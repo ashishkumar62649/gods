@@ -1,0 +1,162 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: #05070d;
+  color: #e6e9f2;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/*
+ * Custom Home button — replaces Cesium's built-in top-right home widget.
+ * Positioned top-left, matches the visual weight of Cesium's toolbar
+ * (dark translucent background, light icon) so it feels native.
+ */
+.custom-home-button {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 10;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  background: rgba(10, 14, 22, 0.72);
+  color: #e6e9f2;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  transition: background 120ms ease, border-color 120ms ease, transform 120ms ease;
+}
+
+.custom-home-button:hover {
+  background: rgba(24, 32, 48, 0.88);
+  border-color: rgba(255, 255, 255, 0.24);
+}
+
+.custom-home-button:active {
+  transform: scale(0.96);
+}
+
+.custom-home-button:focus-visible {
+  outline: 2px solid #6ea8ff;
+  outline-offset: 2px;
+}
+
+/*
+ * Search box — sits to the right of the Home button in the top-left
+ * cluster. Minimal styling that matches the Home button's weight.
+ */
+.search-box {
+  position: absolute;
+  top: 10px;
+  left: 56px; /* 10 (gutter) + 36 (home btn) + 10 (gap) */
+  z-index: 10;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.search-box__input {
+  width: 260px;
+  height: 36px;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  background: rgba(10, 14, 22, 0.72);
+  color: #e6e9f2;
+  font-size: 14px;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.search-box__input::placeholder {
+  color: #8a92a6;
+}
+
+.search-box__input:focus {
+  outline: 2px solid #6ea8ff;
+  outline-offset: 2px;
+  border-color: transparent;
+}
+
+.search-box__submit {
+  height: 36px;
+  padding: 0 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  background: rgba(10, 14, 22, 0.72);
+  color: #e6e9f2;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 120ms ease, border-color 120ms ease;
+}
+
+.search-box__submit:hover:not(:disabled) {
+  background: rgba(24, 32, 48, 0.88);
+  border-color: rgba(255, 255, 255, 0.24);
+}
+
+.search-box__submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.search-box__submit:focus-visible {
+  outline: 2px solid #6ea8ff;
+  outline-offset: 2px;
+}
+
+/*
+ * Buildings toggle — sits to the right of the search box in the top-left
+ * cluster. Matches the weight of the other top-left controls.
+ * 10 (gutter) + 36 (home) + 10 (gap) + 260 (search input) + 6 (gap) + 50 (Go) + 10 (gap)
+ * ≈ 382px from the left edge.
+ */
+.buildings-toggle {
+  position: absolute;
+  top: 10px;
+  left: 392px;
+  z-index: 10;
+  height: 36px;
+  padding: 0 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  background: rgba(10, 14, 22, 0.72);
+  color: #e6e9f2;
+  font-size: 14px;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  transition: background 120ms ease, border-color 120ms ease;
+}
+
+.buildings-toggle:hover {
+  background: rgba(24, 32, 48, 0.88);
+  border-color: rgba(255, 255, 255, 0.24);
+}
+
+.buildings-toggle:focus-visible {
+  outline: 2px solid #6ea8ff;
+  outline-offset: 2px;
+}
+
+/* On-state gets a subtle accent border so the current state is obvious. */
+.buildings-toggle--on {
+  border-color: rgba(110, 168, 255, 0.6);
+}

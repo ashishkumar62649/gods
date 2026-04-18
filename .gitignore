@@ -1,9 +1,20 @@
+# Root-level ignores — applied to both old-hero-globe/ and explorer/.
+
+# Dependencies / build output
 node_modules
 dist
 .vite
+
+# Environment files (never commit tokens)
 .env
 .env.local
+.env.*.local
+
+# OS / editor
 .DS_Store
+Thumbs.db
 *.log
-venv
+
+# Local harness / misc
 .claude/
+venv/
