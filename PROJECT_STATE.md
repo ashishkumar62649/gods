@@ -399,6 +399,14 @@ Expected result:
 - fewer abrupt disappearances between polls
 - valid live flights are no longer artificially capped at 1800 by the proxy
 
+### Flight Trails & UI Fixes
+
+New capability added:
+- Flight trails (historical path drawing) are now fully implemented.
+- `updateSelectedTrailGluePoint` gracefully connects historical trace data to the live predicted flight position.
+- Compilation errors and trace API mismatches have been resolved.
+- Flight details UI appropriately handles camera mode tracking states.
+
 ## 9. Known Bugs / Open Issues
 
 ### Bugs still active or still awaiting retest
@@ -435,7 +443,6 @@ Immediate next steps:
 - tune colors if the user still wants a different palette
 
 Short-term flight improvements:
-- optional trail/path for selected flight
 - performance tuning for full-world all-flight rendering
 - smoother motion blending when fresh snapshots arrive
 - richer feed-health messaging

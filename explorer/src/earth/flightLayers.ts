@@ -438,10 +438,48 @@ export class FlightSceneLayerManager {
         : true;
 
       if (insideView) {
+        // --- Forward-Only Check Valve ---
+        // Calculate the vector from current rendered position to the target.
+        const toTarget = Cartesian3.subtract(
+          entry.targetApiPosition,
+          entry.sharedFramePosition,
+          new Cartesian3(),
+        );
+
+        // Build a unit forward vector from the flight's heading in world space.
+        // We project the heading as a surface tangent at the current position.
+        const flight = entry.flight;
+        const headingRad = (flight.headingDegrees * Math.PI) / 180;
+        // North and East unit vectors at the current globe position.
+        const up = Cartesian3.normalize(entry.sharedFramePosition, new Cartesian3());
+        // East = up × [0,0,1] (pole), then normalise.
+        const pole = new Cartesian3(0, 0, 1);
+        const east = Cartesian3.normalize(
+          Cartesian3.cross(pole, up, new Cartesian3()),
+          new Cartesian3(),
+        );
+        const north = Cartesian3.normalize(
+          Cartesian3.cross(up, east, new Cartesian3()),
+          new Cartesian3(),
+        );
+        // headingRad is CW from North; forward = north*cos(h) + east*sin(h)
+        const forwardVec = Cartesian3.add(
+          Cartesian3.multiplyByScalar(north, Math.cos(headingRad), new Cartesian3()),
+          Cartesian3.multiplyByScalar(east, Math.sin(headingRad), new Cartesian3()),
+          new Cartesian3(),
+        );
+
+        // Dot product: positive = target is ahead, negative = target is behind.
+        const dot = Cartesian3.dot(forwardVec, toTarget);
+
+        // If target is behind the nose, suppress the lerp to a crawl (10% speed)
+        // so the plane glides slowly while the projected target catches up.
+        const lerpFactor = dot < 0 ? FLIGHT_LERP_FACTOR * 0.1 : FLIGHT_LERP_FACTOR;
+
         Cartesian3.lerp(
           entry.correctionVector,
           Cartesian3.ZERO,
-          FLIGHT_LERP_FACTOR,
+          lerpFactor,
           entry.correctionVector,
         );
         Cartesian3.add(
