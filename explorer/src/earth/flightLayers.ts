@@ -76,6 +76,8 @@ interface FlightRenderEntry extends FlightPrimitiveEntry {
   dotBaseColor: Color;
   dotOutlineBaseColor: Color;
   iconBaseColor: Color;
+  /** 1 = normal DR speed; 0.5 = throttled while waiting for target to advance ahead. */
+  speedMultiplier: number;
 }
 
 interface RouteState {
@@ -304,26 +306,71 @@ export class FlightSceneLayerManager {
           dotBaseColor: Color.clone(Color.WHITE, new Color()),
           dotOutlineBaseColor: Color.clone(Color.WHITE, new Color()),
           iconBaseColor: Color.clone(Color.WHITE, new Color()),
+          speedMultiplier: 1,
         };
         this.flightEntries.set(flight.id, entry);
         Cartesian3.normalize(initialPosition, entry.icon.alignedAxis);
       }
 
       const confirmedApiPosition = buildFlightApiCartesian(flight);
-      Cartesian3.subtract(
-        entry.sharedFramePosition,
+
+      // --- API-Arrival Forward-Only Lock ---
+      // Test whether the incoming API position is ahead of or behind the plane.
+      // Build forward vector from heading in world space (same math as the per-frame valve).
+      const toNewTarget = Cartesian3.subtract(
         confirmedApiPosition,
-        entry.correctionVector,
+        entry.sharedFramePosition,
+        new Cartesian3(),
       );
-      Cartesian3.clone(confirmedApiPosition, entry.confirmedApiPosition);
-      entry.flight = flight;
-      entry.lastUpdatedMs = nowMs;
-      entry.fadeStartedAtMs = null;
-      if (entry.currentOpacity !== 1) {
-        entry.currentOpacity = 1;
+      const _up = Cartesian3.normalize(entry.sharedFramePosition, new Cartesian3());
+      const _pole = new Cartesian3(0, 0, 1);
+      const _east = Cartesian3.normalize(
+        Cartesian3.cross(_pole, _up, new Cartesian3()),
+        new Cartesian3(),
+      );
+      const _north = Cartesian3.normalize(
+        Cartesian3.cross(_up, _east, new Cartesian3()),
+        new Cartesian3(),
+      );
+      const _hRad = (flight.headingDegrees * Math.PI) / 180;
+      const _fwd = Cartesian3.add(
+        Cartesian3.multiplyByScalar(_north, Math.cos(_hRad), new Cartesian3()),
+        Cartesian3.multiplyByScalar(_east, Math.sin(_hRad), new Cartesian3()),
+        new Cartesian3(),
+      );
+      const apiDot = Cartesian3.dot(_fwd, toNewTarget);
+
+      if (apiDot < 0) {
+        // New API position is BEHIND the plane — ignore it this cycle.
+        // Throttle DR speed so the plane coasts slowly until the next update
+        // lands in front of it.
+        entry.speedMultiplier = 0.5;
+        // Still update flight metadata (callsign, heading, etc.) but keep the
+        // current targetApiPosition so there is no backward snap.
+        entry.flight = flight;
+        entry.lastUpdatedMs = nowMs;
+        entry.fadeStartedAtMs = null;
+        if (entry.currentOpacity !== 1) {
+          entry.currentOpacity = 1;
+        }
+      } else {
+        // Target is ahead — accept the new position and restore full DR speed.
+        entry.speedMultiplier = 1;
+        Cartesian3.subtract(
+          entry.sharedFramePosition,
+          confirmedApiPosition,
+          entry.correctionVector,
+        );
+        Cartesian3.clone(confirmedApiPosition, entry.confirmedApiPosition);
+        entry.flight = flight;
+        entry.lastUpdatedMs = nowMs;
+        entry.fadeStartedAtMs = null;
+        if (entry.currentOpacity !== 1) {
+          entry.currentOpacity = 1;
+        }
+        this.updateTargetApiPosition(entry, nowSeconds);
       }
 
-      this.updateTargetApiPosition(entry, nowSeconds);
       this.applyFlightVisual(entry, flight);
     }
 
@@ -531,7 +578,10 @@ export class FlightSceneLayerManager {
   }
 
   private updateTargetApiPosition(entry: FlightRenderEntry, nowSeconds: number) {
-    const ageSeconds = Math.min(20, Math.max(0, nowSeconds - entry.flight.timestamp));
+    // speedMultiplier throttles dead-reckoning when a backward API update was
+    // rejected, so the plane coasts slowly until the next valid update.
+    const rawAge = Math.min(20, Math.max(0, nowSeconds - entry.flight.timestamp));
+    const ageSeconds = rawAge * entry.speedMultiplier;
     const predicted = predictFlightPosition(entry.flight, ageSeconds);
     entry.targetLongitude = predicted.longitude;
     entry.targetLatitude = predicted.latitude;
