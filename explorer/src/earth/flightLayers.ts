@@ -76,8 +76,6 @@ interface FlightRenderEntry extends FlightPrimitiveEntry {
   dotBaseColor: Color;
   dotOutlineBaseColor: Color;
   iconBaseColor: Color;
-  /** 1 = normal DR speed; 0.5 = throttled while waiting for target to advance ahead. */
-  speedMultiplier: number;
 }
 
 interface RouteState {
@@ -306,70 +304,39 @@ export class FlightSceneLayerManager {
           dotBaseColor: Color.clone(Color.WHITE, new Color()),
           dotOutlineBaseColor: Color.clone(Color.WHITE, new Color()),
           iconBaseColor: Color.clone(Color.WHITE, new Color()),
-          speedMultiplier: 1,
         };
         this.flightEntries.set(flight.id, entry);
         Cartesian3.normalize(initialPosition, entry.icon.alignedAxis);
       }
 
       const confirmedApiPosition = buildFlightApiCartesian(flight);
-
-      // --- API-Arrival Forward-Only Lock ---
-      // Test whether the incoming API position is ahead of or behind the plane.
-      // Build forward vector from heading in world space (same math as the per-frame valve).
-      const toNewTarget = Cartesian3.subtract(
-        confirmedApiPosition,
-        entry.sharedFramePosition,
-        new Cartesian3(),
-      );
-      const _up = Cartesian3.normalize(entry.sharedFramePosition, new Cartesian3());
-      const _pole = new Cartesian3(0, 0, 1);
-      const _east = Cartesian3.normalize(
-        Cartesian3.cross(_pole, _up, new Cartesian3()),
-        new Cartesian3(),
-      );
-      const _north = Cartesian3.normalize(
-        Cartesian3.cross(_up, _east, new Cartesian3()),
-        new Cartesian3(),
-      );
-      const _hRad = (flight.headingDegrees * Math.PI) / 180;
-      const _fwd = Cartesian3.add(
-        Cartesian3.multiplyByScalar(_north, Math.cos(_hRad), new Cartesian3()),
-        Cartesian3.multiplyByScalar(_east, Math.sin(_hRad), new Cartesian3()),
-        new Cartesian3(),
-      );
-      const apiDot = Cartesian3.dot(_fwd, toNewTarget);
-
-      if (apiDot < 0) {
-        // New API position is BEHIND the plane — ignore it this cycle.
-        // Throttle DR speed so the plane coasts slowly until the next update
-        // lands in front of it.
-        entry.speedMultiplier = 0.5;
-        // Still update flight metadata (callsign, heading, etc.) but keep the
-        // current targetApiPosition so there is no backward snap.
-        entry.flight = flight;
-        entry.lastUpdatedMs = nowMs;
-        entry.fadeStartedAtMs = null;
-        if (entry.currentOpacity !== 1) {
-          entry.currentOpacity = 1;
-        }
-      } else {
-        // Target is ahead — accept the new position and restore full DR speed.
-        entry.speedMultiplier = 1;
-        Cartesian3.subtract(
-          entry.sharedFramePosition,
-          confirmedApiPosition,
-          entry.correctionVector,
-        );
-        Cartesian3.clone(confirmedApiPosition, entry.confirmedApiPosition);
-        entry.flight = flight;
-        entry.lastUpdatedMs = nowMs;
-        entry.fadeStartedAtMs = null;
-        if (entry.currentOpacity !== 1) {
-          entry.currentOpacity = 1;
-        }
-        this.updateTargetApiPosition(entry, nowSeconds);
+      Cartesian3.clone(confirmedApiPosition, entry.confirmedApiPosition);
+      entry.flight = flight;
+      entry.lastUpdatedMs = nowMs;
+      entry.fadeStartedAtMs = null;
+      if (entry.currentOpacity !== 1) {
+        entry.currentOpacity = 1;
       }
+
+      // --- Error Vector Decay (true zero-jump kinematics) ---
+      // Project the new API position forward to right now, giving us the best
+      // estimate of where the plane physically is at this instant.
+      this.updateTargetApiPosition(entry, nowSeconds);
+
+      // Absorb any gap between the current rendered position and the projected
+      // target into correctionVector. Because sharedFramePosition was the
+      // rendered position on the PREVIOUS frame, the plane does NOT jump at
+      // all on this update frame:
+      //   sharedFramePosition = targetApiPosition + correctionVector
+      //                       = targetApiPosition + (prev_rendered - targetApiPosition)
+      //                       = prev_rendered  ← zero pixel movement on update frame
+      // The correctionVector decays to zero over the next ~1 second at
+      // FLIGHT_LERP_FACTOR per frame, bleeding off any overshoot invisibly.
+      Cartesian3.subtract(
+        entry.sharedFramePosition,
+        entry.targetApiPosition,
+        entry.correctionVector,
+      );
 
       this.applyFlightVisual(entry, flight);
     }
@@ -485,48 +452,14 @@ export class FlightSceneLayerManager {
         : true;
 
       if (insideView) {
-        // --- Forward-Only Check Valve ---
-        // Calculate the vector from current rendered position to the target.
-        const toTarget = Cartesian3.subtract(
-          entry.targetApiPosition,
-          entry.sharedFramePosition,
-          new Cartesian3(),
-        );
-
-        // Build a unit forward vector from the flight's heading in world space.
-        // We project the heading as a surface tangent at the current position.
-        const flight = entry.flight;
-        const headingRad = (flight.headingDegrees * Math.PI) / 180;
-        // North and East unit vectors at the current globe position.
-        const up = Cartesian3.normalize(entry.sharedFramePosition, new Cartesian3());
-        // East = up × [0,0,1] (pole), then normalise.
-        const pole = new Cartesian3(0, 0, 1);
-        const east = Cartesian3.normalize(
-          Cartesian3.cross(pole, up, new Cartesian3()),
-          new Cartesian3(),
-        );
-        const north = Cartesian3.normalize(
-          Cartesian3.cross(up, east, new Cartesian3()),
-          new Cartesian3(),
-        );
-        // headingRad is CW from North; forward = north*cos(h) + east*sin(h)
-        const forwardVec = Cartesian3.add(
-          Cartesian3.multiplyByScalar(north, Math.cos(headingRad), new Cartesian3()),
-          Cartesian3.multiplyByScalar(east, Math.sin(headingRad), new Cartesian3()),
-          new Cartesian3(),
-        );
-
-        // Dot product: positive = target is ahead, negative = target is behind.
-        const dot = Cartesian3.dot(forwardVec, toTarget);
-
-        // If target is behind the nose, suppress the lerp to a crawl (10% speed)
-        // so the plane glides slowly while the projected target catches up.
-        const lerpFactor = dot < 0 ? FLIGHT_LERP_FACTOR * 0.1 : FLIGHT_LERP_FACTOR;
-
+        // Error Vector Decay per-frame step:
+        // Lerp correctionVector toward zero at a constant rate, then add it
+        // to the dead-reckoned target. The plane position never jumps;
+        // it glides smoothly from the previous rendered location to the truth.
         Cartesian3.lerp(
           entry.correctionVector,
           Cartesian3.ZERO,
-          lerpFactor,
+          FLIGHT_LERP_FACTOR,
           entry.correctionVector,
         );
         Cartesian3.add(
@@ -578,10 +511,7 @@ export class FlightSceneLayerManager {
   }
 
   private updateTargetApiPosition(entry: FlightRenderEntry, nowSeconds: number) {
-    // speedMultiplier throttles dead-reckoning when a backward API update was
-    // rejected, so the plane coasts slowly until the next valid update.
-    const rawAge = Math.min(20, Math.max(0, nowSeconds - entry.flight.timestamp));
-    const ageSeconds = rawAge * entry.speedMultiplier;
+    const ageSeconds = Math.min(20, Math.max(0, nowSeconds - entry.flight.timestamp));
     const predicted = predictFlightPosition(entry.flight, ageSeconds);
     entry.targetLongitude = predicted.longitude;
     entry.targetLatitude = predicted.latitude;
