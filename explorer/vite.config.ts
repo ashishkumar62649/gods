@@ -10,5 +10,11 @@ export default defineConfig({
   server: {
     port: 5174, // 5173 is reserved for old-hero-globe
     open: true,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8788',
+        changeOrigin: true,
+      },
+    },
   },
 });
