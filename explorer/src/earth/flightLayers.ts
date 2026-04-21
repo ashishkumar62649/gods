@@ -28,6 +28,7 @@ import {
   AUX_AIRPORT_ICON_IMAGE,
   AirportRecord,
   DESTINATION_AIRPORT_ICON_IMAGE,
+  fetchFlightTrace,
   FlightRecord,
   FlightRenderMode,
   FlightRouteSnapshot,
@@ -42,6 +43,7 @@ import {
   getFlightIconDimensions,
   getFlightIconImage,
   getFlightIconKey,
+  getFlightIconRotationRadians,
 } from './flightVisuals';
 
 interface FlightPickId {
@@ -59,10 +61,31 @@ interface FlightPrimitiveEntry {
   icon: Billboard;
 }
 
+interface FlightRenderEntry extends FlightPrimitiveEntry {
+  flight: FlightRecord;
+  sharedFramePosition: Cartesian3;
+  confirmedApiPosition: Cartesian3;
+  targetApiPosition: Cartesian3;
+  correctionVector: Cartesian3;
+  targetLatitude: number;
+  targetLongitude: number;
+  targetAltitudeMeters: number;
+  lastUpdatedMs: number;
+  fadeStartedAtMs: number | null;
+  currentOpacity: number;
+  dotBaseColor: Color;
+  dotOutlineBaseColor: Color;
+  iconBaseColor: Color;
+}
+
 interface RouteState {
   snapshot: FlightRouteSnapshot | null;
   flightId: string | null;
 }
+
+const FLIGHT_LERP_FACTOR = 0.05;
+const FLIGHT_STALE_TIMEOUT_MS = 60_000;
+const FLIGHT_FADE_DURATION_MS = 2_000;
 
 export class FlightSceneLayerManager {
   private readonly viewer: CesiumViewer;
@@ -74,12 +97,17 @@ export class FlightSceneLayerManager {
   private readonly flightLabels: LabelCollection;
   private readonly trailPolylines: PolylineCollection;
   private readonly routePolylines: PolylineCollection;
-  private readonly flightEntries = new Map<string, FlightPrimitiveEntry>();
-  private readonly flightRecords = new Map<string, FlightRecord>();
+  private readonly flightEntries = new Map<string, FlightRenderEntry>();
+  private readonly selectedTrailSegments: Polyline[] = [];
   private readonly selectedFlightLabel: Label;
-  private readonly selectedTrailPolyline: Polyline;
   private readonly routeArcPolyline: Polyline;
-  private readonly removePostRender: (() => void) | undefined;
+  private selectedTrailAbortController: AbortController | null = null;
+  private selectedTrailRequestToken = 0;
+  private activeTrailFlightId: string | null = null;
+  private activeTrailAltitudesMeters: number[] = [];
+  private activeTrailPositions: Cartesian3[] = [];
+  private activeTrailLastAnchorTimestamp: number | null = null;
+  private activeTrailHasGluePoint = false;
   private flightsVisible = false;
   private airportsVisible = false;
   private renderMode: FlightRenderMode = 'dot';
@@ -89,6 +117,7 @@ export class FlightSceneLayerManager {
     snapshot: null,
     flightId: null,
   };
+  private tickFrame = 0;
 
   constructor(viewer: CesiumViewer) {
     this.viewer = viewer;
@@ -112,21 +141,9 @@ export class FlightSceneLayerManager {
       showBackground: true,
       backgroundColor: Color.fromCssColorString('#0d1324').withAlpha(0.82),
       backgroundPadding: new Cartesian2(10, 6),
-      // pixelOffset pushes the label above the plane icon in screen space.
-      // Do NOT add a world-space altitude offset — it causes the label to
-      // float far above the aircraft at close range (e.g. drone mode).
       pixelOffset: new Cartesian2(0, -52),
       verticalOrigin: VerticalOrigin.BOTTOM,
       horizontalOrigin: HorizontalOrigin.CENTER,
-    });
-
-    this.selectedTrailPolyline = this.trailPolylines.add({
-      show: false,
-      width: 3.5,
-      material: Material.fromType(Material.ColorType, {
-        color: Color.fromCssColorString('#7effcf').withAlpha(0.42),
-      }),
-      positions: [],
     });
 
     this.routeArcPolyline = this.routePolylines.add({
@@ -142,13 +159,10 @@ export class FlightSceneLayerManager {
     this.routeAirportBillboards.show = true;
 
     this.viewer.scene.primitives.add(this.root);
-    this.removePostRender = this.viewer.scene.postRender.addEventListener(() => {
-      this.updateAnimatedFlightPositions();
-    });
   }
 
   destroy() {
-    this.removePostRender?.();
+    this.selectedTrailAbortController?.abort();
     if (!this.viewer.isDestroyed()) {
       this.viewer.scene.primitives.remove(this.root);
       this.viewer.scene.requestRender();
@@ -159,6 +173,7 @@ export class FlightSceneLayerManager {
     this.flightsVisible = visible;
     this.flightDots.show = visible;
     this.flightBillboards.show = visible;
+    this.updateTrailSegmentVisibility();
     this.refreshSelectionOverlays();
     this.requestRender();
   }
@@ -173,59 +188,150 @@ export class FlightSceneLayerManager {
     this.selectedFlightId = flightId;
     this.refreshFlightVisuals();
     this.refreshSelectionOverlays();
+    this.updateSelectedTrail(this.showSelectedTrail ? flightId : null);
     this.requestRender();
   }
 
   setShowSelectedTrail(show: boolean) {
     this.showSelectedTrail = show;
-    this.refreshSelectionOverlays();
+    this.updateSelectedTrail(show ? this.selectedFlightId : null);
     this.requestRender();
   }
 
+  updateSelectedTrail(flightId: string | null) {
+    this.selectedTrailRequestToken += 1;
+    const requestToken = this.selectedTrailRequestToken;
+
+    this.selectedTrailAbortController?.abort();
+    this.selectedTrailAbortController = null;
+    this.clearSelectedTrail();
+
+    if (!flightId) {
+      return;
+    }
+
+    const normalizedFlightId = String(flightId).trim().toLowerCase();
+    if (!normalizedFlightId) {
+      return;
+    }
+
+    const controller = new AbortController();
+    this.selectedTrailAbortController = controller;
+
+    fetchFlightTrace(normalizedFlightId, controller.signal)
+      .then((payload) => {
+        if (
+          requestToken !== this.selectedTrailRequestToken ||
+          !this.showSelectedTrail ||
+          this.selectedFlightId !== normalizedFlightId
+        ) {
+          return;
+        }
+
+        if (!payload.found || payload.path.length === 0) {
+          return;
+        }
+
+        const trailData = buildOpenSkyTrailData(payload.path);
+        if (trailData.positions.length < 2) {
+          return;
+        }
+
+        this.activeTrailFlightId = normalizedFlightId;
+        this.activeTrailPositions = trailData.positions;
+        this.activeTrailAltitudesMeters = trailData.altitudesMeters;
+        this.activeTrailLastAnchorTimestamp = null;
+        this.activeTrailHasGluePoint = false;
+
+        const selectedEntry = this.flightEntries.get(normalizedFlightId) ?? null;
+        if (selectedEntry) {
+          this.promoteSelectedTrailLiveAnchor(selectedEntry);
+        } else {
+          this.rebuildSelectedTrailSegments(null);
+        }
+        this.requestRender();
+      })
+      .catch((error: unknown) => {
+        if (controller.signal.aborted) {
+          return;
+        }
+
+        console.warn('[Explorer] Failed to load selected flight trail:', error);
+
+        if (requestToken === this.selectedTrailRequestToken) {
+          this.clearSelectedTrail();
+        }
+      })
+      .finally(() => {
+        if (this.selectedTrailAbortController === controller) {
+          this.selectedTrailAbortController = null;
+        }
+      });
+  }
+
   syncFlights(flights: FlightRecord[]) {
-    const liveIds = new Set<string>();
+    const nowMs = Date.now();
+    const nowSeconds = nowMs / 1000;
 
     for (const flight of flights) {
-      liveIds.add(flight.id);
-      this.flightRecords.set(flight.id, flight);
-
       let entry = this.flightEntries.get(flight.id);
       if (!entry) {
+        const initialPosition = buildFlightApiCartesian(flight);
         entry = {
           dot: this.flightDots.add({
             id: { kind: 'flight', flightId: flight.id } satisfies FlightPickId,
-            position: Cartesian3.ZERO,
+            position: initialPosition,
           }),
           icon: this.flightBillboards.add({
             id: { kind: 'flight', flightId: flight.id } satisfies FlightPickId,
-            position: Cartesian3.ZERO,
-            // alignedAxis is set to the local up vector in updateFlightPosition
-            // every frame so heading rotation is correct across the globe.
+            position: initialPosition,
             alignedAxis: Cartesian3.ZERO,
             verticalOrigin: VerticalOrigin.CENTER,
             horizontalOrigin: HorizontalOrigin.CENTER,
             scaleByDistance: new NearFarScalar(5_000, 1.1, 20_000_000, 0.48),
           }),
+          flight,
+          sharedFramePosition: Cartesian3.clone(initialPosition),
+          confirmedApiPosition: Cartesian3.clone(initialPosition),
+          targetApiPosition: Cartesian3.clone(initialPosition),
+          correctionVector: new Cartesian3(),
+          targetLatitude: flight.latitude,
+          targetLongitude: flight.longitude,
+          targetAltitudeMeters: Math.max(0, flight.altitudeMeters),
+          lastUpdatedMs: nowMs,
+          fadeStartedAtMs: null,
+          currentOpacity: 1,
+          dotBaseColor: Color.clone(Color.WHITE, new Color()),
+          dotOutlineBaseColor: Color.clone(Color.WHITE, new Color()),
+          iconBaseColor: Color.clone(Color.WHITE, new Color()),
         };
-
         this.flightEntries.set(flight.id, entry);
+        Cartesian3.normalize(initialPosition, entry.icon.alignedAxis);
       }
 
-      this.updateFlightPosition(entry, flight);
+      const confirmedApiPosition = buildFlightApiCartesian(flight);
+      Cartesian3.subtract(
+        entry.sharedFramePosition,
+        confirmedApiPosition,
+        entry.correctionVector,
+      );
+      Cartesian3.clone(confirmedApiPosition, entry.confirmedApiPosition);
+      entry.flight = flight;
+      entry.lastUpdatedMs = nowMs;
+      entry.fadeStartedAtMs = null;
+      if (entry.currentOpacity !== 1) {
+        entry.currentOpacity = 1;
+      }
+
+      this.updateTargetApiPosition(entry, nowSeconds);
       this.applyFlightVisual(entry, flight);
     }
 
-    for (const [flightId, entry] of this.flightEntries.entries()) {
-      if (liveIds.has(flightId)) continue;
-
-      this.flightDots.remove(entry.dot);
-      this.flightBillboards.remove(entry.icon);
-      this.flightEntries.delete(flightId);
-      this.flightRecords.delete(flightId);
-    }
-
-    if (this.selectedFlightId && !this.flightRecords.has(this.selectedFlightId)) {
-      this.selectedFlightId = null;
+    if (this.showSelectedTrail && this.selectedFlightId) {
+      const selectedEntry = this.flightEntries.get(this.selectedFlightId) ?? null;
+      if (selectedEntry) {
+        this.promoteSelectedTrailLiveAnchor(selectedEntry);
+      }
     }
 
     this.refreshSelectionOverlays();
@@ -281,6 +387,92 @@ export class FlightSceneLayerManager {
     return null;
   }
 
+  tickPositions(): void {
+    if (this.flightEntries.size === 0) return;
+
+    const nowMs = Date.now();
+    const nowSeconds = nowMs / 1000;
+    const refreshAlignedAxis = (this.tickFrame % 30) === 0;
+    const viewRectangle = this.flightsVisible
+      ? this.viewer.camera.computeViewRectangle(this.viewer.scene.globe.ellipsoid)
+      : null;
+    const entriesToRemove: string[] = [];
+    this.tickFrame += 1;
+
+    for (const [flightId, entry] of this.flightEntries.entries()) {
+      this.updateTargetApiPosition(entry, nowSeconds);
+
+      const staleForMs = nowMs - entry.lastUpdatedMs;
+      if (staleForMs > FLIGHT_STALE_TIMEOUT_MS) {
+        if (!entry.fadeStartedAtMs) {
+          entry.fadeStartedAtMs = nowMs;
+        }
+
+        const nextOpacity = clamp01(
+          1 - (nowMs - entry.fadeStartedAtMs) / FLIGHT_FADE_DURATION_MS,
+        );
+        if (nextOpacity !== entry.currentOpacity) {
+          entry.currentOpacity = nextOpacity;
+          this.applyEntryOpacity(entry);
+        }
+
+        if (nextOpacity <= 0) {
+          entriesToRemove.push(flightId);
+          continue;
+        }
+      } else if (entry.currentOpacity !== 1) {
+        entry.currentOpacity = 1;
+        this.applyEntryOpacity(entry);
+      }
+
+      if (!this.flightsVisible) {
+        continue;
+      }
+
+      const insideView = viewRectangle
+        ? rectangleContainsLonLat(
+            viewRectangle,
+            entry.targetLongitude,
+            entry.targetLatitude,
+          )
+        : true;
+
+      if (insideView) {
+        Cartesian3.lerp(
+          entry.correctionVector,
+          Cartesian3.ZERO,
+          FLIGHT_LERP_FACTOR,
+          entry.correctionVector,
+        );
+        Cartesian3.add(
+          entry.targetApiPosition,
+          entry.correctionVector,
+          entry.sharedFramePosition,
+        );
+      } else {
+        Cartesian3.clone(entry.targetApiPosition, entry.sharedFramePosition);
+        Cartesian3.clone(Cartesian3.ZERO, entry.correctionVector);
+      }
+
+      this.applyRenderedPosition(entry, refreshAlignedAxis);
+
+      if (
+        this.showSelectedTrail &&
+        this.activeTrailFlightId === flightId &&
+        this.selectedFlightId === flightId
+      ) {
+        this.updateSelectedTrailGluePoint(entry);
+      }
+    }
+
+    for (const flightId of entriesToRemove) {
+      this.removeFlightEntry(flightId);
+    }
+
+    this.refreshSelectionOverlays();
+    this.refreshRouteOverlay();
+  }
+
   private extractPickId(picked: unknown) {
     if (!picked || typeof picked !== 'object') return null;
 
@@ -288,83 +480,44 @@ export class FlightSceneLayerManager {
       return picked.id;
     }
 
-    if ('primitive' in picked && picked.primitive && typeof picked.primitive === 'object' && 'id' in picked.primitive) {
+    if (
+      'primitive' in picked &&
+      picked.primitive &&
+      typeof picked.primitive === 'object' &&
+      'id' in picked.primitive
+    ) {
       return picked.primitive.id;
     }
 
     return null;
   }
 
-  private updateFlightPosition(entry: FlightPrimitiveEntry, flight: FlightRecord) {
-    const ageSeconds = Math.min(
-      20,
-      Math.max(0, Date.now() / 1000 - flight.timestamp),
-    );
-    const predicted = predictFlightPosition(flight, ageSeconds);
-    const position = Cartesian3.fromDegrees(
-      predicted.longitude,
-      predicted.latitude,
-      Math.max(0, predicted.altitudeMeters),
-    );
+  private updateTargetApiPosition(entry: FlightRenderEntry, nowSeconds: number) {
+    const ageSeconds = Math.min(20, Math.max(0, nowSeconds - entry.flight.timestamp));
+    const predicted = predictFlightPosition(entry.flight, ageSeconds);
+    entry.targetLongitude = predicted.longitude;
+    entry.targetLatitude = predicted.latitude;
+    entry.targetAltitudeMeters = Math.max(0, predicted.altitudeMeters);
 
-    entry.dot.position = position;
-    entry.icon.position = position;
-    // alignedAxis must be the local surface normal (unit vector pointing away
-    // from the Earth's center at this position) so that icon rotation is
-    // measured in the horizontal plane. UNIT_Z (pole axis) only works when
-    // looking straight down — tilted views make icons point in wrong directions.
-    Cartesian3.normalize(position, entry.icon.alignedAxis);
+    Cartesian3.fromDegrees(
+      entry.targetLongitude,
+      entry.targetLatitude,
+      entry.targetAltitudeMeters,
+      undefined,
+      entry.targetApiPosition,
+    );
   }
 
-  /**
-   * Dead-reckoning tick — called every Cesium frame from a preRender listener.
-   *
-   * Performance notes:
-   *  • One Date.now() call shared across ALL flights per frame (not per-flight).
-   *  • Reuses a single Cartesian3 scratch object per flight (no GC per frame).
-   *  • alignedAxis (billboard surface normal) is refreshed every 30 frames
-   *    (~0.5 s at 60fps) — it changes very slowly and doesn't need per-frame
-   *    precision.
-   *  • Skips flights whose speed is zero (parked/unknown) — they don't move.
-   *  • Exits immediately if flights are hidden (zero iterations).
-   */
-  private _tickFrame = 0;
+  private applyRenderedPosition(entry: FlightRenderEntry, refreshAlignedAxis: boolean) {
+    entry.dot.position = entry.sharedFramePosition;
+    entry.icon.position = entry.sharedFramePosition;
 
-  tickPositions(): void {
-    if (!this.flightsVisible) return;
-
-    const nowSeconds = Date.now() / 1000;
-    const refreshAlignedAxis = (this._tickFrame % 30) === 0;
-    this._tickFrame++;
-
-    for (const [flightId, entry] of this.flightEntries.entries()) {
-      const flight = this.flightRecords.get(flightId);
-      if (!flight) continue;
-      // Stationary flights don't need dead-reckoning — skip to save CPU.
-      if (flight.speedMetersPerSecond <= 0) continue;
-
-      const ageSeconds = Math.min(20, Math.max(0, nowSeconds - flight.timestamp));
-      const predicted = predictFlightPosition(flight, ageSeconds);
-
-      // Each primitive holds a reference to its position object, so we must
-      // allocate a fresh Cartesian3 — reusing a single scratch would make
-      // every entry point to the same location.
-      const position = Cartesian3.fromDegrees(
-        predicted.longitude,
-        predicted.latitude,
-        Math.max(0, predicted.altitudeMeters),
-      );
-
-      entry.dot.position = position;
-      entry.icon.position = position;
-
-      if (refreshAlignedAxis) {
-        Cartesian3.normalize(position, entry.icon.alignedAxis);
-      }
+    if (refreshAlignedAxis) {
+      Cartesian3.normalize(entry.sharedFramePosition, entry.icon.alignedAxis);
     }
   }
 
-  private applyFlightVisual(entry: FlightPrimitiveEntry, flight: FlightRecord) {
+  private applyFlightVisual(entry: FlightRenderEntry, flight: FlightRecord) {
     const isSelected = this.selectedFlightId === flight.id;
     const hasSelection = Boolean(this.selectedFlightId);
     const dimmed = hasSelection && !isSelected;
@@ -377,91 +530,74 @@ export class FlightSceneLayerManager {
       : isSelected
         ? new Color(baseColor.red, baseColor.green, baseColor.blue, 0.96)
         : new Color(baseColor.red, baseColor.green, baseColor.blue, 0.88);
+    const outlineColor = isSelected
+      ? Color.WHITE.withAlpha(0.9)
+      : new Color(0.05, 0.08, 0.14, dimmed ? 0.12 : 0.36);
     const iconSize = getFlightIconDimensions(flight, isSelected);
 
     entry.dot.show = this.flightsVisible && this.renderMode === 'dot' && !isSelected;
     entry.dot.pixelSize = isSelected ? 13 : 7.5;
-    entry.dot.color = markerColor;
-    entry.dot.outlineColor = isSelected
-      ? Color.WHITE.withAlpha(0.9)
-      : new Color(0.05, 0.08, 0.14, dimmed ? 0.12 : 0.36);
     entry.dot.outlineWidth = isSelected ? 2 : 1;
+
+    entry.dotBaseColor = markerColor;
+    entry.dotOutlineBaseColor = outlineColor;
+    entry.iconBaseColor = markerColor;
 
     entry.icon.show = this.flightsVisible && (this.renderMode === 'icon' || isSelected);
     entry.icon.image = getFlightIconImage(iconKey);
-    entry.icon.color = markerColor;
-    // Rotate so the nose (SVG top = +Y) points in the heading direction.
-    // With alignedAxis = localUp, rotation=0 aligns SVG-top to North.
-    // Negate heading to convert CW-from-North to CCW Cesium rotation.
-    entry.icon.rotation = CesiumMath.toRadians(-flight.headingDegrees);
+    entry.icon.rotation = getFlightIconRotationRadians(flight);
     entry.icon.width = iconSize.width;
     entry.icon.height = iconSize.height;
+
+    this.applyEntryOpacity(entry);
+  }
+
+  private applyEntryOpacity(entry: FlightRenderEntry) {
+    entry.dot.color = cloneColorWithOpacity(entry.dotBaseColor, entry.currentOpacity);
+    entry.dot.outlineColor = cloneColorWithOpacity(
+      entry.dotOutlineBaseColor,
+      entry.currentOpacity,
+    );
+    entry.icon.color = cloneColorWithOpacity(entry.iconBaseColor, entry.currentOpacity);
   }
 
   private refreshFlightVisuals() {
-    for (const [flightId, entry] of this.flightEntries.entries()) {
-      const flight = this.flightRecords.get(flightId);
-      if (!flight) continue;
-      this.updateFlightPosition(entry, flight);
-      this.applyFlightVisual(entry, flight);
+    for (const entry of this.flightEntries.values()) {
+      this.applyFlightVisual(entry, entry.flight);
     }
   }
 
   private refreshSelectionOverlays() {
-    const selectedFlight = this.selectedFlightId
-      ? this.flightRecords.get(this.selectedFlightId) ?? null
+    const selectedEntry = this.selectedFlightId
+      ? this.flightEntries.get(this.selectedFlightId) ?? null
       : null;
-    const showLabel = this.flightsVisible && Boolean(selectedFlight);
+    const showLabel = this.flightsVisible && Boolean(selectedEntry);
 
-    if (!selectedFlight || !showLabel) {
+    if (!selectedEntry || !showLabel) {
       this.selectedFlightLabel.show = false;
-      this.selectedTrailPolyline.show = false;
-      this.selectedTrailPolyline.positions = [];
       return;
     }
 
     this.selectedFlightLabel.show = true;
-    this.selectedFlightLabel.text = getFlightDisplayName(selectedFlight);
-    const ageSeconds = Math.min(
-      20,
-      Math.max(0, Date.now() / 1000 - selectedFlight.timestamp),
-    );
-    const predicted = predictFlightPosition(selectedFlight, ageSeconds);
-    // Anchor the label to the exact plane position in world space.
-    // Visual separation above the icon is handled by pixelOffset alone.
-    this.selectedFlightLabel.position = Cartesian3.fromDegrees(
-      predicted.longitude,
-      predicted.latitude,
-      Math.max(0, predicted.altitudeMeters),
-    );
-
-    const trailPositions = this.showSelectedTrail
-      ? buildTrailPositions(selectedFlight, predicted)
-      : [];
-
-    this.selectedTrailPolyline.show = this.flightsVisible && trailPositions.length > 1;
-    this.selectedTrailPolyline.positions = trailPositions;
+    this.selectedFlightLabel.text = getFlightDisplayName(selectedEntry.flight);
+    this.selectedFlightLabel.position = selectedEntry.sharedFramePosition;
   }
 
   private refreshRouteOverlay() {
     const { snapshot, flightId } = this.routeState;
-    const trackedFlight = flightId ? this.flightRecords.get(flightId) ?? null : null;
+    const trackedEntry = flightId ? this.flightEntries.get(flightId) ?? null : null;
 
-    if (!snapshot?.found || !snapshot.origin || !snapshot.destination || !trackedFlight) {
+    if (!snapshot?.found || !snapshot.origin || !snapshot.destination || !trackedEntry) {
       this.routeArcPolyline.show = false;
       this.routeArcPolyline.positions = [];
       this.routeAirportBillboards.removeAll();
       return;
     }
 
-    const ageSeconds = Math.min(
-      20,
-      Math.max(0, Date.now() / 1000 - trackedFlight.timestamp),
-    );
-    const predictedFlight = predictFlightPosition(trackedFlight, ageSeconds);
+    const renderedFlight = getRenderedFlightState(trackedEntry);
     const routePositions = buildRouteArcPositions(
       snapshot.origin,
-      predictedFlight,
+      renderedFlight,
       snapshot.destination,
     );
     this.routeArcPolyline.show = routePositions.length > 1;
@@ -480,7 +616,11 @@ export class FlightSceneLayerManager {
     });
     this.routeAirportBillboards.add({
       image: DESTINATION_AIRPORT_ICON_IMAGE,
-      position: Cartesian3.fromDegrees(snapshot.destination.longitude, snapshot.destination.latitude, 0),
+      position: Cartesian3.fromDegrees(
+        snapshot.destination.longitude,
+        snapshot.destination.latitude,
+        0,
+      ),
       verticalOrigin: VerticalOrigin.BOTTOM,
       horizontalOrigin: HorizontalOrigin.CENTER,
       width: 24,
@@ -489,7 +629,7 @@ export class FlightSceneLayerManager {
       color: Color.fromCssColorString('#ffc09b'),
     });
 
-    this.selectedFlightLabel.text = getFlightDisplayName(trackedFlight);
+    this.selectedFlightLabel.text = getFlightDisplayName(trackedEntry.flight);
   }
 
   private requestRender() {
@@ -498,80 +638,209 @@ export class FlightSceneLayerManager {
     }
   }
 
-  private updateAnimatedFlightPositions() {
-    if (!this.flightsVisible) return;
+  private clearSelectedTrail() {
+    this.activeTrailFlightId = null;
+    this.activeTrailAltitudesMeters = [];
+    this.activeTrailPositions = [];
+    this.activeTrailLastAnchorTimestamp = null;
+    this.activeTrailHasGluePoint = false;
+    while (this.selectedTrailSegments.length > 0) {
+      const segment = this.selectedTrailSegments.pop();
+      if (segment) {
+        this.trailPolylines.remove(segment);
+      }
+    }
+    this.requestRender();
+  }
 
-    for (const [flightId, entry] of this.flightEntries.entries()) {
-      const flight = this.flightRecords.get(flightId);
-      if (!flight) continue;
-      this.updateFlightPosition(entry, flight);
+  private rebuildSelectedTrailSegments(referenceFlight: FlightRecord | null) {
+    while (this.selectedTrailSegments.length > 0) {
+      const segment = this.selectedTrailSegments.pop();
+      if (segment) {
+        this.trailPolylines.remove(segment);
+      }
     }
 
-    if (this.selectedFlightId) {
-      this.refreshSelectionOverlays();
+    if (this.activeTrailPositions.length < 2) {
+      return;
     }
 
-    if (this.routeState.snapshot?.found && this.routeState.flightId) {
+    for (let index = 1; index < this.activeTrailPositions.length; index += 1) {
+      this.selectedTrailSegments.push(
+        this.trailPolylines.add({
+          show: this.flightsVisible && this.showSelectedTrail,
+          width: 3,
+          positions: [
+            this.activeTrailPositions[index - 1],
+            this.activeTrailPositions[index],
+          ],
+          material: Material.fromType(Material.ColorType, {
+            color: getTrailSegmentColor(
+              referenceFlight,
+              this.activeTrailAltitudesMeters[index],
+            ),
+          }),
+        }),
+      );
+    }
+  }
+
+  private promoteSelectedTrailLiveAnchor(entry: FlightRenderEntry) {
+    if (this.activeTrailFlightId !== entry.flight.id) {
+      return;
+    }
+
+    if (this.activeTrailPositions.length === 0) {
+      return;
+    }
+
+    if (this.activeTrailLastAnchorTimestamp === entry.flight.timestamp) {
+      return;
+    }
+
+    const confirmedAltitude = Math.max(0, entry.flight.altitudeMeters);
+
+    if (!this.activeTrailHasGluePoint) {
+      this.activeTrailPositions.push(Cartesian3.clone(entry.confirmedApiPosition));
+      this.activeTrailAltitudesMeters.push(confirmedAltitude);
+      this.activeTrailPositions.push(Cartesian3.clone(entry.sharedFramePosition));
+      this.activeTrailAltitudesMeters.push(confirmedAltitude);
+      this.activeTrailHasGluePoint = true;
+    } else {
+      const currentGlueIndex = this.activeTrailPositions.length - 1;
+      this.activeTrailPositions[currentGlueIndex] = Cartesian3.clone(entry.confirmedApiPosition);
+      this.activeTrailAltitudesMeters[currentGlueIndex] = confirmedAltitude;
+      this.activeTrailPositions.push(Cartesian3.clone(entry.sharedFramePosition));
+      this.activeTrailAltitudesMeters.push(confirmedAltitude);
+    }
+
+    this.activeTrailLastAnchorTimestamp = entry.flight.timestamp;
+    this.rebuildSelectedTrailSegments(entry.flight);
+    this.updateSelectedTrailGluePoint(entry);
+    this.requestRender();
+  }
+
+  private updateSelectedTrailGluePoint(entry: FlightRenderEntry) {
+    if (
+      this.activeTrailFlightId !== entry.flight.id ||
+      !this.activeTrailHasGluePoint ||
+      this.activeTrailPositions.length < 2 ||
+      this.selectedTrailSegments.length === 0
+    ) {
+      return;
+    }
+
+    const glueIndex = this.activeTrailPositions.length - 1;
+    const altitudeMeters = Math.max(0, getRenderedFlightState(entry).altitudeMeters);
+
+    Cartesian3.clone(entry.sharedFramePosition, this.activeTrailPositions[glueIndex]);
+    this.activeTrailAltitudesMeters[glueIndex] = altitudeMeters;
+
+    const lastSegment = this.selectedTrailSegments[this.selectedTrailSegments.length - 1];
+    lastSegment.positions = [
+      this.activeTrailPositions[glueIndex - 1],
+      this.activeTrailPositions[glueIndex],
+    ];
+    lastSegment.material = Material.fromType(Material.ColorType, {
+      color: getTrailSegmentColor(entry.flight, altitudeMeters),
+    });
+  }
+
+  private updateTrailSegmentVisibility() {
+    const show = this.flightsVisible && this.showSelectedTrail;
+    for (const segment of this.selectedTrailSegments) {
+      segment.show = show;
+    }
+  }
+
+  private removeFlightEntry(flightId: string) {
+    const entry = this.flightEntries.get(flightId);
+    if (!entry) {
+      return;
+    }
+
+    this.flightDots.remove(entry.dot);
+    this.flightBillboards.remove(entry.icon);
+    this.flightEntries.delete(flightId);
+
+    if (this.activeTrailFlightId === flightId) {
+      this.clearSelectedTrail();
+    }
+
+    if (this.routeState.flightId === flightId) {
+      this.routeState = {
+        snapshot: null,
+        flightId: null,
+      };
       this.refreshRouteOverlay();
+    }
+
+    if (this.selectedFlightId === flightId) {
+      this.selectedFlightId = null;
+      this.selectedFlightLabel.show = false;
     }
   }
 }
 
-function buildTrailPositions(
-  flight: FlightRecord,
-  predictedHead?: {
-    latitude: number;
-    longitude: number;
-    altitudeMeters: number;
-  },
-) {
-  const trail = (flight.trail ?? []).map((point) => ({
-    latitude: point.latitude,
-    longitude: point.longitude,
-    altitudeMeters: Math.max(0, point.altitudeMeters),
-  }));
+function buildOpenSkyTrailData(path: Array<{
+  latitude: number;
+  longitude: number;
+  baroAltitudeMeters: number;
+}>) {
+  const flatArray: number[] = [];
+  const altitudesMeters: number[] = [];
 
-  const liveHead = predictedHead ?? predictFlightPosition(
-    flight,
-    Math.min(20, Math.max(0, Date.now() / 1000 - flight.timestamp)),
-  );
-
-  if (trail.length === 0) {
-    trail.push({
-      latitude: liveHead.latitude,
-      longitude: liveHead.longitude,
-      altitudeMeters: Math.max(0, liveHead.altitudeMeters),
-    });
-  } else {
-    const lastPoint = trail[trail.length - 1];
-    const distanceToHeadMeters = estimateDistanceMeters(lastPoint, liveHead);
-
-    if (distanceToHeadMeters > 15) {
-      const interpolationSteps = Math.max(
-        1,
-        Math.min(4, Math.round(distanceToHeadMeters / 350)),
-      );
-
-      for (let index = 1; index <= interpolationSteps; index += 1) {
-        const fraction = index / interpolationSteps;
-        trail.push({
-          latitude: lastPoint.latitude + (liveHead.latitude - lastPoint.latitude) * fraction,
-          longitude: interpolateLongitude(lastPoint.longitude, liveHead.longitude, fraction),
-          altitudeMeters:
-            lastPoint.altitudeMeters +
-            (Math.max(0, liveHead.altitudeMeters) - lastPoint.altitudeMeters) * fraction,
-        });
-      }
-    }
+  for (const point of path) {
+    const altitudeMeters = Math.max(0, point.baroAltitudeMeters);
+    flatArray.push(point.longitude, point.latitude, altitudeMeters);
+    altitudesMeters.push(altitudeMeters);
   }
 
-  return trail.map((point) =>
-    Cartesian3.fromDegrees(
-      point.longitude,
-      point.latitude,
-      point.altitudeMeters,
-    ),
+  return {
+    positions: Cartesian3.fromDegreesArrayHeights(flatArray),
+    altitudesMeters,
+  };
+}
+
+function buildFlightApiCartesian(flight: FlightRecord) {
+  return Cartesian3.fromDegrees(
+    flight.longitude,
+    flight.latitude,
+    Math.max(0, flight.altitudeMeters),
   );
+}
+
+function getRenderedFlightState(entry: FlightRenderEntry) {
+  const cartographic = Cartographic.fromCartesian(entry.sharedFramePosition);
+  if (!cartographic) {
+    return {
+      latitude: entry.targetLatitude,
+      longitude: entry.targetLongitude,
+      altitudeMeters: entry.targetAltitudeMeters,
+    };
+  }
+
+  return {
+    latitude: CesiumMath.toDegrees(cartographic.latitude),
+    longitude: CesiumMath.toDegrees(cartographic.longitude),
+    altitudeMeters: Math.max(0, cartographic.height),
+  };
+}
+
+function getTrailSegmentColor(referenceFlight: FlightRecord | null, altitudeMeters: number) {
+  if (!referenceFlight) {
+    return Color.CYAN.withAlpha(0.8);
+  }
+
+  const css = getFlightAltitudeColorCss(
+    {
+      ...referenceFlight,
+      altitudeMeters,
+    },
+    false,
+  );
+
+  return Color.fromCssColorString(css).withAlpha(0.8);
 }
 
 function buildRouteArcPositions(
@@ -599,9 +868,17 @@ function buildRouteArcPositions(
   const spline = new CatmullRomSpline({
     times: [0, 0.28, 0.5, 0.72, 1],
     points: [
-      Cartesian3.fromDegrees(originPoint.longitude, originPoint.latitude, originPoint.altitudeMeters),
+      Cartesian3.fromDegrees(
+        originPoint.longitude,
+        originPoint.latitude,
+        originPoint.altitudeMeters,
+      ),
       supportA,
-      Cartesian3.fromDegrees(livePoint.longitude, livePoint.latitude, livePoint.altitudeMeters),
+      Cartesian3.fromDegrees(
+        livePoint.longitude,
+        livePoint.latitude,
+        livePoint.altitudeMeters,
+      ),
       supportB,
       Cartesian3.fromDegrees(
         destinationPoint.longitude,
@@ -648,26 +925,6 @@ function buildRouteSupportPoint(
   );
 }
 
-function estimateDistanceMeters(
-  start: { latitude: number; longitude: number },
-  end: { latitude: number; longitude: number },
-) {
-  const geodesic = new EllipsoidGeodesic(
-    Cartographic.fromDegrees(start.longitude, start.latitude),
-    Cartographic.fromDegrees(end.longitude, end.latitude),
-  );
-
-  return Number.isFinite(geodesic.surfaceDistance) ? geodesic.surfaceDistance : 0;
-}
-
-function interpolateLongitude(startLongitude: number, endLongitude: number, fraction: number) {
-  let delta = endLongitude - startLongitude;
-  if (delta > 180) delta -= 360;
-  if (delta < -180) delta += 360;
-  const interpolated = startLongitude + delta * fraction;
-  return ((((interpolated + 180) % 360) + 360) % 360) - 180;
-}
-
 function getAirportAppearance(airport: AirportRecord) {
   switch (airport.type) {
     case 'large_airport':
@@ -703,6 +960,35 @@ function getAirportAppearance(airport: AirportRecord) {
         distanceDisplayCondition: new DistanceDisplayCondition(0, 1_200_000),
       };
   }
+}
+
+function rectangleContainsLonLat(
+  rectangle: { west: number; east: number; south: number; north: number },
+  longitudeDegrees: number,
+  latitudeDegrees: number,
+) {
+  const west = CesiumMath.toDegrees(rectangle.west);
+  const east = CesiumMath.toDegrees(rectangle.east);
+  const south = CesiumMath.toDegrees(rectangle.south);
+  const north = CesiumMath.toDegrees(rectangle.north);
+
+  if (latitudeDegrees < south || latitudeDegrees > north) {
+    return false;
+  }
+
+  if (west <= east) {
+    return longitudeDegrees >= west && longitudeDegrees <= east;
+  }
+
+  return longitudeDegrees >= west || longitudeDegrees <= east;
+}
+
+function cloneColorWithOpacity(color: Color, opacity: number) {
+  return new Color(color.red, color.green, color.blue, color.alpha * opacity);
+}
+
+function clamp01(value: number) {
+  return Math.max(0, Math.min(1, value));
 }
 
 function isFlightPickId(value: unknown): value is FlightPickId {

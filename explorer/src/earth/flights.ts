@@ -46,6 +46,25 @@ export interface FlightRouteSnapshot {
   error?: string;
 }
 
+export interface FlightTracePoint {
+  time: number;
+  latitude: number;
+  longitude: number;
+  baroAltitudeMeters: number;
+  trueTrack: number | null;
+  onGround: boolean;
+}
+
+export interface FlightTraceSnapshot {
+  icao24: string;
+  found: boolean;
+  startTime?: number | null;
+  endTime?: number | null;
+  callsign?: string | null;
+  path: FlightTracePoint[];
+  error?: string;
+}
+
 export interface FlightFeedSnapshot {
   source: 'opensky' | 'mock';
   authMode: 'oauth' | 'anonymous' | 'fallback';
@@ -71,6 +90,7 @@ const FLIGHT_API_BASE = import.meta.env.VITE_FLIGHT_API_BASE?.trim() ?? '';
 
 export const FLIGHT_API_URL = `${FLIGHT_API_BASE}/api/flights`;
 export const FLIGHT_ROUTE_API_BASE_URL = `${FLIGHT_API_BASE}/api/route`;
+export const FLIGHT_TRACE_API_BASE_URL = `${FLIGHT_API_BASE}/api/trace`;
 export const AIRPORTS_API_URL = `${FLIGHT_API_BASE}/api/airports`;
 export const FLIGHT_POLL_INTERVAL_MS = 15_000;
 export const FLIGHT_ICON_ALTITUDE_THRESHOLD = 3_500_000;
@@ -292,6 +312,23 @@ export async function fetchFlightRoute(callsign: string, signal?: AbortSignal) {
   }
 
   return (await response.json()) as FlightRouteSnapshot;
+}
+
+export async function fetchFlightTrace(icao24: string, signal?: AbortSignal) {
+  const response = await fetch(
+    `${FLIGHT_TRACE_API_BASE_URL}/${encodeURIComponent(icao24.trim().toLowerCase())}`,
+    { signal },
+  );
+
+  if (response.status === 404) {
+    return (await response.json()) as FlightTraceSnapshot;
+  }
+
+  if (!response.ok) {
+    throw new Error(await readErrorMessage(response, 'Trace lookup'));
+  }
+
+  return (await response.json()) as FlightTraceSnapshot;
 }
 
 export async function fetchAirports(signal?: AbortSignal) {

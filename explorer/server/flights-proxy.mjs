@@ -100,6 +100,41 @@ createServer(async (req, res) => {
     return;
   }
 
+  if (pathname.startsWith('/api/trace/') && req.method === 'GET') {
+    const hex = normalizeAircraftIcao24(
+      decodeURIComponent(pathname.slice('/api/trace/'.length)).trim(),
+    );
+
+    if (!hex) {
+      sendJson(res, 400, {
+        icao24: null,
+        found: false,
+        path: [],
+        error: 'A valid ICAO24 hex code is required.',
+      });
+      return;
+    }
+
+    try {
+      const trace = await fetchTraceForIcao24(hex);
+      if (!trace.found) {
+        sendJson(res, 404, trace);
+        return;
+      }
+
+      sendJson(res, 200, trace);
+    } catch (error) {
+      console.error(`[flights-proxy] Failed to resolve trace for ${hex}:`, error);
+      sendJson(res, 502, {
+        icao24: hex,
+        found: false,
+        path: [],
+        error: error instanceof Error ? error.message : 'Unknown trace lookup error',
+      });
+    }
+    return;
+  }
+
   if (pathname.startsWith('/api/route/') && req.method === 'GET') {
     if (!airportIndex.available) {
       sendJson(res, 503, {
@@ -346,6 +381,54 @@ async function fetchRouteForCallsign(callsign) {
   };
 }
 
+async function fetchTraceForIcao24(icao24) {
+  const authHeaders = await getOpenSkyHeaders();
+  const response = await fetch(
+    `${OPENSKY_API_BASE}/tracks/all?icao24=${encodeURIComponent(icao24)}&time=0`,
+    { headers: authHeaders },
+  );
+
+  if (response.status === 404) {
+    return {
+      icao24,
+      found: false,
+      path: [],
+      error: 'No OpenSky track history was found for this aircraft.',
+    };
+  }
+
+  if (!response.ok) {
+    throw new Error(`OpenSky track lookup returned ${response.status}`);
+  }
+
+  const payload = await response.json();
+  const rawPath = Array.isArray(payload?.path) ? payload.path : [];
+  const path = rawPath
+    .map(normalizeOpenSkyTrackPoint)
+    .filter(Boolean);
+
+  if (path.length === 0) {
+    return {
+      icao24,
+      found: false,
+      startTime: toFiniteNumber(payload?.startTime),
+      endTime: toFiniteNumber(payload?.endTime),
+      callsign: normalizeTextField(payload?.callsign),
+      path: [],
+      error: 'OpenSky returned no usable path points for this aircraft.',
+    };
+  }
+
+  return {
+    icao24,
+    found: true,
+    startTime: toFiniteNumber(payload?.startTime),
+    endTime: toFiniteNumber(payload?.endTime),
+    callsign: normalizeTextField(payload?.callsign),
+    path,
+  };
+}
+
 async function getOpenSkyHeaders() {
   const clientId = process.env.OPENSKY_CLIENT_ID?.trim();
   const clientSecret = process.env.OPENSKY_CLIENT_SECRET?.trim();
@@ -414,6 +497,30 @@ function normalizeOpenSkyState(row, snapshotTime) {
     timestamp: lastContact,
     categoryCode: toFiniteNumber(row[17]),
     ...lookupAircraftMetadata(String(row[0] || '').trim().toLowerCase()),
+  };
+}
+
+function normalizeOpenSkyTrackPoint(row) {
+  if (!Array.isArray(row)) return null;
+
+  const time = toFiniteNumber(row[0]);
+  const latitude = toFiniteNumber(row[1]);
+  const longitude = toFiniteNumber(row[2]);
+  const baroAltitudeMeters = toFiniteNumber(row[3]);
+  const trueTrack = toFiniteNumber(row[4]);
+  const onGround = Boolean(row[5]);
+
+  if (time === null || latitude === null || longitude === null) {
+    return null;
+  }
+
+  return {
+    time,
+    latitude,
+    longitude,
+    baroAltitudeMeters: onGround ? 0 : Math.max(0, baroAltitudeMeters ?? 0),
+    trueTrack,
+    onGround,
   };
 }
 

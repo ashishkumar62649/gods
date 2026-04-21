@@ -20,6 +20,7 @@ interface FlightDetailsPanelProps {
   isCockpitMode: boolean;
   showRoute: boolean;
   showTrail: boolean;
+  onFocus: () => void;
   onToggleDrone: () => void;
   onToggleCockpit: () => void;
   onToggleTracking: () => void;
@@ -37,6 +38,7 @@ export default function FlightDetailsPanel({
   isCockpitMode,
   showRoute,
   showTrail,
+  onFocus,
   onToggleDrone,
   onToggleCockpit,
   onToggleTracking,
@@ -70,6 +72,14 @@ export default function FlightDetailsPanel({
       </div>
 
       <div className="flight-panel__controls">
+        <button
+          type="button"
+          className="flight-panel__action"
+          onClick={onFocus}
+          title="Focus the camera on the selected aircraft"
+        >
+          Focus
+        </button>
         <button
           type="button"
           className={

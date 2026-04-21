@@ -164,6 +164,17 @@ export function getFlightIconKey(flight: FlightRecord): FlightIconKey {
   return resolveFlightIconPreset(flight).shape;
 }
 
+export function getFlightIconRotationRadians(flight: FlightRecord) {
+  const preset = resolveFlightIconPreset(flight);
+  const shape = SHAPES[preset.shape];
+
+  if (shape.noRotate) {
+    return 0;
+  }
+
+  return (flight.headingDegrees * Math.PI) / 180;
+}
+
 export function getFlightAltitudeColorCss(flight: FlightRecord, selected = false) {
   const altitudeFeet = Number.isFinite(flight.altitudeMeters)
     ? Math.max(0, flight.altitudeMeters * METERS_TO_FEET)

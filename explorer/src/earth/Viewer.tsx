@@ -2799,6 +2799,14 @@ export default function Viewer() {
           isCockpitMode={cockpitFlightId === selectedFlight?.id}
           showRoute={showSelectedFlightRoute}
           showTrail={showSelectedFlightTrail}
+          onFocus={() => {
+            if (!selectedFlight) return;
+            cancelAutoLandmarkExperience();
+            focusFlight(selectedFlight, {
+              duration: 1.2,
+              secondsAhead: 0,
+            });
+          }}
           onToggleDrone={toggleSelectedFlightDrone}
           onToggleCockpit={toggleSelectedFlightCockpit}
           onToggleTracking={toggleSelectedFlightTracking}
