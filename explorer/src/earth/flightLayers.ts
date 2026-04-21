@@ -11,6 +11,7 @@ import {
   Label,
   LabelCollection,
   LabelStyle,
+  Material,
   Math as CesiumMath,
   NearFarScalar,
   PointPrimitive,
@@ -111,14 +112,18 @@ export class FlightSceneLayerManager {
     this.selectedTrailPolyline = this.trailPolylines.add({
       show: false,
       width: 3.5,
-      material: Color.fromCssColorString('#7effcf').withAlpha(0.42),
+      material: Material.fromType(Material.ColorType, {
+        color: Color.fromCssColorString('#7effcf').withAlpha(0.42),
+      }),
       positions: [],
     });
 
     this.routeArcPolyline = this.routePolylines.add({
       show: false,
       width: 4.2,
-      material: Color.fromCssColorString('#85c6ff').withAlpha(0.72),
+      material: Material.fromType(Material.ColorType, {
+        color: Color.fromCssColorString('#85c6ff').withAlpha(0.72),
+      }),
       positions: [],
     });
 
@@ -354,7 +359,7 @@ export class FlightSceneLayerManager {
     );
 
     const trailPositions = this.showSelectedTrail
-      ? buildTrailPositions(selectedFlight)
+      ? buildTrailPositions(selectedFlight, predicted)
       : [];
 
     this.selectedTrailPolyline.show = this.flightsVisible && trailPositions.length > 1;
@@ -422,15 +427,61 @@ export class FlightSceneLayerManager {
   }
 }
 
-function buildTrailPositions(flight: FlightRecord) {
-  return (flight.trail ?? [])
-    .map((point) =>
-      Cartesian3.fromDegrees(
-        point.longitude,
-        point.latitude,
-        Math.max(0, point.altitudeMeters),
-      ),
-    );
+function buildTrailPositions(
+  flight: FlightRecord,
+  predictedHead?: {
+    latitude: number;
+    longitude: number;
+    altitudeMeters: number;
+  },
+) {
+  const trail = (flight.trail ?? []).map((point) => ({
+    latitude: point.latitude,
+    longitude: point.longitude,
+    altitudeMeters: Math.max(0, point.altitudeMeters),
+  }));
+
+  const liveHead = predictedHead ?? predictFlightPosition(
+    flight,
+    Math.min(20, Math.max(0, Date.now() / 1000 - flight.timestamp)),
+  );
+
+  if (trail.length === 0) {
+    trail.push({
+      latitude: liveHead.latitude,
+      longitude: liveHead.longitude,
+      altitudeMeters: Math.max(0, liveHead.altitudeMeters),
+    });
+  } else {
+    const lastPoint = trail[trail.length - 1];
+    const distanceToHeadMeters = estimateDistanceMeters(lastPoint, liveHead);
+
+    if (distanceToHeadMeters > 15) {
+      const interpolationSteps = Math.max(
+        1,
+        Math.min(4, Math.round(distanceToHeadMeters / 350)),
+      );
+
+      for (let index = 1; index <= interpolationSteps; index += 1) {
+        const fraction = index / interpolationSteps;
+        trail.push({
+          latitude: lastPoint.latitude + (liveHead.latitude - lastPoint.latitude) * fraction,
+          longitude: interpolateLongitude(lastPoint.longitude, liveHead.longitude, fraction),
+          altitudeMeters:
+            lastPoint.altitudeMeters +
+            (Math.max(0, liveHead.altitudeMeters) - lastPoint.altitudeMeters) * fraction,
+        });
+      }
+    }
+  }
+
+  return trail.map((point) =>
+    Cartesian3.fromDegrees(
+      point.longitude,
+      point.latitude,
+      point.altitudeMeters,
+    ),
+  );
 }
 
 function buildRouteArcPositions(
@@ -497,6 +548,26 @@ function sampleArcSegment(
   }
 
   return positions;
+}
+
+function estimateDistanceMeters(
+  start: { latitude: number; longitude: number },
+  end: { latitude: number; longitude: number },
+) {
+  const geodesic = new EllipsoidGeodesic(
+    Cartographic.fromDegrees(start.longitude, start.latitude),
+    Cartographic.fromDegrees(end.longitude, end.latitude),
+  );
+
+  return Number.isFinite(geodesic.surfaceDistance) ? geodesic.surfaceDistance : 0;
+}
+
+function interpolateLongitude(startLongitude: number, endLongitude: number, fraction: number) {
+  let delta = endLongitude - startLongitude;
+  if (delta > 180) delta -= 360;
+  if (delta < -180) delta += 360;
+  const interpolated = startLongitude + delta * fraction;
+  return ((((interpolated + 180) % 360) + 360) % 360) - 180;
 }
 
 function isFlightPickId(value: unknown): value is FlightPickId {
