@@ -1,166 +1,173 @@
-# Graph Report - E:\ashis\god eyes  (2026-04-21)
+# Graph Report - .  (2026-04-21)
 
 ## Corpus Check
-- Corpus is ~32,308 words - fits in a single context window. You may not need a graph.
+- Corpus is ~42,309 words - fits in a single context window. You may not need a graph.
 
 ## Summary
-- 84 nodes · 97 edges · 18 communities detected
-- Extraction: 92% EXTRACTED · 8% INFERRED · 0% AMBIGUOUS · INFERRED: 8 edges (avg confidence: 0.79)
+- 99 nodes · 147 edges · 20 communities detected
+- Extraction: 90% EXTRACTED · 10% INFERRED · 0% AMBIGUOUS · INFERRED: 14 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
-- [[_COMMUNITY_Viewer Camera and Globe Controls|Viewer Camera and Globe Controls]]
-- [[_COMMUNITY_Product Direction and Core Features|Product Direction and Core Features]]
-- [[_COMMUNITY_Flight Proxy Backend|Flight Proxy Backend]]
-- [[_COMMUNITY_Flight Data Utilities|Flight Data Utilities]]
-- [[_COMMUNITY_Flight Intel Experience|Flight Intel Experience]]
-- [[_COMMUNITY_Legacy Camera Rig Orbit|Legacy Camera Rig Orbit]]
-- [[_COMMUNITY_Legacy Earth Texture|Legacy Earth Texture]]
-- [[_COMMUNITY_Application Entry Points|Application Entry Points]]
-- [[_COMMUNITY_Legacy Lighting|Legacy Lighting]]
-- [[_COMMUNITY_Legacy Scene Composition|Legacy Scene Composition]]
-- [[_COMMUNITY_Explorer Vite Type Stub|Explorer Vite Type Stub]]
-- [[_COMMUNITY_Explorer Vite Config JS|Explorer Vite Config JS]]
-- [[_COMMUNITY_Explorer Vite Config TS|Explorer Vite Config TS]]
-- [[_COMMUNITY_Explorer Main Entry|Explorer Main Entry]]
-- [[_COMMUNITY_Explorer Vite Env Types|Explorer Vite Env Types]]
-- [[_COMMUNITY_Legacy Vite Config|Legacy Vite Config]]
-- [[_COMMUNITY_Legacy Main Entry|Legacy Main Entry]]
-- [[_COMMUNITY_Legacy Constants|Legacy Constants]]
+- [[_COMMUNITY_Flight Scene Visuals|Flight Scene Visuals]]
+- [[_COMMUNITY_Flight UI & Formatting|Flight UI & Formatting]]
+- [[_COMMUNITY_Viewer Core Navigation|Viewer Core Navigation]]
+- [[_COMMUNITY_Flight Proxy Server|Flight Proxy Server]]
+- [[_COMMUNITY_Proxy Airport Data|Proxy Airport Data]]
+- [[_COMMUNITY_Flight Path Interactivity|Flight Path Interactivity]]
+- [[_COMMUNITY_Proxy OpenSky Feed|Proxy OpenSky Feed]]
+- [[_COMMUNITY_Old Globe Camera|Old Globe Camera]]
+- [[_COMMUNITY_Proxy Data Normalization|Proxy Data Normalization]]
+- [[_COMMUNITY_App Entry|App Entry]]
+- [[_COMMUNITY_Old Globe Lights|Old Globe Lights]]
+- [[_COMMUNITY_Old Globe Scene|Old Globe Scene]]
+- [[_COMMUNITY_Vite Configuration|Vite Configuration]]
+- [[_COMMUNITY_Vite Configuration|Vite Configuration]]
+- [[_COMMUNITY_Vite Configuration|Vite Configuration]]
+- [[_COMMUNITY_Vite Configuration|Vite Configuration]]
+- [[_COMMUNITY_Vite Configuration|Vite Configuration]]
+- [[_COMMUNITY_Vite Configuration|Vite Configuration]]
+- [[_COMMUNITY_Vite Configuration|Vite Configuration]]
+- [[_COMMUNITY_Vite Configuration|Vite Configuration]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `Cesium 3D Earth Explorer` - 10 edges
-2. `Flight Layer` - 6 edges
-3. `refreshSnapshot()` - 4 edges
-4. `fetchOpenSkySnapshot()` - 4 edges
-5. `getCameraCartographic()` - 4 edges
-6. `normalizeOpenSkyState()` - 3 edges
-7. `buildMockSnapshot()` - 3 edges
-8. `toFiniteNumber()` - 3 edges
-9. `normalizeHeading()` - 3 edges
-10. `flyObliqueToDestination()` - 3 edges
+1. `FlightSceneLayerManager` - 19 edges
+2. `pollForViewer()` - 10 edges
+3. `fetchRouteForCallsign()` - 5 edges
+4. `refreshSnapshot()` - 4 edges
+5. `fetchOpenSkySnapshot()` - 4 edges
+6. `loadAirportIndex()` - 4 edges
+7. `normalizeAirportRow()` - 4 edges
+8. `toFiniteNumber()` - 4 edges
+9. `getCameraCartographic()` - 4 edges
+10. `stabilizeFlights()` - 3 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `Legacy Hero Globe Prototype` --semantically_similar_to--> `Cesium 3D Earth Explorer`  [INFERRED] [semantically similar]
-  old-hero-globe\public\textures\README.txt → PROJECT_STATE.md
-- `OpenSky Network` --conceptually_related_to--> `Flight Layer`  [INFERRED]
-  explorer\server\flights-proxy.mjs → PROJECT_STATE.md
 - `pollForViewer()` --calls--> `getFlightRenderMode()`  [INFERRED]
   explorer\src\earth\Viewer.tsx → explorer\src\earth\flights.ts
+- `FlightDetailsPanel()` --calls--> `getAirportDisplayCode()`  [INFERRED]
+  explorer\src\earth\FlightDetailsPanel.tsx → explorer\src\earth\flights.ts
 - `loadFlights()` --calls--> `fetchFlightSnapshot()`  [INFERRED]
   explorer\src\earth\Viewer.tsx → explorer\src\earth\flights.ts
 - `getFlightCameraTarget()` --calls--> `predictFlightPosition()`  [INFERRED]
   explorer\src\earth\Viewer.tsx → explorer\src\earth\flights.ts
-
-## Hyperedges (group relationships)
-- **Core Globe Experience** — feature_smooth_globe_navigation, feature_place_search, feature_imagery_switching, feature_3d_buildings, feature_landmark_orbiting [EXTRACTED 0.95]
+- `CameraRig()` --calls--> `useIdleRotation()`  [INFERRED]
+  old-hero-globe\src\scene\CameraRig.jsx → old-hero-globe\src\hooks\useIdleRotation.js
 
 ## Communities
 
-### Community 0 - "Viewer Camera and Globe Controls"
-Cohesion: 0.19
-Nodes (9): getFlightRenderMode(), eventCameFromHud(), flyObliqueToDestination(), flyObliqueToPoint(), getCameraCartographic(), pollForViewer(), stopFromInteraction(), stopFromPointerMove() (+1 more)
+### Community 0 - "Flight Scene Visuals"
+Cohesion: 0.27
+Nodes (3): FlightSceneLayerManager, getFlightDisplayName(), pollForViewer()
 
-### Community 1 - "Product Direction and Core Features"
+### Community 1 - "Flight UI & Formatting"
 Cohesion: 0.13
-Nodes (9): Legacy Hero Globe Prototype, Control-first now, premium polish layered later, 3D Buildings, Cesium 3D Earth Explorer, Imagery Switching, Landmark Orbiting, Place Search, Smooth Globe Navigation (+1 more)
+Nodes (7): FlightDetailsPanel(), fetchFlightSnapshot(), getAirportDisplayCode(), getFlightRenderMode(), predictFlightPosition(), getFlightCameraTarget(), loadFlights()
 
-### Community 2 - "Flight Proxy Backend"
+### Community 2 - "Viewer Core Navigation"
+Cohesion: 0.22
+Nodes (7): eventCameFromHud(), flyObliqueToDestination(), flyObliqueToPoint(), getCameraCartographic(), stopFromInteraction(), stopFromPointerMove(), updateZoomForAltitude()
+
+### Community 3 - "Flight Proxy Server"
 Cohesion: 0.24
-Nodes (10): buildMockFlights(), buildMockSnapshot(), fetchOpenSkySnapshot(), getFlightSnapshot(), getOpenSkyHeaders(), normalizeHeading(), normalizeOpenSkyState(), refreshSnapshot() (+2 more)
+Nodes (4): buildMockFlights(), buildMockSnapshot(), getFlightSnapshot(), refreshSnapshot()
 
-### Community 3 - "Flight Data Utilities"
-Cohesion: 0.2
-Nodes (4): fetchFlightSnapshot(), predictFlightPosition(), getFlightCameraTarget(), loadFlights()
-
-### Community 4 - "Flight Intel Experience"
+### Community 4 - "Proxy Airport Data"
 Cohesion: 0.29
-Nodes (5): Local Flight Proxy, Flight Layer, Live Intelligence Layers, Selected Flight Focus and Track Controls, OpenSky Network
+Nodes (8): buildAirportCodes(), extractRouteCodes(), fetchRouteForCallsign(), loadAirportIndex(), normalizeAirportCode(), normalizeAirportRow(), normalizeCallsign(), serializeAirport()
 
-### Community 5 - "Legacy Camera Rig Orbit"
+### Community 5 - "Flight Path Interactivity"
+Cohesion: 0.33
+Nodes (4): buildRouteArcPositions(), buildTrailPositions(), isFlightPickId(), sampleArcSegment()
+
+### Community 6 - "Proxy OpenSky Feed"
+Cohesion: 0.5
+Nodes (4): appendTrailPoint(), fetchOpenSkySnapshot(), getOpenSkyHeaders(), stabilizeFlights()
+
+### Community 7 - "Old Globe Camera"
 Cohesion: 0.5
 Nodes (2): CameraRig(), useIdleRotation()
 
-### Community 6 - "Legacy Earth Texture"
-Cohesion: 0.5
-Nodes (1): NASA Blue Marble Imagery
+### Community 8 - "Proxy Data Normalization"
+Cohesion: 1.0
+Nodes (3): normalizeHeading(), normalizeOpenSkyState(), toFiniteNumber()
 
-### Community 7 - "Application Entry Points"
+### Community 9 - "App Entry"
 Cohesion: 0.67
 Nodes (1): App()
 
-### Community 8 - "Legacy Lighting"
+### Community 10 - "Old Globe Lights"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 9 - "Legacy Scene Composition"
+### Community 11 - "Old Globe Scene"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 10 - "Explorer Vite Type Stub"
+### Community 12 - "Vite Configuration"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 11 - "Explorer Vite Config JS"
+### Community 13 - "Vite Configuration"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 12 - "Explorer Vite Config TS"
+### Community 14 - "Vite Configuration"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 13 - "Explorer Main Entry"
+### Community 15 - "Vite Configuration"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 14 - "Explorer Vite Env Types"
+### Community 16 - "Vite Configuration"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 15 - "Legacy Vite Config"
+### Community 17 - "Vite Configuration"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 16 - "Legacy Main Entry"
+### Community 18 - "Vite Configuration"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 17 - "Legacy Constants"
+### Community 19 - "Vite Configuration"
 Cohesion: 1.0
 Nodes (0): 
 
 ## Knowledge Gaps
-- **3 isolated node(s):** `God Eyes Explorer`, `Control-first now, premium polish layered later`, `Legacy Hero Globe Prototype`
-  These have ≤1 connection - possible missing edges or undocumented components.
-- **Thin community `Legacy Lighting`** (2 nodes): `Lights()`, `Lights.jsx`
+- **Thin community `Old Globe Lights`** (2 nodes): `Lights()`, `Lights.jsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Legacy Scene Composition`** (2 nodes): `Scene.jsx`, `Scene()`
+- **Thin community `Old Globe Scene`** (2 nodes): `Scene.jsx`, `Scene()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Explorer Vite Type Stub`** (1 nodes): `vite.config.d.ts`
+- **Thin community `Vite Configuration`** (1 nodes): `vite.config.d.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Explorer Vite Config JS`** (1 nodes): `vite.config.js`
+- **Thin community `Vite Configuration`** (1 nodes): `vite.config.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Explorer Vite Config TS`** (1 nodes): `vite.config.ts`
+- **Thin community `Vite Configuration`** (1 nodes): `vite.config.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Explorer Main Entry`** (1 nodes): `main.tsx`
+- **Thin community `Vite Configuration`** (1 nodes): `main.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Explorer Vite Env Types`** (1 nodes): `vite-env.d.ts`
+- **Thin community `Vite Configuration`** (1 nodes): `vite-env.d.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Legacy Vite Config`** (1 nodes): `vite.config.js`
+- **Thin community `Vite Configuration`** (1 nodes): `vite.config.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Legacy Main Entry`** (1 nodes): `main.jsx`
+- **Thin community `Vite Configuration`** (1 nodes): `main.jsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Legacy Constants`** (1 nodes): `constants.js`
+- **Thin community `Vite Configuration`** (1 nodes): `constants.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Flight Layer` connect `Flight Intel Experience` to `Viewer Camera and Globe Controls`, `Flight Proxy Backend`, `Flight Data Utilities`?**
-  _High betweenness centrality (0.282) - this node is a cross-community bridge._
-- **Why does `Cesium 3D Earth Explorer` connect `Product Direction and Core Features` to `Viewer Camera and Globe Controls`, `Flight Intel Experience`?**
-  _High betweenness centrality (0.143) - this node is a cross-community bridge._
-- **What connects `God Eyes Explorer`, `Control-first now, premium polish layered later`, `Legacy Hero Globe Prototype` to the rest of the system?**
-  _3 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `Product Direction and Core Features` be split into smaller, more focused modules?**
+- **Why does `pollForViewer()` connect `Flight Scene Visuals` to `Flight UI & Formatting`, `Viewer Core Navigation`?**
+  _High betweenness centrality (0.113) - this node is a cross-community bridge._
+- **Why does `FlightSceneLayerManager` connect `Flight Scene Visuals` to `Flight Path Interactivity`?**
+  _High betweenness centrality (0.078) - this node is a cross-community bridge._
+- **Why does `getFlightDisplayName()` connect `Flight Scene Visuals` to `Flight UI & Formatting`?**
+  _High betweenness centrality (0.046) - this node is a cross-community bridge._
+- **Are the 8 inferred relationships involving `pollForViewer()` (e.g. with `.setFlightsVisible()` and `.setAirportsVisible()`) actually correct?**
+  _`pollForViewer()` has 8 INFERRED edges - model-reasoned connections that need verification._
+- **Should `Flight UI & Formatting` be split into smaller, more focused modules?**
   _Cohesion score 0.13 - nodes in this community are weakly interconnected._

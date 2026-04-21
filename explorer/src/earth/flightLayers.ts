@@ -31,6 +31,7 @@ import {
   FLIGHT_ICON_IMAGE,
   getFlightDisplayName,
   ORIGIN_AIRPORT_ICON_IMAGE,
+  predictFlightPosition,
   SELECTED_FLIGHT_ICON_IMAGE,
 } from './flights';
 
@@ -69,6 +70,7 @@ export class FlightSceneLayerManager {
   private readonly selectedFlightLabel: Label;
   private readonly selectedTrailPolyline: Polyline;
   private readonly routeArcPolyline: Polyline;
+  private readonly removePostRender: (() => void) | undefined;
   private flightsVisible = false;
   private airportsVisible = false;
   private renderMode: FlightRenderMode = 'dot';
@@ -104,7 +106,6 @@ export class FlightSceneLayerManager {
       pixelOffset: new Cartesian2(0, -38),
       verticalOrigin: VerticalOrigin.BOTTOM,
       horizontalOrigin: HorizontalOrigin.CENTER,
-      disableDepthTestDistance: Number.POSITIVE_INFINITY,
     });
 
     this.selectedTrailPolyline = this.trailPolylines.add({
@@ -125,9 +126,13 @@ export class FlightSceneLayerManager {
     this.routeAirportBillboards.show = true;
 
     this.viewer.scene.primitives.add(this.root);
+    this.removePostRender = this.viewer.scene.postRender.addEventListener(() => {
+      this.updateAnimatedFlightPositions();
+    });
   }
 
   destroy() {
+    this.removePostRender?.();
     if (!this.viewer.isDestroyed()) {
       this.viewer.scene.primitives.remove(this.root);
       this.viewer.scene.requestRender();
@@ -174,7 +179,6 @@ export class FlightSceneLayerManager {
           dot: this.flightDots.add({
             id: { kind: 'flight', flightId: flight.id } satisfies FlightPickId,
             position: Cartesian3.ZERO,
-            disableDepthTestDistance: Number.POSITIVE_INFINITY,
           }),
           icon: this.flightBillboards.add({
             id: { kind: 'flight', flightId: flight.id } satisfies FlightPickId,
@@ -183,7 +187,6 @@ export class FlightSceneLayerManager {
             verticalOrigin: VerticalOrigin.CENTER,
             horizontalOrigin: HorizontalOrigin.CENTER,
             scaleByDistance: new NearFarScalar(5_000, 1.1, 20_000_000, 0.48),
-            disableDepthTestDistance: Number.POSITIVE_INFINITY,
           }),
         };
 
@@ -227,7 +230,6 @@ export class FlightSceneLayerManager {
         scaleByDistance: new NearFarScalar(30_000, 1.1, 15_000_000, 0.26),
         distanceDisplayCondition: new DistanceDisplayCondition(0, 25_000_000),
         color: Color.fromCssColorString('#a6e5ff').withAlpha(0.82),
-        disableDepthTestDistance: Number.POSITIVE_INFINITY,
       });
     }
 
@@ -275,10 +277,15 @@ export class FlightSceneLayerManager {
   }
 
   private updateFlightPosition(entry: FlightPrimitiveEntry, flight: FlightRecord) {
+    const ageSeconds = Math.min(
+      20,
+      Math.max(0, Date.now() / 1000 - flight.timestamp),
+    );
+    const predicted = predictFlightPosition(flight, ageSeconds);
     const position = Cartesian3.fromDegrees(
-      flight.longitude,
-      flight.latitude,
-      Math.max(0, flight.altitudeMeters),
+      predicted.longitude,
+      predicted.latitude,
+      Math.max(0, predicted.altitudeMeters),
     );
 
     entry.dot.position = position;
@@ -335,10 +342,15 @@ export class FlightSceneLayerManager {
 
     this.selectedFlightLabel.show = true;
     this.selectedFlightLabel.text = getFlightDisplayName(selectedFlight);
+    const ageSeconds = Math.min(
+      20,
+      Math.max(0, Date.now() / 1000 - selectedFlight.timestamp),
+    );
+    const predicted = predictFlightPosition(selectedFlight, ageSeconds);
     this.selectedFlightLabel.position = Cartesian3.fromDegrees(
-      selectedFlight.longitude,
-      selectedFlight.latitude,
-      Math.max(0, selectedFlight.altitudeMeters + 2_000),
+      predicted.longitude,
+      predicted.latitude,
+      Math.max(0, predicted.altitudeMeters + 2_000),
     );
 
     const trailPositions = this.showSelectedTrail
@@ -373,7 +385,6 @@ export class FlightSceneLayerManager {
       width: 24,
       height: 24,
       scaleByDistance: new NearFarScalar(20_000, 1.16, 15_000_000, 0.32),
-      disableDepthTestDistance: Number.POSITIVE_INFINITY,
       color: Color.fromCssColorString('#89ffd1'),
     });
     this.routeAirportBillboards.add({
@@ -384,7 +395,6 @@ export class FlightSceneLayerManager {
       width: 24,
       height: 24,
       scaleByDistance: new NearFarScalar(20_000, 1.16, 15_000_000, 0.32),
-      disableDepthTestDistance: Number.POSITIVE_INFINITY,
       color: Color.fromCssColorString('#ffc09b'),
     });
 
@@ -394,6 +404,20 @@ export class FlightSceneLayerManager {
   private requestRender() {
     if (!this.viewer.isDestroyed()) {
       this.viewer.scene.requestRender();
+    }
+  }
+
+  private updateAnimatedFlightPositions() {
+    if (!this.flightsVisible) return;
+
+    for (const [flightId, entry] of this.flightEntries.entries()) {
+      const flight = this.flightRecords.get(flightId);
+      if (!flight) continue;
+      this.updateFlightPosition(entry, flight);
+    }
+
+    if (this.selectedFlightId) {
+      this.refreshSelectionOverlays();
     }
   }
 }

@@ -164,7 +164,7 @@ export async function fetchFlightRoute(callsign: string, signal?: AbortSignal) {
   }
 
   if (!response.ok) {
-    throw new Error(`Route lookup returned ${response.status}`);
+    throw new Error(await readErrorMessage(response, 'Route lookup'));
   }
 
   return (await response.json()) as FlightRouteSnapshot;
@@ -173,7 +173,7 @@ export async function fetchFlightRoute(callsign: string, signal?: AbortSignal) {
 export async function fetchAirports(signal?: AbortSignal) {
   const response = await fetch(AIRPORTS_API_URL, { signal });
   if (!response.ok) {
-    throw new Error(`Airport feed returned ${response.status}`);
+    throw new Error(await readErrorMessage(response, 'Airport feed'));
   }
 
   return (await response.json()) as AirportRecord[];
@@ -255,4 +255,23 @@ export function predictFlightPosition(
     longitude: ((((lon2 * 180) / Math.PI) + 540) % 360) - 180,
     altitudeMeters: flight.altitudeMeters,
   };
+}
+
+async function readErrorMessage(response: Response, label: string) {
+  try {
+    const payload = (await response.clone().json()) as {
+      error?: string;
+      path?: string;
+    };
+
+    if (payload?.error) {
+      return payload.path
+        ? `${payload.error} (${payload.path})`
+        : payload.error;
+    }
+  } catch {
+    // Ignore JSON parse failures and fall back to the status text.
+  }
+
+  return `${label} returned ${response.status}`;
 }
