@@ -2,6 +2,7 @@ import { createServer } from 'node:http';
 import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { gunzipSync } from 'node:zlib';
 import { parse } from 'csv-parse/sync';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -20,6 +21,7 @@ const ABSOLUTE_STALE_CONTACT_SECONDS = 150;
 const LIVE_CONTACT_MAX_AGE_SECONDS = 150;
 const MAX_TRAIL_POINTS = 15;
 const AIRPORTS_CSV_PATH = resolveAirportCsvPath();
+const AIRCRAFT_METADATA_PATH = resolveAircraftMetadataPath();
 
 const cache = {
   snapshot: null,
@@ -35,6 +37,7 @@ const tokenState = {
 };
 
 const airportIndex = loadAirportIndex(AIRPORTS_CSV_PATH);
+const aircraftMetadataIndex = loadAircraftMetadataIndex(AIRCRAFT_METADATA_PATH);
 
 createServer(async (req, res) => {
   setCorsHeaders(res);
@@ -76,6 +79,10 @@ createServer(async (req, res) => {
       airportCount: airportIndex.airports.length,
       routeCandidateAirportCount: airportIndex.routeAirports.length,
       airportsError: airportIndex.loadError,
+      aircraftMetadataAvailable: aircraftMetadataIndex.available,
+      aircraftMetadataPath: aircraftMetadataIndex.sourcePath,
+      aircraftMetadataCount: aircraftMetadataIndex.recordsByIcao24.size,
+      aircraftMetadataError: aircraftMetadataIndex.loadError,
     });
     return;
   }
@@ -150,6 +157,16 @@ createServer(async (req, res) => {
       `[flights-proxy] airports.csv not loaded from ${airportIndex.sourcePath}: ${airportIndex.loadError}`,
     );
   }
+
+  if (aircraftMetadataIndex.available) {
+    console.log(
+      `[flights-proxy] Loaded ${aircraftMetadataIndex.recordsByIcao24.size} aircraft metadata rows from ${aircraftMetadataIndex.sourcePath}`,
+    );
+  } else {
+    console.warn(
+      `[flights-proxy] aircraft metadata not loaded from ${aircraftMetadataIndex.sourcePath}: ${aircraftMetadataIndex.loadError}`,
+    );
+  }
 });
 
 async function getFlightSnapshot() {
@@ -194,7 +211,7 @@ async function refreshSnapshot() {
 
 async function fetchOpenSkySnapshot() {
   const authHeaders = await getOpenSkyHeaders();
-  const response = await fetch(`${OPENSKY_API_BASE}/states/all`, {
+  const response = await fetch(`${OPENSKY_API_BASE}/states/all?extended=1`, {
     headers: authHeaders,
   });
 
@@ -395,6 +412,8 @@ function normalizeOpenSkyState(row, snapshotTime) {
     headingDegrees: heading,
     speedMetersPerSecond: speed,
     timestamp: lastContact,
+    categoryCode: toFiniteNumber(row[17]),
+    ...lookupAircraftMetadata(String(row[0] || '').trim().toLowerCase()),
   };
 }
 
@@ -438,6 +457,8 @@ function buildMockFlights(nowSeconds) {
       headingDegrees: normalizeHeading(Number(heading) + phase * 20),
       speedMetersPerSecond: Number(speed),
       timestamp: nowSeconds,
+      categoryCode: getMockCategoryCode(id),
+      ...getMockAircraftMetadata(id),
       trail: buildMockTrail(latitude, longitude, altitudeMeters, Number(heading), Number(speed)),
     };
   });
@@ -483,6 +504,148 @@ function appendTrailPoint(existingTrail, flight) {
   }
 
   return [...existingTrail, trailPoint].slice(-MAX_TRAIL_POINTS);
+}
+
+function lookupAircraftMetadata(icao24) {
+  const metadata = aircraftMetadataIndex.recordsByIcao24.get(icao24);
+  if (!metadata) {
+    return {
+      aircraftTypeCode: null,
+      aircraftModel: null,
+      aircraftManufacturer: null,
+      aircraftRegistration: null,
+      aircraftOperator: null,
+    };
+  }
+
+  return {
+    aircraftTypeCode: metadata.typeCode,
+    aircraftModel: metadata.model,
+    aircraftManufacturer: metadata.manufacturerName,
+    aircraftRegistration: metadata.registration,
+    aircraftOperator: metadata.operator,
+  };
+}
+
+function loadAircraftMetadataIndex(csvPath) {
+  if (!existsSync(csvPath)) {
+    return {
+      available: false,
+      sourcePath: csvPath,
+      loadError: 'File not found',
+      recordsByIcao24: new Map(),
+    };
+  }
+
+  try {
+    const source = readMaybeCompressedText(csvPath);
+    const rows = parseAircraftMetadataRows(source);
+
+    const recordsByIcao24 = new Map();
+    for (const row of rows) {
+      const record = normalizeAircraftMetadataRow(row);
+      if (!record) continue;
+      recordsByIcao24.set(record.icao24, record);
+    }
+
+    return {
+      available: true,
+      sourcePath: csvPath,
+      loadError: null,
+      recordsByIcao24,
+    };
+  } catch (error) {
+    return {
+      available: false,
+      sourcePath: csvPath,
+      loadError: error instanceof Error ? error.message : 'Unknown CSV parse error',
+      recordsByIcao24: new Map(),
+    };
+  }
+}
+
+function normalizeAircraftMetadataRow(row) {
+  if (Array.isArray(row)) {
+    const icao24 = normalizeAircraftIcao24(row[0]);
+    if (!icao24) return null;
+
+    const description = normalizeTextField(row[4] ?? row[5] ?? row[6]);
+    return {
+      icao24,
+      typeCode: normalizeAircraftTypeCode(row[2]),
+      model: description,
+      manufacturerName: deriveManufacturerFromDescription(description),
+      registration: normalizeTextField(row[1]),
+      operator: normalizeTextField(row[7] ?? row[8] ?? null),
+    };
+  }
+
+  const icao24 = normalizeAircraftIcao24(
+    row.icao24 ??
+    row.icao_24 ??
+    row.hex ??
+    row.mode_s ??
+    row.modeS ??
+    row.mode_s_code,
+  );
+
+  if (!icao24) return null;
+
+  const typeCode = normalizeAircraftTypeCode(
+    row.typecode ??
+    row.type_code ??
+    row.icaoaircrafttype ??
+    row.icao_aircraft_type ??
+    row.aircraft_type ??
+    row.aircrafttype,
+  );
+
+  return {
+    icao24,
+    typeCode,
+    model: normalizeTextField(row.model ?? row.model_full ?? row.description),
+    manufacturerName: normalizeTextField(
+      row.manufacturername ??
+      row.manufacturer_name ??
+      row.manufacturer ??
+      row.manufacturericao,
+    ),
+    registration: normalizeTextField(row.registration ?? row.reg ?? row.tailnumber ?? row.tail_number),
+    operator: normalizeTextField(
+      row.operator ??
+      row.operatorname ??
+      row.operator_name ??
+      row.owner ??
+      row.airline,
+    ),
+  };
+}
+
+function parseAircraftMetadataRows(source) {
+  const firstLine = String(source.split(/\r?\n/, 1)[0] ?? '').trim();
+  const looksLikeTar1090Db =
+    firstLine.includes(';') &&
+    !/^[A-Za-z0-9_," ]+$/.test(firstLine);
+
+  if (looksLikeTar1090Db) {
+    return parse(source, {
+      columns: false,
+      delimiter: ';',
+      skip_empty_lines: true,
+      bom: true,
+      relax_column_count: true,
+      relax_quotes: true,
+      trim: true,
+    });
+  }
+
+  return parse(source, {
+    columns: true,
+    skip_empty_lines: true,
+    bom: true,
+    relax_column_count: true,
+    trim: true,
+  });
 }
 
 function loadAirportIndex(csvPath) {
@@ -778,6 +941,36 @@ function resolveAirportCsvPath() {
     : path.resolve(projectRoot, configuredPath);
 }
 
+function resolveAircraftMetadataCsvPath() {
+  const configuredPath =
+    process.env.AIRCRAFT_METADATA_PATH?.trim() ??
+    process.env.AIRCRAFT_METADATA_CSV_PATH?.trim();
+  if (!configuredPath) {
+    const defaultCandidates = [
+      path.join(projectRoot, 'server', 'data', 'aircraft-metadata.csv'),
+      path.join(projectRoot, 'server', 'data', 'aircraft-metadata.csv.gz'),
+      path.join(projectRoot, 'server', 'data', 'aircraft.csv.gz'),
+      path.join(projectRoot, 'server', 'data', 'aircraft.csv'),
+    ];
+
+    for (const candidate of defaultCandidates) {
+      if (existsSync(candidate)) {
+        return candidate;
+      }
+    }
+
+    return defaultCandidates[2];
+  }
+
+  return path.isAbsolute(configuredPath)
+    ? configuredPath
+    : path.resolve(projectRoot, configuredPath);
+}
+
+function resolveAircraftMetadataPath() {
+  return resolveAircraftMetadataCsvPath();
+}
+
 function normalizeCallsign(callsign) {
   return String(callsign || '')
     .trim()
@@ -788,6 +981,48 @@ function normalizeCallsign(callsign) {
 function normalizeAirportCode(value) {
   const code = typeof value === 'string' ? value.trim().toUpperCase() : '';
   return code || null;
+}
+
+function normalizeAircraftIcao24(value) {
+  const code = String(value || '')
+    .trim()
+    .toLowerCase();
+
+  return /^[0-9a-f]{6}$/.test(code) ? code : null;
+}
+
+function normalizeAircraftTypeCode(value) {
+  const typeCode = String(value || '')
+    .trim()
+    .toUpperCase();
+
+  return typeCode || null;
+}
+
+function normalizeTextField(value) {
+  const text = typeof value === 'string' ? value.trim() : '';
+  return text || null;
+}
+
+function deriveManufacturerFromDescription(description) {
+  const normalized = normalizeTextField(description);
+  if (!normalized) return null;
+
+  const manufacturer = normalized.split(/\s+/).slice(0, 2).join(' ');
+  return manufacturer || null;
+}
+
+function readMaybeCompressedText(filePath) {
+  const buffer = readFileSync(filePath);
+  const isGzip =
+    filePath.toLowerCase().endsWith('.gz') ||
+    (buffer.length >= 2 && buffer[0] === 0x1f && buffer[1] === 0x8b);
+
+  if (!isGzip) {
+    return buffer.toString('utf8');
+  }
+
+  return gunzipSync(buffer).toString('utf8');
 }
 
 function toFiniteNumber(value) {
@@ -826,5 +1061,85 @@ function loadDotEnv(envPath) {
     if (!key || process.env[key] !== undefined) continue;
 
     process.env[key] = value.replace(/^['"]|['"]$/g, '');
+  }
+}
+
+function getMockCategoryCode(id) {
+  switch (id) {
+    case 'ai101':
+      return 4;
+    case 'ba257':
+      return 5;
+    case 'ek512':
+      return 5;
+    case 'ua890':
+      return 4;
+    case 'sq406':
+      return 2;
+    case 'af226':
+      return 4;
+    default:
+      return 4;
+  }
+}
+
+function getMockAircraftMetadata(id) {
+  switch (id) {
+    case 'ai101':
+      return {
+        aircraftTypeCode: 'A320',
+        aircraftModel: 'Airbus A320-200',
+        aircraftManufacturer: 'Airbus',
+        aircraftRegistration: 'VT-EXA',
+        aircraftOperator: 'Air India',
+      };
+    case 'ba257':
+      return {
+        aircraftTypeCode: 'B789',
+        aircraftModel: 'Boeing 787-9',
+        aircraftManufacturer: 'Boeing',
+        aircraftRegistration: 'G-ZBKA',
+        aircraftOperator: 'British Airways',
+      };
+    case 'ek512':
+      return {
+        aircraftTypeCode: 'B77W',
+        aircraftModel: 'Boeing 777-300ER',
+        aircraftManufacturer: 'Boeing',
+        aircraftRegistration: 'A6-ECN',
+        aircraftOperator: 'Emirates',
+      };
+    case 'ua890':
+      return {
+        aircraftTypeCode: 'B739',
+        aircraftModel: 'Boeing 737-900',
+        aircraftManufacturer: 'Boeing',
+        aircraftRegistration: 'N75435',
+        aircraftOperator: 'United Airlines',
+      };
+    case 'sq406':
+      return {
+        aircraftTypeCode: 'E190',
+        aircraftModel: 'Embraer 190',
+        aircraftManufacturer: 'Embraer',
+        aircraftRegistration: '9V-EMB',
+        aircraftOperator: 'Scoot',
+      };
+    case 'af226':
+      return {
+        aircraftTypeCode: 'A321',
+        aircraftModel: 'Airbus A321',
+        aircraftManufacturer: 'Airbus',
+        aircraftRegistration: 'F-GTAX',
+        aircraftOperator: 'Air France',
+      };
+    default:
+      return {
+        aircraftTypeCode: null,
+        aircraftModel: null,
+        aircraftManufacturer: null,
+        aircraftRegistration: null,
+        aircraftOperator: null,
+      };
   }
 }

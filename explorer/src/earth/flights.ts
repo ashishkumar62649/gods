@@ -14,6 +14,12 @@ export interface FlightRecord {
   speedMetersPerSecond: number;
   timestamp: number;
   originCountry?: string | null;
+  categoryCode?: number | null;
+  aircraftTypeCode?: string | null;
+  aircraftModel?: string | null;
+  aircraftManufacturer?: string | null;
+  aircraftRegistration?: string | null;
+  aircraftOperator?: string | null;
   trail: FlightTrailPoint[];
 }
 
@@ -142,6 +148,80 @@ const DESTINATION_AIRPORT_ICON_SVG = `
     <path fill="#fff1e8" d="M42 22 46.9 34.8 57.1 38.9 57.1 43.3 47.6 42.3 44.6 47.4 49.2 61.8 45.9 63.6 42 53.4 38.1 63.6 34.8 61.8 39.4 47.4 36.4 42.3 26.9 43.3 26.9 38.9 37.1 34.8Z"/>
   </svg>
 `;
+
+export const SELECTED_FLIGHT_MODEL_GLTF = {
+  asset: { version: '2.0' },
+  extensionsUsed: ['KHR_materials_unlit'],
+  extensionsRequired: ['KHR_materials_unlit'],
+  scene: 0,
+  scenes: [{ nodes: [0] }],
+  nodes: [{ mesh: 0 }],
+  meshes: [{
+    primitives: [{
+      attributes: { POSITION: 0 },
+      indices: 1,
+      material: 0,
+    }],
+  }],
+  materials: [{
+    pbrMetallicRoughness: {
+      baseColorFactor: [0.49, 1.0, 0.82, 1.0],
+      metallicFactor: 0.0,
+      roughnessFactor: 1.0,
+    },
+    doubleSided: true,
+    extensions: {
+      KHR_materials_unlit: {},
+    },
+  }],
+  buffers: [
+    {
+      uri: 'data:application/octet-stream;base64,AAAAAM3MDEAAAAAAAAAAAM3MzD7sUTg+AAAAAM3MzD7sUTi+AAAAADMz87/NzMw9zczMvwAAAAAAAAAAzczMPwAAAAAAAAAAzcwMv5qZmb8AAAAAzcwMP5qZmb8AAAAAAAAAAAAAoL8AAEA/',
+      byteLength: 108,
+    },
+    {
+      uri: 'data:application/octet-stream;base64,AAABAAQAAAAEAAIAAAAFAAEAAAACAAUABAAFAAEABAACAAUAAQAGAAMAAgADAAYAAQADAAcAAgAHAAMAAwAIAAEAAwACAAgA',
+      byteLength: 72,
+    },
+  ],
+  bufferViews: [
+    {
+      buffer: 0,
+      byteOffset: 0,
+      byteLength: 108,
+      target: 34962,
+    },
+    {
+      buffer: 1,
+      byteOffset: 0,
+      byteLength: 72,
+      target: 34963,
+    },
+  ],
+  accessors: [
+    {
+      bufferView: 0,
+      byteOffset: 0,
+      componentType: 5126,
+      count: 9,
+      type: 'VEC3',
+      min: [-1.6, -1.9, -0.18],
+      max: [1.6, 2.2, 0.75],
+    },
+    {
+      bufferView: 1,
+      byteOffset: 0,
+      componentType: 5123,
+      count: 36,
+      type: 'SCALAR',
+    },
+  ],
+} as const;
+
+export const SELECTED_FLIGHT_MODEL_URL =
+  `data:model/gltf+json,${encodeURIComponent(
+    JSON.stringify(SELECTED_FLIGHT_MODEL_GLTF),
+  )}`;
 
 export const FLIGHT_ICON_IMAGE = `data:image/svg+xml;utf8,${encodeURIComponent(
   PLANE_ICON_SVG,

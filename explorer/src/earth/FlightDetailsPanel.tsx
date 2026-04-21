@@ -9,6 +9,7 @@ import {
   getAirportDisplayCode,
   getFlightDisplayName,
 } from './flights';
+import { getFlightVisualTypeLabel } from './flightVisuals';
 
 interface FlightDetailsPanelProps {
   feed: FlightFeedState;
@@ -156,6 +157,10 @@ export default function FlightDetailsPanel({
           <span className="flight-panel__value">
             {flight.originCountry?.trim() || 'Unknown'}
           </span>
+        </div>
+        <div className="flight-panel__row">
+          <span className="flight-panel__label">Type</span>
+          <span className="flight-panel__value">{getFlightVisualTypeLabel(flight)}</span>
         </div>
         <div className="flight-panel__row">
           <span className="flight-panel__label">Updated</span>

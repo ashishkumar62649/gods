@@ -244,6 +244,8 @@ Frontend behavior:
 - right-side detail panel
 - selected-flight `Focus`
 - selected-flight `Track`
+- selected-flight `Chase` (camera follows strictly behind)
+- selected-flight `Cockpit` (camera rides on plane, 360° free-look, includes data HUD)
 - de-emphasis of non-selected flights
 
 Current flight data flow:
@@ -252,8 +254,9 @@ Current flight data flow:
 - proxy normalizes raw state vectors into internal records
 - proxy keeps recently-missing flights alive for a short grace window
 - proxy reuses the last good live snapshot on transient feed failure
-- frontend predicts short-horizon movement using speed + heading + timestamp
-- flights are rendered using Cesium entities inside a `CustomDataSource`
+- frontend drives smooth 60fps motion via `viewer.scene.preRender` and direct primitive mutation (bypassing React)
+- frontend predicts short-horizon movement using a spherical haversine dead-reckoning projection
+- flights are rendered using highly performant `PointPrimitiveCollection` and `BillboardCollection`
 
 Internal flight record shape currently supports:
 - `id`
@@ -285,6 +288,9 @@ Confirmed by the user in this chat:
 - icons are visible when zooming in
 - selected flight panel appears
 - selected-flight `Focus` / `Track` works
+- selected-flight `Chase` mode keeps camera fixed behind the plane
+- selected-flight `Cockpit` mode lets the user freely look 360° while the plane moves
+- flight motion is smooth at 60fps using dead reckoning prediction
 - selected-flight camera no longer forces a default tilt
 - flight icon heading no longer changes incorrectly when the camera rotates
 
@@ -354,18 +360,33 @@ Fix applied:
 Expected result:
 - default Cesium green box / default info UI should no longer appear
 
-### Selected-flight camera controls
+### Tracking, Chase, and Cockpit Modes
 
 New capability added:
 - selected flights now have a one-shot `Focus` camera action
-- selected flights now have a `Track` toggle for a live chase-style follow view
+- selected flights now have a `Track` toggle for a live follow view
+- the unstable drone mode was split into two dedicated views:
+  - `Chase` mode: camera stays locked exactly behind the aircraft.
+  - `Cockpit` mode: camera rides exactly on the aircraft coordinate. Includes an immersive top-center HUD (Altitude, Speed, Heading, Callsign, Route) and allows 360-degree free-look via drag.
 
 Behavior:
 - tracking stops cleanly on deselect
 - tracking stops when flights are turned off
-- tracking stops on manual non-HUD interaction
+- tracking stops on manual non-HUD interaction (except dragging during Cockpit mode, which controls the look angle)
 - home/search/orbit actions cancel tracking before taking over the camera
 - focus/track preserves the user's current camera angle instead of forcing a default chase tilt
+
+### 60 FPS Dead Reckoning
+
+New capability added:
+- primitive mutation loop attached to `viewer.scene.preRender`
+- planes no longer jump/teleport across the globe every 15 seconds
+
+Behavior:
+- every frame, calculates elapsed time since last server update
+- projects new Cartesian3 coordinate using heading, speed, and haversine logic
+- assigns position directly to Cesium `Point` and `Billboard` primitives
+- completely bypasses React `useState` for 60fps performance without vDOM thrashing
 
 ### Flight-feed stabilization and full valid-flight return
 
@@ -508,4 +529,14 @@ Those issues were patched in code; camera behavior was then user-confirmed as go
 
 If a new chat needs a short orientation, use this:
 
-The explorer is now a 3D-only Cesium globe with working terrain, imagery switching, buildings, search, orbit, and a first live flight layer. Flights come from a local OpenSky-backed proxy, render as dots/icons depending on zoom, support selection with a right-side detail panel, include selected-flight `Focus` / `Track` controls, preserve the user's camera angle during tracking, and now use backend feed stabilization so flights do not disappear immediately on a single missed snapshot. The last active work is flight-layer polish plus scale work: confirm any remaining occlusion / selection styling tweaks, then continue into trails, feed-health messaging, and performance tuning for full-world all-flight rendering.
+The explorer is now a 3D-only Cesium globe with working terrain, imagery switching, buildings, search, orbit, and a first live flight layer. Flights come from a local OpenSky-backed proxy, rendering as dots/icons through highly performant primitives, rather than generic entities. Flights feature 60fps smooth dead-reckoning motion. They support selection with a right-side detail panel, include `Focus`, `Track`, `Chase`, and an immersive `Cockpit` mode with a custom HUD and 360° free-look. The last active work involved building out the smooth motion loops and interactive tracking views. Next steps involve optional trail/path generation, richer feed-health messaging, and global scaling polish.
+
+## 16. Project Knowledge Graph
+
+This project uses `graphify` for maintaining a knowledge graph of the codebase.
+The output is located in `graphify-out/`.
+- Always consult `graphify-out/GRAPH_REPORT.md` for architecture and codebase questions.
+- Navigate `graphify-out/wiki/index.md` if it exists instead of reading raw files.
+- Run `graphify update .` after modifying code files in any session to keep the graph current.
+
+

@@ -126,6 +126,8 @@ Camera.DEFAULT_VIEW_RECTANGLE = Rectangle.fromDegrees(
 const METERS_PER_DEG_LAT = 111_320;
 const FLIGHT_EASING = EasingFunction.SINUSOIDAL_IN_OUT;
 const FLIGHT_TRACK_SECONDS_AHEAD = 3;
+const COCKPIT_ENTRY_PITCH = CesiumMath.toRadians(-5);
+const COCKPIT_LOOK_SENSITIVITY = 0.004;
 
 /**
  * Place the camera south of (lonDeg, latDeg) at `altitude` meters, pitched
@@ -363,25 +365,82 @@ function getFlightCameraOffset(
   );
 }
 
+function getChaseCameraView(
+  flight: FlightRecord,
+  secondsAhead: number,
+) {
+  const target = getFlightCameraTarget(flight, secondsAhead);
+  const headingRad = CesiumMath.toRadians(flight.headingDegrees);
+  const speedMetersPerSecond = Math.max(60, flight.speedMetersPerSecond);
+  const altitudeMeters = Math.max(0, flight.altitudeMeters);
+  const trailingDistance = CesiumMath.clamp(
+    speedMetersPerSecond * 4.2 + altitudeMeters * 0.16,
+    900,
+    5_600,
+  );
+  const verticalOffset = CesiumMath.clamp(
+    altitudeMeters * 0.14 + 240,
+    260,
+    1_900,
+  );
+  const enuTransform = Transforms.eastNorthUpToFixedFrame(target);
+  const destination = Matrix4.multiplyByPoint(
+    enuTransform,
+    new Cartesian3(
+      -Math.sin(headingRad) * trailingDistance,
+      -Math.cos(headingRad) * trailingDistance,
+      verticalOffset,
+    ),
+    new Cartesian3(),
+  );
+  const direction = Cartesian3.normalize(
+    Cartesian3.subtract(target, destination, new Cartesian3()),
+    new Cartesian3(),
+  );
+  const upHint = Matrix4.multiplyByPointAsVector(
+    enuTransform,
+    Cartesian3.UNIT_Z,
+    new Cartesian3(),
+  );
+  const right = Cartesian3.normalize(
+    Cartesian3.cross(direction, upHint, new Cartesian3()),
+    new Cartesian3(),
+  );
+  const up = Cartesian3.normalize(
+    Cartesian3.cross(right, direction, new Cartesian3()),
+    new Cartesian3(),
+  );
+
+  return {
+    destination,
+    orientation: {
+      direction,
+      up,
+    },
+  };
+}
+
 /**
  * Cockpit entry view — positions the camera AT the plane's location,
  * facing in the direction it is travelling. Used for the initial fly-in
  * animation when the user activates drone/cockpit mode.
  */
-function getDroneCockpitEntry(flight: FlightRecord, secondsAhead: number) {
+function getCockpitCameraPose(
+  flight: FlightRecord,
+  secondsAhead: number,
+  headingOffsetRad: number,
+  pitchRad: number,
+) {
   const target = getFlightCameraTarget(flight, secondsAhead);
   const headingRad = CesiumMath.toRadians(flight.headingDegrees);
-  // Slightly above the flight position so you're "on top" of the plane.
   const enuTransform = Transforms.eastNorthUpToFixedFrame(target);
-  const localUp = new Cartesian3(0, 0, 30); // 30 m above plane
+  const localUp = new Cartesian3(0, 0, 30);
   const worldPos = Matrix4.multiplyByPoint(enuTransform, localUp, new Cartesian3());
 
-  // Orientation: face the heading direction, slight look-down.
-  const pitchRad = CesiumMath.toRadians(-5);
   return {
     destination: worldPos,
     orientation: {
-      heading: headingRad,
+      heading: headingRad + headingOffsetRad,
       pitch: pitchRad,
       roll: 0,
     },
@@ -581,6 +640,14 @@ export default function Viewer() {
   const trackedFlightIdRef = useRef<string | null>(null);
   const droneFlightIdRef = useRef<string | null>(null);
   const cockpitFlightIdRef = useRef<string | null>(null);
+  const cockpitLookHeadingOffsetRef = useRef(0);
+  const cockpitLookPitchRef = useRef(COCKPIT_ENTRY_PITCH);
+  const cockpitPointerRef = useRef({
+    active: false,
+    pointerId: null as number | null,
+    lastX: 0,
+    lastY: 0,
+  });
   const trackedFlightViewRef = useRef<HeadingPitchRange | null>(null);
   const showSelectedFlightTrailRef = useRef(false);
   const showSelectedFlightRouteRef = useRef(false);
@@ -741,6 +808,10 @@ export default function Viewer() {
     trackedFlightIdRef.current = null;
     droneFlightIdRef.current = null;
     cockpitFlightIdRef.current = null;
+    cockpitLookHeadingOffsetRef.current = 0;
+    cockpitLookPitchRef.current = COCKPIT_ENTRY_PITCH;
+    cockpitPointerRef.current.active = false;
+    cockpitPointerRef.current.pointerId = null;
     trackedFlightViewRef.current = null;
     setTrackedFlightId(null);
     setDroneFlightId(null);
@@ -1339,21 +1410,13 @@ export default function Viewer() {
 
     const liveFlight = flightRecordsRef.current.get(flightId) ?? selectedFlight;
     const ageSeconds = Math.min(20, Math.max(0, Date.now() / 1000 - liveFlight.timestamp));
-    const target = getFlightCameraTarget(liveFlight, ageSeconds);
-    // Place camera behind: heading + 180°, pitch -20°, distance ~1km.
-    const speed = Math.max(60, liveFlight.speedMetersPerSecond);
-    const alt = Math.max(0, liveFlight.altitudeMeters);
-    const range = CesiumMath.clamp(speed * 2.5 + alt * 0.07, 350, 2_200);
-    const chaseOffset = new HeadingPitchRange(
-      CesiumMath.toRadians(liveFlight.headingDegrees) + Math.PI,
-      CesiumMath.toRadians(-20),
-      range,
-    );
+    const chaseView = getChaseCameraView(liveFlight, ageSeconds);
 
     viewer.camera.lookAtTransform(Matrix4.IDENTITY);
-    viewer.camera.flyToBoundingSphere(new BoundingSphere(target, 1), {
+    viewer.camera.flyTo({
+      destination: chaseView.destination,
+      orientation: chaseView.orientation,
       duration: 1.5,
-      offset: chaseOffset,
       easingFunction: FLIGHT_EASING,
       complete: () => {
         if (selectedFlightIdRef.current !== flightId) return;
@@ -1361,18 +1424,13 @@ export default function Viewer() {
         const refreshed = flightRecordsRef.current.get(flightId);
         if (!activeViewer || activeViewer.isDestroyed() || !refreshed) return;
         const liveAgeSeconds = Math.min(20, Math.max(0, Date.now() / 1000 - refreshed.timestamp));
-        const liveTarget = getFlightCameraTarget(refreshed, liveAgeSeconds);
-        const liveSpeed = Math.max(60, refreshed.speedMetersPerSecond);
-        const liveAlt = Math.max(0, refreshed.altitudeMeters);
-        const liveRange = CesiumMath.clamp(liveSpeed * 2.5 + liveAlt * 0.07, 350, 2_200);
-        const liveOffset = new HeadingPitchRange(
-          CesiumMath.toRadians(refreshed.headingDegrees) + Math.PI,
-          CesiumMath.toRadians(-20),
-          liveRange,
-        );
+        const liveChaseView = getChaseCameraView(refreshed, liveAgeSeconds);
         droneFlightIdRef.current = flightId;
         setDroneFlightId(flightId);
-        activeViewer.camera.lookAt(liveTarget, liveOffset);
+        activeViewer.camera.setView({
+          destination: liveChaseView.destination,
+          orientation: liveChaseView.orientation,
+        });
         activeViewer.scene.requestRender();
       },
     });
@@ -1403,7 +1461,16 @@ export default function Viewer() {
 
     const liveFlight = flightRecordsRef.current.get(flightId) ?? selectedFlight;
     const ageSeconds = Math.min(20, Math.max(0, Date.now() / 1000 - liveFlight.timestamp));
-    const entry = getDroneCockpitEntry(liveFlight, ageSeconds);
+    cockpitLookHeadingOffsetRef.current = 0;
+    cockpitLookPitchRef.current = COCKPIT_ENTRY_PITCH;
+    cockpitPointerRef.current.active = false;
+    cockpitPointerRef.current.pointerId = null;
+    const entry = getCockpitCameraPose(
+      liveFlight,
+      ageSeconds,
+      cockpitLookHeadingOffsetRef.current,
+      cockpitLookPitchRef.current,
+    );
 
     viewer.camera.lookAtTransform(Matrix4.IDENTITY);
 
@@ -1418,6 +1485,12 @@ export default function Viewer() {
         if (!activeViewer || activeViewer.isDestroyed()) return;
         cockpitFlightIdRef.current = flightId;
         setCockpitFlightId(flightId);
+        const ctrl = activeViewer.scene.screenSpaceCameraController;
+        ctrl.enableRotate = false;
+        ctrl.enableTranslate = false;
+        ctrl.enableZoom = false;
+        ctrl.enableTilt = false;
+        ctrl.enableLook = false;
         activeViewer.scene.requestRender();
       },
     });
@@ -2059,30 +2132,14 @@ export default function Viewer() {
           return;
         }
 
-        // ── Cockpit / rider mode ────────────────────────────────────────────
-        // Move the camera WITH the plane each frame, but preserve whatever
-        // direction the user is currently looking (allowing free 360° look).
-        //
-        // Strategy: compute the plane's world position, build a position 30 m
-        // above it in the local ENU frame, then call setView with:
-        //   • destination = that world position  (camera moves with plane)
-        //   • orientation = current camera direction/up  (user keeps their view)
         const ageSeconds = Math.min(
           20,
           Math.max(0, Date.now() / 1000 - liveFlight.timestamp),
         );
-        const planeCenter = getFlightCameraTarget(liveFlight, ageSeconds);
-        const enuTransform = Transforms.eastNorthUpToFixedFrame(planeCenter);
-        const cockpitOffset = new Cartesian3(0, 0, 30); // 30 m above plane
-        const cockpitPos = Matrix4.multiplyByPoint(enuTransform, cockpitOffset, new Cartesian3());
-
-        // Snapshot current look direction before setView overwrites it.
-        const dir = Cartesian3.clone(activeViewer.camera.directionWC, new Cartesian3());
-        const up  = Cartesian3.clone(activeViewer.camera.upWC, new Cartesian3());
-
+        const chaseView = getChaseCameraView(liveFlight, ageSeconds);
         activeViewer.camera.setView({
-          destination: cockpitPos,
-          orientation: { direction: dir, up },
+          destination: chaseView.destination,
+          orientation: chaseView.orientation,
         });
       };
 
@@ -2127,16 +2184,13 @@ export default function Viewer() {
         if (!liveFlight) { stopFlightTracking(); return; }
 
         const ageSeconds = Math.min(20, Math.max(0, Date.now() / 1000 - liveFlight.timestamp));
-        const planeCenter = getFlightCameraTarget(liveFlight, ageSeconds);
-        const enuTransform = Transforms.eastNorthUpToFixedFrame(planeCenter);
-        const cockpitPos = Matrix4.multiplyByPoint(
-          enuTransform, new Cartesian3(0, 0, 30), new Cartesian3(),
+        const cockpitPose = getCockpitCameraPose(
+          liveFlight,
+          ageSeconds,
+          cockpitLookHeadingOffsetRef.current,
+          cockpitLookPitchRef.current,
         );
-
-        // Preserve whatever direction+up the user has set via mouse drag.
-        const dir = Cartesian3.clone(viewer.camera.directionWC, new Cartesian3());
-        const up  = Cartesian3.clone(viewer.camera.upWC, new Cartesian3());
-        viewer.camera.setView({ destination: cockpitPos, orientation: { direction: dir, up } });
+        viewer.camera.setView(cockpitPose);
       };
 
       syncCockpitCamera();
@@ -2152,46 +2206,101 @@ export default function Viewer() {
   }, [cockpitFlightId, stopFlightTracking]);
 
   useEffect(() => {
+    if (!cockpitFlightId) return;
+
+    const eventCameFromHud = (target: EventTarget | null) =>
+      target instanceof Node && Boolean(hudRef.current?.contains(target));
+
+    const pointerState = cockpitPointerRef.current;
+
+    const onPointerDown = (event: PointerEvent) => {
+      if (eventCameFromHud(event.target)) return;
+      pointerState.active = true;
+      pointerState.pointerId = event.pointerId;
+      pointerState.lastX = event.clientX;
+      pointerState.lastY = event.clientY;
+    };
+
+    const onPointerMove = (event: PointerEvent) => {
+      if (!pointerState.active || pointerState.pointerId !== event.pointerId) return;
+
+      const deltaX = event.clientX - pointerState.lastX;
+      const deltaY = event.clientY - pointerState.lastY;
+      pointerState.lastX = event.clientX;
+      pointerState.lastY = event.clientY;
+
+      cockpitLookHeadingOffsetRef.current -= deltaX * COCKPIT_LOOK_SENSITIVITY;
+      cockpitLookPitchRef.current = CesiumMath.clamp(
+        cockpitLookPitchRef.current - deltaY * COCKPIT_LOOK_SENSITIVITY,
+        CesiumMath.toRadians(-85),
+        CesiumMath.toRadians(55),
+      );
+
+      viewerRef.current?.cesiumElement?.scene.requestRender();
+      event.preventDefault();
+    };
+
+    const onPointerUp = (event: PointerEvent) => {
+      if (pointerState.pointerId !== event.pointerId) return;
+      pointerState.active = false;
+      pointerState.pointerId = null;
+    };
+
+    const onWheel = (event: WheelEvent) => {
+      if (eventCameFromHud(event.target)) return;
+      event.preventDefault();
+    };
+
+    window.addEventListener('pointerdown', onPointerDown, {
+      capture: true,
+      passive: true,
+    });
+    window.addEventListener('pointermove', onPointerMove, {
+      capture: true,
+      passive: false,
+    });
+    window.addEventListener('pointerup', onPointerUp, {
+      capture: true,
+      passive: true,
+    });
+    window.addEventListener('pointercancel', onPointerUp, {
+      capture: true,
+      passive: true,
+    });
+    window.addEventListener('wheel', onWheel, {
+      capture: true,
+      passive: false,
+    });
+
+    return () => {
+      pointerState.active = false;
+      pointerState.pointerId = null;
+      window.removeEventListener('pointerdown', onPointerDown, true);
+      window.removeEventListener('pointermove', onPointerMove, true);
+      window.removeEventListener('pointerup', onPointerUp, true);
+      window.removeEventListener('pointercancel', onPointerUp, true);
+      window.removeEventListener('wheel', onWheel, true);
+    };
+  }, [cockpitFlightId]);
+
+  useEffect(() => {
     const isCockpit = Boolean(cockpitFlightId);
     if (!orbitEnabled && !autoBuildingsEnabled && !trackedFlightId && !droneFlightId && !isCockpit) return;
 
     const eventCameFromHud = (target: EventTarget | null) =>
       target instanceof Node && Boolean(hudRef.current?.contains(target));
 
-    // For drone/cockpit mode: pointer DRAG = look around (allowed).
-    // Stop ONLY on a clean click (pointerdown that becomes pointerup quickly).
-    // For orbit/track modes: any interaction stops immediately.
-    let pointerDownTime = 0;
-    let pointerMoved = false;
-
     const stopFromInteraction = (event: Event) => {
       if (eventCameFromHud(event.target)) return;
-      // Cockpit mode: drag = look around, so don't stop on drag events.
-      // Chase/orbit/track modes: stop immediately on any interaction.
       if (isCockpit) return;
       cancelAutoLandmarkExperience();
       stopFlightTracking();
     };
     const stopFromPointerMove = (e: PointerEvent | MouseEvent) => {
       if (eventCameFromHud(e.target)) return;
-      if (isCockpit) {
-        pointerMoved = true; // drag = look around, NOT a click
-        return;
-      }
+      if (isCockpit) return;
       if ((e as { buttons?: number }).buttons) {
         cancelAutoLandmarkExperience();
-        stopFlightTracking();
-      }
-    };
-    const onPointerDown = (e: PointerEvent) => {
-      if (!isCockpit || eventCameFromHud(e.target)) return;
-      pointerDownTime = Date.now();
-      pointerMoved = false;
-    };
-    const onPointerUp = (e: PointerEvent) => {
-      if (!isCockpit || eventCameFromHud(e.target)) return;
-      // Quick tap without movement = click → exit cockpit mode.
-      if (!pointerMoved && Date.now() - pointerDownTime < 300) {
         stopFlightTracking();
       }
     };
@@ -2207,8 +2316,6 @@ export default function Viewer() {
     window.addEventListener('mousemove', stopFromPointerMove, listenerOpts);
     window.addEventListener('keydown', stopFromInteraction, true);
     window.addEventListener('blur', stopFromInteraction, true);
-    window.addEventListener('pointerdown', onPointerDown, listenerOpts);
-    window.addEventListener('pointerup', onPointerUp, listenerOpts);
 
     return () => {
       window.removeEventListener('pointerdown', stopFromInteraction, listenerOpts);
@@ -2221,8 +2328,6 @@ export default function Viewer() {
       window.removeEventListener('mousemove', stopFromPointerMove, listenerOpts);
       window.removeEventListener('keydown', stopFromInteraction, true);
       window.removeEventListener('blur', stopFromInteraction, true);
-      window.removeEventListener('pointerdown', onPointerDown, listenerOpts);
-      window.removeEventListener('pointerup', onPointerUp, listenerOpts);
     };
   }, [
     autoBuildingsEnabled,

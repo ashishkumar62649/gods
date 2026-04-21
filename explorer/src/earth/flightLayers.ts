@@ -1,6 +1,7 @@
 import {
   Billboard,
   BillboardCollection,
+  CatmullRomSpline,
   Cartesian2,
   Cartesian3,
   Cartographic,
@@ -30,14 +31,18 @@ import {
   FlightRecord,
   FlightRenderMode,
   FlightRouteSnapshot,
-  FLIGHT_ICON_IMAGE,
   MEDIUM_AIRPORT_ICON_IMAGE,
   getFlightDisplayName,
   ORIGIN_AIRPORT_ICON_IMAGE,
   predictFlightPosition,
   SMALL_AIRPORT_ICON_IMAGE,
-  SELECTED_FLIGHT_ICON_IMAGE,
 } from './flights';
+import {
+  getFlightAltitudeColorCss,
+  getFlightIconDimensions,
+  getFlightIconImage,
+  getFlightIconKey,
+} from './flightVisuals';
 
 interface FlightPickId {
   kind: 'flight';
@@ -363,32 +368,34 @@ export class FlightSceneLayerManager {
     const isSelected = this.selectedFlightId === flight.id;
     const hasSelection = Boolean(this.selectedFlightId);
     const dimmed = hasSelection && !isSelected;
-    const markerColor = isSelected
-      ? Color.fromCssColorString('#7effcf')
-      : dimmed
-        ? new Color(0.58, 0.8, 0.94, 0.28)
-        : Color.fromCssColorString('#8feaff');
+    const iconKey = getFlightIconKey(flight);
+    const baseColor = Color.fromCssColorString(
+      getFlightAltitudeColorCss(flight, isSelected),
+    );
+    const markerColor = dimmed
+      ? new Color(baseColor.red, baseColor.green, baseColor.blue, 0.24)
+      : isSelected
+        ? new Color(baseColor.red, baseColor.green, baseColor.blue, 0.96)
+        : new Color(baseColor.red, baseColor.green, baseColor.blue, 0.88);
+    const iconSize = getFlightIconDimensions(flight, isSelected);
 
     entry.dot.show = this.flightsVisible && this.renderMode === 'dot' && !isSelected;
-    entry.dot.pixelSize = isSelected ? 14 : 7;
+    entry.dot.pixelSize = isSelected ? 13 : 7.5;
     entry.dot.color = markerColor;
     entry.dot.outlineColor = isSelected
-      ? Color.fromCssColorString('#dfffee')
-      : new Color(0.06, 0.1, 0.18, dimmed ? 0.12 : 0.32);
+      ? Color.WHITE.withAlpha(0.9)
+      : new Color(0.05, 0.08, 0.14, dimmed ? 0.12 : 0.36);
     entry.dot.outlineWidth = isSelected ? 2 : 1;
 
     entry.icon.show = this.flightsVisible && (this.renderMode === 'icon' || isSelected);
-    entry.icon.image = isSelected ? SELECTED_FLIGHT_ICON_IMAGE : FLIGHT_ICON_IMAGE;
+    entry.icon.image = getFlightIconImage(iconKey);
     entry.icon.color = markerColor;
     // Rotate so the nose (SVG top = +Y) points in the heading direction.
     // With alignedAxis = localUp, rotation=0 aligns SVG-top to North.
     // Negate heading to convert CW-from-North to CCW Cesium rotation.
     entry.icon.rotation = CesiumMath.toRadians(-flight.headingDegrees);
-    // Narrow width + taller height matches the aircraft silhouette SVG.
-    // The narrow width means the icon is very thin when viewed from the side.
-    entry.icon.width = isSelected ? 22 : 14;
-    entry.icon.height = isSelected ? 56 : 38;
-
+    entry.icon.width = iconSize.width;
+    entry.icon.height = iconSize.height;
   }
 
   private refreshFlightVisuals() {
@@ -447,7 +454,16 @@ export class FlightSceneLayerManager {
       return;
     }
 
-    const routePositions = buildRouteArcPositions(snapshot.origin, trackedFlight, snapshot.destination);
+    const ageSeconds = Math.min(
+      20,
+      Math.max(0, Date.now() / 1000 - trackedFlight.timestamp),
+    );
+    const predictedFlight = predictFlightPosition(trackedFlight, ageSeconds);
+    const routePositions = buildRouteArcPositions(
+      snapshot.origin,
+      predictedFlight,
+      snapshot.destination,
+    );
     this.routeArcPolyline.show = routePositions.length > 1;
     this.routeArcPolyline.positions = routePositions;
 
@@ -493,6 +509,10 @@ export class FlightSceneLayerManager {
 
     if (this.selectedFlightId) {
       this.refreshSelectionOverlays();
+    }
+
+    if (this.routeState.snapshot?.found && this.routeState.flightId) {
+      this.refreshRouteOverlay();
     }
   }
 }
@@ -556,68 +576,76 @@ function buildTrailPositions(
 
 function buildRouteArcPositions(
   origin: AirportRecord,
-  flight: FlightRecord,
+  flight: { latitude: number; longitude: number; altitudeMeters: number },
   destination: AirportRecord,
 ) {
-  const firstLeg = sampleArcSegment(
-    {
-      latitude: origin.latitude,
-      longitude: origin.longitude,
-      altitudeMeters: 0,
-    },
-    {
-      latitude: flight.latitude,
-      longitude: flight.longitude,
-      altitudeMeters: Math.max(0, flight.altitudeMeters),
-    },
-  );
-  const secondLeg = sampleArcSegment(
-    {
-      latitude: flight.latitude,
-      longitude: flight.longitude,
-      altitudeMeters: Math.max(0, flight.altitudeMeters),
-    },
-    {
-      latitude: destination.latitude,
-      longitude: destination.longitude,
-      altitudeMeters: 0,
-    },
-  );
+  const originPoint = {
+    latitude: origin.latitude,
+    longitude: origin.longitude,
+    altitudeMeters: 0,
+  };
+  const livePoint = {
+    latitude: flight.latitude,
+    longitude: flight.longitude,
+    altitudeMeters: Math.max(0, flight.altitudeMeters),
+  };
+  const destinationPoint = {
+    latitude: destination.latitude,
+    longitude: destination.longitude,
+    altitudeMeters: 0,
+  };
+  const supportA = buildRouteSupportPoint(originPoint, livePoint, 0.6);
+  const supportB = buildRouteSupportPoint(livePoint, destinationPoint, 0.4);
+  const spline = new CatmullRomSpline({
+    times: [0, 0.28, 0.5, 0.72, 1],
+    points: [
+      Cartesian3.fromDegrees(originPoint.longitude, originPoint.latitude, originPoint.altitudeMeters),
+      supportA,
+      Cartesian3.fromDegrees(livePoint.longitude, livePoint.latitude, livePoint.altitudeMeters),
+      supportB,
+      Cartesian3.fromDegrees(
+        destinationPoint.longitude,
+        destinationPoint.latitude,
+        destinationPoint.altitudeMeters,
+      ),
+    ],
+  });
+  const positions: Cartesian3[] = [];
+  const sampleCount = 96;
 
-  return [...firstLeg, ...secondLeg.slice(1)];
+  for (let index = 0; index <= sampleCount; index += 1) {
+    positions.push(spline.evaluate(index / sampleCount));
+  }
+
+  return positions;
 }
 
-function sampleArcSegment(
+function buildRouteSupportPoint(
   start: { latitude: number; longitude: number; altitudeMeters: number },
   end: { latitude: number; longitude: number; altitudeMeters: number },
+  fraction: number,
 ) {
   const geodesic = new EllipsoidGeodesic(
     Cartographic.fromDegrees(start.longitude, start.latitude),
     Cartographic.fromDegrees(end.longitude, end.latitude),
   );
-  const surfaceDistance = Number.isFinite(geodesic.surfaceDistance) ? geodesic.surfaceDistance : 0;
-  const sampleCount = Math.max(18, Math.min(72, Math.round(surfaceDistance / 180_000)));
-  const arcHeight = Math.min(340_000, Math.max(30_000, surfaceDistance * 0.045));
-  const positions: Cartesian3[] = [];
+  const surfaceDistance = Number.isFinite(geodesic.surfaceDistance)
+    ? geodesic.surfaceDistance
+    : 0;
+  const surfacePoint = geodesic.interpolateUsingFraction(fraction);
+  const baseHeight =
+    start.altitudeMeters +
+    (end.altitudeMeters - start.altitudeMeters) * fraction;
+  const liftedHeight =
+    baseHeight +
+    Math.sin(Math.PI * fraction) *
+      Math.min(280_000, Math.max(18_000, surfaceDistance * 0.035));
 
-  for (let index = 0; index <= sampleCount; index += 1) {
-    const fraction = sampleCount === 0 ? 1 : index / sampleCount;
-    const surfacePoint = geodesic.interpolateUsingFraction(fraction);
-    const baseHeight =
-      start.altitudeMeters +
-      (end.altitudeMeters - start.altitudeMeters) * fraction;
-    const liftedHeight = baseHeight + Math.sin(Math.PI * fraction) * arcHeight;
-
-    positions.push(
-      Cartesian3.fromRadians(
-        surfacePoint.longitude,
-        surfacePoint.latitude,
-        liftedHeight,
-      ),
-    );
-  }
-
-  return positions;
+  return Cartesian3.fromRadians(
+    surfacePoint.longitude,
+    surfacePoint.latitude,
+    liftedHeight,
+  );
 }
 
 function estimateDistanceMeters(
