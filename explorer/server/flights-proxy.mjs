@@ -17,6 +17,7 @@ const OPENSKY_TOKEN_URL =
 const SNAPSHOT_TTL_MS = 12_000;
 const MISSING_FLIGHT_RETENTION_MS = 45_000;
 const ABSOLUTE_STALE_CONTACT_SECONDS = 150;
+const LIVE_CONTACT_MAX_AGE_SECONDS = 150;
 const MAX_TRAIL_POINTS = 15;
 const AIRPORTS_CSV_PATH = resolveAirportCsvPath();
 
@@ -72,8 +73,8 @@ createServer(async (req, res) => {
       lastUpdatedMs: cache.lastUpdatedMs,
       airportsCsvAvailable: airportIndex.available,
       airportsCsvPath: airportIndex.sourcePath,
-      airportCount: airportIndex.airportsByCode.size,
-      featuredAirportCount: airportIndex.featuredAirports.length,
+      airportCount: airportIndex.airports.length,
+      routeCandidateAirportCount: airportIndex.routeAirports.length,
       airportsError: airportIndex.loadError,
     });
     return;
@@ -88,12 +89,7 @@ createServer(async (req, res) => {
       return;
     }
 
-    const includeMedium = searchParams.get('includeMedium') === '1';
-    const airports = includeMedium
-      ? buildAirportLayerPayload(airportIndex)
-      : airportIndex.featuredAirports.filter((airport) => airport.type === 'large_airport');
-
-    sendJson(res, 200, airports);
+    sendJson(res, 200, airportIndex.airports);
     return;
   }
 
@@ -271,13 +267,16 @@ async function fetchRouteForCallsign(callsign) {
   );
 
   if (response.status === 404) {
-    return {
-      callsign: normalizedCallsign,
-      found: false,
-      origin: null,
-      destination: null,
-      error: 'No route was found for this callsign.',
-    };
+    return (
+      estimateRouteFromLiveFlight(normalizedCallsign) ??
+      {
+        callsign: normalizedCallsign,
+        found: false,
+        origin: null,
+        destination: null,
+        error: 'No route was found for this callsign.',
+      }
+    );
   }
 
   if (!response.ok) {
@@ -288,13 +287,16 @@ async function fetchRouteForCallsign(callsign) {
   const [originCode, destinationCode] = extractRouteCodes(payload);
 
   if (!originCode || !destinationCode) {
-    return {
-      callsign: normalizedCallsign,
-      found: false,
-      origin: null,
-      destination: null,
-      error: 'OpenSky did not return usable origin and destination airport codes.',
-    };
+    return (
+      estimateRouteFromLiveFlight(normalizedCallsign) ??
+      {
+        callsign: normalizedCallsign,
+        found: false,
+        origin: null,
+        destination: null,
+        error: 'OpenSky did not return usable origin and destination airport codes.',
+      }
+    );
   }
 
   const origin = airportIndex.airportsByCode.get(originCode);
@@ -305,19 +307,23 @@ async function fetchRouteForCallsign(callsign) {
       .filter(Boolean)
       .join(', ');
 
-    return {
-      callsign: normalizedCallsign,
-      found: false,
-      origin: origin ? serializeAirport(origin) : null,
-      destination: destination ? serializeAirport(destination) : null,
-      error: `Airport lookup failed for ${missingCodes}.`,
-    };
+    return (
+      estimateRouteFromLiveFlight(normalizedCallsign) ??
+      {
+        callsign: normalizedCallsign,
+        found: false,
+        origin: origin ? serializeAirport(origin) : null,
+        destination: destination ? serializeAirport(destination) : null,
+        error: `Airport lookup failed for ${missingCodes}.`,
+      }
+    );
   }
 
   return {
     callsign: normalizedCallsign,
     found: true,
     fetchedAt: new Date().toISOString(),
+    source: 'opensky',
     origin: serializeAirport(origin),
     destination: serializeAirport(destination),
   };
@@ -374,7 +380,7 @@ function normalizeOpenSkyState(row, snapshotTime) {
     longitude === null ||
     latitude === null ||
     onGround ||
-    lastContact < snapshotTime - 90
+    lastContact < snapshotTime - LIVE_CONTACT_MAX_AGE_SECONDS
   ) {
     return null;
   }
@@ -486,7 +492,8 @@ function loadAirportIndex(csvPath) {
       sourcePath: csvPath,
       loadError: 'File not found',
       airportsByCode: new Map(),
-      featuredAirports: [],
+      airports: [],
+      routeAirports: [],
     };
   }
 
@@ -501,7 +508,8 @@ function loadAirportIndex(csvPath) {
     });
 
     const airportsByCode = new Map();
-    const featuredAirports = [];
+    const airports = [];
+    const routeAirports = [];
 
     for (const row of rows) {
       const airport = normalizeAirportRow(row);
@@ -511,19 +519,22 @@ function loadAirportIndex(csvPath) {
         airportsByCode.set(code, airport);
       }
 
-      if (airport.type === 'large_airport' || airport.type === 'medium_airport') {
-        featuredAirports.push(serializeAirport(airport));
+      airports.push(serializeAirport(airport));
+
+      if (isRouteCandidateAirport(airport)) {
+        routeAirports.push(airport);
       }
     }
 
-    featuredAirports.sort((a, b) => a.name.localeCompare(b.name));
+    airports.sort((a, b) => a.name.localeCompare(b.name));
 
     return {
       available: true,
       sourcePath: csvPath,
       loadError: null,
       airportsByCode,
-      featuredAirports,
+      airports,
+      routeAirports,
     };
   } catch (error) {
     return {
@@ -531,28 +542,10 @@ function loadAirportIndex(csvPath) {
       sourcePath: csvPath,
       loadError: error instanceof Error ? error.message : 'Unknown CSV parse error',
       airportsByCode: new Map(),
-      featuredAirports: [],
+      airports: [],
+      routeAirports: [],
     };
   }
-}
-
-function buildAirportLayerPayload(index) {
-  const combined = [];
-  const seenIds = new Set();
-
-  for (const airport of index.featuredAirports) {
-    if (airport.type !== 'large_airport' && airport.type !== 'medium_airport') {
-      continue;
-    }
-
-    if (seenIds.has(airport.id)) continue;
-    seenIds.add(airport.id);
-    combined.push(airport);
-  }
-
-  return combined.length <= 5000
-    ? combined
-    : combined.filter((airport) => airport.type === 'large_airport');
 }
 
 function normalizeAirportRow(row) {
@@ -629,6 +622,90 @@ function extractRouteCodes(payload) {
   ];
 }
 
+function estimateRouteFromLiveFlight(callsign) {
+  const liveFlight = findLiveFlightByCallsign(callsign);
+  if (!liveFlight) return null;
+
+  const origin = pickEstimatedRouteAirport(liveFlight, 'origin');
+  const destination = pickEstimatedRouteAirport(liveFlight, 'destination');
+
+  if (!origin || !destination || origin.id === destination.id) {
+    return null;
+  }
+
+  return {
+    callsign,
+    found: true,
+    fetchedAt: new Date().toISOString(),
+    source: 'estimated',
+    origin: serializeAirport(origin),
+    destination: serializeAirport(destination),
+    error: 'Estimated from live heading and nearest aligned airports.',
+  };
+}
+
+function findLiveFlightByCallsign(callsign) {
+  let bestMatch = null;
+
+  for (const entry of flightStore.values()) {
+    const normalizedEntryCallsign = normalizeCallsign(entry.flight.callsign);
+    if (!normalizedEntryCallsign || normalizedEntryCallsign !== callsign) continue;
+
+    if (!bestMatch || entry.flight.timestamp > bestMatch.timestamp) {
+      bestMatch = entry.flight;
+    }
+  }
+
+  return bestMatch;
+}
+
+function pickEstimatedRouteAirport(flight, kind) {
+  let bestAirport = null;
+  let bestScore = Number.POSITIVE_INFINITY;
+
+  for (const airport of airportIndex.routeAirports) {
+    const distanceMeters = estimateSurfaceDistanceMeters(
+      airport.latitude,
+      airport.longitude,
+      flight.latitude,
+      flight.longitude,
+    );
+
+    if (!Number.isFinite(distanceMeters) || distanceMeters < 20_000 || distanceMeters > 6_000_000) {
+      continue;
+    }
+
+    const bearing =
+      kind === 'origin'
+        ? bearingDegrees(airport.latitude, airport.longitude, flight.latitude, flight.longitude)
+        : bearingDegrees(flight.latitude, flight.longitude, airport.latitude, airport.longitude);
+
+    const headingDelta = headingDifferenceDegrees(flight.headingDegrees, bearing);
+    const maxHeadingDelta =
+      airport.type === 'large_airport'
+        ? 55
+        : airport.type === 'medium_airport'
+          ? 40
+          : 28;
+
+    if (headingDelta > maxHeadingDelta) {
+      continue;
+    }
+
+    const score =
+      distanceMeters +
+      headingDelta * 18_000 -
+      airportTypePriorityBonus(airport.type);
+
+    if (score < bestScore) {
+      bestScore = score;
+      bestAirport = airport;
+    }
+  }
+
+  return bestAirport;
+}
+
 function serializeAirport(airport) {
   return {
     id: airport.id,
@@ -642,6 +719,52 @@ function serializeAirport(airport) {
     latitude: airport.latitude,
     longitude: airport.longitude,
   };
+}
+
+function isRouteCandidateAirport(airport) {
+  return (
+    airport.type === 'large_airport' ||
+    airport.type === 'medium_airport' ||
+    airport.type === 'small_airport'
+  );
+}
+
+function airportTypePriorityBonus(type) {
+  if (type === 'large_airport') return 350_000;
+  if (type === 'medium_airport') return 180_000;
+  if (type === 'small_airport') return 50_000;
+  return 0;
+}
+
+function estimateSurfaceDistanceMeters(lat1, lon1, lat2, lon2) {
+  const earthRadiusMeters = 6_371_000;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+  const startLat = (lat1 * Math.PI) / 180;
+  const endLat = (lat2 * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(startLat) * Math.cos(endLat) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return earthRadiusMeters * c;
+}
+
+function bearingDegrees(lat1, lon1, lat2, lon2) {
+  const startLat = (lat1 * Math.PI) / 180;
+  const endLat = (lat2 * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+
+  const y = Math.sin(dLon) * Math.cos(endLat);
+  const x =
+    Math.cos(startLat) * Math.sin(endLat) -
+    Math.sin(startLat) * Math.cos(endLat) * Math.cos(dLon);
+
+  return normalizeHeading((Math.atan2(y, x) * 180) / Math.PI);
+}
+
+function headingDifferenceDegrees(a, b) {
+  const delta = Math.abs(normalizeHeading(a) - normalizeHeading(b));
+  return Math.min(delta, 360 - delta);
 }
 
 function resolveAirportCsvPath() {

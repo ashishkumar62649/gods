@@ -24,6 +24,7 @@ import {
   TileMapServiceImageryProvider,
   Viewer as CesiumViewer,
   Terrain,
+  Transforms,
   createWorldImageryAsync,
   createOsmBuildingsAsync,
 } from 'cesium';
@@ -41,6 +42,9 @@ import {
   fetchAirports,
   fetchFlightRoute,
   fetchFlightSnapshot,
+  formatAltitudeMeters,
+  formatHeading,
+  formatSpeed,
   getFlightRenderMode,
   predictFlightPosition,
 } from './flights';
@@ -359,6 +363,31 @@ function getFlightCameraOffset(
   );
 }
 
+/**
+ * Cockpit entry view — positions the camera AT the plane's location,
+ * facing in the direction it is travelling. Used for the initial fly-in
+ * animation when the user activates drone/cockpit mode.
+ */
+function getDroneCockpitEntry(flight: FlightRecord, secondsAhead: number) {
+  const target = getFlightCameraTarget(flight, secondsAhead);
+  const headingRad = CesiumMath.toRadians(flight.headingDegrees);
+  // Slightly above the flight position so you're "on top" of the plane.
+  const enuTransform = Transforms.eastNorthUpToFixedFrame(target);
+  const localUp = new Cartesian3(0, 0, 30); // 30 m above plane
+  const worldPos = Matrix4.multiplyByPoint(enuTransform, localUp, new Cartesian3());
+
+  // Orientation: face the heading direction, slight look-down.
+  const pitchRad = CesiumMath.toRadians(-5);
+  return {
+    destination: worldPos,
+    orientation: {
+      heading: headingRad,
+      pitch: pitchRad,
+      roll: 0,
+    },
+  };
+}
+
 type SidebarSection = 'base' | 'intel' | 'visual' | 'system';
 
 interface ImageryOption {
@@ -550,11 +579,15 @@ export default function Viewer() {
   const showAirportsRef = useRef(false);
   const selectedFlightIdRef = useRef<string | null>(null);
   const trackedFlightIdRef = useRef<string | null>(null);
+  const droneFlightIdRef = useRef<string | null>(null);
+  const cockpitFlightIdRef = useRef<string | null>(null);
   const trackedFlightViewRef = useRef<HeadingPitchRange | null>(null);
   const showSelectedFlightTrailRef = useRef(false);
+  const showSelectedFlightRouteRef = useRef(false);
   const airportsLoadedRef = useRef(false);
   const airportsLoadingRef = useRef(false);
   const airportRecordsCacheRef = useRef<AirportRecord[]>([]);
+  const selectedFlightRouteRef = useRef<FlightRouteSnapshot | null>(null);
   const currentImageryLayersRef = useRef<ImageryLayer[]>([]);
   const hudRef = useRef<HTMLDivElement | null>(null);
 
@@ -575,13 +608,16 @@ export default function Viewer() {
   const [showAirports, setShowAirports] = useState(false);
   const [selectedFlightId, setSelectedFlightId] = useState<string | null>(null);
   const [trackedFlightId, setTrackedFlightId] = useState<string | null>(null);
+  const [droneFlightId, setDroneFlightId] = useState<string | null>(null);
+  const [cockpitFlightId, setCockpitFlightId] = useState<string | null>(null);
   const [selectedFlight, setSelectedFlight] = useState<FlightRecord | null>(null);
   const [showSelectedFlightTrail, setShowSelectedFlightTrail] = useState(false);
+  const [showSelectedFlightRoute, setShowSelectedFlightRoute] = useState(false);
   const [flightFeed, setFlightFeed] = useState<FlightFeedState>(INITIAL_FLIGHT_FEED);
   const [flightRenderMode, setFlightRenderMode] = useState<FlightRenderMode>('dot');
-  const [trackedFlightRoute, setTrackedFlightRoute] = useState<FlightRouteSnapshot | null>(null);
+  const [selectedFlightRoute, setSelectedFlightRoute] = useState<FlightRouteSnapshot | null>(null);
   const [airportLayerMessage, setAirportLayerMessage] = useState(
-    'Render major airports with performance billboards.',
+    'Render every airport with zoom-aware visibility.',
   );
 
   // User toggle state for the buildings layer. Effective visibility is
@@ -703,17 +739,62 @@ export default function Viewer() {
 
   const stopFlightTracking = useCallback(() => {
     trackedFlightIdRef.current = null;
+    droneFlightIdRef.current = null;
+    cockpitFlightIdRef.current = null;
     trackedFlightViewRef.current = null;
     setTrackedFlightId(null);
-    setTrackedFlightRoute(null);
-    flightLayerManagerRef.current?.setTrackedRoute(null, null);
+    setDroneFlightId(null);
+    setCockpitFlightId(null);
 
     const viewer = viewerRef.current?.cesiumElement;
     if (viewer && !viewer.isDestroyed()) {
       viewer.camera.lookAtTransform(Matrix4.IDENTITY);
+      // Restore all camera controller inputs that cockpit mode may have disabled.
+      const ctrl = viewer.scene.screenSpaceCameraController;
+      ctrl.enableRotate = true;
+      ctrl.enableTranslate = true;
+      ctrl.enableZoom = true;
+      ctrl.enableTilt = true;
+      ctrl.enableLook = true;
       viewer.scene.requestRender();
     }
   }, []);
+
+  // ── 60 fps dead-reckoning loop ──────────────────────────────────────────
+  // Attaches FlightSceneLayerManager.tickPositions() to Cesium's preRender
+  // event so aircraft glide smoothly every frame instead of teleporting on
+  // each OpenSky poll.
+  //
+  // Rules:
+  //  • Empty deps → registered ONCE on mount, removed on unmount.
+  //  • NO useState calls inside → zero React re-renders at 60fps.
+  //  • Reads flightLayerManagerRef directly (mutable ref, not state).
+  useEffect(() => {
+    let cancelled = false;
+    let rafId = 0;
+    let removePreRender: (() => void) | undefined;
+
+    const pollForViewer = () => {
+      if (cancelled) return;
+      const viewer = viewerRef.current?.cesiumElement;
+      const manager = flightLayerManagerRef.current;
+      if (!viewer || viewer.isDestroyed() || !manager) {
+        rafId = requestAnimationFrame(pollForViewer);
+        return;
+      }
+      // Attach the tick to Cesium's preRender — fires automatically every frame.
+      removePreRender = viewer.scene.preRender.addEventListener(() => {
+        flightLayerManagerRef.current?.tickPositions();
+      });
+    };
+
+    rafId = requestAnimationFrame(pollForViewer);
+    return () => {
+      cancelled = true;
+      if (rafId) cancelAnimationFrame(rafId);
+      removePreRender?.();
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const focusFlight = useCallback(
     (
@@ -779,6 +860,10 @@ export default function Viewer() {
     showAirportsRef.current = nextEnabled;
     setShowAirports(nextEnabled);
     flightLayerManagerRef.current?.setAirportsVisible(nextEnabled);
+  }, []);
+
+  const toggleSelectedFlightRoute = useCallback(() => {
+    setShowSelectedFlightRoute((enabled) => !enabled);
   }, []);
 
   const handleImageryOptionChange = useCallback(
@@ -1234,17 +1319,114 @@ export default function Viewer() {
     ],
   );
 
-  const handleFocusSelectedFlight = useCallback(() => {
+  // ── Chase cam (Drone) ────────────────────────────────────────────────────
+  // Camera locked BEHIND the plane, always follows it.
+  // User cannot look around; the view is fixed to trail the aircraft.
+  const toggleSelectedFlightDrone = useCallback(() => {
     if (!selectedFlight) return;
+
+    if (droneFlightIdRef.current === selectedFlight.id) {
+      stopFlightTracking();
+      return;
+    }
+
     cancelAutoLandmarkExperience();
     stopFlightTracking();
-    focusFlight(selectedFlight);
+
+    const flightId = selectedFlight.id;
+    const viewer = viewerRef.current?.cesiumElement;
+    if (!viewer || viewer.isDestroyed()) return;
+
+    const liveFlight = flightRecordsRef.current.get(flightId) ?? selectedFlight;
+    const ageSeconds = Math.min(20, Math.max(0, Date.now() / 1000 - liveFlight.timestamp));
+    const target = getFlightCameraTarget(liveFlight, ageSeconds);
+    // Place camera behind: heading + 180°, pitch -20°, distance ~1km.
+    const speed = Math.max(60, liveFlight.speedMetersPerSecond);
+    const alt = Math.max(0, liveFlight.altitudeMeters);
+    const range = CesiumMath.clamp(speed * 2.5 + alt * 0.07, 350, 2_200);
+    const chaseOffset = new HeadingPitchRange(
+      CesiumMath.toRadians(liveFlight.headingDegrees) + Math.PI,
+      CesiumMath.toRadians(-20),
+      range,
+    );
+
+    viewer.camera.lookAtTransform(Matrix4.IDENTITY);
+    viewer.camera.flyToBoundingSphere(new BoundingSphere(target, 1), {
+      duration: 1.5,
+      offset: chaseOffset,
+      easingFunction: FLIGHT_EASING,
+      complete: () => {
+        if (selectedFlightIdRef.current !== flightId) return;
+        const activeViewer = viewerRef.current?.cesiumElement;
+        const refreshed = flightRecordsRef.current.get(flightId);
+        if (!activeViewer || activeViewer.isDestroyed() || !refreshed) return;
+        const liveAgeSeconds = Math.min(20, Math.max(0, Date.now() / 1000 - refreshed.timestamp));
+        const liveTarget = getFlightCameraTarget(refreshed, liveAgeSeconds);
+        const liveSpeed = Math.max(60, refreshed.speedMetersPerSecond);
+        const liveAlt = Math.max(0, refreshed.altitudeMeters);
+        const liveRange = CesiumMath.clamp(liveSpeed * 2.5 + liveAlt * 0.07, 350, 2_200);
+        const liveOffset = new HeadingPitchRange(
+          CesiumMath.toRadians(refreshed.headingDegrees) + Math.PI,
+          CesiumMath.toRadians(-20),
+          liveRange,
+        );
+        droneFlightIdRef.current = flightId;
+        setDroneFlightId(flightId);
+        activeViewer.camera.lookAt(liveTarget, liveOffset);
+        activeViewer.scene.requestRender();
+      },
+    });
   }, [
     cancelAutoLandmarkExperience,
-    focusFlight,
     selectedFlight,
     stopFlightTracking,
   ]);
+
+  // ── Cockpit mode ─────────────────────────────────────────────────────────
+  // Camera rides ON the plane. User can look 360° freely.
+  // All Cesium inputs stay enabled; position is re-locked to the plane
+  // every frame, so panning only changes the view direction.
+  const toggleSelectedFlightCockpit = useCallback(() => {
+    if (!selectedFlight) return;
+
+    if (cockpitFlightIdRef.current === selectedFlight.id) {
+      stopFlightTracking();
+      return;
+    }
+
+    cancelAutoLandmarkExperience();
+    stopFlightTracking();
+
+    const flightId = selectedFlight.id;
+    const viewer = viewerRef.current?.cesiumElement;
+    if (!viewer || viewer.isDestroyed()) return;
+
+    const liveFlight = flightRecordsRef.current.get(flightId) ?? selectedFlight;
+    const ageSeconds = Math.min(20, Math.max(0, Date.now() / 1000 - liveFlight.timestamp));
+    const entry = getDroneCockpitEntry(liveFlight, ageSeconds);
+
+    viewer.camera.lookAtTransform(Matrix4.IDENTITY);
+
+    viewer.camera.flyTo({
+      destination: entry.destination,
+      orientation: entry.orientation,
+      duration: 1.6,
+      easingFunction: FLIGHT_EASING,
+      complete: () => {
+        if (selectedFlightIdRef.current !== flightId) return;
+        const activeViewer = viewerRef.current?.cesiumElement;
+        if (!activeViewer || activeViewer.isDestroyed()) return;
+        cockpitFlightIdRef.current = flightId;
+        setCockpitFlightId(flightId);
+        activeViewer.scene.requestRender();
+      },
+    });
+  }, [
+    cancelAutoLandmarkExperience,
+    selectedFlight,
+    stopFlightTracking,
+  ]);
+
 
   const toggleSelectedFlightTracking = useCallback(() => {
     if (!selectedFlight) return;
@@ -1444,8 +1626,16 @@ export default function Viewer() {
   }, [showSelectedFlightTrail]);
 
   useEffect(() => {
+    showSelectedFlightRouteRef.current = showSelectedFlightRoute;
+  }, [showSelectedFlightRoute]);
+
+  useEffect(() => {
     trackedFlightIdRef.current = trackedFlightId;
   }, [trackedFlightId]);
+
+  useEffect(() => {
+    droneFlightIdRef.current = droneFlightId;
+  }, [droneFlightId]);
 
   useEffect(() => {
     showAirportsRef.current = showAirports;
@@ -1453,11 +1643,18 @@ export default function Viewer() {
   }, [showAirports]);
 
   useEffect(() => {
-    if (!trackedFlightId) return;
-    if (!flightsEnabled || selectedFlightId !== trackedFlightId) {
+    const activeFlightCameraId = droneFlightId ?? trackedFlightId;
+    if (!activeFlightCameraId) return;
+    if (!flightsEnabled || selectedFlightId !== activeFlightCameraId) {
       stopFlightTracking();
     }
-  }, [flightsEnabled, selectedFlightId, stopFlightTracking, trackedFlightId]);
+  }, [
+    droneFlightId,
+    flightsEnabled,
+    selectedFlightId,
+    stopFlightTracking,
+    trackedFlightId,
+  ]);
 
   useEffect(() => {
     let cancelled = false;
@@ -1501,6 +1698,16 @@ export default function Viewer() {
       }
       if (flightRecordsRef.current.size > 0) {
         layerManager.syncFlights(Array.from(flightRecordsRef.current.values()));
+      }
+      if (
+        showSelectedFlightRouteRef.current &&
+        selectedFlightIdRef.current &&
+        selectedFlightRouteRef.current?.found
+      ) {
+        layerManager.setTrackedRoute(
+          selectedFlightRouteRef.current,
+          selectedFlightIdRef.current,
+        );
       }
 
       const handler = new ScreenSpaceEventHandler(viewerUsed.scene.canvas);
@@ -1660,7 +1867,7 @@ export default function Viewer() {
     let cancelled = false;
     const controller = new AbortController();
     airportsLoadingRef.current = true;
-    setAirportLayerMessage('Loading major airports from the local proxy...');
+    setAirportLayerMessage('Loading the full airport dataset from the local proxy...');
 
     void fetchAirports(controller.signal)
       .then((airports) => {
@@ -1668,7 +1875,7 @@ export default function Viewer() {
         airportsLoadedRef.current = true;
         airportRecordsCacheRef.current = airports;
         flightLayerManagerRef.current?.setGlobalAirports(airports);
-        setAirportLayerMessage(`${airports.length} major airports ready.`);
+        setAirportLayerMessage(`${airports.length} airports ready.`);
       })
       .catch((error) => {
         if (cancelled || controller.signal.aborted) return;
@@ -1690,14 +1897,19 @@ export default function Viewer() {
   }, [showAirports]);
 
   useEffect(() => {
-    if (!trackedFlightId) {
-      setTrackedFlightRoute(null);
+    selectedFlightRouteRef.current = selectedFlightRoute;
+  }, [selectedFlightRoute]);
+
+  useEffect(() => {
+    if (!showSelectedFlightRoute || !selectedFlightId || !flightsEnabled) {
+      setSelectedFlightRoute(null);
+      selectedFlightRouteRef.current = null;
       flightLayerManagerRef.current?.setTrackedRoute(null, null);
       return;
     }
 
-    const trackedFlight = flightRecordsRef.current.get(trackedFlightId);
-    const callsign = trackedFlight?.callsign?.trim() ?? '';
+    const routeFlight = flightRecordsRef.current.get(selectedFlightId);
+    const callsign = routeFlight?.callsign?.trim() ?? '';
     if (!callsign) {
       const unavailableRoute: FlightRouteSnapshot = {
         callsign: null,
@@ -1706,19 +1918,25 @@ export default function Viewer() {
         destination: null,
         error: 'This flight does not have a usable callsign for route lookup.',
       };
-      setTrackedFlightRoute(unavailableRoute);
-      flightLayerManagerRef.current?.setTrackedRoute(null, trackedFlightId);
+      setSelectedFlightRoute(unavailableRoute);
+      selectedFlightRouteRef.current = unavailableRoute;
+      flightLayerManagerRef.current?.setTrackedRoute(null, selectedFlightId);
       return;
     }
 
     let cancelled = false;
     const controller = new AbortController();
 
+    setSelectedFlightRoute(null);
+    selectedFlightRouteRef.current = null;
+    flightLayerManagerRef.current?.setTrackedRoute(null, null);
+
     void fetchFlightRoute(callsign, controller.signal)
       .then((route) => {
         if (cancelled) return;
-        setTrackedFlightRoute(route);
-        flightLayerManagerRef.current?.setTrackedRoute(route.found ? route : null, trackedFlightId);
+        setSelectedFlightRoute(route);
+        selectedFlightRouteRef.current = route;
+        flightLayerManagerRef.current?.setTrackedRoute(route.found ? route : null, selectedFlightId);
       })
       .catch((error) => {
         if (cancelled || controller.signal.aborted) return;
@@ -1733,15 +1951,16 @@ export default function Viewer() {
               ? error.message
               : 'The route service is temporarily unavailable.',
         };
-        setTrackedFlightRoute(failedRoute);
-        flightLayerManagerRef.current?.setTrackedRoute(null, trackedFlightId);
+        setSelectedFlightRoute(failedRoute);
+        selectedFlightRouteRef.current = failedRoute;
+        flightLayerManagerRef.current?.setTrackedRoute(null, selectedFlightId);
       });
 
     return () => {
       cancelled = true;
       controller.abort();
     };
-  }, [trackedFlightId]);
+  }, [flightsEnabled, selectedFlightId, showSelectedFlightRoute]);
 
   useEffect(() => {
     if (!trackedFlightId) return;
@@ -1806,20 +2025,173 @@ export default function Viewer() {
   }, [stopFlightTracking, trackedFlightId]);
 
   useEffect(() => {
-    if (!orbitEnabled && !autoBuildingsEnabled && !trackedFlightId) return;
+    if (!droneFlightId) return;
+
+    let cancelled = false;
+    let rafId = 0;
+    let removePostRender: (() => void) | null = null;
+    let attempts = 0;
+    const maxAttempts = 600;
+
+    const pollForViewer = () => {
+      if (cancelled) return;
+      attempts += 1;
+
+      const viewer = viewerRef.current?.cesiumElement;
+      const ready = Boolean(viewer) && !viewer!.isDestroyed();
+      if (!ready) {
+        if (attempts <= maxAttempts) {
+          rafId = requestAnimationFrame(pollForViewer);
+        }
+        return;
+      }
+
+      const activeViewer = viewer!;
+      const syncDroneFlightCamera = () => {
+        if (cancelled || activeViewer.isDestroyed()) return;
+
+        const activeFlightId = droneFlightIdRef.current;
+        if (!activeFlightId) return;
+
+        const liveFlight = flightRecordsRef.current.get(activeFlightId);
+        if (!liveFlight) {
+          stopFlightTracking();
+          return;
+        }
+
+        // ── Cockpit / rider mode ────────────────────────────────────────────
+        // Move the camera WITH the plane each frame, but preserve whatever
+        // direction the user is currently looking (allowing free 360° look).
+        //
+        // Strategy: compute the plane's world position, build a position 30 m
+        // above it in the local ENU frame, then call setView with:
+        //   • destination = that world position  (camera moves with plane)
+        //   • orientation = current camera direction/up  (user keeps their view)
+        const ageSeconds = Math.min(
+          20,
+          Math.max(0, Date.now() / 1000 - liveFlight.timestamp),
+        );
+        const planeCenter = getFlightCameraTarget(liveFlight, ageSeconds);
+        const enuTransform = Transforms.eastNorthUpToFixedFrame(planeCenter);
+        const cockpitOffset = new Cartesian3(0, 0, 30); // 30 m above plane
+        const cockpitPos = Matrix4.multiplyByPoint(enuTransform, cockpitOffset, new Cartesian3());
+
+        // Snapshot current look direction before setView overwrites it.
+        const dir = Cartesian3.clone(activeViewer.camera.directionWC, new Cartesian3());
+        const up  = Cartesian3.clone(activeViewer.camera.upWC, new Cartesian3());
+
+        activeViewer.camera.setView({
+          destination: cockpitPos,
+          orientation: { direction: dir, up },
+        });
+      };
+
+
+      syncDroneFlightCamera();
+      removePostRender = activeViewer.scene.postRender.addEventListener(
+        syncDroneFlightCamera,
+      );
+    };
+
+    rafId = requestAnimationFrame(pollForViewer);
+
+    return () => {
+      cancelled = true;
+      if (rafId) cancelAnimationFrame(rafId);
+      removePostRender?.();
+    };
+  }, [droneFlightId, stopFlightTracking]);
+
+  // ── Cockpit position-lock loop ──────────────────────────────────────────
+  // Keeps camera AT the plane each frame while preserving user orientation.
+  useEffect(() => {
+    if (!cockpitFlightId) return;
+    let cancelled = false;
+    let rafId = 0;
+    let removePostRender: (() => void) | undefined;
+
+    const pollForViewer = () => {
+      if (cancelled) return;
+      const viewer = viewerRef.current?.cesiumElement;
+      if (!viewer || viewer.isDestroyed()) {
+        rafId = requestAnimationFrame(pollForViewer);
+        return;
+      }
+
+      const syncCockpitCamera = () => {
+        if (cancelled || viewer.isDestroyed()) return;
+        const activeCockpitId = cockpitFlightIdRef.current;
+        if (!activeCockpitId) return;
+
+        const liveFlight = flightRecordsRef.current.get(activeCockpitId);
+        if (!liveFlight) { stopFlightTracking(); return; }
+
+        const ageSeconds = Math.min(20, Math.max(0, Date.now() / 1000 - liveFlight.timestamp));
+        const planeCenter = getFlightCameraTarget(liveFlight, ageSeconds);
+        const enuTransform = Transforms.eastNorthUpToFixedFrame(planeCenter);
+        const cockpitPos = Matrix4.multiplyByPoint(
+          enuTransform, new Cartesian3(0, 0, 30), new Cartesian3(),
+        );
+
+        // Preserve whatever direction+up the user has set via mouse drag.
+        const dir = Cartesian3.clone(viewer.camera.directionWC, new Cartesian3());
+        const up  = Cartesian3.clone(viewer.camera.upWC, new Cartesian3());
+        viewer.camera.setView({ destination: cockpitPos, orientation: { direction: dir, up } });
+      };
+
+      syncCockpitCamera();
+      removePostRender = viewer.scene.postRender.addEventListener(syncCockpitCamera);
+    };
+
+    rafId = requestAnimationFrame(pollForViewer);
+    return () => {
+      cancelled = true;
+      if (rafId) cancelAnimationFrame(rafId);
+      removePostRender?.();
+    };
+  }, [cockpitFlightId, stopFlightTracking]);
+
+  useEffect(() => {
+    const isCockpit = Boolean(cockpitFlightId);
+    if (!orbitEnabled && !autoBuildingsEnabled && !trackedFlightId && !droneFlightId && !isCockpit) return;
 
     const eventCameFromHud = (target: EventTarget | null) =>
       target instanceof Node && Boolean(hudRef.current?.contains(target));
 
+    // For drone/cockpit mode: pointer DRAG = look around (allowed).
+    // Stop ONLY on a clean click (pointerdown that becomes pointerup quickly).
+    // For orbit/track modes: any interaction stops immediately.
+    let pointerDownTime = 0;
+    let pointerMoved = false;
+
     const stopFromInteraction = (event: Event) => {
       if (eventCameFromHud(event.target)) return;
+      // Cockpit mode: drag = look around, so don't stop on drag events.
+      // Chase/orbit/track modes: stop immediately on any interaction.
+      if (isCockpit) return;
       cancelAutoLandmarkExperience();
       stopFlightTracking();
     };
     const stopFromPointerMove = (e: PointerEvent | MouseEvent) => {
       if (eventCameFromHud(e.target)) return;
+      if (isCockpit) {
+        pointerMoved = true; // drag = look around, NOT a click
+        return;
+      }
       if ((e as { buttons?: number }).buttons) {
         cancelAutoLandmarkExperience();
+        stopFlightTracking();
+      }
+    };
+    const onPointerDown = (e: PointerEvent) => {
+      if (!isCockpit || eventCameFromHud(e.target)) return;
+      pointerDownTime = Date.now();
+      pointerMoved = false;
+    };
+    const onPointerUp = (e: PointerEvent) => {
+      if (!isCockpit || eventCameFromHud(e.target)) return;
+      // Quick tap without movement = click → exit cockpit mode.
+      if (!pointerMoved && Date.now() - pointerDownTime < 300) {
         stopFlightTracking();
       }
     };
@@ -1835,6 +2207,8 @@ export default function Viewer() {
     window.addEventListener('mousemove', stopFromPointerMove, listenerOpts);
     window.addEventListener('keydown', stopFromInteraction, true);
     window.addEventListener('blur', stopFromInteraction, true);
+    window.addEventListener('pointerdown', onPointerDown, listenerOpts);
+    window.addEventListener('pointerup', onPointerUp, listenerOpts);
 
     return () => {
       window.removeEventListener('pointerdown', stopFromInteraction, listenerOpts);
@@ -1847,14 +2221,19 @@ export default function Viewer() {
       window.removeEventListener('mousemove', stopFromPointerMove, listenerOpts);
       window.removeEventListener('keydown', stopFromInteraction, true);
       window.removeEventListener('blur', stopFromInteraction, true);
+      window.removeEventListener('pointerdown', onPointerDown, listenerOpts);
+      window.removeEventListener('pointerup', onPointerUp, listenerOpts);
     };
   }, [
     autoBuildingsEnabled,
     cancelAutoLandmarkExperience,
+    cockpitFlightId,
+    droneFlightId,
     orbitEnabled,
     stopFlightTracking,
     trackedFlightId,
   ]);
+
 
   // ---------------------------------------------------------------------
   // Dedicated Buildings loading effect.
@@ -2143,7 +2522,7 @@ export default function Viewer() {
                 <span className="layer-card__meta">
                   {showAirports
                     ? airportLayerMessage
-                    : 'Show major airports without cluttering the flight layer.'}
+                    : 'Show every airport with zoom-aware visibility.'}
                 </span>
               </span>
               <span
@@ -2275,14 +2654,50 @@ export default function Viewer() {
           </div>
         </aside>
 
+        {/* ── Cockpit HUD overlay ─────────────────────────────────────────── */}
+        {cockpitFlightId && selectedFlight && (
+          <div className="cockpit-hud" aria-label="Cockpit mode HUD">
+            <div className="cockpit-hud__badge">✈ COCKPIT MODE</div>
+            <div className="cockpit-hud__flight">{
+              selectedFlight.callsign?.trim() || selectedFlight.id.toUpperCase()
+            }</div>
+            {selectedFlightRoute?.found && selectedFlightRoute.origin && selectedFlightRoute.destination && (
+              <div className="cockpit-hud__route">
+                <span className="cockpit-hud__route-from">
+                  {selectedFlightRoute.origin.iataCode || selectedFlightRoute.origin.ident}
+                  {selectedFlightRoute.origin.municipality ? ` · ${selectedFlightRoute.origin.municipality}` : ''}
+                </span>
+                <span className="cockpit-hud__route-arrow">→</span>
+                <span className="cockpit-hud__route-to">
+                  {selectedFlightRoute.destination.iataCode || selectedFlightRoute.destination.ident}
+                  {selectedFlightRoute.destination.municipality ? ` · ${selectedFlightRoute.destination.municipality}` : ''}
+                </span>
+              </div>
+            )}
+            <div className="cockpit-hud__stats">
+              <span>{formatAltitudeMeters(selectedFlight.altitudeMeters)}</span>
+              <span className="cockpit-hud__sep">·</span>
+              <span>{formatSpeed(selectedFlight.speedMetersPerSecond)}</span>
+              <span className="cockpit-hud__sep">·</span>
+              <span>{formatHeading(selectedFlight.headingDegrees)}</span>
+            </div>
+            <div className="cockpit-hud__hint">Drag to look · Click to exit</div>
+          </div>
+        )}
+
         <FlightDetailsPanel
           feed={flightFeed}
           flight={selectedFlight}
-          route={trackedFlightId === selectedFlight?.id ? trackedFlightRoute : null}
+          route={showSelectedFlightRoute ? selectedFlightRoute : null}
           isTracking={trackedFlightId === selectedFlight?.id}
+          isDroneMode={droneFlightId === selectedFlight?.id}
+          isCockpitMode={cockpitFlightId === selectedFlight?.id}
+          showRoute={showSelectedFlightRoute}
           showTrail={showSelectedFlightTrail}
-          onFocus={handleFocusSelectedFlight}
+          onToggleDrone={toggleSelectedFlightDrone}
+          onToggleCockpit={toggleSelectedFlightCockpit}
           onToggleTracking={toggleSelectedFlightTracking}
+          onToggleRoute={toggleSelectedFlightRoute}
           onToggleTrail={() => setShowSelectedFlightTrail((enabled) => !enabled)}
           onClose={() => updateSelectedFlight(null)}
         />

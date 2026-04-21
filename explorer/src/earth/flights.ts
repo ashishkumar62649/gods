@@ -34,6 +34,7 @@ export interface FlightRouteSnapshot {
   callsign: string | null;
   found: boolean;
   fetchedAt?: string;
+  source?: 'opensky' | 'estimated';
   origin: AirportRecord | null;
   destination: AirportRecord | null;
   error?: string;
@@ -69,24 +70,34 @@ export const FLIGHT_POLL_INTERVAL_MS = 15_000;
 export const FLIGHT_ICON_ALTITUDE_THRESHOLD = 3_500_000;
 export const FLIGHT_PREDICTION_SECONDS = 12;
 
+// Top-down aircraft silhouette.
+// Nose points UP (toward +Y in SVG = top of viewBox).
+// Long fuselage, swept wings, small tail — appears thin from oblique angles.
 const PLANE_ICON_SVG = `
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-    <path fill="white" d="M32 5 38.2 21.5 49 25.7 49 30.4 38.8 29.1 35.5 34.8 40.8 51.2 37.3 53 32 41.4 26.7 53 23.2 51.2 28.5 34.8 25.2 29.1 15 30.4 15 25.7 25.8 21.5Z"/>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 64">
+    <!-- fuselage -->
+    <ellipse cx="16" cy="32" rx="3.5" ry="24" fill="white"/>
+    <!-- main wings: swept back from mid-fuselage -->
+    <polygon points="16,22 1,38 4,40 16,29 28,40 31,38" fill="white"/>
+    <!-- tail fins -->
+    <polygon points="16,54 6,62 8,64 16,59 24,64 26,62" fill="white"/>
   </svg>
 `;
 
+// Selected version — same silhouette, cyan, with bracket corners.
 const SELECTED_FLIGHT_ICON_SVG = `
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 88 88">
-    <g fill="none" stroke="#5cf2b5" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M16 30 V16 H30" />
-      <path d="M58 16 H72 V30" />
-      <path d="M72 58 V72 H58" />
-      <path d="M30 72 H16 V58" />
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 88">
+    <!-- bracket corners -->
+    <g fill="none" stroke="#5cf2b5" stroke-width="4" stroke-linecap="round">
+      <path d="M4 22 V4 H22"/><path d="M42 4 H60 V22"/>
+      <path d="M60 66 V84 H42"/><path d="M22 84 H4 V66"/>
     </g>
-    <path
-      fill="#79ffd0"
-      d="M44 12 49.6 27.2 59.2 31 59.2 35.2 50.2 34.1 47.3 39.1 52 54.5 48.8 56.2 44 45.3 39.2 56.2 36 54.5 40.7 39.1 37.8 34.1 28.8 35.2 28.8 31 38.4 27.2Z"
-    />
+    <!-- fuselage -->
+    <ellipse cx="32" cy="44" rx="4.5" ry="28" fill="#79ffd0"/>
+    <!-- main wings -->
+    <polygon points="32,32 6,52 10,55 32,44 54,55 58,52" fill="#79ffd0"/>
+    <!-- tail fins -->
+    <polygon points="32,68 18,80 21,82 32,75 43,82 46,80" fill="#79ffd0"/>
   </svg>
 `;
 
@@ -94,6 +105,27 @@ const AIRPORT_ICON_SVG = `
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72">
     <circle cx="36" cy="36" r="26" fill="#122038" stroke="#89d8ff" stroke-width="4" />
     <path fill="#f4fbff" d="M35.7 15 40.3 26.9 49 30.3 49 34.6 40.9 33.8 38.4 38.3 42.2 50.4 39.3 52 35.7 43.3 32.2 52 29.3 50.4 33.1 38.3 30.5 33.8 22.4 34.6 22.4 30.3 31.1 26.9Z"/>
+  </svg>
+`;
+
+const MEDIUM_AIRPORT_ICON_SVG = `
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72">
+    <path fill="#132033" stroke="#80c7ff" stroke-width="4" d="M36 10 58 36 36 62 14 36Z" />
+    <path fill="#f4fbff" d="M35.8 20 40 31 48 34.2 48 38.1 40.6 37.4 38.2 41.5 41.6 52.7 38.8 54.2 35.8 46 32.8 54.2 30 52.7 33.4 41.5 31 37.4 23.6 38.1 23.6 34.2 31.6 31Z"/>
+  </svg>
+`;
+
+const SMALL_AIRPORT_ICON_SVG = `
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72">
+    <circle cx="36" cy="36" r="12" fill="#d9f3ff" />
+    <circle cx="36" cy="36" r="20" fill="none" stroke="#6ebcff" stroke-width="4" stroke-dasharray="7 6" />
+  </svg>
+`;
+
+const AUX_AIRPORT_ICON_SVG = `
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72">
+    <circle cx="36" cy="36" r="16" fill="#dceeff" />
+    <path stroke="#88b6ff" stroke-width="5" stroke-linecap="round" d="M36 16v40M16 36h40" />
   </svg>
 `;
 
@@ -121,6 +153,18 @@ export const SELECTED_FLIGHT_ICON_IMAGE = `data:image/svg+xml;utf8,${encodeURICo
 
 export const AIRPORT_ICON_IMAGE = `data:image/svg+xml;utf8,${encodeURIComponent(
   AIRPORT_ICON_SVG,
+)}`;
+
+export const MEDIUM_AIRPORT_ICON_IMAGE = `data:image/svg+xml;utf8,${encodeURIComponent(
+  MEDIUM_AIRPORT_ICON_SVG,
+)}`;
+
+export const SMALL_AIRPORT_ICON_IMAGE = `data:image/svg+xml;utf8,${encodeURIComponent(
+  SMALL_AIRPORT_ICON_SVG,
+)}`;
+
+export const AUX_AIRPORT_ICON_IMAGE = `data:image/svg+xml;utf8,${encodeURIComponent(
+  AUX_AIRPORT_ICON_SVG,
 )}`;
 
 export const ORIGIN_AIRPORT_ICON_IMAGE = `data:image/svg+xml;utf8,${encodeURIComponent(

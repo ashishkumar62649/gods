@@ -15,9 +15,14 @@ interface FlightDetailsPanelProps {
   flight: FlightRecord | null;
   route: FlightRouteSnapshot | null;
   isTracking: boolean;
+  isDroneMode: boolean;
+  isCockpitMode: boolean;
+  showRoute: boolean;
   showTrail: boolean;
-  onFocus: () => void;
+  onToggleDrone: () => void;
+  onToggleCockpit: () => void;
   onToggleTracking: () => void;
+  onToggleRoute: () => void;
   onToggleTrail: () => void;
   onClose: () => void;
 }
@@ -27,19 +32,24 @@ export default function FlightDetailsPanel({
   flight,
   route,
   isTracking,
+  isDroneMode,
+  isCockpitMode,
+  showRoute,
   showTrail,
-  onFocus,
+  onToggleDrone,
+  onToggleCockpit,
   onToggleTracking,
+  onToggleRoute,
   onToggleTrail,
   onClose,
 }: FlightDetailsPanelProps) {
   if (!flight) return null;
 
   const routeSummary = route?.found && route.origin && route.destination
-    ? `${getAirportDisplayCode(route.origin)} -> ${getAirportDisplayCode(route.destination)}`
-    : isTracking
+    ? `${getAirportDisplayCode(route.origin)} -> ${getAirportDisplayCode(route.destination)}${route.source === 'estimated' ? ' (Estimated)' : ''}`
+    : showRoute
       ? route?.error || 'Looking up route...'
-      : 'Track this flight to load the route arc.';
+      : 'Enable Route Arc to load endpoints and arc.';
 
   return (
     <aside className="flight-panel" aria-label="Selected flight details">
@@ -61,10 +71,27 @@ export default function FlightDetailsPanel({
       <div className="flight-panel__controls">
         <button
           type="button"
-          className="flight-panel__action"
-          onClick={onFocus}
+          className={
+            isDroneMode
+              ? 'flight-panel__action flight-panel__action--active'
+              : 'flight-panel__action'
+          }
+          onClick={onToggleDrone}
+          title="Chase cam — camera follows behind the plane"
         >
-          Focus
+          {isDroneMode ? 'Chase On' : 'Chase'}
+        </button>
+        <button
+          type="button"
+          className={
+            isCockpitMode
+              ? 'flight-panel__action flight-panel__action--active'
+              : 'flight-panel__action'
+          }
+          onClick={onToggleCockpit}
+          title="Cockpit — ride on the plane, look 360°"
+        >
+          {isCockpitMode ? 'Cockpit On' : 'Cockpit'}
         </button>
         <button
           type="button"
@@ -76,6 +103,17 @@ export default function FlightDetailsPanel({
           onClick={onToggleTracking}
         >
           {isTracking ? 'Tracking' : 'Track'}
+        </button>
+        <button
+          type="button"
+          className={
+            showRoute
+              ? 'flight-panel__action flight-panel__action--active'
+              : 'flight-panel__action'
+          }
+          onClick={onToggleRoute}
+        >
+          {showRoute ? 'Arc On' : 'Route Arc'}
         </button>
         <button
           type="button"

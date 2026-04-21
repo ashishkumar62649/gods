@@ -24,15 +24,18 @@ import {
 } from 'cesium';
 import {
   AIRPORT_ICON_IMAGE,
+  AUX_AIRPORT_ICON_IMAGE,
   AirportRecord,
   DESTINATION_AIRPORT_ICON_IMAGE,
   FlightRecord,
   FlightRenderMode,
   FlightRouteSnapshot,
   FLIGHT_ICON_IMAGE,
+  MEDIUM_AIRPORT_ICON_IMAGE,
   getFlightDisplayName,
   ORIGIN_AIRPORT_ICON_IMAGE,
   predictFlightPosition,
+  SMALL_AIRPORT_ICON_IMAGE,
   SELECTED_FLIGHT_ICON_IMAGE,
 } from './flights';
 
@@ -104,7 +107,10 @@ export class FlightSceneLayerManager {
       showBackground: true,
       backgroundColor: Color.fromCssColorString('#0d1324').withAlpha(0.82),
       backgroundPadding: new Cartesian2(10, 6),
-      pixelOffset: new Cartesian2(0, -38),
+      // pixelOffset pushes the label above the plane icon in screen space.
+      // Do NOT add a world-space altitude offset — it causes the label to
+      // float far above the aircraft at close range (e.g. drone mode).
+      pixelOffset: new Cartesian2(0, -52),
       verticalOrigin: VerticalOrigin.BOTTOM,
       horizontalOrigin: HorizontalOrigin.CENTER,
     });
@@ -188,7 +194,9 @@ export class FlightSceneLayerManager {
           icon: this.flightBillboards.add({
             id: { kind: 'flight', flightId: flight.id } satisfies FlightPickId,
             position: Cartesian3.ZERO,
-            alignedAxis: Cartesian3.UNIT_Z,
+            // alignedAxis is set to the local up vector in updateFlightPosition
+            // every frame so heading rotation is correct across the globe.
+            alignedAxis: Cartesian3.ZERO,
             verticalOrigin: VerticalOrigin.CENTER,
             horizontalOrigin: HorizontalOrigin.CENTER,
             scaleByDistance: new NearFarScalar(5_000, 1.1, 20_000_000, 0.48),
@@ -224,17 +232,18 @@ export class FlightSceneLayerManager {
     this.airportBillboards.removeAll();
 
     for (const airport of airports) {
+      const appearance = getAirportAppearance(airport);
       this.airportBillboards.add({
         id: { kind: 'airport', airportId: airport.id } satisfies AirportPickId,
-        image: AIRPORT_ICON_IMAGE,
+        image: appearance.image,
         position: Cartesian3.fromDegrees(airport.longitude, airport.latitude, 0),
         verticalOrigin: VerticalOrigin.BOTTOM,
         horizontalOrigin: HorizontalOrigin.CENTER,
-        width: 18,
-        height: 18,
-        scaleByDistance: new NearFarScalar(30_000, 1.1, 15_000_000, 0.26),
-        distanceDisplayCondition: new DistanceDisplayCondition(0, 25_000_000),
-        color: Color.fromCssColorString('#a6e5ff').withAlpha(0.82),
+        width: appearance.size,
+        height: appearance.size,
+        scaleByDistance: appearance.scaleByDistance,
+        distanceDisplayCondition: appearance.distanceDisplayCondition,
+        color: appearance.color,
       });
     }
 
@@ -295,6 +304,59 @@ export class FlightSceneLayerManager {
 
     entry.dot.position = position;
     entry.icon.position = position;
+    // alignedAxis must be the local surface normal (unit vector pointing away
+    // from the Earth's center at this position) so that icon rotation is
+    // measured in the horizontal plane. UNIT_Z (pole axis) only works when
+    // looking straight down — tilted views make icons point in wrong directions.
+    Cartesian3.normalize(position, entry.icon.alignedAxis);
+  }
+
+  /**
+   * Dead-reckoning tick — called every Cesium frame from a preRender listener.
+   *
+   * Performance notes:
+   *  • One Date.now() call shared across ALL flights per frame (not per-flight).
+   *  • Reuses a single Cartesian3 scratch object per flight (no GC per frame).
+   *  • alignedAxis (billboard surface normal) is refreshed every 30 frames
+   *    (~0.5 s at 60fps) — it changes very slowly and doesn't need per-frame
+   *    precision.
+   *  • Skips flights whose speed is zero (parked/unknown) — they don't move.
+   *  • Exits immediately if flights are hidden (zero iterations).
+   */
+  private _tickFrame = 0;
+
+  tickPositions(): void {
+    if (!this.flightsVisible) return;
+
+    const nowSeconds = Date.now() / 1000;
+    const refreshAlignedAxis = (this._tickFrame % 30) === 0;
+    this._tickFrame++;
+
+    for (const [flightId, entry] of this.flightEntries.entries()) {
+      const flight = this.flightRecords.get(flightId);
+      if (!flight) continue;
+      // Stationary flights don't need dead-reckoning — skip to save CPU.
+      if (flight.speedMetersPerSecond <= 0) continue;
+
+      const ageSeconds = Math.min(20, Math.max(0, nowSeconds - flight.timestamp));
+      const predicted = predictFlightPosition(flight, ageSeconds);
+
+      // Each primitive holds a reference to its position object, so we must
+      // allocate a fresh Cartesian3 — reusing a single scratch would make
+      // every entry point to the same location.
+      const position = Cartesian3.fromDegrees(
+        predicted.longitude,
+        predicted.latitude,
+        Math.max(0, predicted.altitudeMeters),
+      );
+
+      entry.dot.position = position;
+      entry.icon.position = position;
+
+      if (refreshAlignedAxis) {
+        Cartesian3.normalize(position, entry.icon.alignedAxis);
+      }
+    }
   }
 
   private applyFlightVisual(entry: FlightPrimitiveEntry, flight: FlightRecord) {
@@ -318,9 +380,15 @@ export class FlightSceneLayerManager {
     entry.icon.show = this.flightsVisible && (this.renderMode === 'icon' || isSelected);
     entry.icon.image = isSelected ? SELECTED_FLIGHT_ICON_IMAGE : FLIGHT_ICON_IMAGE;
     entry.icon.color = markerColor;
+    // Rotate so the nose (SVG top = +Y) points in the heading direction.
+    // With alignedAxis = localUp, rotation=0 aligns SVG-top to North.
+    // Negate heading to convert CW-from-North to CCW Cesium rotation.
     entry.icon.rotation = CesiumMath.toRadians(-flight.headingDegrees);
-    entry.icon.width = isSelected ? 44 : 28;
-    entry.icon.height = isSelected ? 44 : 28;
+    // Narrow width + taller height matches the aircraft silhouette SVG.
+    // The narrow width means the icon is very thin when viewed from the side.
+    entry.icon.width = isSelected ? 22 : 14;
+    entry.icon.height = isSelected ? 56 : 38;
+
   }
 
   private refreshFlightVisuals() {
@@ -352,10 +420,12 @@ export class FlightSceneLayerManager {
       Math.max(0, Date.now() / 1000 - selectedFlight.timestamp),
     );
     const predicted = predictFlightPosition(selectedFlight, ageSeconds);
+    // Anchor the label to the exact plane position in world space.
+    // Visual separation above the icon is handled by pixelOffset alone.
     this.selectedFlightLabel.position = Cartesian3.fromDegrees(
       predicted.longitude,
       predicted.latitude,
-      Math.max(0, predicted.altitudeMeters + 2_000),
+      Math.max(0, predicted.altitudeMeters),
     );
 
     const trailPositions = this.showSelectedTrail
@@ -568,6 +638,43 @@ function interpolateLongitude(startLongitude: number, endLongitude: number, frac
   if (delta < -180) delta += 360;
   const interpolated = startLongitude + delta * fraction;
   return ((((interpolated + 180) % 360) + 360) % 360) - 180;
+}
+
+function getAirportAppearance(airport: AirportRecord) {
+  switch (airport.type) {
+    case 'large_airport':
+      return {
+        image: AIRPORT_ICON_IMAGE,
+        size: 18,
+        color: Color.fromCssColorString('#a6e5ff').withAlpha(0.86),
+        scaleByDistance: new NearFarScalar(30_000, 1.12, 15_000_000, 0.26),
+        distanceDisplayCondition: new DistanceDisplayCondition(0, 25_000_000),
+      };
+    case 'medium_airport':
+      return {
+        image: MEDIUM_AIRPORT_ICON_IMAGE,
+        size: 14,
+        color: Color.fromCssColorString('#ffd37f').withAlpha(0.82),
+        scaleByDistance: new NearFarScalar(20_000, 0.96, 8_000_000, 0.2),
+        distanceDisplayCondition: new DistanceDisplayCondition(0, 8_500_000),
+      };
+    case 'small_airport':
+      return {
+        image: SMALL_AIRPORT_ICON_IMAGE,
+        size: 10,
+        color: Color.fromCssColorString('#8ef0a5').withAlpha(0.86),
+        scaleByDistance: new NearFarScalar(15_000, 0.84, 2_500_000, 0.14),
+        distanceDisplayCondition: new DistanceDisplayCondition(0, 2_800_000),
+      };
+    default:
+      return {
+        image: AUX_AIRPORT_ICON_IMAGE,
+        size: 8,
+        color: Color.fromCssColorString('#d9b7ff').withAlpha(0.72),
+        scaleByDistance: new NearFarScalar(12_000, 0.7, 1_000_000, 0.1),
+        distanceDisplayCondition: new DistanceDisplayCondition(0, 1_200_000),
+      };
+  }
 }
 
 function isFlightPickId(value: unknown): value is FlightPickId {
