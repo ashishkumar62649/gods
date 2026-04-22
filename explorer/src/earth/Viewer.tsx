@@ -2200,7 +2200,7 @@ export default function Viewer() {
     SECTION_TABS[0];
 
   const renderSoonCard = (label: string) => (
-    <div className="layer-card layer-card--soon" key={label}>
+    <div className="layer-card layer-card--soon flex justify-between items-center w-full py-1.5 aether-data-row" key={label}>
       <div className="layer-card__body">
         <p className="layer-card__label">{label}</p>
       </div>
@@ -2218,8 +2218,8 @@ export default function Viewer() {
                 type="button"
                 className={
                   imageryPickerOpen
-                    ? 'layer-card layer-card--toggle layer-card--base layer-card--active'
-                    : 'layer-card layer-card--toggle layer-card--base'
+                    ? 'layer-card layer-card--toggle layer-card--base layer-card--active flex justify-between items-center w-full py-1.5 aether-data-row'
+                    : 'layer-card layer-card--toggle layer-card--base flex justify-between items-center w-full py-1.5 aether-data-row'
                 }
                 onClick={() => setImageryPickerOpen((open) => !open)}
               >
@@ -2234,48 +2234,14 @@ export default function Viewer() {
                 </span>
               </button>
 
-              <div
-                className={
-                  imageryPickerOpen
-                    ? 'imagery-flyout imagery-flyout--open'
-                    : 'imagery-flyout'
-                }
-              >
-                <div className="imagery-flyout__header">
-                  <p className="imagery-flyout__eyebrow">Map Styles</p>
-                  <h3 className="imagery-flyout__title">Imagery</h3>
-                </div>
-                <div className="imagery-flyout__grid">
-                  {imageryOptions.map((option) => (
-                    <button
-                      key={option.id}
-                      type="button"
-                      className={
-                        option.id === selectedImageryId
-                          ? 'imagery-option imagery-option--active'
-                          : 'imagery-option'
-                      }
-                      onClick={() => handleImageryOptionChange(option)}
-                      title={option.tooltip}
-                    >
-                      <img
-                        className="imagery-option__thumb"
-                        src={option.iconUrl}
-                        alt=""
-                      />
-                      <span className="imagery-option__name">{option.name}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
             </div>
 
             <button
               type="button"
               className={
                 buildingsEnabled || autoBuildingsEnabled
-                  ? 'layer-card layer-card--toggle layer-card--base layer-card--active'
-                  : 'layer-card layer-card--toggle layer-card--base'
+                  ? 'layer-card layer-card--toggle layer-card--base layer-card--active flex justify-between items-center w-full py-1.5 aether-data-row'
+                  : 'layer-card layer-card--toggle layer-card--base flex justify-between items-center w-full py-1.5 aether-data-row'
               }
               onClick={toggleBuildings}
             >
@@ -2304,8 +2270,8 @@ export default function Viewer() {
               type="button"
               className={
                 orbitEnabled
-                  ? 'layer-card layer-card--toggle layer-card--base layer-card--active'
-                  : 'layer-card layer-card--toggle layer-card--base'
+                  ? 'layer-card layer-card--toggle layer-card--base layer-card--active flex justify-between items-center w-full py-1.5 aether-data-row'
+                  : 'layer-card layer-card--toggle layer-card--base flex justify-between items-center w-full py-1.5 aether-data-row'
               }
               onClick={toggleOrbit}
             >
@@ -2337,8 +2303,8 @@ export default function Viewer() {
               type="button"
               className={
                 flightsEnabled
-                  ? 'layer-card layer-card--toggle layer-card--intel layer-card--active'
-                  : 'layer-card layer-card--toggle layer-card--intel'
+                  ? 'layer-card layer-card--toggle layer-card--intel layer-card--active flex justify-between items-center w-full py-1.5 aether-data-row'
+                  : 'layer-card layer-card--toggle layer-card--intel flex justify-between items-center w-full py-1.5 aether-data-row'
               }
               onClick={toggleFlights}
             >
@@ -2364,8 +2330,8 @@ export default function Viewer() {
               type="button"
               className={
                 showAirports
-                  ? 'layer-card layer-card--toggle layer-card--intel layer-card--active'
-                  : 'layer-card layer-card--toggle layer-card--intel'
+                  ? 'layer-card layer-card--toggle layer-card--intel layer-card--active flex justify-between items-center w-full py-1.5 aether-data-row'
+                  : 'layer-card layer-card--toggle layer-card--intel flex justify-between items-center w-full py-1.5 aether-data-row'
               }
               onClick={toggleAirports}
             >
@@ -2387,7 +2353,7 @@ export default function Viewer() {
                 </span>
               </span>
             </button>
-            <div className="layer-card layer-card--status">
+            <div className="layer-card layer-card--status flex justify-between items-center w-full py-1.5 aether-data-row">
               <div className="layer-card__body">
                 <p className="layer-card__label">Flight Feed</p>
                 <p className="layer-card__meta">
@@ -2424,7 +2390,7 @@ export default function Viewer() {
       case 'visual':
         return (
           <>
-            <div className="layer-card layer-card--status">
+            <div className="layer-card layer-card--status flex justify-between items-center w-full py-1.5 aether-data-row">
               <div className="layer-card__body">
                 <p className="layer-card__label">Standard View</p>
                 <p className="layer-card__meta">
@@ -2463,6 +2429,8 @@ export default function Viewer() {
         homeButton={false}
         geocoder={false}
         baseLayerPicker={false}
+        timeline={false}
+        animation={false}
         selectionIndicator={false}
         infoBox={false}
         // Explicit: keep Cesium's built-in Navigation Help widget (the "?"
@@ -2475,8 +2443,8 @@ export default function Viewer() {
       <div className="hud-shell" ref={hudRef}>
         <SearchBox onSearch={flyToPlace} />
 
-        <aside className="layer-sidebar aether-sidebar-shell" aria-label="Layer controls">
-          <div className="layer-sidebar__panel aether-panel aether-radius-2xl">
+        <aside className="layer-sidebar absolute top-24 left-4 z-40 w-[clamp(16rem,18vw,20rem)] h-[clamp(30rem,60vh,45rem)] aether-panel rounded-2xl flex flex-col overflow-hidden" aria-label="Layer controls">
+          <div className="layer-sidebar__panel flex flex-col h-full overflow-hidden">
             <div className="layer-tabs" role="tablist" aria-label="Layer groups">
               {SECTION_TABS.map((section) => (
                 <button
@@ -2496,15 +2464,46 @@ export default function Viewer() {
               ))}
             </div>
 
-            <section className={`layer-section layer-section--${activeSection}`}>
+            <section className={`layer-section layer-section--${activeSection} flex flex-col flex-1 overflow-hidden`}>
               <div className="layer-section__header">
                 <p className="layer-section__eyebrow aether-kicker">{currentSection.label}</p>
                 <h2 className="layer-section__title aether-glow-text">{currentSection.title}</h2>
               </div>
-              <div className="layer-section__body">{renderSectionBody()}</div>
+              <div className="layer-section__body flex-1 overflow-y-auto custom-scrollbar p-3">{renderSectionBody()}</div>
             </section>
           </div>
         </aside>
+
+        {imageryPickerOpen && (
+          <div className="imagery-flyout imagery-flyout--open custom-scrollbar aether-floating-panel">
+            <div className="imagery-flyout__header">
+              <p className="imagery-flyout__eyebrow aether-kicker">Map Styles</p>
+              <h3 className="imagery-flyout__title aether-glow-text">Imagery</h3>
+            </div>
+            <div className="imagery-flyout__grid">
+              {imageryOptions.map((option) => (
+                <button
+                  key={option.id}
+                  type="button"
+                  className={
+                    option.id === selectedImageryId
+                      ? 'imagery-option imagery-option--active'
+                      : 'imagery-option'
+                  }
+                  onClick={() => handleImageryOptionChange(option)}
+                  title={option.tooltip}
+                >
+                  <img
+                    className="imagery-option__thumb"
+                    src={option.iconUrl}
+                    alt=""
+                  />
+                  <span className="imagery-option__name">{option.name}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* ── Flight Deck HUD overlay ─────────────────────────────────────── */}
         {sensorLink === 'flight-deck' && selectedFlight && (
@@ -2563,7 +2562,7 @@ export default function Viewer() {
         <div className="hud-quick-actions">
           <button
             type="button"
-            className="custom-home-button"
+            className="custom-home-button aether-floating-action"
             onClick={() => {
               releaseSensorLink();
               flyHome(2);
@@ -2589,13 +2588,13 @@ export default function Viewer() {
 
           <button
             type="button"
-            className="dev-status-trigger"
+            className="dev-status-trigger aether-floating-action"
             onClick={() => setDevStatusOpen((open) => !open)}
             aria-expanded={devStatusOpen}
             aria-controls="dev-status-panel"
           >
             <span>Dev Status</span>
-            <span className="dev-status-trigger__badge">{activeLayerCount} Live</span>
+            <span className="dev-status-trigger__badge aether-floating-badge">{activeLayerCount} Live</span>
           </button>
         </div>
 
@@ -2603,8 +2602,8 @@ export default function Viewer() {
           id="dev-status-panel"
           className={
             devStatusOpen
-              ? 'dev-status-panel dev-status-panel--open'
-              : 'dev-status-panel'
+              ? 'dev-status-panel dev-status-panel--open custom-scrollbar aether-floating-panel'
+              : 'dev-status-panel custom-scrollbar aether-floating-panel'
           }
           aria-label="Developer status"
         >
@@ -2612,37 +2611,37 @@ export default function Viewer() {
             <h2 className="dev-status-panel__title">Developer Status</h2>
           </div>
           <div className="dev-status-panel__body">
-            <div className="dev-status-row">
+            <div className="dev-status-row flex justify-between items-center w-full py-1.5 aether-data-row">
               <span className="dev-status-row__label">Active group</span>
               <span className="dev-status-row__value">{currentSection.label}</span>
             </div>
-            <div className="dev-status-row">
+            <div className="dev-status-row flex justify-between items-center w-full py-1.5 aether-data-row">
               <span className="dev-status-row__label">Imagery</span>
               <span className="dev-status-row__value">
                 {selectedImageryOption?.name ?? 'Unavailable'}
               </span>
             </div>
-            <div className="dev-status-row">
+            <div className="dev-status-row flex justify-between items-center w-full py-1.5 aether-data-row">
               <span className="dev-status-row__label">Scene</span>
               <span className="dev-status-row__value">3D only</span>
             </div>
-            <div className="dev-status-row">
+            <div className="dev-status-row flex justify-between items-center w-full py-1.5 aether-data-row">
               <span className="dev-status-row__label">Buildings</span>
               <span className="dev-status-row__value">
                 {buildingsEnabled || autoBuildingsEnabled ? 'On' : 'Off'}
               </span>
             </div>
-            <div className="dev-status-row">
+            <div className="dev-status-row flex justify-between items-center w-full py-1.5 aether-data-row">
               <span className="dev-status-row__label">Flights</span>
               <span className="dev-status-row__value">
                 {flightsEnabled ? `${flightFeed.flightCount} active` : 'Off'}
               </span>
             </div>
-            <div className="dev-status-row">
+            <div className="dev-status-row flex justify-between items-center w-full py-1.5 aether-data-row">
               <span className="dev-status-row__label">Flight feed</span>
               <span className="dev-status-row__value">{flightFeed.sourceLabel}</span>
             </div>
-            <div className="dev-status-row">
+            <div className="dev-status-row flex justify-between items-center w-full py-1.5 aether-data-row">
               <span className="dev-status-row__label">Orbit</span>
               <span className="dev-status-row__value">
                 {orbitEnabled ? 'On' : 'Off'}

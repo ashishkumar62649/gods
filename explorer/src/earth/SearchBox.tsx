@@ -92,7 +92,7 @@ export default function SearchBox({ onSearch }: SearchBoxProps) {
   }
 
   return (
-    <div className="search-box" ref={rootRef}>
+    <div className="search-box absolute top-4 left-4 z-50 w-[clamp(16rem,18vw,20rem)] aether-panel rounded-xl" ref={rootRef}>
       <form
         className="search-box__surface"
         onSubmit={handleSubmit}
@@ -119,7 +119,7 @@ export default function SearchBox({ onSearch }: SearchBoxProps) {
         </button>
       </form>
       {dropdownOpen && recentSearches.length > 0 ? (
-        <div className="search-box__dropdown" role="listbox">
+        <div className="search-box__dropdown custom-scrollbar" role="listbox">
           <p className="search-box__dropdown-title">Recent Searches</p>
           <div className="search-box__dropdown-list">
             {recentSearches.map((recentQuery) => (

@@ -55,10 +55,10 @@ export default function FlightDetailsPanel({
       : 'Enable Route Arc to load endpoints and arc.';
 
   return (
-    <aside className="flight-panel aether-details-shell aether-panel aether-radius-2xl" aria-label="Selected flight details">
+    <aside className="flight-panel absolute top-4 right-4 z-40 w-[clamp(18rem,20vw,22rem)] max-h-[calc(100vh-2rem)] aether-panel rounded-2xl flex flex-col overflow-hidden" aria-label="Selected flight details">
       <div className="flight-panel__header">
         <div>
-          <p className="flight-panel__eyebrow aether-kicker">Selected Flight</p>
+          <p className="flight-panel__eyebrow aether-kicker text-[9px] tracking-[0.25em]">Selected Flight</p>
           <h2 className="flight-panel__title aether-glow-text">{getFlightDisplayName(flight)}</h2>
         </div>
         <button
@@ -74,12 +74,13 @@ export default function FlightDetailsPanel({
       <div className="flight-panel__controls">
         <button
           type="button"
-          className="flight-panel__action"
+          className="flight-panel__action flex items-center gap-2"
           onClick={onFocus}
           aria-label="Focus the camera on the selected aircraft"
           title="Focus the camera on the selected aircraft"
         >
           <svg
+            className="flex-shrink-0"
             width="16"
             height="16"
             viewBox="0 0 24 24"
@@ -101,8 +102,8 @@ export default function FlightDetailsPanel({
       </div>
 
       <div className="flight-panel__controls">
-        <div className="flight-panel__row">
-          <span className="flight-panel__label aether-kicker">Asset View</span>
+        <div className="flight-panel__row flex justify-between items-center w-full py-1.5 aether-data-row">
+          <span className="flight-panel__label aether-kicker text-[9px] tracking-[0.25em]">Asset View</span>
           <div className="flight-panel__segmented" role="group" aria-label="Asset view">
             <button
               type="button"
@@ -129,8 +130,8 @@ export default function FlightDetailsPanel({
           </div>
         </div>
 
-        <div className="flight-panel__row">
-          <span className="flight-panel__label aether-kicker">Sensor Link</span>
+        <div className="flight-panel__row flex justify-between items-center w-full py-1.5 aether-data-row">
+          <span className="flight-panel__label aether-kicker text-[9px] tracking-[0.25em]">Sensor Link</span>
           <div className="flight-panel__segmented" role="group" aria-label="Sensor link">
             <button
               type="button"
@@ -203,52 +204,52 @@ export default function FlightDetailsPanel({
         </button>
       </div>
 
-      <div className="flight-panel__body">
-        <div className="flight-panel__row aether-data-row">
-          <span className="flight-panel__label aether-kicker">ICAO24</span>
-          <span className="flight-panel__value aether-value aether-glow-text">{flight.id.toUpperCase()}</span>
+      <div className="flight-panel__body flex-1 overflow-y-auto custom-scrollbar p-3">
+        <div className="flight-panel__row flex justify-between items-center w-full py-1.5 aether-data-row">
+          <span className="flight-panel__label aether-kicker text-[9px] tracking-[0.25em]">ICAO24</span>
+          <span className="flight-panel__value aether-value aether-glow-text text-[11px] leading-tight">{flight.id.toUpperCase()}</span>
         </div>
-        <div className="flight-panel__row aether-data-row">
-          <span className="flight-panel__label aether-kicker">Altitude</span>
-          <span className="flight-panel__value aether-value aether-glow-text">
+        <div className="flight-panel__row flex justify-between items-center w-full py-1.5 aether-data-row">
+          <span className="flight-panel__label aether-kicker text-[9px] tracking-[0.25em]">Altitude</span>
+          <span className="flight-panel__value aether-value aether-glow-text text-[11px] leading-tight">
             {formatAltitudeMeters(flight.altitudeMeters)}
           </span>
         </div>
-        <div className="flight-panel__row aether-data-row">
-          <span className="flight-panel__label aether-kicker">Speed</span>
-          <span className="flight-panel__value aether-value aether-glow-text">
+        <div className="flight-panel__row flex justify-between items-center w-full py-1.5 aether-data-row">
+          <span className="flight-panel__label aether-kicker text-[9px] tracking-[0.25em]">Speed</span>
+          <span className="flight-panel__value aether-value aether-glow-text text-[11px] leading-tight">
             {formatSpeed(flight.speedMetersPerSecond)}
           </span>
         </div>
-        <div className="flight-panel__row aether-data-row">
-          <span className="flight-panel__label aether-kicker">Heading</span>
-          <span className="flight-panel__value aether-value aether-glow-text">
+        <div className="flight-panel__row flex justify-between items-center w-full py-1.5 aether-data-row">
+          <span className="flight-panel__label aether-kicker text-[9px] tracking-[0.25em]">Heading</span>
+          <span className="flight-panel__value aether-value aether-glow-text text-[11px] leading-tight">
             {formatHeading(flight.headingDegrees)}
           </span>
         </div>
-        <div className="flight-panel__row aether-data-row">
-          <span className="flight-panel__label aether-kicker">Country</span>
-          <span className="flight-panel__value aether-value aether-glow-text">
+        <div className="flight-panel__row flex justify-between items-center w-full py-1.5 aether-data-row">
+          <span className="flight-panel__label aether-kicker text-[9px] tracking-[0.25em]">Country</span>
+          <span className="flight-panel__value aether-value aether-glow-text text-[11px] leading-tight">
             {flight.originCountry?.trim() || 'Unknown'}
           </span>
         </div>
-        <div className="flight-panel__row aether-data-row">
-          <span className="flight-panel__label aether-kicker">Type</span>
-          <span className="flight-panel__value aether-value aether-glow-text">{getFlightVisualTypeLabel(flight)}</span>
+        <div className="flight-panel__row flex justify-between items-center w-full py-1.5 aether-data-row">
+          <span className="flight-panel__label aether-kicker text-[9px] tracking-[0.25em]">Type</span>
+          <span className="flight-panel__value aether-value aether-glow-text text-[11px] leading-tight">{getFlightVisualTypeLabel(flight)}</span>
         </div>
-        <div className="flight-panel__row aether-data-row">
-          <span className="flight-panel__label aether-kicker">Updated</span>
-          <span className="flight-panel__value aether-value aether-glow-text">
+        <div className="flight-panel__row flex justify-between items-center w-full py-1.5 aether-data-row">
+          <span className="flight-panel__label aether-kicker text-[9px] tracking-[0.25em]">Updated</span>
+          <span className="flight-panel__value aether-value aether-glow-text text-[11px] leading-tight">
             {formatLastUpdated(flight.timestamp)}
           </span>
         </div>
-        <div className="flight-panel__row aether-data-row">
-          <span className="flight-panel__label aether-kicker">Feed</span>
-          <span className="flight-panel__value aether-value aether-glow-text">{feed.sourceLabel}</span>
+        <div className="flight-panel__row flex justify-between items-center w-full py-1.5 aether-data-row">
+          <span className="flight-panel__label aether-kicker text-[9px] tracking-[0.25em]">Feed</span>
+          <span className="flight-panel__value aether-value aether-glow-text text-[11px] leading-tight">{feed.sourceLabel}</span>
         </div>
-        <div className="flight-panel__row aether-data-row">
-          <span className="flight-panel__label aether-kicker">Route</span>
-          <span className="flight-panel__value aether-value aether-glow-text">{routeSummary}</span>
+        <div className="flight-panel__row flex justify-between items-center w-full py-1.5 aether-data-row">
+          <span className="flight-panel__label aether-kicker text-[9px] tracking-[0.25em]">Route</span>
+          <span className="flight-panel__value aether-value aether-glow-text text-[11px] leading-tight">{routeSummary}</span>
         </div>
       </div>
     </aside>
