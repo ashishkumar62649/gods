@@ -29,7 +29,9 @@ import {
 import {
   AUX_AIRPORT_ICON_IMAGE,
   AirportRecord,
+  COMMS_TOWER_ICON_IMAGE,
   DESTINATION_AIRPORT_ICON_IMAGE,
+  HFDL_TOWER_ICON_IMAGE,
   LARGE_AIRPORT_ICON_IMAGE,
   MEDIUM_AIRPORT_ICON_IMAGE,
   SELECTED_FLIGHT_MODEL_URL,
@@ -50,26 +52,9 @@ import {
 
 const TARGET_OPTIC_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><defs><filter id="cyanGlow"><feGaussianBlur stdDeviation="3" result="blur" /><feComposite in="SourceGraphic" in2="blur" operator="over" /></filter></defs><g filter="url(#cyanGlow)"><path d="M 20 10 L 10 10 L 10 20 M 60 10 L 70 10 L 70 20 M 10 60 L 10 70 L 20 70 M 70 60 L 70 70 L 60 70" fill="none" stroke="#22d3ee" stroke-width="3" /><path d="M 40 15 L 40 25 M 40 55 L 40 65 M 15 40 L 25 40 M 55 40 L 65 40" fill="none" stroke="#67e8f9" stroke-width="2" opacity="0.8" /><circle cx="40" cy="40" r="18" fill="none" stroke="#a5f3fc" stroke-width="1" stroke-dasharray="4 4" opacity="0.6"/></g></svg>';
 const TARGET_OPTIC_IMAGE = `data:image/svg+xml;utf8,${encodeURIComponent(TARGET_OPTIC_SVG)}`;
-const RECEIVER_TOWER_SVG = (accent: string, fill: string) => `
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80">
-    <defs>
-      <filter id="towerGlow" x="-25%" y="-25%" width="150%" height="150%">
-        <feGaussianBlur stdDeviation="3.5" result="blur" />
-        <feComposite in="SourceGraphic" in2="blur" operator="over" />
-      </filter>
-    </defs>
-    <g filter="url(#towerGlow)">
-      <path d="M40 12 L54 64 H48 L44 50 H36 L32 64 H26 Z" fill="${fill}" stroke="${accent}" stroke-width="2.5" stroke-linejoin="round" />
-      <path d="M40 18 L40 6" stroke="${accent}" stroke-width="3" stroke-linecap="round" />
-      <path d="M26 26 Q40 14 54 26" fill="none" stroke="${accent}" stroke-width="2.4" stroke-linecap="round" opacity="0.95" />
-      <path d="M20 34 Q40 18 60 34" fill="none" stroke="${accent}" stroke-width="2" stroke-linecap="round" opacity="0.75" />
-      <circle cx="40" cy="18" r="4" fill="${accent}" />
-    </g>
-  </svg>
-`;
-const VDL_TOWER_IMAGE = `data:image/svg+xml;utf8,${encodeURIComponent(RECEIVER_TOWER_SVG('#67e8f9', 'rgba(7, 18, 34, 0.9)'))}`;
-const ACARS_TOWER_IMAGE = `data:image/svg+xml;utf8,${encodeURIComponent(RECEIVER_TOWER_SVG('#60a5fa', 'rgba(8, 16, 36, 0.9)'))}`;
-const HFDL_TOWER_IMAGE = `data:image/svg+xml;utf8,${encodeURIComponent(RECEIVER_TOWER_SVG('#fb7185', 'rgba(34, 8, 14, 0.92)'))}`;
+const VDL_TOWER_IMAGE = COMMS_TOWER_ICON_IMAGE;
+const ACARS_TOWER_IMAGE = COMMS_TOWER_ICON_IMAGE;
+const HFDL_TOWER_IMAGE = HFDL_TOWER_ICON_IMAGE;
 const GROUND_STATION_OFFSET_DEGREES = 0.005;
 const HFDL_STATIONS = [
   { id: 'hfdl-1', lat: 37.619, lon: -122.374 }, { id: 'hfdl-2', lat: 64.13, lon: -21.94 },
@@ -93,8 +78,7 @@ interface AirportPickId {
 
 export interface GroundStationsState {
   hfdl: boolean;
-  vdl: boolean;
-  acars: boolean;
+  comms: boolean;
 }
 
 export type FlightAssetView = 'symbology' | 'airframe';
@@ -177,8 +161,7 @@ export class FlightSceneLayerManager {
   private sensorLinkState: FlightSensorLinkState = 'release';
   private groundStationsState: GroundStationsState = {
     hfdl: false,
-    vdl: false,
-    acars: false,
+    comms: false,
   };
   private selectedFlightId: string | null = null;
   private showSelectedTrail = false;
@@ -529,9 +512,9 @@ export class FlightSceneLayerManager {
           ),
           verticalOrigin: VerticalOrigin.BOTTOM,
           horizontalOrigin: HorizontalOrigin.CENTER,
-          width: 28,
-          height: 28,
-          scaleByDistance: new NearFarScalar(15_000, 1.0, 8_000_000, 0.26),
+          width: 56,
+          height: 56,
+          scaleByDistance: new NearFarScalar(12_000, 1.5, 14_000_000, 0.62),
         });
 
         this.acarsBillboards.add({
@@ -543,9 +526,9 @@ export class FlightSceneLayerManager {
           ),
           verticalOrigin: VerticalOrigin.BOTTOM,
           horizontalOrigin: HorizontalOrigin.CENTER,
-          width: 28,
-          height: 28,
-          scaleByDistance: new NearFarScalar(15_000, 1.0, 8_000_000, 0.26),
+          width: 56,
+          height: 56,
+          scaleByDistance: new NearFarScalar(12_000, 1.5, 14_000_000, 0.62),
         });
       }
     }
@@ -556,10 +539,10 @@ export class FlightSceneLayerManager {
         position: Cartesian3.fromDegrees(station.lon, station.lat, 0),
         verticalOrigin: VerticalOrigin.BOTTOM,
         horizontalOrigin: HorizontalOrigin.CENTER,
-        width: 30,
-        height: 30,
-        scaleByDistance: new NearFarScalar(20_000, 1.06, 10_000_000, 0.3),
-        distanceDisplayCondition: new DistanceDisplayCondition(0, 25_000_000),
+        width: 96,
+        height: 96,
+        scaleByDistance: new NearFarScalar(20_000, 1.8, 25_000_000, 0.95),
+        distanceDisplayCondition: new DistanceDisplayCondition(0, 40_000_000),
       });
     }
 
@@ -591,8 +574,8 @@ export class FlightSceneLayerManager {
 
   private applyGroundStationVisibility() {
     this.hfdlBillboards.show = this.groundStationsState.hfdl;
-    this.vdlBillboards.show = this.groundStationsState.vdl;
-    this.acarsBillboards.show = this.groundStationsState.acars;
+    this.vdlBillboards.show = this.groundStationsState.comms;
+    this.acarsBillboards.show = this.groundStationsState.comms;
   }
 
   pickFlight(windowPosition: Cartesian2) {
@@ -1315,34 +1298,34 @@ function getAirportAppearance(airport: AirportRecord) {
     case 'large_airport':
       return {
         image: LARGE_AIRPORT_ICON_IMAGE,
-        size: 18,
-        color: Color.fromCssColorString('#a6e5ff').withAlpha(0.86),
-        scaleByDistance: new NearFarScalar(30_000, 1.12, 15_000_000, 0.26),
+        size: 38,
+        color: Color.WHITE.withAlpha(1),
+        scaleByDistance: new NearFarScalar(30_000, 1.5, 20_000_000, 0.58),
         distanceDisplayCondition: new DistanceDisplayCondition(0, 25_000_000),
       };
     case 'medium_airport':
       return {
         image: MEDIUM_AIRPORT_ICON_IMAGE,
-        size: 14,
-        color: Color.fromCssColorString('#ffd37f').withAlpha(0.82),
-        scaleByDistance: new NearFarScalar(20_000, 0.96, 8_000_000, 0.2),
+        size: 30,
+        color: Color.WHITE.withAlpha(1),
+        scaleByDistance: new NearFarScalar(20_000, 1.28, 12_000_000, 0.46),
         distanceDisplayCondition: new DistanceDisplayCondition(0, 8_500_000),
       };
     case 'small_airport':
     case 'heliport':
       return {
         image: SMALL_AIRPORT_ICON_IMAGE,
-        size: 10,
-        color: Color.fromCssColorString('#8ef0a5').withAlpha(0.86),
-        scaleByDistance: new NearFarScalar(15_000, 0.84, 2_500_000, 0.14),
+        size: 18,
+        color: Color.WHITE.withAlpha(1),
+        scaleByDistance: new NearFarScalar(15_000, 1.08, 2_500_000, 0.32),
         distanceDisplayCondition: new DistanceDisplayCondition(0.0, 2_500_000.0),
       };
     default:
       return {
         image: AUX_AIRPORT_ICON_IMAGE,
-        size: 8,
-        color: Color.fromCssColorString('#d9b7ff').withAlpha(0.72),
-        scaleByDistance: new NearFarScalar(12_000, 0.7, 1_000_000, 0.1),
+        size: 16,
+        color: Color.WHITE.withAlpha(1),
+        scaleByDistance: new NearFarScalar(12_000, 0.94, 1_000_000, 0.28),
         distanceDisplayCondition: new DistanceDisplayCondition(0, 1_200_000),
       };
   }

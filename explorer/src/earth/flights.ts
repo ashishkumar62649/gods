@@ -1,3 +1,9 @@
+import largeAirportIconPng from '../assets/map-icons/generated/airport-large-blue.png?inline';
+import mediumAirportIconPng from '../assets/map-icons/generated/airport-medium-yellow.png?inline';
+import smallAirportIconPng from '../assets/map-icons/generated/airport-small-green.png?inline';
+import commsTowerIconPng from '../assets/map-icons/generated/tower-comms-blue.png?inline';
+import hfdlTowerIconPng from '../assets/map-icons/generated/tower-hfdl-red.png?inline';
+
 export interface FlightTrailPoint {
   latitude: number;
   longitude: number;
@@ -127,27 +133,6 @@ const SELECTED_FLIGHT_ICON_SVG = `
   </svg>
 `;
 
-const LARGE_AIRPORT_SVG = `
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-    <circle cx="32" cy="32" r="23" fill="rgba(6, 15, 28, 0.92)" stroke="#67e8f9" stroke-width="3" />
-    <circle cx="32" cy="32" r="7" fill="#a5f3fc" />
-  </svg>
-`;
-
-const MEDIUM_AIRPORT_SVG = `
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
-    <circle cx="24" cy="24" r="17" fill="rgba(8, 17, 34, 0.9)" stroke="#5eead4" stroke-width="2" />
-    <circle cx="24" cy="24" r="5" fill="#99f6e4" />
-  </svg>
-`;
-
-const SMALL_AIRPORT_SVG = `
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-    <circle cx="16" cy="16" r="11" fill="rgba(8, 16, 30, 0.75)" stroke="rgba(103, 232, 249, 0.72)" stroke-width="1.5" />
-    <circle cx="16" cy="16" r="3.2" fill="rgba(165, 243, 252, 0.82)" />
-  </svg>
-`;
-
 const AUX_AIRPORT_ICON_SVG = `
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72">
     <circle cx="36" cy="36" r="16" fill="#dceeff" />
@@ -251,19 +236,17 @@ export const SELECTED_FLIGHT_ICON_IMAGE = `data:image/svg+xml;utf8,${encodeURICo
   SELECTED_FLIGHT_ICON_SVG,
 )}`;
 
-export const LARGE_AIRPORT_ICON_IMAGE = `data:image/svg+xml;utf8,${encodeURIComponent(
-  LARGE_AIRPORT_SVG,
-)}`;
+export const LARGE_AIRPORT_ICON_IMAGE = largeAirportIconPng;
 
-export const MEDIUM_AIRPORT_ICON_IMAGE = `data:image/svg+xml;utf8,${encodeURIComponent(
-  MEDIUM_AIRPORT_SVG,
-)}`;
+export const MEDIUM_AIRPORT_ICON_IMAGE = mediumAirportIconPng;
 
-export const SMALL_AIRPORT_ICON_IMAGE = `data:image/svg+xml;utf8,${encodeURIComponent(
-  SMALL_AIRPORT_SVG,
-)}`;
+export const SMALL_AIRPORT_ICON_IMAGE = smallAirportIconPng;
 
 export const AIRPORT_ICON_IMAGE = LARGE_AIRPORT_ICON_IMAGE;
+
+export const COMMS_TOWER_ICON_IMAGE = commsTowerIconPng;
+
+export const HFDL_TOWER_ICON_IMAGE = hfdlTowerIconPng;
 
 export const AUX_AIRPORT_ICON_IMAGE = `data:image/svg+xml;utf8,${encodeURIComponent(
   AUX_AIRPORT_ICON_SVG,

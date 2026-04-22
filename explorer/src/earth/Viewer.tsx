@@ -587,8 +587,7 @@ export default function Viewer() {
   const showAirportsRef = useRef(false);
   const groundStationsRef = useRef<GroundStationsState>({
     hfdl: false,
-    vdl: false,
-    acars: false,
+    comms: false,
   });
   const selectedFlightIdRef = useRef<string | null>(null);
   const assetViewRef = useRef<FlightAssetView>('symbology');
@@ -626,8 +625,7 @@ export default function Viewer() {
   const [showAirports, setShowAirports] = useState(false);
   const [groundStations, setGroundStations] = useState<GroundStationsState>({
     hfdl: false,
-    vdl: false,
-    acars: false,
+    comms: false,
   });
   const [sigintInfrastructureOpen, setSigintInfrastructureOpen] = useState(true);
   const [selectedFlightId, setSelectedFlightId] = useState<string | null>(null);
@@ -1810,7 +1808,7 @@ export default function Viewer() {
 
   useEffect(() => {
     const needsAirportDataset =
-      showAirports || groundStations.hfdl || groundStations.vdl || groundStations.acars;
+      showAirports || groundStations.hfdl || groundStations.comms;
     if (!needsAirportDataset) return;
     if (airportsLoadedRef.current || airportsLoadingRef.current) return;
 
@@ -1844,7 +1842,7 @@ export default function Viewer() {
       cancelled = true;
       controller.abort();
     };
-  }, [groundStations.acars, groundStations.hfdl, groundStations.vdl, showAirports]);
+  }, [groundStations.comms, groundStations.hfdl, showAirports]);
 
   useEffect(() => {
     selectedFlightRouteRef.current = selectedFlightRoute;
@@ -2148,8 +2146,7 @@ export default function Viewer() {
   const activeLayerCount =
     Number(flightsEnabled) +
     Number(groundStations.hfdl) +
-    Number(groundStations.vdl) +
-    Number(groundStations.acars) +
+    Number(groundStations.comms) +
     Number(Boolean(buildingsEnabled || autoBuildingsEnabled)) +
     Number(orbitEnabled);
 
@@ -2321,7 +2318,7 @@ export default function Viewer() {
                 <span className="layer-card__body">
                   <span className="layer-card__label">SIGINT Infrastructure</span>
                   <span className="layer-card__meta">
-                    Map physical HFDL, VDL, and ACARS ground stations.
+                    Map HFDL stations plus combined VDL and ACARS comms sites.
                   </span>
                 </span>
                 <span className="layer-badge">
@@ -2329,11 +2326,10 @@ export default function Viewer() {
                 </span>
               </button>
               {sigintInfrastructureOpen && (
-                <div className="grid grid-cols-3 gap-2 pt-3">
+                <div className="grid grid-cols-2 gap-2 pt-3">
                   {([
                     ['hfdl', 'HFDL'],
-                    ['vdl', 'VDL'],
-                    ['acars', 'ACARS'],
+                    ['comms', 'VDL+ACARS'],
                   ] as const).map(([layerKey, label]) => (
                     <button
                       key={layerKey}
