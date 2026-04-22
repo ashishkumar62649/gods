@@ -49,6 +49,9 @@ import {
   getFlightIconKey,
 } from './flightVisuals';
 
+const TARGET_OPTIC_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><defs><filter id="cyanGlow"><feGaussianBlur stdDeviation="3" result="blur" /><feComposite in="SourceGraphic" in2="blur" operator="over" /></filter></defs><g filter="url(#cyanGlow)"><path d="M 20 10 L 10 10 L 10 20 M 60 10 L 70 10 L 70 20 M 10 60 L 10 70 L 20 70 M 70 60 L 70 70 L 60 70" fill="none" stroke="#22d3ee" stroke-width="3" /><path d="M 40 15 L 40 25 M 40 55 L 40 65 M 15 40 L 25 40 M 55 40 L 65 40" fill="none" stroke="#67e8f9" stroke-width="2" opacity="0.8" /><circle cx="40" cy="40" r="18" fill="none" stroke="#a5f3fc" stroke-width="1" stroke-dasharray="4 4" opacity="0.6"/></g></svg>';
+const TARGET_OPTIC_IMAGE = `data:image/svg+xml;utf8,${encodeURIComponent(TARGET_OPTIC_SVG)}`;
+
 interface FlightPickId {
   kind: 'flight';
   flightId: string;
@@ -109,6 +112,8 @@ export class FlightSceneLayerManager {
   private readonly flightBillboards: BillboardCollection;
   private readonly airportBillboards: BillboardCollection;
   private readonly routeAirportBillboards: BillboardCollection;
+  private readonly targetOpticBillboard: Billboard;
+  private readonly routeDestinationBillboard: Billboard;
   private readonly flightLabels: LabelCollection;
   private readonly trailPolylines: PolylineCollection;
   private readonly routePolylines: PolylineCollection;
@@ -173,6 +178,29 @@ export class FlightSceneLayerManager {
         color: Color.fromCssColorString('#85c6ff').withAlpha(0.72),
       }),
       positions: [],
+    });
+
+    this.targetOpticBillboard = this.routeAirportBillboards.add({
+      image: TARGET_OPTIC_IMAGE,
+      position: Cartesian3.ZERO,
+      width: 80,
+      height: 80,
+      show: false,
+      verticalOrigin: VerticalOrigin.CENTER,
+      horizontalOrigin: HorizontalOrigin.CENTER,
+      scaleByDistance: new NearFarScalar(2_500, 1.0, 8_000_000, 0.36),
+    });
+
+    this.routeDestinationBillboard = this.routeAirportBillboards.add({
+      image: DESTINATION_AIRPORT_ICON_IMAGE,
+      position: Cartesian3.ZERO,
+      show: false,
+      verticalOrigin: VerticalOrigin.BOTTOM,
+      horizontalOrigin: HorizontalOrigin.CENTER,
+      width: 24,
+      height: 24,
+      scaleByDistance: new NearFarScalar(20_000, 1.16, 15_000_000, 0.32),
+      color: Color.fromCssColorString('#ffc09b'),
     });
 
     this.airportBillboards.show = false;
@@ -242,6 +270,9 @@ export class FlightSceneLayerManager {
     this.selectedFlightId = flightId;
     if (!flightId && this.sensorLinkState !== 'release') {
       this.setSensorLinkState('release');
+    }
+    if (!flightId) {
+      this.targetOpticBillboard.show = false;
     }
     this.refreshFlightVisuals();
     this.refreshSelectionOverlays();
@@ -473,6 +504,7 @@ export class FlightSceneLayerManager {
     const cameraHeading = this.viewer.camera.heading;
     const entriesToRemove: string[] = [];
     this.tickFrame += 1;
+    this.targetOpticBillboard.show = false;
 
     for (const [flightId, entry] of this.flightEntries.entries()) {
       this.updateTargetApiPosition(entry, nowSeconds);
@@ -563,6 +595,11 @@ export class FlightSceneLayerManager {
         this.routeState.flightId === flightId
       ) {
         this.refreshRouteOverlay();
+      }
+
+      if (this.selectedFlightId === flightId) {
+        this.targetOpticBillboard.position = entry.sharedFramePosition;
+        this.targetOpticBillboard.show = this.flightsVisible;
       }
     }
 
@@ -736,12 +773,15 @@ export class FlightSceneLayerManager {
 
     if (!selectedEntry || !showLabel) {
       this.selectedFlightLabel.show = false;
+      this.targetOpticBillboard.show = false;
       return;
     }
 
     this.selectedFlightLabel.show = true;
     this.selectedFlightLabel.text = getFlightDisplayName(selectedEntry.flight);
     this.selectedFlightLabel.position = selectedEntry.sharedFramePosition;
+    this.targetOpticBillboard.position = selectedEntry.sharedFramePosition;
+    this.targetOpticBillboard.show = true;
   }
 
   private updateSensorLinkCamera(selectedEntry: FlightRenderEntry | null) {
@@ -757,31 +797,19 @@ export class FlightSceneLayerManager {
     const camera = this.viewer.camera;
     const controller = this.viewer.scene.screenSpaceCameraController;
     const target = selectedEntry.sharedFramePosition;
-    const distToPlane = Cartesian3.distance(camera.positionWC, target);
 
     switch (this.sensorLinkState) {
       case 'focus': {
         const transform = Transforms.eastNorthUpToFixedFrame(target);
-
-        if (distToPlane > 200) {
-          camera.lookAtTransform(
-            transform,
-            new HeadingPitchRange(0, CesiumMath.toRadians(-20), 200),
-          );
-        } else {
-          // Preserve the user's current local orbit if they are already
-          // inside the bounded focus sphere around the aircraft.
-          camera.lookAtTransform(transform);
-        }
-
+        // Preserve Cesium's native local-frame orbit without fighting the
+        // controller by updating only the moving reference frame each tick.
+        camera.lookAtTransform(transform);
         controller.maximumZoomDistance = 200;
-        controller.minimumZoomDistance = 30;
         break;
       }
       case 'pursuit': {
         camera.lookAtTransform(Matrix4.IDENTITY);
         controller.maximumZoomDistance = Number.POSITIVE_INFINITY;
-        controller.minimumZoomDistance = 1;
         camera.lookAt(
           target,
           new HeadingPitchRange(
@@ -795,7 +823,6 @@ export class FlightSceneLayerManager {
       case 'flight-deck': {
         camera.lookAtTransform(Matrix4.IDENTITY);
         controller.maximumZoomDistance = Number.POSITIVE_INFINITY;
-        controller.minimumZoomDistance = 1;
         camera.position = Cartesian3.clone(target, camera.position);
         camera.setView({
           orientation: {
@@ -826,7 +853,6 @@ export class FlightSceneLayerManager {
     }
 
     controller.maximumZoomDistance = Number.POSITIVE_INFINITY;
-    controller.minimumZoomDistance = 1;
   }
 
   private refreshRouteOverlay() {
@@ -836,7 +862,7 @@ export class FlightSceneLayerManager {
     if (!snapshot?.found || !snapshot.destination || !trackedEntry) {
       this.routeArcPolyline.show = false;
       this.routeArcPolyline.positions = [];
-      this.routeAirportBillboards.removeAll();
+      this.routeDestinationBillboard.show = false;
       return;
     }
 
@@ -851,21 +877,12 @@ export class FlightSceneLayerManager {
     this.routeArcPolyline.positions = arcPositions;
 
     // Keep destination pin; origin is covered by the snail trail.
-    this.routeAirportBillboards.removeAll();
-    this.routeAirportBillboards.add({
-      image: DESTINATION_AIRPORT_ICON_IMAGE,
-      position: Cartesian3.fromDegrees(
-        snapshot.destination.longitude,
-        snapshot.destination.latitude,
-        0,
-      ),
-      verticalOrigin: VerticalOrigin.BOTTOM,
-      horizontalOrigin: HorizontalOrigin.CENTER,
-      width: 24,
-      height: 24,
-      scaleByDistance: new NearFarScalar(20_000, 1.16, 15_000_000, 0.32),
-      color: Color.fromCssColorString('#ffc09b'),
-    });
+    this.routeDestinationBillboard.position = Cartesian3.fromDegrees(
+      snapshot.destination.longitude,
+      snapshot.destination.latitude,
+      0,
+    );
+    this.routeDestinationBillboard.show = true;
 
     this.selectedFlightLabel.text = getFlightDisplayName(trackedEntry.flight);
   }
@@ -1019,6 +1036,7 @@ export class FlightSceneLayerManager {
     if (this.selectedFlightId === flightId) {
       this.selectedFlightId = null;
       this.selectedFlightLabel.show = false;
+      this.targetOpticBillboard.show = false;
       this.sensorLinkState = 'release';
       this.releaseLockedCamera();
     }

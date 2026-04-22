@@ -1604,10 +1604,7 @@ export default function Viewer() {
       selectedFlightId ? flightRecordsRef.current.get(selectedFlightId) ?? null : null,
     );
     flightLayerManagerRef.current?.setSelectedFlightId(selectedFlightId);
-    if (!selectedFlightId && sensorLinkRef.current !== 'release') {
-      releaseSensorLink();
-    }
-  }, [releaseSensorLink, selectedFlightId]);
+  }, [selectedFlightId]);
 
   useEffect(() => {
     showSelectedFlightTrailRef.current = showSelectedFlightTrail;
@@ -1704,7 +1701,9 @@ export default function Viewer() {
       const handler = new ScreenSpaceEventHandler(viewerUsed.scene.canvas);
       handler.setInputAction((movement: { position: Cartesian2 }) => {
         const flightId = layerManager.pickFlight(movement.position);
-        updateSelectedFlight(flightId);
+        if (flightId) {
+          updateSelectedFlight(flightId);
+        }
       }, ScreenSpaceEventType.LEFT_CLICK);
 
       flightInteractionHandlerRef.current = handler;
@@ -1992,13 +1991,9 @@ export default function Viewer() {
 
     const onPointerUp = (event: PointerEvent) => {
       if (pointerState.pointerId !== event.pointerId) return;
-      const shouldRelease = !pointerState.moved && !eventCameFromHud(event.target);
       pointerState.active = false;
       pointerState.pointerId = null;
       pointerState.moved = false;
-      if (shouldRelease) {
-        releaseSensorLink();
-      }
     };
 
     const onWheel = (event: WheelEvent) => {
@@ -2037,7 +2032,7 @@ export default function Viewer() {
       window.removeEventListener('pointercancel', onPointerUp, true);
       window.removeEventListener('wheel', onWheel, true);
     };
-  }, [releaseSensorLink, sensorLink]);
+  }, [sensorLink]);
 
   useEffect(() => {
     if (!orbitEnabled && !autoBuildingsEnabled) return;
