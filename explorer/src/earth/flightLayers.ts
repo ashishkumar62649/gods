@@ -7,18 +7,23 @@ import {
   Color,
   DistanceDisplayCondition,
   EllipsoidGeodesic,
+  HeadingPitchRange,
+  HeadingPitchRoll,
   HorizontalOrigin,
   Label,
   LabelCollection,
   LabelStyle,
   Material,
   Math as CesiumMath,
+  Matrix4,
+  Model,
   NearFarScalar,
   PointPrimitive,
   PointPrimitiveCollection,
   Polyline,
   PolylineCollection,
   PrimitiveCollection,
+  Transforms,
   VerticalOrigin,
   Viewer as CesiumViewer,
 } from 'cesium';
@@ -32,6 +37,7 @@ import {
   FlightRenderMode,
   FlightRouteSnapshot,
   MEDIUM_AIRPORT_ICON_IMAGE,
+  SELECTED_FLIGHT_MODEL_URL,
   getFlightDisplayName,
   predictFlightPosition,
   SMALL_AIRPORT_ICON_IMAGE,
@@ -53,6 +59,13 @@ interface AirportPickId {
   airportId: string;
 }
 
+export type FlightAssetView = 'symbology' | 'airframe';
+export type FlightSensorLinkState =
+  | 'release'
+  | 'tactical'
+  | 'pursuit'
+  | 'flight-deck';
+
 interface FlightPrimitiveEntry {
   dot: PointPrimitive;
   icon: Billboard;
@@ -60,6 +73,8 @@ interface FlightPrimitiveEntry {
 
 interface FlightRenderEntry extends FlightPrimitiveEntry {
   flight: FlightRecord;
+  model?: Model;
+  modelLoadPromise?: Promise<void>;
   sharedFramePosition: Cartesian3;
   confirmedApiPosition: Cartesian3;
   targetApiPosition: Cartesian3;
@@ -83,6 +98,9 @@ interface RouteState {
 const FLIGHT_LERP_FACTOR = 0.05;
 const FLIGHT_STALE_TIMEOUT_MS = 60_000;
 const FLIGHT_FADE_DURATION_MS = 2_000;
+const FLIGHT_DECK_ENTRY_PITCH = CesiumMath.toRadians(-5);
+const FLIGHT_DECK_PITCH_MIN = CesiumMath.toRadians(-85);
+const FLIGHT_DECK_PITCH_MAX = CesiumMath.toRadians(55);
 
 export class FlightSceneLayerManager {
   private readonly viewer: CesiumViewer;
@@ -108,6 +126,9 @@ export class FlightSceneLayerManager {
   private flightsVisible = false;
   private airportsVisible = false;
   private renderMode: FlightRenderMode = 'dot';
+  private assetViewState: FlightAssetView = 'symbology';
+  private sensorLinkState: FlightSensorLinkState = 'release';
+  private sensorLinkWasLocked = false;
   private selectedFlightId: string | null = null;
   private showSelectedTrail = false;
   private routeState: RouteState = {
@@ -115,6 +136,9 @@ export class FlightSceneLayerManager {
     flightId: null,
   };
   private tickFrame = 0;
+  private flightDeckLookHeadingOffset = 0;
+  private flightDeckLookPitch = FLIGHT_DECK_ENTRY_PITCH;
+  private destroyed = false;
 
   constructor(viewer: CesiumViewer) {
     this.viewer = viewer;
@@ -159,6 +183,7 @@ export class FlightSceneLayerManager {
   }
 
   destroy() {
+    this.destroyed = true;
     this.selectedTrailAbortController?.abort();
     if (!this.viewer.isDestroyed()) {
       this.viewer.scene.primitives.remove(this.root);
@@ -170,6 +195,7 @@ export class FlightSceneLayerManager {
     this.flightsVisible = visible;
     this.flightDots.show = visible;
     this.flightBillboards.show = visible;
+    this.refreshFlightVisuals();
     this.updateTrailSegmentVisibility();
     this.refreshSelectionOverlays();
     this.requestRender();
@@ -181,8 +207,43 @@ export class FlightSceneLayerManager {
     this.requestRender();
   }
 
+  setAssetViewState(nextView: FlightAssetView) {
+    this.assetViewState = nextView;
+    this.refreshFlightVisuals();
+    this.requestRender();
+  }
+
+  setSensorLinkState(nextState: FlightSensorLinkState) {
+    const previousState = this.sensorLinkState;
+    this.sensorLinkState = nextState;
+    if (nextState === 'flight-deck' && previousState !== 'flight-deck') {
+      this.resetFlightDeckLook();
+    }
+    this.updateSensorLinkCamera(
+      this.selectedFlightId ? this.flightEntries.get(this.selectedFlightId) ?? null : null,
+    );
+    this.requestRender();
+  }
+
+  resetFlightDeckLook() {
+    this.flightDeckLookHeadingOffset = 0;
+    this.flightDeckLookPitch = FLIGHT_DECK_ENTRY_PITCH;
+  }
+
+  adjustFlightDeckLook(deltaHeadingRadians: number, deltaPitchRadians: number) {
+    this.flightDeckLookHeadingOffset += deltaHeadingRadians;
+    this.flightDeckLookPitch = CesiumMath.clamp(
+      this.flightDeckLookPitch + deltaPitchRadians,
+      FLIGHT_DECK_PITCH_MIN,
+      FLIGHT_DECK_PITCH_MAX,
+    );
+  }
+
   setSelectedFlightId(flightId: string | null) {
     this.selectedFlightId = flightId;
+    if (!flightId && this.sensorLinkState !== 'release') {
+      this.setSensorLinkState('release');
+    }
     this.refreshFlightVisuals();
     this.refreshSelectionOverlays();
     const wantsTrail = this.showSelectedTrail || Boolean(this.routeState.flightId);
@@ -291,6 +352,8 @@ export class FlightSceneLayerManager {
             scaleByDistance: new NearFarScalar(5_000, 1.1, 20_000_000, 0.48),
           }),
           flight,
+          model: undefined,
+          modelLoadPromise: undefined,
           sharedFramePosition: Cartesian3.clone(initialPosition),
           confirmedApiPosition: Cartesian3.clone(initialPosition),
           targetApiPosition: Cartesian3.clone(initialPosition),
@@ -474,6 +537,17 @@ export class FlightSceneLayerManager {
       this.applyRenderedPosition(entry);
       const headingRad = (entry.flight.headingDegrees * Math.PI) / 180;
       entry.icon.rotation = cameraHeading - headingRad;
+      if (entry.model?.show) {
+        const hpr = new HeadingPitchRoll(
+          CesiumMath.toRadians(entry.flight.headingDegrees - 90),
+          0,
+          0,
+        );
+        entry.model.modelMatrix = Transforms.headingPitchRollToFixedFrame(
+          entry.sharedFramePosition,
+          hpr,
+        );
+      }
 
       if (
         this.showSelectedTrail &&
@@ -499,6 +573,9 @@ export class FlightSceneLayerManager {
 
     this.refreshSelectionOverlays();
     this.refreshRouteOverlay();
+    this.updateSensorLinkCamera(
+      this.selectedFlightId ? this.flightEntries.get(this.selectedFlightId) ?? null : null,
+    );
   }
 
   private extractPickId(picked: unknown) {
@@ -558,6 +635,10 @@ export class FlightSceneLayerManager {
       ? Color.WHITE.withAlpha(0.9)
       : new Color(0.05, 0.08, 0.14, dimmed ? 0.12 : 0.36);
     const iconSize = getFlightIconDimensions(flight, isSelected);
+    const showSelectedAirframe =
+      this.flightsVisible &&
+      isSelected &&
+      this.assetViewState === 'airframe';
 
     entry.dot.show = this.flightsVisible && this.renderMode === 'dot' && !isSelected;
     entry.dot.pixelSize = isSelected ? 13 : 7.5;
@@ -567,10 +648,23 @@ export class FlightSceneLayerManager {
     entry.dotOutlineBaseColor = outlineColor;
     entry.iconBaseColor = markerColor;
 
-    entry.icon.show = this.flightsVisible && (this.renderMode === 'icon' || isSelected);
+    entry.icon.show =
+      this.flightsVisible &&
+      !showSelectedAirframe &&
+      (this.renderMode === 'icon' || isSelected);
     entry.icon.image = getFlightIconImage(iconKey);
     entry.icon.width = iconSize.width;
     entry.icon.height = iconSize.height;
+
+    if (showSelectedAirframe) {
+      entry.icon.show = false;
+      this.ensureAirframeModel(entry);
+      if (entry.model) {
+        entry.model.show = true;
+      }
+    } else if (entry.model) {
+      entry.model.show = false;
+    }
 
     this.applyEntryOpacity(entry);
   }
@@ -582,6 +676,51 @@ export class FlightSceneLayerManager {
       entry.currentOpacity,
     );
     entry.icon.color = cloneColorWithOpacity(entry.iconBaseColor, entry.currentOpacity);
+    if (entry.model) {
+      entry.model.color = Color.WHITE.withAlpha(entry.currentOpacity);
+    }
+  }
+
+  private ensureAirframeModel(entry: FlightRenderEntry) {
+    if (entry.model || entry.modelLoadPromise) {
+      return;
+    }
+
+    const flightId = entry.flight.id;
+    entry.modelLoadPromise = Model.fromGltfAsync({
+      url: SELECTED_FLIGHT_MODEL_URL,
+      minimumPixelSize: 42,
+      maximumScale: 128,
+      incrementallyLoadTextures: false,
+    })
+      .then((model) => {
+        if (this.destroyed || !this.flightEntries.has(flightId)) {
+          if (!model.isDestroyed()) {
+            model.destroy();
+          }
+          return;
+        }
+
+        model.show = false;
+        this.root.add(model);
+
+        const liveEntry = this.flightEntries.get(flightId);
+        if (!liveEntry) {
+          if (!model.isDestroyed()) {
+            model.destroy();
+          }
+          return;
+        }
+
+        liveEntry.model = model;
+        liveEntry.modelLoadPromise = undefined;
+        this.applyFlightVisual(liveEntry, liveEntry.flight);
+        this.requestRender();
+      })
+      .catch((error: unknown) => {
+        entry.modelLoadPromise = undefined;
+        console.warn('[Explorer] Failed to load selected flight airframe:', error);
+      });
   }
 
   private refreshFlightVisuals() {
@@ -604,6 +743,74 @@ export class FlightSceneLayerManager {
     this.selectedFlightLabel.show = true;
     this.selectedFlightLabel.text = getFlightDisplayName(selectedEntry.flight);
     this.selectedFlightLabel.position = selectedEntry.sharedFramePosition;
+  }
+
+  private updateSensorLinkCamera(selectedEntry: FlightRenderEntry | null) {
+    if (
+      !selectedEntry ||
+      !this.flightsVisible ||
+      this.sensorLinkState === 'release'
+    ) {
+      this.releaseLockedCamera();
+      return;
+    }
+
+    const camera = this.viewer.camera;
+    const target = selectedEntry.sharedFramePosition;
+
+    switch (this.sensorLinkState) {
+      case 'tactical': {
+        const currentOffset = this.captureCurrentCameraOffset(target);
+        camera.lookAt(target, currentOffset);
+        this.sensorLinkWasLocked = true;
+        break;
+      }
+      case 'pursuit': {
+        camera.lookAt(
+          target,
+          new HeadingPitchRange(
+            CesiumMath.toRadians(selectedEntry.flight.headingDegrees),
+            CesiumMath.toRadians(-12),
+            150,
+          ),
+        );
+        this.sensorLinkWasLocked = true;
+        break;
+      }
+      case 'flight-deck': {
+        camera.setView({
+          destination: target,
+          orientation: {
+            heading:
+              CesiumMath.toRadians(selectedEntry.flight.headingDegrees) +
+              this.flightDeckLookHeadingOffset,
+            pitch: this.flightDeckLookPitch,
+            roll: 0,
+          },
+        });
+        this.sensorLinkWasLocked = true;
+        break;
+      }
+      default:
+        break;
+    }
+  }
+
+  private captureCurrentCameraOffset(target: Cartesian3) {
+    return new HeadingPitchRange(
+      this.viewer.camera.heading,
+      this.viewer.camera.pitch,
+      Math.max(150, Cartesian3.distance(this.viewer.camera.position, target)),
+    );
+  }
+
+  private releaseLockedCamera() {
+    if (!this.sensorLinkWasLocked || this.viewer.isDestroyed()) {
+      return;
+    }
+
+    this.viewer.camera.lookAtTransform(Matrix4.IDENTITY);
+    this.sensorLinkWasLocked = false;
   }
 
   private refreshRouteOverlay() {
@@ -776,6 +983,9 @@ export class FlightSceneLayerManager {
 
     this.flightDots.remove(entry.dot);
     this.flightBillboards.remove(entry.icon);
+    if (entry.model) {
+      this.root.remove(entry.model);
+    }
     this.flightEntries.delete(flightId);
 
     if (this.activeTrailFlightId === flightId) {
@@ -793,6 +1003,8 @@ export class FlightSceneLayerManager {
     if (this.selectedFlightId === flightId) {
       this.selectedFlightId = null;
       this.selectedFlightLabel.show = false;
+      this.sensorLinkState = 'release';
+      this.releaseLockedCamera();
     }
   }
 }

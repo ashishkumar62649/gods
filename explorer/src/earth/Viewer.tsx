@@ -31,7 +31,11 @@ import {
 import { CesiumComponentRef, Viewer as ResiumViewer } from 'resium';
 import FlightDetailsPanel from './FlightDetailsPanel';
 import SearchBox from './SearchBox';
-import { FlightSceneLayerManager } from './flightLayers';
+import {
+  FlightAssetView,
+  FlightSceneLayerManager,
+  FlightSensorLinkState,
+} from './flightLayers';
 import {
   AirportRecord,
   FLIGHT_POLL_INTERVAL_MS,
@@ -125,7 +129,6 @@ Camera.DEFAULT_VIEW_RECTANGLE = Rectangle.fromDegrees(
  */
 const METERS_PER_DEG_LAT = 111_320;
 const FLIGHT_EASING = EasingFunction.SINUSOIDAL_IN_OUT;
-const FLIGHT_TRACK_SECONDS_AHEAD = 3;
 const COCKPIT_ENTRY_PITCH = CesiumMath.toRadians(-5);
 const COCKPIT_LOOK_SENSITIVITY = 0.004;
 
@@ -637,18 +640,15 @@ export default function Viewer() {
   const flightsEnabledRef = useRef(false);
   const showAirportsRef = useRef(false);
   const selectedFlightIdRef = useRef<string | null>(null);
-  const trackedFlightIdRef = useRef<string | null>(null);
-  const droneFlightIdRef = useRef<string | null>(null);
-  const cockpitFlightIdRef = useRef<string | null>(null);
-  const cockpitLookHeadingOffsetRef = useRef(0);
-  const cockpitLookPitchRef = useRef(COCKPIT_ENTRY_PITCH);
+  const assetViewRef = useRef<FlightAssetView>('symbology');
+  const sensorLinkRef = useRef<FlightSensorLinkState>('release');
   const cockpitPointerRef = useRef({
     active: false,
     pointerId: null as number | null,
     lastX: 0,
     lastY: 0,
+    moved: false,
   });
-  const trackedFlightViewRef = useRef<HeadingPitchRange | null>(null);
   const showSelectedFlightTrailRef = useRef(false);
   const showSelectedFlightRouteRef = useRef(false);
   const airportsLoadedRef = useRef(false);
@@ -674,9 +674,8 @@ export default function Viewer() {
   const [flightsEnabled, setFlightsEnabled] = useState(false);
   const [showAirports, setShowAirports] = useState(false);
   const [selectedFlightId, setSelectedFlightId] = useState<string | null>(null);
-  const [trackedFlightId, setTrackedFlightId] = useState<string | null>(null);
-  const [droneFlightId, setDroneFlightId] = useState<string | null>(null);
-  const [cockpitFlightId, setCockpitFlightId] = useState<string | null>(null);
+  const [assetView, setAssetView] = useState<FlightAssetView>('symbology');
+  const [sensorLink, setSensorLink] = useState<FlightSensorLinkState>('release');
   const [selectedFlight, setSelectedFlight] = useState<FlightRecord | null>(null);
   const [showSelectedFlightTrail, setShowSelectedFlightTrail] = useState(false);
   const [showSelectedFlightRoute, setShowSelectedFlightRoute] = useState(false);
@@ -804,23 +803,16 @@ export default function Viewer() {
     setSelectedFlight(flightId ? flightRecordsRef.current.get(flightId) ?? null : null);
   }, []);
 
-  const stopFlightTracking = useCallback(() => {
-    trackedFlightIdRef.current = null;
-    droneFlightIdRef.current = null;
-    cockpitFlightIdRef.current = null;
-    cockpitLookHeadingOffsetRef.current = 0;
-    cockpitLookPitchRef.current = COCKPIT_ENTRY_PITCH;
+  const releaseSensorLink = useCallback(() => {
+    sensorLinkRef.current = 'release';
+    setSensorLink('release');
+    flightLayerManagerRef.current?.setSensorLinkState('release');
     cockpitPointerRef.current.active = false;
     cockpitPointerRef.current.pointerId = null;
-    trackedFlightViewRef.current = null;
-    setTrackedFlightId(null);
-    setDroneFlightId(null);
-    setCockpitFlightId(null);
+    cockpitPointerRef.current.moved = false;
 
     const viewer = viewerRef.current?.cesiumElement;
     if (viewer && !viewer.isDestroyed()) {
-      viewer.camera.lookAtTransform(Matrix4.IDENTITY);
-      // Restore all camera controller inputs that cockpit mode may have disabled.
       const ctrl = viewer.scene.screenSpaceCameraController;
       ctrl.enableRotate = true;
       ctrl.enableTranslate = true;
@@ -921,10 +913,10 @@ export default function Viewer() {
     flightLayerManagerRef.current?.setFlightsVisible(nextEnabled);
 
     if (!nextEnabled) {
-      stopFlightTracking();
+      releaseSensorLink();
       updateSelectedFlight(null);
     }
-  }, [stopFlightTracking, updateSelectedFlight]);
+  }, [releaseSensorLink, updateSelectedFlight]);
 
   const toggleAirports = useCallback(() => {
     const nextEnabled = !showAirportsRef.current;
@@ -1082,7 +1074,7 @@ export default function Viewer() {
     if (orbitEnabledRef.current) {
       stopOrbit();
     } else {
-      stopFlightTracking();
+      releaseSensorLink();
       // Manual ON: compute a fresh focal point from the current view so the
       // orbit never jumps to a stale landmark from a previous search.
       const viewer = viewerRef.current?.cesiumElement;
@@ -1115,7 +1107,7 @@ export default function Viewer() {
       orbitRangeRef.current = null;
       startOrbit();
     }
-  }, [startOrbit, stopFlightTracking, stopOrbit]);
+  }, [releaseSensorLink, startOrbit, stopOrbit]);
 
   const refineLandmarkOrbitFrom3D = useCallback(
     (groundTarget: Cartesian3, rev: number) => {
@@ -1168,7 +1160,7 @@ export default function Viewer() {
         return;
       }
 
-      stopFlightTracking();
+      releaseSensorLink();
       cancelAutoLandmarkExperience();
 
       if (!geocoderRef.current) {
@@ -1383,174 +1375,95 @@ export default function Viewer() {
     [
       cancelAutoLandmarkExperience,
       refineLandmarkOrbitFrom3D,
+      releaseSensorLink,
       setAutoBuildingsMode,
       startOrbit,
-      stopFlightTracking,
       stopOrbit,
     ],
   );
 
-  // ── Chase cam (Drone) ────────────────────────────────────────────────────
-  // Camera locked BEHIND the plane, always follows it.
-  // User cannot look around; the view is fixed to trail the aircraft.
-  const toggleSelectedFlightDrone = useCallback(() => {
-    if (!selectedFlight) return;
-
-    if (droneFlightIdRef.current === selectedFlight.id) {
-      stopFlightTracking();
+  const handleSensorLinkChange = useCallback((nextLink: FlightSensorLinkState) => {
+    if (nextLink === 'release') {
+      releaseSensorLink();
       return;
     }
 
+    if (!selectedFlight) return;
+
     cancelAutoLandmarkExperience();
-    stopFlightTracking();
+    releaseSensorLink();
 
     const flightId = selectedFlight.id;
     const viewer = viewerRef.current?.cesiumElement;
     if (!viewer || viewer.isDestroyed()) return;
 
-    const liveFlight = flightRecordsRef.current.get(flightId) ?? selectedFlight;
-    const ageSeconds = Math.min(20, Math.max(0, Date.now() / 1000 - liveFlight.timestamp));
-    const chaseView = getChaseCameraView(liveFlight, ageSeconds);
+    const armSensorLink = () => {
+      if (selectedFlightIdRef.current !== flightId) return;
 
-    viewer.camera.lookAtTransform(Matrix4.IDENTITY);
-    viewer.camera.flyTo({
-      destination: chaseView.destination,
-      orientation: chaseView.orientation,
-      duration: 1.5,
-      easingFunction: FLIGHT_EASING,
-      complete: () => {
-        if (selectedFlightIdRef.current !== flightId) return;
-        const activeViewer = viewerRef.current?.cesiumElement;
-        const refreshed = flightRecordsRef.current.get(flightId);
-        if (!activeViewer || activeViewer.isDestroyed() || !refreshed) return;
-        const liveAgeSeconds = Math.min(20, Math.max(0, Date.now() / 1000 - refreshed.timestamp));
-        const liveChaseView = getChaseCameraView(refreshed, liveAgeSeconds);
-        droneFlightIdRef.current = flightId;
-        setDroneFlightId(flightId);
-        activeViewer.camera.setView({
-          destination: liveChaseView.destination,
-          orientation: liveChaseView.orientation,
-        });
-        activeViewer.scene.requestRender();
-      },
-    });
-  }, [
-    cancelAutoLandmarkExperience,
-    selectedFlight,
-    stopFlightTracking,
-  ]);
+      sensorLinkRef.current = nextLink;
+      setSensorLink(nextLink);
+      flightLayerManagerRef.current?.setSensorLinkState(nextLink);
 
-  // ── Cockpit mode ─────────────────────────────────────────────────────────
-  // Camera rides ON the plane. User can look 360° freely.
-  // All Cesium inputs stay enabled; position is re-locked to the plane
-  // every frame, so panning only changes the view direction.
-  const toggleSelectedFlightCockpit = useCallback(() => {
-    if (!selectedFlight) return;
-
-    if (cockpitFlightIdRef.current === selectedFlight.id) {
-      stopFlightTracking();
-      return;
-    }
-
-    cancelAutoLandmarkExperience();
-    stopFlightTracking();
-
-    const flightId = selectedFlight.id;
-    const viewer = viewerRef.current?.cesiumElement;
-    if (!viewer || viewer.isDestroyed()) return;
-
-    const liveFlight = flightRecordsRef.current.get(flightId) ?? selectedFlight;
-    const ageSeconds = Math.min(20, Math.max(0, Date.now() / 1000 - liveFlight.timestamp));
-    cockpitLookHeadingOffsetRef.current = 0;
-    cockpitLookPitchRef.current = COCKPIT_ENTRY_PITCH;
-    cockpitPointerRef.current.active = false;
-    cockpitPointerRef.current.pointerId = null;
-    const entry = getCockpitCameraPose(
-      liveFlight,
-      ageSeconds,
-      cockpitLookHeadingOffsetRef.current,
-      cockpitLookPitchRef.current,
-    );
-
-    viewer.camera.lookAtTransform(Matrix4.IDENTITY);
-
-    viewer.camera.flyTo({
-      destination: entry.destination,
-      orientation: entry.orientation,
-      duration: 1.6,
-      easingFunction: FLIGHT_EASING,
-      complete: () => {
-        if (selectedFlightIdRef.current !== flightId) return;
-        const activeViewer = viewerRef.current?.cesiumElement;
-        if (!activeViewer || activeViewer.isDestroyed()) return;
-        cockpitFlightIdRef.current = flightId;
-        setCockpitFlightId(flightId);
-        const ctrl = activeViewer.scene.screenSpaceCameraController;
+      if (nextLink === 'flight-deck') {
+        const ctrl = viewer.scene.screenSpaceCameraController;
         ctrl.enableRotate = false;
         ctrl.enableTranslate = false;
         ctrl.enableZoom = false;
         ctrl.enableTilt = false;
         ctrl.enableLook = false;
-        activeViewer.scene.requestRender();
-      },
-    });
-  }, [
-    cancelAutoLandmarkExperience,
-    selectedFlight,
-    stopFlightTracking,
-  ]);
+      }
 
+      viewer.scene.requestRender();
+    };
 
-  const toggleSelectedFlightTracking = useCallback(() => {
-    if (!selectedFlight) return;
+    const liveFlight = flightRecordsRef.current.get(flightId) ?? selectedFlight;
+    const ageSeconds = Math.min(20, Math.max(0, Date.now() / 1000 - liveFlight.timestamp));
 
-    if (trackedFlightIdRef.current === selectedFlight.id) {
-      stopFlightTracking();
-      return;
-    }
-
-    cancelAutoLandmarkExperience();
-    stopFlightTracking();
-
-    const flightId = selectedFlight.id;
-    const viewer = viewerRef.current?.cesiumElement;
-    if (viewer && !viewer.isDestroyed()) {
-      trackedFlightViewRef.current = getFlightCameraOffset(
-        viewer,
-        getFlightCameraTarget(selectedFlight, 0),
-      );
-    }
-
-    focusFlight(selectedFlight, {
-      duration: 1.4,
-      secondsAhead: 0,
-      complete: () => {
-        if (selectedFlightIdRef.current !== flightId) return;
-
-        const viewer = viewerRef.current?.cesiumElement;
-        const liveFlight = flightRecordsRef.current.get(flightId);
-        if (!viewer || viewer.isDestroyed() || !liveFlight) return;
-
-        trackedFlightIdRef.current = flightId;
-        setTrackedFlightId(flightId);
-        const trackingOffset =
-          trackedFlightViewRef.current ??
-          getFlightCameraOffset(
-            viewer,
-            getFlightCameraTarget(liveFlight, FLIGHT_TRACK_SECONDS_AHEAD),
-          );
-        viewer.camera.lookAt(
-          getFlightCameraTarget(liveFlight, FLIGHT_TRACK_SECONDS_AHEAD),
-          trackingOffset,
+    switch (nextLink) {
+      case 'tactical':
+        focusFlight(selectedFlight, {
+          duration: 1.4,
+          secondsAhead: 0,
+          complete: armSensorLink,
+        });
+        break;
+      case 'pursuit': {
+        const chaseView = getChaseCameraView(liveFlight, ageSeconds);
+        viewer.camera.lookAtTransform(Matrix4.IDENTITY);
+        viewer.camera.flyTo({
+          destination: chaseView.destination,
+          orientation: chaseView.orientation,
+          duration: 1.5,
+          easingFunction: FLIGHT_EASING,
+          complete: armSensorLink,
+        });
+        break;
+      }
+      case 'flight-deck': {
+        const cockpitPose = getCockpitCameraPose(
+          liveFlight,
+          ageSeconds,
+          0,
+          COCKPIT_ENTRY_PITCH,
         );
-        viewer.scene.requestRender();
-      },
-    });
+        viewer.camera.lookAtTransform(Matrix4.IDENTITY);
+        viewer.camera.flyTo({
+          destination: cockpitPose.destination,
+          orientation: cockpitPose.orientation,
+          duration: 1.6,
+          easingFunction: FLIGHT_EASING,
+          complete: armSensorLink,
+        });
+        break;
+      }
+      default:
+        break;
+    }
   }, [
     cancelAutoLandmarkExperience,
     focusFlight,
+    releaseSensorLink,
     selectedFlight,
-    stopFlightTracking,
   ]);
 
   useEffect(() => {
@@ -1691,7 +1604,10 @@ export default function Viewer() {
       selectedFlightId ? flightRecordsRef.current.get(selectedFlightId) ?? null : null,
     );
     flightLayerManagerRef.current?.setSelectedFlightId(selectedFlightId);
-  }, [selectedFlightId]);
+    if (!selectedFlightId && sensorLinkRef.current !== 'release') {
+      releaseSensorLink();
+    }
+  }, [releaseSensorLink, selectedFlightId]);
 
   useEffect(() => {
     showSelectedFlightTrailRef.current = showSelectedFlightTrail;
@@ -1703,12 +1619,14 @@ export default function Viewer() {
   }, [showSelectedFlightRoute]);
 
   useEffect(() => {
-    trackedFlightIdRef.current = trackedFlightId;
-  }, [trackedFlightId]);
+    assetViewRef.current = assetView;
+    flightLayerManagerRef.current?.setAssetViewState(assetView);
+  }, [assetView]);
 
   useEffect(() => {
-    droneFlightIdRef.current = droneFlightId;
-  }, [droneFlightId]);
+    sensorLinkRef.current = sensorLink;
+    flightLayerManagerRef.current?.setSensorLinkState(sensorLink);
+  }, [sensorLink]);
 
   useEffect(() => {
     showAirportsRef.current = showAirports;
@@ -1716,17 +1634,15 @@ export default function Viewer() {
   }, [showAirports]);
 
   useEffect(() => {
-    const activeFlightCameraId = droneFlightId ?? trackedFlightId;
-    if (!activeFlightCameraId) return;
-    if (!flightsEnabled || selectedFlightId !== activeFlightCameraId) {
-      stopFlightTracking();
+    if (sensorLink === 'release') return;
+    if (!flightsEnabled || !selectedFlightId) {
+      releaseSensorLink();
     }
   }, [
-    droneFlightId,
     flightsEnabled,
+    releaseSensorLink,
     selectedFlightId,
-    stopFlightTracking,
-    trackedFlightId,
+    sensorLink,
   ]);
 
   useEffect(() => {
@@ -1755,6 +1671,8 @@ export default function Viewer() {
       const layerManager = new FlightSceneLayerManager(viewerUsed);
       layerManager.setFlightsVisible(flightsEnabledRef.current);
       layerManager.setAirportsVisible(showAirportsRef.current);
+      layerManager.setAssetViewState(assetViewRef.current);
+      layerManager.setSensorLinkState(sensorLinkRef.current);
       flightLayerManagerRef.current = layerManager;
       localLayerManager = layerManager;
 
@@ -2036,177 +1954,7 @@ export default function Viewer() {
   }, [flightsEnabled, selectedFlightId, showSelectedFlightRoute]);
 
   useEffect(() => {
-    if (!trackedFlightId) return;
-
-    let cancelled = false;
-    let rafId = 0;
-    let removePostRender: (() => void) | null = null;
-    let attempts = 0;
-    const maxAttempts = 600;
-
-    const pollForViewer = () => {
-      if (cancelled) return;
-      attempts += 1;
-
-      const viewer = viewerRef.current?.cesiumElement;
-      const ready = Boolean(viewer) && !viewer!.isDestroyed();
-      if (!ready) {
-        if (attempts <= maxAttempts) {
-          rafId = requestAnimationFrame(pollForViewer);
-        }
-        return;
-      }
-
-      const activeViewer = viewer!;
-      const syncTrackedFlightCamera = () => {
-        if (cancelled || activeViewer.isDestroyed()) return;
-
-        const activeFlightId = trackedFlightIdRef.current;
-        if (!activeFlightId) return;
-
-        const liveFlight = flightRecordsRef.current.get(activeFlightId);
-        if (!liveFlight) {
-          stopFlightTracking();
-          return;
-        }
-
-        const trackingOffset =
-          trackedFlightViewRef.current ??
-          getFlightCameraOffset(
-            activeViewer,
-            getFlightCameraTarget(liveFlight, FLIGHT_TRACK_SECONDS_AHEAD),
-          );
-        activeViewer.camera.lookAt(
-          getFlightCameraTarget(liveFlight, FLIGHT_TRACK_SECONDS_AHEAD),
-          trackingOffset,
-        );
-      };
-
-      syncTrackedFlightCamera();
-      removePostRender = activeViewer.scene.postRender.addEventListener(
-        syncTrackedFlightCamera,
-      );
-    };
-
-    rafId = requestAnimationFrame(pollForViewer);
-
-    return () => {
-      cancelled = true;
-      if (rafId) cancelAnimationFrame(rafId);
-      removePostRender?.();
-    };
-  }, [stopFlightTracking, trackedFlightId]);
-
-  useEffect(() => {
-    if (!droneFlightId) return;
-
-    let cancelled = false;
-    let rafId = 0;
-    let removePostRender: (() => void) | null = null;
-    let attempts = 0;
-    const maxAttempts = 600;
-
-    const pollForViewer = () => {
-      if (cancelled) return;
-      attempts += 1;
-
-      const viewer = viewerRef.current?.cesiumElement;
-      const ready = Boolean(viewer) && !viewer!.isDestroyed();
-      if (!ready) {
-        if (attempts <= maxAttempts) {
-          rafId = requestAnimationFrame(pollForViewer);
-        }
-        return;
-      }
-
-      const activeViewer = viewer!;
-      const syncDroneFlightCamera = () => {
-        if (cancelled || activeViewer.isDestroyed()) return;
-
-        const activeFlightId = droneFlightIdRef.current;
-        if (!activeFlightId) return;
-
-        const liveFlight = flightRecordsRef.current.get(activeFlightId);
-        if (!liveFlight) {
-          stopFlightTracking();
-          return;
-        }
-
-        const ageSeconds = Math.min(
-          20,
-          Math.max(0, Date.now() / 1000 - liveFlight.timestamp),
-        );
-        const chaseView = getChaseCameraView(liveFlight, ageSeconds);
-        activeViewer.camera.setView({
-          destination: chaseView.destination,
-          orientation: chaseView.orientation,
-        });
-      };
-
-
-      syncDroneFlightCamera();
-      removePostRender = activeViewer.scene.postRender.addEventListener(
-        syncDroneFlightCamera,
-      );
-    };
-
-    rafId = requestAnimationFrame(pollForViewer);
-
-    return () => {
-      cancelled = true;
-      if (rafId) cancelAnimationFrame(rafId);
-      removePostRender?.();
-    };
-  }, [droneFlightId, stopFlightTracking]);
-
-  // ── Cockpit position-lock loop ──────────────────────────────────────────
-  // Keeps camera AT the plane each frame while preserving user orientation.
-  useEffect(() => {
-    if (!cockpitFlightId) return;
-    let cancelled = false;
-    let rafId = 0;
-    let removePostRender: (() => void) | undefined;
-
-    const pollForViewer = () => {
-      if (cancelled) return;
-      const viewer = viewerRef.current?.cesiumElement;
-      if (!viewer || viewer.isDestroyed()) {
-        rafId = requestAnimationFrame(pollForViewer);
-        return;
-      }
-
-      const syncCockpitCamera = () => {
-        if (cancelled || viewer.isDestroyed()) return;
-        const activeCockpitId = cockpitFlightIdRef.current;
-        if (!activeCockpitId) return;
-
-        const liveFlight = flightRecordsRef.current.get(activeCockpitId);
-        if (!liveFlight) { stopFlightTracking(); return; }
-
-        const ageSeconds = Math.min(20, Math.max(0, Date.now() / 1000 - liveFlight.timestamp));
-        const cockpitPose = getCockpitCameraPose(
-          liveFlight,
-          ageSeconds,
-          cockpitLookHeadingOffsetRef.current,
-          cockpitLookPitchRef.current,
-        );
-        viewer.camera.setView(cockpitPose);
-      };
-
-      syncCockpitCamera();
-      removePostRender = viewer.scene.postRender.addEventListener(syncCockpitCamera);
-    };
-
-    rafId = requestAnimationFrame(pollForViewer);
-    return () => {
-      cancelled = true;
-      if (rafId) cancelAnimationFrame(rafId);
-      removePostRender?.();
-    };
-  }, [cockpitFlightId, stopFlightTracking]);
-
-  useEffect(() => {
-    if (!cockpitFlightId) return;
+    if (sensorLink !== 'flight-deck') return;
 
     const eventCameFromHud = (target: EventTarget | null) =>
       target instanceof Node && Boolean(hudRef.current?.contains(target));
@@ -2219,6 +1967,7 @@ export default function Viewer() {
       pointerState.pointerId = event.pointerId;
       pointerState.lastX = event.clientX;
       pointerState.lastY = event.clientY;
+      pointerState.moved = false;
     };
 
     const onPointerMove = (event: PointerEvent) => {
@@ -2228,12 +1977,13 @@ export default function Viewer() {
       const deltaY = event.clientY - pointerState.lastY;
       pointerState.lastX = event.clientX;
       pointerState.lastY = event.clientY;
+      if (Math.abs(deltaX) > 1 || Math.abs(deltaY) > 1) {
+        pointerState.moved = true;
+      }
 
-      cockpitLookHeadingOffsetRef.current -= deltaX * COCKPIT_LOOK_SENSITIVITY;
-      cockpitLookPitchRef.current = CesiumMath.clamp(
-        cockpitLookPitchRef.current - deltaY * COCKPIT_LOOK_SENSITIVITY,
-        CesiumMath.toRadians(-85),
-        CesiumMath.toRadians(55),
+      flightLayerManagerRef.current?.adjustFlightDeckLook(
+        -deltaX * COCKPIT_LOOK_SENSITIVITY,
+        -deltaY * COCKPIT_LOOK_SENSITIVITY,
       );
 
       viewerRef.current?.cesiumElement?.scene.requestRender();
@@ -2242,8 +1992,13 @@ export default function Viewer() {
 
     const onPointerUp = (event: PointerEvent) => {
       if (pointerState.pointerId !== event.pointerId) return;
+      const shouldRelease = !pointerState.moved && !eventCameFromHud(event.target);
       pointerState.active = false;
       pointerState.pointerId = null;
+      pointerState.moved = false;
+      if (shouldRelease) {
+        releaseSensorLink();
+      }
     };
 
     const onWheel = (event: WheelEvent) => {
@@ -2275,33 +2030,29 @@ export default function Viewer() {
     return () => {
       pointerState.active = false;
       pointerState.pointerId = null;
+      pointerState.moved = false;
       window.removeEventListener('pointerdown', onPointerDown, true);
       window.removeEventListener('pointermove', onPointerMove, true);
       window.removeEventListener('pointerup', onPointerUp, true);
       window.removeEventListener('pointercancel', onPointerUp, true);
       window.removeEventListener('wheel', onWheel, true);
     };
-  }, [cockpitFlightId]);
+  }, [releaseSensorLink, sensorLink]);
 
   useEffect(() => {
-    const isCockpit = Boolean(cockpitFlightId);
-    if (!orbitEnabled && !autoBuildingsEnabled && !trackedFlightId && !droneFlightId && !isCockpit) return;
+    if (!orbitEnabled && !autoBuildingsEnabled) return;
 
     const eventCameFromHud = (target: EventTarget | null) =>
       target instanceof Node && Boolean(hudRef.current?.contains(target));
 
     const stopFromInteraction = (event: Event) => {
       if (eventCameFromHud(event.target)) return;
-      if (isCockpit) return;
       cancelAutoLandmarkExperience();
-      stopFlightTracking();
     };
     const stopFromPointerMove = (e: PointerEvent | MouseEvent) => {
       if (eventCameFromHud(e.target)) return;
-      if (isCockpit) return;
       if ((e as { buttons?: number }).buttons) {
         cancelAutoLandmarkExperience();
-        stopFlightTracking();
       }
     };
     const listenerOpts = { capture: true, passive: true } as const;
@@ -2332,11 +2083,7 @@ export default function Viewer() {
   }, [
     autoBuildingsEnabled,
     cancelAutoLandmarkExperience,
-    cockpitFlightId,
-    droneFlightId,
     orbitEnabled,
-    stopFlightTracking,
-    trackedFlightId,
   ]);
 
 
@@ -2759,10 +2506,10 @@ export default function Viewer() {
           </div>
         </aside>
 
-        {/* ── Cockpit HUD overlay ─────────────────────────────────────────── */}
-        {cockpitFlightId && selectedFlight && (
-          <div className="cockpit-hud" aria-label="Cockpit mode HUD">
-            <div className="cockpit-hud__badge">✈ COCKPIT MODE</div>
+        {/* ── Flight Deck HUD overlay ─────────────────────────────────────── */}
+        {sensorLink === 'flight-deck' && selectedFlight && (
+          <div className="cockpit-hud" aria-label="Flight deck HUD">
+            <div className="cockpit-hud__badge">FLIGHT DECK LINK</div>
             <div className="cockpit-hud__flight">{
               selectedFlight.callsign?.trim() || selectedFlight.id.toUpperCase()
             }</div>
@@ -2786,7 +2533,7 @@ export default function Viewer() {
               <span className="cockpit-hud__sep">·</span>
               <span>{formatHeading(selectedFlight.headingDegrees)}</span>
             </div>
-            <div className="cockpit-hud__hint">Drag to look · Click to exit</div>
+            <div className="cockpit-hud__hint">Drag to look · Click map to release</div>
           </div>
         )}
 
@@ -2794,9 +2541,8 @@ export default function Viewer() {
           feed={flightFeed}
           flight={selectedFlight}
           route={showSelectedFlightRoute ? selectedFlightRoute : null}
-          isTracking={trackedFlightId === selectedFlight?.id}
-          isDroneMode={droneFlightId === selectedFlight?.id}
-          isCockpitMode={cockpitFlightId === selectedFlight?.id}
+          assetView={assetView}
+          sensorLink={sensorLink}
           showRoute={showSelectedFlightRoute}
           showTrail={showSelectedFlightTrail}
           onFocus={() => {
@@ -2807,9 +2553,8 @@ export default function Viewer() {
               secondsAhead: 0,
             });
           }}
-          onToggleDrone={toggleSelectedFlightDrone}
-          onToggleCockpit={toggleSelectedFlightCockpit}
-          onToggleTracking={toggleSelectedFlightTracking}
+          onAssetViewChange={setAssetView}
+          onSensorLinkChange={handleSensorLinkChange}
           onToggleRoute={toggleSelectedFlightRoute}
           onToggleTrail={() => setShowSelectedFlightTrail((enabled) => !enabled)}
           onClose={() => updateSelectedFlight(null)}
@@ -2820,7 +2565,7 @@ export default function Viewer() {
             type="button"
             className="custom-home-button"
             onClick={() => {
-              stopFlightTracking();
+              releaseSensorLink();
               flyHome(2);
             }}
             title="Return to India home view"

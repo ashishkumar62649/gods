@@ -1,7 +1,7 @@
 import {
-  FlightRouteSnapshot,
   FlightFeedState,
   FlightRecord,
+  FlightRouteSnapshot,
   formatAltitudeMeters,
   formatHeading,
   formatLastUpdated,
@@ -9,21 +9,23 @@ import {
   getAirportDisplayCode,
   getFlightDisplayName,
 } from './flights';
+import type {
+  FlightAssetView,
+  FlightSensorLinkState,
+} from './flightLayers';
 import { getFlightVisualTypeLabel } from './flightVisuals';
 
 interface FlightDetailsPanelProps {
   feed: FlightFeedState;
   flight: FlightRecord | null;
   route: FlightRouteSnapshot | null;
-  isTracking: boolean;
-  isDroneMode: boolean;
-  isCockpitMode: boolean;
+  assetView: FlightAssetView;
+  sensorLink: FlightSensorLinkState;
   showRoute: boolean;
   showTrail: boolean;
   onFocus: () => void;
-  onToggleDrone: () => void;
-  onToggleCockpit: () => void;
-  onToggleTracking: () => void;
+  onAssetViewChange: (nextView: FlightAssetView) => void;
+  onSensorLinkChange: (nextLink: FlightSensorLinkState) => void;
   onToggleRoute: () => void;
   onToggleTrail: () => void;
   onClose: () => void;
@@ -33,15 +35,13 @@ export default function FlightDetailsPanel({
   feed,
   flight,
   route,
-  isTracking,
-  isDroneMode,
-  isCockpitMode,
+  assetView,
+  sensorLink,
   showRoute,
   showTrail,
   onFocus,
-  onToggleDrone,
-  onToggleCockpit,
-  onToggleTracking,
+  onAssetViewChange,
+  onSensorLinkChange,
   onToggleRoute,
   onToggleTrail,
   onClose,
@@ -76,45 +76,109 @@ export default function FlightDetailsPanel({
           type="button"
           className="flight-panel__action"
           onClick={onFocus}
+          aria-label="Focus the camera on the selected aircraft"
           title="Focus the camera on the selected aircraft"
         >
-          Focus
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="12" r="3" />
+            <path d="M12 2v4" />
+            <path d="M12 18v4" />
+            <path d="M2 12h4" />
+            <path d="M18 12h4" />
+          </svg>
+          <span>Focus</span>
         </button>
-        <button
-          type="button"
-          className={
-            isDroneMode
-              ? 'flight-panel__action flight-panel__action--active'
-              : 'flight-panel__action'
-          }
-          onClick={onToggleDrone}
-          title="Chase cam — camera follows behind the plane"
-        >
-          {isDroneMode ? 'Chase On' : 'Chase'}
-        </button>
-        <button
-          type="button"
-          className={
-            isCockpitMode
-              ? 'flight-panel__action flight-panel__action--active'
-              : 'flight-panel__action'
-          }
-          onClick={onToggleCockpit}
-          title="Cockpit — ride on the plane, look 360°"
-        >
-          {isCockpitMode ? 'Cockpit On' : 'Cockpit'}
-        </button>
-        <button
-          type="button"
-          className={
-            isTracking
-              ? 'flight-panel__action flight-panel__action--active'
-              : 'flight-panel__action'
-          }
-          onClick={onToggleTracking}
-        >
-          {isTracking ? 'Tracking' : 'Track'}
-        </button>
+      </div>
+
+      <div className="flight-panel__controls">
+        <div className="flight-panel__row">
+          <span className="flight-panel__label">Asset View</span>
+          <div className="flight-panel__segmented" role="group" aria-label="Asset view">
+            <button
+              type="button"
+              className={
+                assetView === 'symbology'
+                  ? 'flight-panel__action flight-panel__action--active'
+                  : 'flight-panel__action'
+              }
+              onClick={() => onAssetViewChange('symbology')}
+            >
+              Symbology
+            </button>
+            <button
+              type="button"
+              className={
+                assetView === 'airframe'
+                  ? 'flight-panel__action flight-panel__action--active'
+                  : 'flight-panel__action'
+              }
+              onClick={() => onAssetViewChange('airframe')}
+            >
+              Airframe
+            </button>
+          </div>
+        </div>
+
+        <div className="flight-panel__row">
+          <span className="flight-panel__label">Sensor Link</span>
+          <div className="flight-panel__segmented" role="group" aria-label="Sensor link">
+            <button
+              type="button"
+              className={
+                sensorLink === 'release'
+                  ? 'flight-panel__action flight-panel__action--active'
+                  : 'flight-panel__action'
+              }
+              onClick={() => onSensorLinkChange('release')}
+            >
+              Release
+            </button>
+            <button
+              type="button"
+              className={
+                sensorLink === 'tactical'
+                  ? 'flight-panel__action flight-panel__action--active'
+                  : 'flight-panel__action'
+              }
+              onClick={() => onSensorLinkChange('tactical')}
+            >
+              Tactical
+            </button>
+            <button
+              type="button"
+              className={
+                sensorLink === 'pursuit'
+                  ? 'flight-panel__action flight-panel__action--active'
+                  : 'flight-panel__action'
+              }
+              onClick={() => onSensorLinkChange('pursuit')}
+            >
+              Pursuit
+            </button>
+            <button
+              type="button"
+              className={
+                sensorLink === 'flight-deck'
+                  ? 'flight-panel__action flight-panel__action--active'
+                  : 'flight-panel__action'
+              }
+              onClick={() => onSensorLinkChange('flight-deck')}
+            >
+              Flight Deck
+            </button>
+          </div>
+        </div>
+
         <button
           type="button"
           className={
