@@ -685,7 +685,7 @@ export class FlightSceneLayerManager {
     for (let index = 1; index < this.activeTrailPositions.length; index += 1) {
       this.selectedTrailSegments.push(
         this.trailPolylines.add({
-          show: this.flightsVisible && this.showSelectedTrail,
+          show: this.flightsVisible && (this.showSelectedTrail || this.isRouteArcActive()),
           width: 3,
           positions: [
             this.activeTrailPositions[index - 1],
@@ -764,10 +764,14 @@ export class FlightSceneLayerManager {
   }
 
   private updateTrailSegmentVisibility() {
-    const show = this.flightsVisible && this.showSelectedTrail;
+    const show = this.flightsVisible && (this.showSelectedTrail || this.isRouteArcActive());
     for (const segment of this.selectedTrailSegments) {
       segment.show = show;
     }
+  }
+
+  private isRouteArcActive() {
+    return Boolean(this.routeState.snapshot?.found && this.routeState.flightId);
   }
 
   private removeFlightEntry(flightId: string) {
