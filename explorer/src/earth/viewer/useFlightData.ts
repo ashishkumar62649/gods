@@ -90,17 +90,26 @@ export function useFlightData({
         const snapshot = await fetchFlightSnapshot(activeController.signal);
         if (cancelled) return;
 
-        syncFlightLayers(snapshot.flights);
+        // The new backend returns { flights: FlightRecord[], meta: {...} }.
+        // Guard against meta being absent (e.g. still running old proxy).
+        const flights = Array.isArray(snapshot.flights) ? snapshot.flights : [];
+        const meta = snapshot.meta ?? {};
+        const openSkyCount  = (meta as { lastOpenSkyCount?: number }).lastOpenSkyCount  ?? 0;
+        const darkFleetCount = (meta as { lastDarkFleetCount?: number }).lastDarkFleetCount ?? 0;
+        const darkFleetSource = (meta as { lastDarkFleetSource?: string | null }).lastDarkFleetSource ?? null;
+        const sweepAt = (meta as { lastSweepAt?: string | null }).lastSweepAt ?? null;
+        const totalCount = (meta as { count?: number }).count ?? flights.length;
+
+        syncFlightLayers(flights);
         setFlightFeed({
           status: 'live',
-          sourceLabel:
-            snapshot.meta.lastDarkFleetSource
-              ? `Fused (${snapshot.meta.lastOpenSkyCount} OpenSky + ${snapshot.meta.lastDarkFleetCount} Community)`
-              : `OpenSky (${snapshot.meta.lastOpenSkyCount})`,
-          message: `${snapshot.flights.length} flights active on the globe.`,
-          fetchedAt: snapshot.meta.lastSweepAt ?? new Date().toISOString(),
-          flightCount: snapshot.flights.length,
-          totalAvailable: snapshot.meta.count,
+          sourceLabel: darkFleetSource
+            ? `Fused · ${openSkyCount + darkFleetCount} flights`
+            : `OpenSky · ${openSkyCount} flights`,
+          message: `${flights.length} flights active on the globe.`,
+          fetchedAt: sweepAt ?? new Date().toISOString(),
+          flightCount: flights.length,
+          totalAvailable: totalCount,
         });
       } catch (error) {
         if (cancelled || activeController.signal.aborted) return;

@@ -1,40 +1,34 @@
 // ============================================================
 // God Eyes — Data Fusion Engine
 // server/config/constants.mjs
-//
-// Single source of truth for all configuration values.
 // ============================================================
 
 export const PORT = process.env.PORT || 8788;
 
-/** How often the radar sweep runs (ms). */
-export const UPDATE_INTERVAL_MS = 5000;
+/** Main radar sweep cadence (ms). */
+export const RADAR_SWEEP_INTERVAL_MS = 5_000;
 
-/** A flight record older than this (ms) is considered stale and purged. */
+/** Flight records older than this are purged (ms). */
 export const STALE_FLIGHT_TIMEOUT_MS = 30_000;
 
-/** Fetch timeout per individual source (ms). */
-export const FETCH_TIMEOUT_MS = 8_000;
+/** Per-request fetch timeout (ms). */
+export const FETCH_TIMEOUT_MS = 20_000;
 
-// ─── OpenSky Network ────────────────────────────────────────
-export const OPENSKY_URL = 'https://opensky-network.org/api/states/all';
+// ─── Primary Feed ─────────────────────────────────────────────
+// Static GZIP snapshot from airplanes.live CDN.
+// Updated every ~8 seconds server-side. ~2–4 MB compressed.
+export const PRIMARY_FEED_URL = 'https://globe.airplanes.live/data/aircraft.json.gz';
 
-/** OpenSky OAuth token endpoint (client-credentials flow). */
-export const OPENSKY_TOKEN_URL = 'https://opensky-network.org/api/auth/token';
+// ─── Expansion Port ───────────────────────────────────────────
+// Drop CUSTOM_API_URL and CUSTOM_API_KEY into your .env to enable
+// a supplemental data source (e.g. your own ADS-B receiver, a
+// paid flight data API, or a government feed).
+// Remains null and silently no-ops if not configured.
+export const CUSTOM_API_URL = process.env.CUSTOM_API_URL || null;
+export const CUSTOM_API_KEY = process.env.CUSTOM_API_KEY || null;
 
-// ─── Rebel / Community Networks ─────────────────────────────
-// These all expose the tar1090 / readsb JSON format at /v2/all.
-// The fetcher will try them in order and stop at the first success,
-// guaranteeing near-100% uptime through cascading fallback.
-export const DARK_FLEET_URLS = [
-  'https://api.adsb.lol/v2/all',
-  'https://api.airplanes.live/v2/all',
-  'https://opendata.adsbfi.com/api/v2/all',
-];
-
-// ─── dbFlags bitmask constants (readsb) ─────────────────────
-// See: https://www.adsbexchange.com/datafields/
-export const DBFLAG_MILITARY    = 1 << 0;  // bit 0
-export const DBFLAG_INTERESTING = 1 << 1;  // bit 1
-export const DBFLAG_PIA         = 1 << 2;  // bit 2 (Privacy ICAO Address)
-export const DBFLAG_LADD        = 1 << 3;  // bit 3 (Limiting Aircraft Data Displayed)
+// ─── dbFlags bitmask constants (readsb) ──────────────────────
+export const DBFLAG_MILITARY    = 1 << 0;
+export const DBFLAG_INTERESTING = 1 << 1;
+export const DBFLAG_PIA         = 1 << 2;
+export const DBFLAG_LADD        = 1 << 3;

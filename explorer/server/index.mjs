@@ -2,99 +2,51 @@
 // God Eyes — Data Fusion Engine
 // server/index.mjs
 //
-// Entry point for the multi-source aviation intelligence backend.
+// Single-source architecture: airplanes.live CDN .gz snapshot.
+// Optional Expansion Port via CUSTOM_API_URL/.env.
 //
-// Run with:
+// Run:
 //   node server/index.mjs
-//
-// Or via npm:
-//   npm run dev:flights  (if script is updated in package.json)
+//   npm run dev:flights
 // ============================================================
 
 import http from 'node:http';
-import { PORT, UPDATE_INTERVAL_MS } from './config/constants.mjs';
+import { PORT, RADAR_SWEEP_INTERVAL_MS } from './config/constants.mjs';
 import { getAllFlights, removeStaleFlights } from './store/flightCache.mjs';
-import { fetchOpenSky, fetchDarkFleet } from './services/fetchers.mjs';
+import { fetchPrimaryRadar, fetchCustomRadar, getSweeepStats } from './services/fetchers.mjs';
 
-// ─── Minimal CORS + JSON helper (no external dependencies) ───
-/**
- * Write CORS headers that allow our local Vite dev server to
- * call this backend from any localhost port.
- */
+// ─── CORS + JSON helpers ──────────────────────────────────────
 function setCorsHeaders(res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 }
 
-/**
- * Send a JSON response.
- * @param {http.ServerResponse} res
- * @param {number} status
- * @param {unknown} data
- */
 function sendJson(res, status, data) {
   const body = JSON.stringify(data);
   res.writeHead(status, {
-    'Content-Type':  'application/json',
+    'Content-Type':   'application/json',
     'Content-Length': Buffer.byteLength(body),
   });
   res.end(body);
 }
 
-// ─── Sweep state ─────────────────────────────────────────────
-const sweepStats = {
-  sweepCount:         0,
-  lastSweepAt:        null,
-  lastOpenSkyCount:   0,
-  lastDarkFleetCount: 0,
-  lastDarkFleetSource: null,
-  openSkyErrors:      0,
-  darkFleetErrors:    0,
-};
+// ─── Sweep counter ────────────────────────────────────────────
+let sweepCount  = 0;
+let lastSweepAt = null;
 
-// ─── Radar Sweep ─────────────────────────────────────────────
-/**
- * The core fusion loop.
- *
- * Fires both fetchers concurrently using Promise.allSettled so that
- * a failure in one source never blocks the other.
- * Stale records are pruned at the end of each sweep.
- */
-async function radarSweep() {
-  sweepStats.sweepCount++;
-  sweepStats.lastSweepAt = new Date().toISOString();
+async function runSweep() {
+  await fetchPrimaryRadar();
+  await fetchCustomRadar();   // no-op if CUSTOM_API_URL not set
 
-  const [openSkyResult, darkFleetResult] = await Promise.allSettled([
-    fetchOpenSky(),
-    fetchDarkFleet(),
-  ]);
+  sweepCount++;
+  lastSweepAt = new Date().toISOString();
 
-  // ── OpenSky outcome ───────────────────────────────────────
-  if (openSkyResult.status === 'fulfilled') {
-    sweepStats.lastOpenSkyCount = openSkyResult.value.count;
-  } else {
-    sweepStats.openSkyErrors++;
-    console.error('[Sweep] OpenSky failed:', openSkyResult.reason?.message ?? openSkyResult.reason);
-  }
-
-  // ── DarkFleet outcome ─────────────────────────────────────
-  if (darkFleetResult.status === 'fulfilled') {
-    sweepStats.lastDarkFleetCount  = darkFleetResult.value.count;
-    sweepStats.lastDarkFleetSource = darkFleetResult.value.url;
-  } else {
-    sweepStats.darkFleetErrors++;
-    console.error('[Sweep] DarkFleet failed:', darkFleetResult.reason?.message ?? darkFleetResult.reason);
-  }
-
-  // ── Stale record pruning ──────────────────────────────────
-  removeStaleFlights();
-
+  const { lastCount } = getSweeepStats();
   const total = getAllFlights().length;
   console.log(
-    `[Sweep #${sweepStats.sweepCount}] Store: ${total} active flights` +
-    ` | OpenSky: ${sweepStats.lastOpenSkyCount}` +
-    ` | DarkFleet: ${sweepStats.lastDarkFleetCount}`
+    `[Sweep #${sweepCount}] Store: ${total.toLocaleString()} active` +
+    ` | Ingested: ${lastCount.toLocaleString()}`,
   );
 }
 
@@ -102,7 +54,6 @@ async function radarSweep() {
 const server = http.createServer((req, res) => {
   setCorsHeaders(res);
 
-  // Pre-flight OPTIONS pass-through
   if (req.method === 'OPTIONS') {
     res.writeHead(204);
     res.end();
@@ -114,16 +65,16 @@ const server = http.createServer((req, res) => {
   // ── GET /api/flights ──────────────────────────────────────
   if (req.method === 'GET' && url.pathname === '/api/flights') {
     const flights = getAllFlights();
+    const { source, lastCount } = getSweeepStats();
     sendJson(res, 200, {
       flights,
       meta: {
-        count:              flights.length,
-        timestamp:          Date.now(),
-        sweepCount:         sweepStats.sweepCount,
-        lastSweepAt:        sweepStats.lastSweepAt,
-        lastOpenSkyCount:   sweepStats.lastOpenSkyCount,
-        lastDarkFleetCount: sweepStats.lastDarkFleetCount,
-        lastDarkFleetSource: sweepStats.lastDarkFleetSource,
+        count:               flights.length,
+        timestamp:           Date.now(),
+        lastSweepAt,
+        lastOpenSkyCount:    0,
+        lastDarkFleetCount:  lastCount,
+        lastDarkFleetSource: source,
       },
     });
     return;
@@ -131,42 +82,43 @@ const server = http.createServer((req, res) => {
 
   // ── GET /api/health ───────────────────────────────────────
   if (req.method === 'GET' && url.pathname === '/api/health') {
+    const { source, lastCount } = getSweeepStats();
     sendJson(res, 200, {
-      status:    'OK',
-      uptime:    process.uptime(),
-      ...sweepStats,
-      storeSize: getAllFlights().length,
+      status:      'OK',
+      uptime:      process.uptime(),
+      storeSize:   getAllFlights().length,
+      sweepCount,
+      lastSweepAt,
+      activeSource: source,
+      lastCount,
     });
     return;
   }
 
-  // ── 404 fallthrough ───────────────────────────────────────
   sendJson(res, 404, { error: 'Not found' });
 });
 
 // ─── Bootstrap ───────────────────────────────────────────────
 server.listen(PORT, async () => {
   console.log('');
-  console.log('╔══════════════════════════════════════════════╗');
-  console.log('║   God Eyes — Data Fusion Engine              ║');
-  console.log(`║   Listening on http://localhost:${PORT}        ║`);
-  console.log('╚══════════════════════════════════════════════╝');
-  console.log('');
-  console.log(`  Update interval : ${UPDATE_INTERVAL_MS / 1000}s`);
-  console.log(`  OpenSky auth    : ${process.env.OPENSKY_CLIENT_ID ? 'OAuth' : 'Anonymous'}`);
+  console.log('🛰️  GOD\'S EYE — Global Radar Online');
+  console.log(`   Port    : ${PORT}`);
+  console.log(`   Primary : airplanes.live CDN (GZIP snapshot)`);
+  console.log(`   Sweep   : every ${RADAR_SWEEP_INTERVAL_MS / 1000}s`);
   console.log('');
 
-  // Run the first sweep immediately so the store is populated before
-  // the first client request arrives.
-  console.log('[Boot] Running initial radar sweep…');
-  await radarSweep();
+  // Warm the store before first client hit
+  console.log('[Boot] Running initial sweep…');
+  await runSweep();
 
-  // Then schedule regular sweeps.
-  setInterval(radarSweep, UPDATE_INTERVAL_MS);
-  console.log(`[Boot] Radar sweep scheduled every ${UPDATE_INTERVAL_MS / 1000}s`);
+  // Decoupled radar + cleanup intervals
+  setInterval(() => runSweep().catch(console.error),          RADAR_SWEEP_INTERVAL_MS);
+  setInterval(() => removeStaleFlights(), 5_000);
+
+  console.log('[Boot] Radar active. Ready.');
 });
 
 server.on('error', (err) => {
-  console.error('[Server] Fatal error:', err.message);
+  console.error('[Server] Fatal:', err.message);
   process.exit(1);
 });

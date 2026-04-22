@@ -2,193 +2,143 @@
 // God Eyes — Data Fusion Engine
 // server/services/fetchers.mjs
 //
-// Responsible for pulling raw data from all sources and
-// pushing normalized records into the flight cache.
+// fetchPrimaryRadar — pulls the static GZIP snapshot from
+//   airplanes.live CDN (~25 000 aircraft, updated every ~8s).
+//   Uses a magic-byte check to handle both compressed and
+//   plain-JSON responses safely.
 //
-// Strategy:
-//   fetchOpenSky()   — OpenSky REST API (OAuth or anonymous)
-//   fetchDarkFleet() — Cascading fallback across DARK_FLEET_URLS
-//                      (adsb.lol → airplanes.live → adsbfi)
+// fetchCustomRadar — Expansion Port. Silently no-ops if
+//   CUSTOM_API_URL is not set in .env.
 // ============================================================
 
+import { gunzipSync } from 'node:zlib';
 import {
-  OPENSKY_URL,
-  OPENSKY_TOKEN_URL,
-  DARK_FLEET_URLS,
+  PRIMARY_FEED_URL,
+  CUSTOM_API_URL,
+  CUSTOM_API_KEY,
   FETCH_TIMEOUT_MS,
 } from '../config/constants.mjs';
-
-import { normalizeOpenSky, normalizeReadsb } from './normalizer.mjs';
+import { normalizeReadsb, normalizeCustomApi } from './normalizer.mjs';
 import { upsertFlight } from '../store/flightCache.mjs';
 
-// ─── Auth token cache (OpenSky OAuth) ────────────────────────
-let _openSkyToken    = null;
-let _tokenExpiresAt  = 0;   // Unix ms
+// ─── Request headers ─────────────────────────────────────────
+const requestHeaders = {
+  'User-Agent':
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' +
+    '(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+  'Accept':          'application/json, application/octet-stream, */*',
+  'Accept-Encoding': 'gzip, deflate, br',
+  'Accept-Language': 'en-US,en;q=0.9',
+  'Referer':         'https://globe.airplanes.live/',
+  'Origin':          'https://globe.airplanes.live',
+  'Cache-Control':   'no-cache',
+};
 
-/**
- * Fetch (or return a cached) OpenSky OAuth access token.
- * Falls back to anonymous if credentials are not configured.
- */
-async function getOpenSkyToken() {
-  const clientId     = process.env.OPENSKY_CLIENT_ID;
-  const clientSecret = process.env.OPENSKY_CLIENT_SECRET;
-
-  if (!clientId || !clientSecret) return null;          // anonymous mode
-
-  const now = Date.now();
-  if (_openSkyToken && now < _tokenExpiresAt - 30_000) {
-    return _openSkyToken;                               // cached & fresh
-  }
-
-  try {
-    const body = new URLSearchParams({
-      grant_type:    'client_credentials',
-      client_id:     clientId,
-      client_secret: clientSecret,
-    });
-
-    const resp = await fetchWithTimeout(OPENSKY_TOKEN_URL, {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body,
-    });
-
-    if (!resp.ok) throw new Error(`Token HTTP ${resp.status}`);
-
-    const json = await resp.json();
-    _openSkyToken   = json.access_token;
-    _tokenExpiresAt = now + (json.expires_in ?? 3600) * 1000;
-    return _openSkyToken;
-
-  } catch (err) {
-    console.warn('[OpenSky] Token fetch failed, falling back to anonymous:', err.message);
-    return null;
-  }
-}
-
-// ─── Timeout-aware fetch ──────────────────────────────────────
+// ─── Timeout-aware fetch ─────────────────────────────────────
 function fetchWithTimeout(url, options = {}) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
-
-  return fetch(url, { ...options, signal: controller.signal }).finally(() =>
-    clearTimeout(timer)
-  );
+  return fetch(url, { ...options, signal: controller.signal })
+    .finally(() => clearTimeout(timer));
 }
 
-// ─── OpenSky Fetcher ──────────────────────────────────────────
-/**
- * Fetch current ADS-B state vectors from OpenSky Network.
- * Uses OAuth if credentials are available, otherwise anonymous.
- * Normalizes each state vector and upserts into the flight cache.
- *
- * @returns {Promise<{ source: string, count: number }>}
- */
-export async function fetchOpenSky() {
-  const token   = await getOpenSkyToken();
-  const headers = token ? { Authorization: `Bearer ${token}` } : {};
+// ─── Sweep stats (read by index.mjs for /api/health) ─────────
+let _lastSource    = 'airplanes.live CDN';
+let _lastCount     = 0;
+export function getSweeepStats() {
+  return { source: _lastSource, lastCount: _lastCount };
+}
 
-  let resp;
+// ─── Primary Radar ────────────────────────────────────────────
+/**
+ * Downloads the airplanes.live GZIP aircraft snapshot.
+ * Decompresses with a magic-byte check (0x1f 0x8b = GZIP header)
+ * so it gracefully handles both .gz and plain JSON responses.
+ */
+export async function fetchPrimaryRadar() {
   try {
-    resp = await fetchWithTimeout(OPENSKY_URL, { headers });
+    const response = await fetchWithTimeout(PRIMARY_FEED_URL, {
+      headers: requestHeaders,
+    });
+
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+    // Read raw bytes — we need to handle GZIP ourselves because
+    // Node's fetch may or may not auto-decompress CDN .gz files.
+    const arrayBuffer = await response.arrayBuffer();
+    const buffer      = Buffer.from(arrayBuffer);
+
+    // Magic byte check: GZIP starts with 0x1f 0x8b
+    const isGzip =
+      buffer.length >= 2 &&
+      buffer[0] === 0x1f &&
+      buffer[1] === 0x8b;
+
+    const jsonString = isGzip
+      ? gunzipSync(buffer).toString('utf-8')
+      : buffer.toString('utf-8');
+
+    const data    = JSON.parse(jsonString);
+    const targets = data.ac ?? data.aircraft ?? [];
+
+    if (!Array.isArray(targets)) throw new Error('No aircraft array in payload');
+
+    // Use LOCAL ingest time as the timestamp.
+    // The CDN's data.now can be minutes old (cached response), which would
+    // make every record appear stale and get purged immediately.
+    const ingestNowSec = Math.floor(Date.now() / 1000);
+    let processed = 0;
+
+    for (const target of targets) {
+      // Always stamp with local time — overrides any stale feed timestamp.
+      target.now = ingestNowSec;
+      const flight = normalizeReadsb(target, 'airplanes.live');
+      if (flight) { upsertFlight(flight); processed++; }
+    }
+
+    _lastCount  = processed;
+    _lastSource = 'airplanes.live CDN';
+    console.log(`[Primary Radar] ✓ ${processed.toLocaleString()} targets ingested`);
+
   } catch (err) {
-    if (err.name === 'AbortError') {
-      throw new Error('[OpenSky] Fetch timed out');
-    }
-    throw err;
+    console.error(`[Primary Radar] ✗ Failed: ${err.message}`);
   }
-
-  if (resp.status === 429) {
-    throw new Error('[OpenSky] Rate-limited (429) — skipping this sweep');
-  }
-  if (!resp.ok) {
-    throw new Error(`[OpenSky] HTTP ${resp.status}`);
-  }
-
-  const json = await resp.json();
-  const states = json?.states;
-
-  if (!Array.isArray(states)) {
-    throw new Error('[OpenSky] Response missing states array');
-  }
-
-  let count = 0;
-  for (const sv of states) {
-    const flight = normalizeOpenSky(sv);
-    if (flight) {
-      upsertFlight(flight);
-      count++;
-    }
-  }
-
-  const authMode = token ? 'oauth' : 'anonymous';
-  console.log(`[OpenSky] ✓ ${count} flights ingested (${authMode})`);
-  return { source: 'OPENSKY', count };
 }
 
-// ─── Dark Fleet (Community Rebel Networks) Fetcher ───────────
+// ─── Expansion Port ───────────────────────────────────────────
 /**
- * Fetch from community ADS-B networks using a cascading fallback strategy.
+ * Fetches from a custom user-defined API endpoint.
+ * Silently aborts if CUSTOM_API_URL is not set in .env.
  *
- * Attempts DARK_FLEET_URLS in order. On any error or timeout, moves to
- * the next URL. Stops at the first successful response so we don't
- * hammer all three networks simultaneously.
- *
- * These networks share the readsb/tar1090 JSON format:
- *   { ac: [ { hex, flight, lat, lon, alt_baro, gs, track, dbFlags, ... } ] }
- *
- * @returns {Promise<{ source: string, url: string, count: number }>}
+ * Expected response shapes (tried in order):
+ *   { states: [...] }   — OpenSky-style
+ *   { ac: [...] }       — readsb/tar1090-style
+ *   [...]               — bare array
  */
-export async function fetchDarkFleet() {
-  let lastError = null;
+export async function fetchCustomRadar() {
+  if (!CUSTOM_API_URL) return; // Expansion Port not configured
 
-  for (const url of DARK_FLEET_URLS) {
-    try {
-      const resp = await fetchWithTimeout(url);
+  try {
+    const headers = {
+      ...requestHeaders,
+      ...(CUSTOM_API_KEY ? { Authorization: `Bearer ${CUSTOM_API_KEY}` } : {}),
+    };
 
-      if (!resp.ok) {
-        throw new Error(`HTTP ${resp.status}`);
-      }
+    const response = await fetchWithTimeout(CUSTOM_API_URL, { headers });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
-      const json = await resp.json();
+    const data    = await response.json();
+    const targets = data.states ?? data.ac ?? data.aircraft ?? (Array.isArray(data) ? data : []);
 
-      // The readsb /v2/all endpoint wraps aircraft in an `ac` array.
-      // Some implementations also nest it under `aircraft`.
-      const aircraft = json?.ac ?? json?.aircraft ?? [];
-
-      if (!Array.isArray(aircraft)) {
-        throw new Error('Response missing ac/aircraft array');
-      }
-
-      // Feed-level timestamp (seconds) injected into each record via normalizer
-      const feedNow = json?.now ?? Math.floor(Date.now() / 1000);
-
-      let count = 0;
-      for (const ac of aircraft) {
-        // Propagate feed-level timestamp if individual records lack it
-        if (ac.now == null) ac.now = feedNow;
-
-        const flight = normalizeReadsb(ac, url);
-        if (flight) {
-          upsertFlight(flight);
-          count++;
-        }
-      }
-
-      const label = url.split('/')[2]; // e.g. "api.adsb.lol"
-      console.log(`[DarkFleet] ✓ ${count} flights ingested from ${label}`);
-      return { source: 'DARK_FLEET', url, count };
-
-    } catch (err) {
-      const label = url.split('/')[2];
-      const reason = err.name === 'AbortError' ? 'timeout' : err.message;
-      console.warn(`[DarkFleet] ✗ ${label} failed (${reason}) — trying next…`);
-      lastError = err;
+    let processed = 0;
+    for (const target of targets) {
+      const flight = normalizeCustomApi(target, CUSTOM_API_URL);
+      if (flight) { upsertFlight(flight); processed++; }
     }
-  }
 
-  // All URLs failed
-  throw new Error(
-    `[DarkFleet] All community sources failed. Last error: ${lastError?.message}`
-  );
+    console.log(`[Expansion Port] ✓ ${processed.toLocaleString()} targets ingested`);
+
+  } catch (err) {
+    console.error(`[Expansion Port] ✗ Failed: ${err.message}`);
+  }
 }

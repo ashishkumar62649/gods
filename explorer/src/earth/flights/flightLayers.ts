@@ -434,6 +434,15 @@ export class FlightSceneLayerManager {
     const nowSeconds = nowMs / 1000;
 
     for (const flight of flights) {
+      // Guard: skip any record with invalid position — should be filtered by
+      // the normalizer, but defence-in-depth prevents Cesium RangeErrors.
+      if (
+        !Number.isFinite(flight.latitude) ||
+        !Number.isFinite(flight.longitude)
+      ) {
+        continue;
+      }
+
       let entry = this.flightEntries.get(flight.id_icao);
       if (!entry) {
         const initialPosition = buildFlightApiCartesian(flight);
@@ -459,7 +468,7 @@ export class FlightSceneLayerManager {
           correctionVector: new Cartesian3(),
           targetLatitude: flight.latitude,
           targetLongitude: flight.longitude,
-          targetAltitudeMeters: Math.max(0, flight.altitude_baro_m),
+          targetAltitudeMeters: Math.max(0, Number.isFinite(flight.altitude_baro_m) ? flight.altitude_baro_m : 0),
           lastUpdatedMs: nowMs,
           fadeStartedAtMs: null,
           currentOpacity: 1,
@@ -803,9 +812,9 @@ export class FlightSceneLayerManager {
   private updateTargetApiPosition(entry: FlightRenderEntry, nowSeconds: number) {
     const ageSeconds = Math.min(20, Math.max(0, nowSeconds - entry.flight.timestamp));
     const predicted = predictFlightPosition(entry.flight, ageSeconds);
-    entry.targetLongitude = predicted.longitude;
-    entry.targetLatitude = predicted.latitude;
-    entry.targetAltitudeMeters = Math.max(0, predicted.altitudeMeters);
+    entry.targetLongitude = Number.isFinite(predicted.longitude) ? predicted.longitude : 0;
+    entry.targetLatitude  = Number.isFinite(predicted.latitude)  ? predicted.latitude  : 0;
+    entry.targetAltitudeMeters = Math.max(0, Number.isFinite(predicted.altitudeMeters) ? predicted.altitudeMeters : 0);
 
     Cartesian3.fromDegrees(
       entry.targetLongitude,
@@ -1263,11 +1272,12 @@ function buildOpenSkyTrailData(path: Array<{
 }
 
 function buildFlightApiCartesian(flight: FlightRecord) {
-  return Cartesian3.fromDegrees(
-    flight.longitude,
-    flight.latitude,
-    Math.max(0, flight.altitude_baro_m),
-  );
+  // Guard: lat/lon can theoretically be null at runtime from the backend
+  // even though TypeScript types them as number. Bad positions crash Cesium.
+  const lon = Number.isFinite(flight.longitude) ? flight.longitude : 0;
+  const lat = Number.isFinite(flight.latitude)  ? flight.latitude  : 0;
+  const alt = Math.max(0, Number.isFinite(flight.altitude_baro_m) ? flight.altitude_baro_m : 0);
+  return Cartesian3.fromDegrees(lon, lat, alt);
 }
 
 function getRenderedFlightState(entry: FlightRenderEntry) {

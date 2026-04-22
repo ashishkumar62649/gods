@@ -239,3 +239,30 @@ export function normalizeReadsb(ac, sourceUrl) {
     timestamp:   ts,
   };
 }
+// ─────────────────────────────────────────────────────────────
+// normalizeCustomApi  (Expansion Port stub)
+//
+// Flexible normalizer for the user-defined CUSTOM_API_URL feed.
+// Auto-detects common response shapes:
+//   • readsb/tar1090 objects  → delegates to normalizeReadsb
+//   • OpenSky state vectors   → delegates to normalizeOpenSky
+//   • Unknown shape           → returns null (record skipped)
+//
+// Extend this function to support proprietary API schemas.
+// ─────────────────────────────────────────────────────────────
+export function normalizeCustomApi(record, sourceUrl) {
+  if (!record) return null;
+
+  // Readsb-style: has `hex` field
+  if (record.hex != null) {
+    return normalizeReadsb(record, sourceUrl ?? 'CUSTOM');
+  }
+
+  // OpenSky-style: is an array (state vector)
+  if (Array.isArray(record)) {
+    return normalizeOpenSky(record);
+  }
+
+  // Unknown — skip
+  return null;
+}
