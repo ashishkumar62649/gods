@@ -104,6 +104,15 @@ const FLIGHT_FADE_DURATION_MS = 2_000;
 const FLIGHT_DECK_ENTRY_PITCH = CesiumMath.toRadians(-5);
 const FLIGHT_DECK_PITCH_MIN = CesiumMath.toRadians(-85);
 const FLIGHT_DECK_PITCH_MAX = CesiumMath.toRadians(55);
+const FOCUS_MIN_DISTANCE = 30;
+const FOCUS_MAX_DISTANCE = 200;
+const scratchFocusInverse = new Matrix4();
+const scratchFocusOffset = new Cartesian3();
+const scratchFocusLocalDirection = new Cartesian3();
+const scratchFocusLocalUp = new Cartesian3();
+const scratchFocusWorldDirection = new Cartesian3();
+const scratchFocusWorldUp = new Cartesian3();
+const scratchFocusWorldPosition = new Cartesian3();
 
 export class FlightSceneLayerManager {
   private readonly viewer: CesiumViewer;
@@ -142,6 +151,7 @@ export class FlightSceneLayerManager {
   private tickFrame = 0;
   private flightDeckLookHeadingOffset = 0;
   private flightDeckLookPitch = FLIGHT_DECK_ENTRY_PITCH;
+  private lastFocusTransform: Matrix4 | null = null;
   private destroyed = false;
 
   constructor(viewer: CesiumViewer) {
@@ -243,6 +253,9 @@ export class FlightSceneLayerManager {
   setSensorLinkState(nextState: FlightSensorLinkState) {
     const previousState = this.sensorLinkState;
     this.sensorLinkState = nextState;
+    if (nextState !== 'focus') {
+      this.lastFocusTransform = null;
+    }
     if (nextState === 'flight-deck' && previousState !== 'flight-deck') {
       this.resetFlightDeckLook();
     }
@@ -801,15 +814,22 @@ export class FlightSceneLayerManager {
     switch (this.sensorLinkState) {
       case 'focus': {
         const transform = Transforms.eastNorthUpToFixedFrame(target);
-        // Preserve Cesium's native local-frame orbit without fighting the
-        // controller by updating only the moving reference frame each tick.
-        camera.lookAtTransform(transform);
-        controller.maximumZoomDistance = 200;
+        const sourceTransform = this.lastFocusTransform ?? transform;
+        this.captureFocusPose(sourceTransform);
+        this.clampFocusOffset();
+        this.applyFocusPose(camera, transform);
+        this.lastFocusTransform = Matrix4.clone(
+          transform,
+          this.lastFocusTransform ?? new Matrix4(),
+        );
+        controller.maximumZoomDistance = FOCUS_MAX_DISTANCE;
+        controller.minimumZoomDistance = FOCUS_MIN_DISTANCE;
         break;
       }
       case 'pursuit': {
         camera.lookAtTransform(Matrix4.IDENTITY);
         controller.maximumZoomDistance = Number.POSITIVE_INFINITY;
+        controller.minimumZoomDistance = FOCUS_MIN_DISTANCE;
         camera.lookAt(
           target,
           new HeadingPitchRange(
@@ -823,6 +843,7 @@ export class FlightSceneLayerManager {
       case 'flight-deck': {
         camera.lookAtTransform(Matrix4.IDENTITY);
         controller.maximumZoomDistance = Number.POSITIVE_INFINITY;
+        controller.minimumZoomDistance = FOCUS_MIN_DISTANCE;
         camera.position = Cartesian3.clone(target, camera.position);
         camera.setView({
           orientation: {
@@ -840,6 +861,79 @@ export class FlightSceneLayerManager {
     }
   }
 
+  private captureFocusPose(sourceTransform: Matrix4) {
+    Matrix4.inverseTransformation(sourceTransform, scratchFocusInverse);
+    Matrix4.multiplyByPoint(
+      scratchFocusInverse,
+      this.viewer.camera.positionWC,
+      scratchFocusOffset,
+    );
+    Matrix4.multiplyByPointAsVector(
+      scratchFocusInverse,
+      this.viewer.camera.directionWC,
+      scratchFocusLocalDirection,
+    );
+    Matrix4.multiplyByPointAsVector(
+      scratchFocusInverse,
+      this.viewer.camera.upWC,
+      scratchFocusLocalUp,
+    );
+  }
+
+  private clampFocusOffset() {
+    const magnitude = Cartesian3.magnitude(scratchFocusOffset);
+    if (!Number.isFinite(magnitude) || magnitude < 1e-3) {
+      return;
+    }
+
+    const clampedMagnitude = CesiumMath.clamp(
+      magnitude,
+      FOCUS_MIN_DISTANCE,
+      FOCUS_MAX_DISTANCE,
+    );
+    if (clampedMagnitude !== magnitude) {
+      Cartesian3.normalize(scratchFocusOffset, scratchFocusOffset);
+      Cartesian3.multiplyByScalar(
+        scratchFocusOffset,
+        clampedMagnitude,
+        scratchFocusOffset,
+      );
+    }
+  }
+
+  private applyFocusPose(camera: CesiumViewer['camera'], targetTransform: Matrix4) {
+    Matrix4.multiplyByPoint(
+      targetTransform,
+      scratchFocusOffset,
+      scratchFocusWorldPosition,
+    );
+    Matrix4.multiplyByPointAsVector(
+      targetTransform,
+      scratchFocusLocalDirection,
+      scratchFocusWorldDirection,
+    );
+    Matrix4.multiplyByPointAsVector(
+      targetTransform,
+      scratchFocusLocalUp,
+      scratchFocusWorldUp,
+    );
+
+    Cartesian3.normalize(scratchFocusWorldDirection, scratchFocusWorldDirection);
+    Cartesian3.normalize(scratchFocusWorldUp, scratchFocusWorldUp);
+
+    if (!Matrix4.equals(camera.transform, Matrix4.IDENTITY)) {
+      camera.lookAtTransform(Matrix4.IDENTITY);
+    }
+
+    camera.setView({
+      destination: scratchFocusWorldPosition,
+      orientation: {
+        direction: scratchFocusWorldDirection,
+        up: scratchFocusWorldUp,
+      },
+    });
+  }
+
   private releaseLockedCamera() {
     if (this.viewer.isDestroyed()) {
       return;
@@ -852,7 +946,9 @@ export class FlightSceneLayerManager {
       camera.lookAtTransform(Matrix4.IDENTITY);
     }
 
+    this.lastFocusTransform = null;
     controller.maximumZoomDistance = Number.POSITIVE_INFINITY;
+    controller.minimumZoomDistance = FOCUS_MIN_DISTANCE;
   }
 
   private refreshRouteOverlay() {
