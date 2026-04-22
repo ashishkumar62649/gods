@@ -62,7 +62,7 @@ interface AirportPickId {
 export type FlightAssetView = 'symbology' | 'airframe';
 export type FlightSensorLinkState =
   | 'release'
-  | 'tactical'
+  | 'focus'
   | 'pursuit'
   | 'flight-deck';
 
@@ -128,7 +128,6 @@ export class FlightSceneLayerManager {
   private renderMode: FlightRenderMode = 'dot';
   private assetViewState: FlightAssetView = 'symbology';
   private sensorLinkState: FlightSensorLinkState = 'release';
-  private sensorLinkWasLocked = false;
   private selectedFlightId: string | null = null;
   private showSelectedTrail = false;
   private routeState: RouteState = {
@@ -756,30 +755,49 @@ export class FlightSceneLayerManager {
     }
 
     const camera = this.viewer.camera;
+    const controller = this.viewer.scene.screenSpaceCameraController;
     const target = selectedEntry.sharedFramePosition;
+    const distToPlane = Cartesian3.distance(camera.positionWC, target);
 
     switch (this.sensorLinkState) {
-      case 'tactical': {
-        const currentOffset = this.captureCurrentCameraOffset(target);
-        camera.lookAt(target, currentOffset);
-        this.sensorLinkWasLocked = true;
+      case 'focus': {
+        const transform = Transforms.eastNorthUpToFixedFrame(target);
+
+        if (distToPlane > 200) {
+          camera.lookAtTransform(
+            transform,
+            new HeadingPitchRange(0, CesiumMath.toRadians(-20), 200),
+          );
+        } else {
+          // Preserve the user's current local orbit if they are already
+          // inside the bounded focus sphere around the aircraft.
+          camera.lookAtTransform(transform);
+        }
+
+        controller.maximumZoomDistance = 200;
+        controller.minimumZoomDistance = 30;
         break;
       }
       case 'pursuit': {
+        camera.lookAtTransform(Matrix4.IDENTITY);
+        controller.maximumZoomDistance = Number.POSITIVE_INFINITY;
+        controller.minimumZoomDistance = 1;
         camera.lookAt(
           target,
           new HeadingPitchRange(
             CesiumMath.toRadians(selectedEntry.flight.headingDegrees),
-            CesiumMath.toRadians(-12),
+            CesiumMath.toRadians(-15),
             150,
           ),
         );
-        this.sensorLinkWasLocked = true;
         break;
       }
       case 'flight-deck': {
+        camera.lookAtTransform(Matrix4.IDENTITY);
+        controller.maximumZoomDistance = Number.POSITIVE_INFINITY;
+        controller.minimumZoomDistance = 1;
+        camera.position = Cartesian3.clone(target, camera.position);
         camera.setView({
-          destination: target,
           orientation: {
             heading:
               CesiumMath.toRadians(selectedEntry.flight.headingDegrees) +
@@ -788,7 +806,6 @@ export class FlightSceneLayerManager {
             roll: 0,
           },
         });
-        this.sensorLinkWasLocked = true;
         break;
       }
       default:
@@ -796,21 +813,20 @@ export class FlightSceneLayerManager {
     }
   }
 
-  private captureCurrentCameraOffset(target: Cartesian3) {
-    return new HeadingPitchRange(
-      this.viewer.camera.heading,
-      this.viewer.camera.pitch,
-      Math.max(150, Cartesian3.distance(this.viewer.camera.position, target)),
-    );
-  }
-
   private releaseLockedCamera() {
-    if (!this.sensorLinkWasLocked || this.viewer.isDestroyed()) {
+    if (this.viewer.isDestroyed()) {
       return;
     }
 
-    this.viewer.camera.lookAtTransform(Matrix4.IDENTITY);
-    this.sensorLinkWasLocked = false;
+    const camera = this.viewer.camera;
+    const controller = this.viewer.scene.screenSpaceCameraController;
+
+    if (!Matrix4.equals(camera.transform, Matrix4.IDENTITY)) {
+      camera.lookAtTransform(Matrix4.IDENTITY);
+    }
+
+    controller.maximumZoomDistance = Number.POSITIVE_INFINITY;
+    controller.minimumZoomDistance = 1;
   }
 
   private refreshRouteOverlay() {

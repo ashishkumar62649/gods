@@ -23,7 +23,6 @@ interface FlightDetailsPanelProps {
   sensorLink: FlightSensorLinkState;
   showRoute: boolean;
   showTrail: boolean;
-  onFocus: () => void;
   onAssetViewChange: (nextView: FlightAssetView) => void;
   onSensorLinkChange: (nextLink: FlightSensorLinkState) => void;
   onToggleRoute: () => void;
@@ -39,7 +38,6 @@ export default function FlightDetailsPanel({
   sensorLink,
   showRoute,
   showTrail,
-  onFocus,
   onAssetViewChange,
   onSensorLinkChange,
   onToggleRoute,
@@ -70,37 +68,6 @@ export default function FlightDetailsPanel({
           X
         </button>
       </div>
-
-      <div className="flight-panel__controls">
-        <button
-          type="button"
-          className="flight-panel__action flex items-center gap-2"
-          onClick={onFocus}
-          aria-label="Focus the camera on the selected aircraft"
-          title="Focus the camera on the selected aircraft"
-        >
-          <svg
-            className="flex-shrink-0"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <circle cx="12" cy="12" r="3" />
-            <path d="M12 2v4" />
-            <path d="M12 18v4" />
-            <path d="M2 12h4" />
-            <path d="M18 12h4" />
-          </svg>
-          <span>Focus</span>
-        </button>
-      </div>
-
       <div className="flight-panel__controls">
         <div className="flight-panel__row flex justify-between items-center w-full py-1.5 aether-data-row">
           <span className="flight-panel__label aether-kicker text-[9px] tracking-[0.25em]">Asset View</span>
@@ -136,24 +103,13 @@ export default function FlightDetailsPanel({
             <button
               type="button"
               className={
-                sensorLink === 'release'
+                sensorLink === 'focus'
                   ? 'flight-panel__action flight-panel__action--active aether-control-active'
                   : 'flight-panel__action'
               }
-              onClick={() => onSensorLinkChange('release')}
+              onClick={() => onSensorLinkChange(sensorLink === 'focus' ? 'release' : 'focus')}
             >
-              Release
-            </button>
-            <button
-              type="button"
-              className={
-                sensorLink === 'tactical'
-                  ? 'flight-panel__action flight-panel__action--active aether-control-active'
-                  : 'flight-panel__action'
-              }
-              onClick={() => onSensorLinkChange('tactical')}
-            >
-              Tactical
+              Focus
             </button>
             <button
               type="button"
@@ -162,7 +118,7 @@ export default function FlightDetailsPanel({
                   ? 'flight-panel__action flight-panel__action--active aether-control-active'
                   : 'flight-panel__action'
               }
-              onClick={() => onSensorLinkChange('pursuit')}
+              onClick={() => onSensorLinkChange(sensorLink === 'pursuit' ? 'release' : 'pursuit')}
             >
               Pursuit
             </button>
@@ -173,7 +129,7 @@ export default function FlightDetailsPanel({
                   ? 'flight-panel__action flight-panel__action--active aether-control-active'
                   : 'flight-panel__action'
               }
-              onClick={() => onSensorLinkChange('flight-deck')}
+              onClick={() => onSensorLinkChange(sensorLink === 'flight-deck' ? 'release' : 'flight-deck')}
             >
               Flight Deck
             </button>

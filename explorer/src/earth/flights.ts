@@ -112,18 +112,18 @@ const PLANE_ICON_SVG = `
 
 // Selected version — same silhouette, cyan, with bracket corners.
 const SELECTED_FLIGHT_ICON_SVG = `
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 88">
-    <!-- bracket corners -->
-    <g fill="none" stroke="#5cf2b5" stroke-width="4" stroke-linecap="round">
-      <path d="M4 22 V4 H22"/><path d="M42 4 H60 V22"/>
-      <path d="M60 66 V84 H42"/><path d="M22 84 H4 V66"/>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80">
+    <defs>
+      <filter id="cyanLockGlow" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="4" result="blur" />
+        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+      </filter>
+    </defs>
+    <g filter="url(#cyanLockGlow)">
+      <path d="M 20 10 L 10 10 L 10 20 M 60 10 L 70 10 L 70 20 M 10 60 L 10 70 L 20 70 M 70 60 L 70 70 L 60 70" fill="none" stroke="#22d3ee" stroke-width="3" />
+      <path d="M 40 15 L 40 25 M 40 55 L 40 65 M 15 40 L 25 40 M 55 40 L 65 40" fill="none" stroke="#67e8f9" stroke-width="2" opacity="0.8" />
+      <circle cx="40" cy="40" r="18" fill="none" stroke="#a5f3fc" stroke-width="1" stroke-dasharray="4 4" opacity="0.6"/>
     </g>
-    <!-- fuselage -->
-    <ellipse cx="32" cy="44" rx="4.5" ry="28" fill="#79ffd0"/>
-    <!-- main wings -->
-    <polygon points="32,32 6,52 10,55 32,44 54,55 58,52" fill="#79ffd0"/>
-    <!-- tail fins -->
-    <polygon points="32,68 18,80 21,82 32,75 43,82 46,80" fill="#79ffd0"/>
   </svg>
 `;
 

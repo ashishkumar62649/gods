@@ -1420,7 +1420,7 @@ export default function Viewer() {
     const ageSeconds = Math.min(20, Math.max(0, Date.now() / 1000 - liveFlight.timestamp));
 
     switch (nextLink) {
-      case 'tactical':
+      case 'focus':
         focusFlight(selectedFlight, {
           duration: 1.4,
           secondsAhead: 0,
@@ -2544,14 +2544,6 @@ export default function Viewer() {
           sensorLink={sensorLink}
           showRoute={showSelectedFlightRoute}
           showTrail={showSelectedFlightTrail}
-          onFocus={() => {
-            if (!selectedFlight) return;
-            cancelAutoLandmarkExperience();
-            focusFlight(selectedFlight, {
-              duration: 1.2,
-              secondsAhead: 0,
-            });
-          }}
           onAssetViewChange={setAssetView}
           onSensorLinkChange={handleSensorLinkChange}
           onToggleRoute={toggleSelectedFlightRoute}
