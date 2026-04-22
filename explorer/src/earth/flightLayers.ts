@@ -1,7 +1,6 @@
 import {
   Billboard,
   BillboardCollection,
-  CatmullRomSpline,
   Cartesian2,
   Cartesian3,
   Cartographic,
@@ -34,7 +33,6 @@ import {
   FlightRouteSnapshot,
   MEDIUM_AIRPORT_ICON_IMAGE,
   getFlightDisplayName,
-  ORIGIN_AIRPORT_ICON_IMAGE,
   predictFlightPosition,
   SMALL_AIRPORT_ICON_IMAGE,
 } from './flights';
@@ -481,6 +479,15 @@ export class FlightSceneLayerManager {
       ) {
         this.updateSelectedTrailGluePoint(entry);
       }
+
+      // Refresh the future-path arc root every frame so it stays glued to the
+      // plane's nose as it glides forward with Error Vector Decay.
+      if (
+        this.routeState.snapshot?.found &&
+        this.routeState.flightId === flightId
+      ) {
+        this.refreshRouteOverlay();
+      }
     }
 
     for (const flightId of entriesToRemove) {
@@ -605,33 +612,25 @@ export class FlightSceneLayerManager {
     const { snapshot, flightId } = this.routeState;
     const trackedEntry = flightId ? this.flightEntries.get(flightId) ?? null : null;
 
-    if (!snapshot?.found || !snapshot.origin || !snapshot.destination || !trackedEntry) {
+    if (!snapshot?.found || !snapshot.destination || !trackedEntry) {
       this.routeArcPolyline.show = false;
       this.routeArcPolyline.positions = [];
       this.routeAirportBillboards.removeAll();
       return;
     }
 
-    const renderedFlight = getRenderedFlightState(trackedEntry);
-    const routePositions = buildRouteArcPositions(
-      snapshot.origin,
-      renderedFlight,
+    // Build the parabolic future-path arc from the plane's exact rendered
+    // position (sharedFramePosition) to the destination airport.
+    const arcPositions = buildFutureArcPositions(
+      trackedEntry.sharedFramePosition,
       snapshot.destination,
+      trackedEntry.flight.altitudeMeters,
     );
-    this.routeArcPolyline.show = routePositions.length > 1;
-    this.routeArcPolyline.positions = routePositions;
+    this.routeArcPolyline.show = arcPositions.length > 1;
+    this.routeArcPolyline.positions = arcPositions;
 
+    // Keep destination pin; origin is covered by the snail trail.
     this.routeAirportBillboards.removeAll();
-    this.routeAirportBillboards.add({
-      image: ORIGIN_AIRPORT_ICON_IMAGE,
-      position: Cartesian3.fromDegrees(snapshot.origin.longitude, snapshot.origin.latitude, 0),
-      verticalOrigin: VerticalOrigin.BOTTOM,
-      horizontalOrigin: HorizontalOrigin.CENTER,
-      width: 24,
-      height: 24,
-      scaleByDistance: new NearFarScalar(20_000, 1.16, 15_000_000, 0.32),
-      color: Color.fromCssColorString('#89ffd1'),
-    });
     this.routeAirportBillboards.add({
       image: DESTINATION_AIRPORT_ICON_IMAGE,
       position: Cartesian3.fromDegrees(
@@ -861,86 +860,70 @@ function getTrailSegmentColor(referenceFlight: FlightRecord | null, altitudeMete
   return Color.fromCssColorString(css).withAlpha(0.8);
 }
 
-function buildRouteArcPositions(
-  origin: AirportRecord,
-  flight: { latitude: number; longitude: number; altitudeMeters: number },
+/**
+ * Parabolic Future-Path Arc
+ *
+ * Draws a geodesic arc from the aircraft's current rendered position
+ * (startCartesian) to the destination airport, curving up then back
+ * down with a parabolic altitude envelope.
+ *
+ * @param startCartesian   - The plane's sharedFramePosition (live, 60fps)
+ * @param destination      - Destination airport record
+ * @param planeAltitudeM   - Current aircraft altitude in metres (for arc start)
+ * @param segments         - Number of polyline segments (default 64)
+ */
+function buildFutureArcPositions(
+  startCartesian: Cartesian3,
   destination: AirportRecord,
-) {
-  const originPoint = {
-    latitude: origin.latitude,
-    longitude: origin.longitude,
-    altitudeMeters: 0,
-  };
-  const livePoint = {
-    latitude: flight.latitude,
-    longitude: flight.longitude,
-    altitudeMeters: Math.max(0, flight.altitudeMeters),
-  };
-  const destinationPoint = {
-    latitude: destination.latitude,
-    longitude: destination.longitude,
-    altitudeMeters: 0,
-  };
-  const supportA = buildRouteSupportPoint(originPoint, livePoint, 0.6);
-  const supportB = buildRouteSupportPoint(livePoint, destinationPoint, 0.4);
-  const spline = new CatmullRomSpline({
-    times: [0, 0.28, 0.5, 0.72, 1],
-    points: [
-      Cartesian3.fromDegrees(
-        originPoint.longitude,
-        originPoint.latitude,
-        originPoint.altitudeMeters,
-      ),
-      supportA,
-      Cartesian3.fromDegrees(
-        livePoint.longitude,
-        livePoint.latitude,
-        livePoint.altitudeMeters,
-      ),
-      supportB,
-      Cartesian3.fromDegrees(
-        destinationPoint.longitude,
-        destinationPoint.latitude,
-        destinationPoint.altitudeMeters,
-      ),
-    ],
-  });
-  const positions: Cartesian3[] = [];
-  const sampleCount = 96;
+  planeAltitudeM: number,
+  segments = 64,
+): Cartesian3[] {
+  const startCarto = Cartographic.fromCartesian(startCartesian);
+  if (!startCarto) return [];
 
-  for (let index = 0; index <= sampleCount; index += 1) {
-    positions.push(spline.evaluate(index / sampleCount));
+  const destCarto = Cartographic.fromDegrees(
+    destination.longitude,
+    destination.latitude,
+    0,
+  );
+
+  const geodesic = new EllipsoidGeodesic(startCarto, destCarto);
+  const surfaceDistM = Number.isFinite(geodesic.surfaceDistance)
+    ? geodesic.surfaceDistance
+    : 0;
+
+  if (surfaceDistM < 100) return []; // plane is already at/past destination
+
+  // Arc peak: 10 % of remaining surface distance, clamped between 8 km and 280 km.
+  const maxArcHeightM = Math.min(280_000, Math.max(8_000, surfaceDistM * 0.1));
+  const startAltM = Math.max(0, planeAltitudeM);
+
+  const positions: Cartesian3[] = [];
+
+  for (let i = 0; i <= segments; i++) {
+    const t = i / segments;
+
+    // Surface position along the geodesic.
+    const surfacePoint = geodesic.interpolateUsingFraction(t);
+
+    // Linearly interpolate base altitude from plane altitude down to 0.
+    const baseAltM = startAltM * (1 - t);
+
+    // Parabolic arch peaks at t=0.5. At t=0 and t=1 the offset is 0.
+    const parabolaM = 4 * maxArcHeightM * t * (1 - t);
+
+    const finalAltM = baseAltM + parabolaM;
+
+    positions.push(
+      Cartesian3.fromRadians(
+        surfacePoint.longitude,
+        surfacePoint.latitude,
+        finalAltM,
+      ),
+    );
   }
 
   return positions;
-}
-
-function buildRouteSupportPoint(
-  start: { latitude: number; longitude: number; altitudeMeters: number },
-  end: { latitude: number; longitude: number; altitudeMeters: number },
-  fraction: number,
-) {
-  const geodesic = new EllipsoidGeodesic(
-    Cartographic.fromDegrees(start.longitude, start.latitude),
-    Cartographic.fromDegrees(end.longitude, end.latitude),
-  );
-  const surfaceDistance = Number.isFinite(geodesic.surfaceDistance)
-    ? geodesic.surfaceDistance
-    : 0;
-  const surfacePoint = geodesic.interpolateUsingFraction(fraction);
-  const baseHeight =
-    start.altitudeMeters +
-    (end.altitudeMeters - start.altitudeMeters) * fraction;
-  const liftedHeight =
-    baseHeight +
-    Math.sin(Math.PI * fraction) *
-      Math.min(280_000, Math.max(18_000, surfaceDistance * 0.035));
-
-  return Cartesian3.fromRadians(
-    surfacePoint.longitude,
-    surfacePoint.latitude,
-    liftedHeight,
-  );
 }
 
 function getAirportAppearance(airport: AirportRecord) {
