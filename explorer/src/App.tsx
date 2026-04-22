@@ -1,4 +1,4 @@
-import Viewer from './earth/Viewer';
+import Viewer from './earth/viewer/Viewer';
 
 export default function App() {
   return <Viewer />;
