@@ -368,61 +368,6 @@ function getFlightCameraOffset(
   );
 }
 
-function getChaseCameraView(
-  flight: FlightRecord,
-  secondsAhead: number,
-) {
-  const target = getFlightCameraTarget(flight, secondsAhead);
-  const headingRad = CesiumMath.toRadians(flight.headingDegrees);
-  const speedMetersPerSecond = Math.max(60, flight.speedMetersPerSecond);
-  const altitudeMeters = Math.max(0, flight.altitudeMeters);
-  const trailingDistance = CesiumMath.clamp(
-    speedMetersPerSecond * 4.2 + altitudeMeters * 0.16,
-    900,
-    5_600,
-  );
-  const verticalOffset = CesiumMath.clamp(
-    altitudeMeters * 0.14 + 240,
-    260,
-    1_900,
-  );
-  const enuTransform = Transforms.eastNorthUpToFixedFrame(target);
-  const destination = Matrix4.multiplyByPoint(
-    enuTransform,
-    new Cartesian3(
-      -Math.sin(headingRad) * trailingDistance,
-      -Math.cos(headingRad) * trailingDistance,
-      verticalOffset,
-    ),
-    new Cartesian3(),
-  );
-  const direction = Cartesian3.normalize(
-    Cartesian3.subtract(target, destination, new Cartesian3()),
-    new Cartesian3(),
-  );
-  const upHint = Matrix4.multiplyByPointAsVector(
-    enuTransform,
-    Cartesian3.UNIT_Z,
-    new Cartesian3(),
-  );
-  const right = Cartesian3.normalize(
-    Cartesian3.cross(direction, upHint, new Cartesian3()),
-    new Cartesian3(),
-  );
-  const up = Cartesian3.normalize(
-    Cartesian3.cross(right, direction, new Cartesian3()),
-    new Cartesian3(),
-  );
-
-  return {
-    destination,
-    orientation: {
-      direction,
-      up,
-    },
-  };
-}
-
 /**
  * Cockpit entry view — positions the camera AT the plane's location,
  * facing in the direction it is travelling. Used for the initial fly-in
@@ -1427,18 +1372,6 @@ export default function Viewer() {
           complete: armSensorLink,
         });
         break;
-      case 'pursuit': {
-        const chaseView = getChaseCameraView(liveFlight, ageSeconds);
-        viewer.camera.lookAtTransform(Matrix4.IDENTITY);
-        viewer.camera.flyTo({
-          destination: chaseView.destination,
-          orientation: chaseView.orientation,
-          duration: 1.5,
-          easingFunction: FLIGHT_EASING,
-          complete: armSensorLink,
-        });
-        break;
-      }
       case 'flight-deck': {
         const cockpitPose = getCockpitCameraPose(
           liveFlight,
@@ -1515,7 +1448,7 @@ export default function Viewer() {
 
     // --- Zoom bounds (safety) ---------------------------------------------
     // Can't punch through terrain, can't zoom past Earth.
-    controller.minimumZoomDistance = 30; // meters
+    controller.minimumZoomDistance = 1; // effectively no close-range clamp
     controller.maximumZoomDistance = 40_000_000; // meters (~Earth diameter)
     controller.enableCollisionDetection = true;
 

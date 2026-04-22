@@ -114,17 +114,6 @@ export default function FlightDetailsPanel({
             <button
               type="button"
               className={
-                sensorLink === 'pursuit'
-                  ? 'flight-panel__action flight-panel__action--active aether-control-active'
-                  : 'flight-panel__action'
-              }
-              onClick={() => onSensorLinkChange(sensorLink === 'pursuit' ? 'release' : 'pursuit')}
-            >
-              Pursuit
-            </button>
-            <button
-              type="button"
-              className={
                 sensorLink === 'flight-deck'
                   ? 'flight-panel__action flight-panel__action--active aether-control-active'
                   : 'flight-panel__action'
