@@ -255,8 +255,9 @@ Current flight data flow:
 - proxy keeps recently-missing flights alive for a short grace window
 - proxy reuses the last good live snapshot on transient feed failure
 - frontend drives smooth 60fps motion via `viewer.scene.preRender` and direct primitive mutation (bypassing React)
-- frontend predicts short-horizon movement using a spherical haversine dead-reckoning projection
-- flights are rendered using highly performant `PointPrimitiveCollection` and `BillboardCollection`
+- frontend uses **Error Vector Decay** kinematics to smoothly absorb incoming delayed API positions without backwards jumping.
+- route arcs are generated dynamically as geodesic parabolas anchored to the aircraft's live position.
+- flights are rendered using highly performant `PointPrimitiveCollection`, `BillboardCollection`, and `PolylineCollection`
 
 Internal flight record shape currently supports:
 - `id`
@@ -376,15 +377,17 @@ Behavior:
 - home/search/orbit actions cancel tracking before taking over the camera
 - focus/track preserves the user's current camera angle instead of forcing a default chase tilt
 
-### 60 FPS Dead Reckoning
+### 60 FPS Error Vector Decay Kinematics
 
 New capability added:
 - primitive mutation loop attached to `viewer.scene.preRender`
 - planes no longer jump/teleport across the globe every 15 seconds
+- replaced simple lerp with true Error Vector Decay logic so dead-reckoning never backtracks.
 
 Behavior:
 - every frame, calculates elapsed time since last server update
 - projects new Cartesian3 coordinate using heading, speed, and haversine logic
+- absorbs API jumps into a correction vector that smoothly decays to zero.
 - assigns position directly to Cesium `Point` and `Billboard` primitives
 - completely bypasses React `useState` for 60fps performance without vDOM thrashing
 
@@ -399,11 +402,13 @@ Expected result:
 - fewer abrupt disappearances between polls
 - valid live flights are no longer artificially capped at 1800 by the proxy
 
-### Flight Trails & UI Fixes
+### Flight Trails, Parabolic Arcs & Unified Lifecycle
 
 New capability added:
 - Flight trails (historical path drawing) are now fully implemented.
 - `updateSelectedTrailGluePoint` gracefully connects historical trace data to the live predicted flight position.
+- Replaced static origin-to-destination route splines with Dynamic Parabolic Future-Path Arcs that anchor to the plane's live nose and curve to the destination.
+- Unified Trail and Arc lifecycle: enabling the Route Arc will force the historical trail to render even if the Trail button is off, ensuring a complete past-to-future path.
 - Compilation errors and trace API mismatches have been resolved.
 - Flight details UI appropriately handles camera mode tracking states.
 
@@ -444,7 +449,6 @@ Immediate next steps:
 
 Short-term flight improvements:
 - performance tuning for full-world all-flight rendering
-- smoother motion blending when fresh snapshots arrive
 - richer feed-health messaging
 - stronger thinning / performance policy for global density
 

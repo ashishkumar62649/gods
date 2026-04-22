@@ -41,7 +41,6 @@ import {
   getFlightIconDimensions,
   getFlightIconImage,
   getFlightIconKey,
-  getFlightIconRotationRadians,
 } from './flightVisuals';
 
 interface FlightPickId {
@@ -186,13 +185,16 @@ export class FlightSceneLayerManager {
     this.selectedFlightId = flightId;
     this.refreshFlightVisuals();
     this.refreshSelectionOverlays();
-    this.updateSelectedTrail(this.showSelectedTrail ? flightId : null);
+    const wantsTrail = this.showSelectedTrail || Boolean(this.routeState.flightId);
+    this.updateSelectedTrail(wantsTrail ? flightId : null);
     this.requestRender();
   }
 
   setShowSelectedTrail(show: boolean) {
     this.showSelectedTrail = show;
-    this.updateSelectedTrail(show ? this.selectedFlightId : null);
+    const wantsTrail = show || Boolean(this.routeState.flightId);
+    this.updateSelectedTrail(wantsTrail ? this.selectedFlightId : null);
+    this.updateTrailSegmentVisibility();
     this.requestRender();
   }
 
@@ -220,7 +222,7 @@ export class FlightSceneLayerManager {
       .then((payload) => {
         if (
           requestToken !== this.selectedTrailRequestToken ||
-          !this.showSelectedTrail ||
+          !(this.showSelectedTrail || this.routeState.flightId === normalizedFlightId) ||
           this.selectedFlightId !== normalizedFlightId
         ) {
           return;
@@ -304,7 +306,6 @@ export class FlightSceneLayerManager {
           iconBaseColor: Color.clone(Color.WHITE, new Color()),
         };
         this.flightEntries.set(flight.id, entry);
-        Cartesian3.normalize(initialPosition, entry.icon.alignedAxis);
       }
 
       const confirmedApiPosition = buildFlightApiCartesian(flight);
@@ -381,11 +382,11 @@ export class FlightSceneLayerManager {
   }
 
   setTrackedRoute(snapshot: FlightRouteSnapshot | null, flightId: string | null) {
-    this.routeState = {
-      snapshot,
-      flightId,
-    };
+    this.routeState = { snapshot, flightId };
+    const wantsTrail = this.showSelectedTrail || Boolean(flightId);
+    this.updateSelectedTrail(wantsTrail ? this.selectedFlightId : null);
     this.refreshRouteOverlay();
+    this.updateTrailSegmentVisibility();
     this.requestRender();
   }
 
@@ -404,10 +405,10 @@ export class FlightSceneLayerManager {
 
     const nowMs = Date.now();
     const nowSeconds = nowMs / 1000;
-    const refreshAlignedAxis = (this.tickFrame % 30) === 0;
     const viewRectangle = this.flightsVisible
       ? this.viewer.camera.computeViewRectangle(this.viewer.scene.globe.ellipsoid)
       : null;
+    const cameraHeading = this.viewer.camera.heading;
     const entriesToRemove: string[] = [];
     this.tickFrame += 1;
 
@@ -470,7 +471,9 @@ export class FlightSceneLayerManager {
         Cartesian3.clone(Cartesian3.ZERO, entry.correctionVector);
       }
 
-      this.applyRenderedPosition(entry, refreshAlignedAxis);
+      this.applyRenderedPosition(entry);
+      const headingRad = (entry.flight.headingDegrees * Math.PI) / 180;
+      entry.icon.rotation = cameraHeading - headingRad;
 
       if (
         this.showSelectedTrail &&
@@ -533,13 +536,9 @@ export class FlightSceneLayerManager {
     );
   }
 
-  private applyRenderedPosition(entry: FlightRenderEntry, refreshAlignedAxis: boolean) {
+  private applyRenderedPosition(entry: FlightRenderEntry) {
     entry.dot.position = entry.sharedFramePosition;
     entry.icon.position = entry.sharedFramePosition;
-
-    if (refreshAlignedAxis) {
-      Cartesian3.normalize(entry.sharedFramePosition, entry.icon.alignedAxis);
-    }
   }
 
   private applyFlightVisual(entry: FlightRenderEntry, flight: FlightRecord) {
@@ -570,7 +569,6 @@ export class FlightSceneLayerManager {
 
     entry.icon.show = this.flightsVisible && (this.renderMode === 'icon' || isSelected);
     entry.icon.image = getFlightIconImage(iconKey);
-    entry.icon.rotation = getFlightIconRotationRadians(flight);
     entry.icon.width = iconSize.width;
     entry.icon.height = iconSize.height;
 
@@ -685,7 +683,7 @@ export class FlightSceneLayerManager {
     for (let index = 1; index < this.activeTrailPositions.length; index += 1) {
       this.selectedTrailSegments.push(
         this.trailPolylines.add({
-          show: this.flightsVisible && (this.showSelectedTrail || this.isRouteArcActive()),
+          show: this.flightsVisible && (this.showSelectedTrail || Boolean(this.routeState.flightId)),
           width: 3,
           positions: [
             this.activeTrailPositions[index - 1],
@@ -764,14 +762,10 @@ export class FlightSceneLayerManager {
   }
 
   private updateTrailSegmentVisibility() {
-    const show = this.flightsVisible && (this.showSelectedTrail || this.isRouteArcActive());
+    const show = this.flightsVisible && (this.showSelectedTrail || Boolean(this.routeState.flightId));
     for (const segment of this.selectedTrailSegments) {
       segment.show = show;
     }
-  }
-
-  private isRouteArcActive() {
-    return Boolean(this.routeState.snapshot?.found && this.routeState.flightId);
   }
 
   private removeFlightEntry(flightId: string) {
