@@ -142,8 +142,8 @@ export function getFlightFamilyLabel(flight: FlightRecord) {
 }
 
 export function getFlightVisualTypeLabel(flight: FlightRecord) {
-  const typeCode = normalizeToken(flight.aircraftTypeCode);
-  const model = normalizeText(flight.aircraftModel);
+  const typeCode = normalizeToken(flight.aircraft_type);
+  const model = normalizeText(flight.description);
 
   if (typeCode && model) {
     return `${typeCode} - ${model}`;
@@ -172,12 +172,12 @@ export function getFlightIconRotationRadians(flight: FlightRecord) {
     return 0;
   }
 
-  return (flight.headingDegrees * Math.PI) / 180;
+  return (flight.heading_true_deg * Math.PI) / 180;
 }
 
 export function getFlightAltitudeColorCss(flight: FlightRecord, selected = false) {
-  const altitudeFeet = Number.isFinite(flight.altitudeMeters)
-    ? Math.max(0, flight.altitudeMeters * METERS_TO_FEET)
+  const altitudeFeet = Number.isFinite(flight.altitude_baro_m)
+    ? Math.max(0, flight.altitude_baro_m * METERS_TO_FEET)
     : null;
   const altitudeState: number | 'ground' | null =
     altitudeFeet === null
@@ -202,13 +202,12 @@ export function getFlightAltitudeColorCss(flight: FlightRecord, selected = false
 }
 
 function resolveFlightIconPreset(flight: FlightRecord): IconPreset {
-  const typeDesignator = normalizeToken(flight.aircraftTypeCode);
-  const category = mapCategoryCode(flight.categoryCode);
+  const typeDesignator = normalizeToken(flight.aircraft_type);
+  const category = null; // category codes not available in new schema; rely on text inference
   const combinedText = [
     typeDesignator,
-    flight.aircraftModel,
-    flight.aircraftManufacturer,
-    flight.aircraftOperator,
+    flight.description,
+    flight.owner_operator,
     flight.callsign,
   ]
     .filter(Boolean)
@@ -397,29 +396,11 @@ function roundAltitudeForColor(altitudeFeet: number) {
   return step * Math.round(altitudeFeet / step);
 }
 
-function mapCategoryCode(categoryCode: number | null | undefined): string | null {
-  switch (Math.round(Number(categoryCode))) {
-    case 1:
-      return 'A1';
-    case 2:
-      return 'A2';
-    case 3:
-      return 'A3';
-    case 4:
-      return 'A4';
-    case 5:
-      return 'A5';
-    case 6:
-      return 'A6';
-    case 7:
-      return 'A7';
-    default:
-      return null;
-  }
-}
+
+
 
 function isLikelyGround(flight: FlightRecord, altitudeFeet: number) {
-  return altitudeFeet <= 150 && flight.speedMetersPerSecond < 85;
+  return altitudeFeet <= 150 && (flight.velocity_mps ?? 0) < 85;
 }
 
 function svgShapeToSVG(shape: TarShape, fillColor: string, strokeColor: string, strokeWidth: number, scale = 1) {

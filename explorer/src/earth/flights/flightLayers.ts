@@ -434,16 +434,16 @@ export class FlightSceneLayerManager {
     const nowSeconds = nowMs / 1000;
 
     for (const flight of flights) {
-      let entry = this.flightEntries.get(flight.id);
+      let entry = this.flightEntries.get(flight.id_icao);
       if (!entry) {
         const initialPosition = buildFlightApiCartesian(flight);
         entry = {
           dot: this.flightDots.add({
-            id: { kind: 'flight', flightId: flight.id } satisfies FlightPickId,
+            id: { kind: 'flight', flightId: flight.id_icao } satisfies FlightPickId,
             position: initialPosition,
           }),
           icon: this.flightBillboards.add({
-            id: { kind: 'flight', flightId: flight.id } satisfies FlightPickId,
+            id: { kind: 'flight', flightId: flight.id_icao } satisfies FlightPickId,
             position: initialPosition,
             alignedAxis: Cartesian3.ZERO,
             verticalOrigin: VerticalOrigin.CENTER,
@@ -459,7 +459,7 @@ export class FlightSceneLayerManager {
           correctionVector: new Cartesian3(),
           targetLatitude: flight.latitude,
           targetLongitude: flight.longitude,
-          targetAltitudeMeters: Math.max(0, flight.altitudeMeters),
+          targetAltitudeMeters: Math.max(0, flight.altitude_baro_m),
           lastUpdatedMs: nowMs,
           fadeStartedAtMs: null,
           currentOpacity: 1,
@@ -467,7 +467,7 @@ export class FlightSceneLayerManager {
           dotOutlineBaseColor: Color.clone(Color.WHITE, new Color()),
           iconBaseColor: Color.clone(Color.WHITE, new Color()),
         };
-        this.flightEntries.set(flight.id, entry);
+        this.flightEntries.set(flight.id_icao, entry);
       }
 
       const confirmedApiPosition = buildFlightApiCartesian(flight);
@@ -733,11 +733,11 @@ export class FlightSceneLayerManager {
       }
 
       this.applyRenderedPosition(entry);
-      const headingRad = (entry.flight.headingDegrees * Math.PI) / 180;
+      const headingRad = (entry.flight.heading_true_deg * Math.PI) / 180;
       entry.icon.rotation = cameraHeading - headingRad;
       if (entry.model?.show) {
         const hpr = new HeadingPitchRoll(
-          CesiumMath.toRadians(entry.flight.headingDegrees - 90),
+          CesiumMath.toRadians(entry.flight.heading_true_deg - 90),
           0,
           0,
         );
@@ -822,18 +822,22 @@ export class FlightSceneLayerManager {
   }
 
   private applyFlightVisual(entry: FlightRenderEntry, flight: FlightRecord) {
-    const isSelected = this.selectedFlightId === flight.id;
+    const isSelected = this.selectedFlightId === flight.id_icao;
     const hasSelection = Boolean(this.selectedFlightId);
     const dimmed = hasSelection && !isSelected;
     const iconKey = getFlightIconKey(flight);
+
+    // Oceanic coasting: drop opacity to 40% for estimated/interpolated positions
+    const estimatedAlpha = flight.is_estimated ? 0.4 : 1.0;
+
     const baseColor = Color.fromCssColorString(
       getFlightAltitudeColorCss(flight, isSelected),
     );
     const markerColor = dimmed
-      ? new Color(baseColor.red, baseColor.green, baseColor.blue, 0.24)
+      ? new Color(baseColor.red, baseColor.green, baseColor.blue, 0.24 * estimatedAlpha)
       : isSelected
-        ? new Color(baseColor.red, baseColor.green, baseColor.blue, 0.96)
-        : new Color(baseColor.red, baseColor.green, baseColor.blue, 0.88);
+        ? new Color(baseColor.red, baseColor.green, baseColor.blue, 0.96 * estimatedAlpha)
+        : new Color(baseColor.red, baseColor.green, baseColor.blue, 0.88 * estimatedAlpha);
     const outlineColor = isSelected
       ? Color.WHITE.withAlpha(0.9)
       : new Color(0.05, 0.08, 0.14, dimmed ? 0.12 : 0.36);
@@ -889,7 +893,7 @@ export class FlightSceneLayerManager {
       return;
     }
 
-    const flightId = entry.flight.id;
+    const flightId = entry.flight.id_icao;
     entry.modelLoadPromise = Model.fromGltfAsync({
       url: SELECTED_FLIGHT_MODEL_URL,
       minimumPixelSize: 42,
@@ -984,7 +988,7 @@ export class FlightSceneLayerManager {
         camera.setView({
           orientation: {
             heading:
-              CesiumMath.toRadians(selectedEntry.flight.headingDegrees) +
+              CesiumMath.toRadians(selectedEntry.flight.heading_true_deg) +
               this.flightDeckLookHeadingOffset,
             pitch: this.flightDeckLookPitch,
             roll: 0,
@@ -1066,7 +1070,7 @@ export class FlightSceneLayerManager {
     const arcPositions = buildFutureArcPositions(
       trackedEntry.sharedFramePosition,
       snapshot.destination,
-      trackedEntry.flight.altitudeMeters,
+      trackedEntry.flight.altitude_baro_m,
     );
     this.routeArcPolyline.show = arcPositions.length > 1;
     this.routeArcPolyline.positions = arcPositions;
@@ -1136,7 +1140,7 @@ export class FlightSceneLayerManager {
   }
 
   private promoteSelectedTrailLiveAnchor(entry: FlightRenderEntry) {
-    if (this.activeTrailFlightId !== entry.flight.id) {
+    if (this.activeTrailFlightId !== entry.flight.id_icao) {
       return;
     }
 
@@ -1148,7 +1152,7 @@ export class FlightSceneLayerManager {
       return;
     }
 
-    const confirmedAltitude = Math.max(0, entry.flight.altitudeMeters);
+    const confirmedAltitude = Math.max(0, entry.flight.altitude_baro_m);
 
     if (!this.activeTrailHasGluePoint) {
       this.activeTrailPositions.push(Cartesian3.clone(entry.confirmedApiPosition));
@@ -1172,7 +1176,7 @@ export class FlightSceneLayerManager {
 
   private updateSelectedTrailGluePoint(entry: FlightRenderEntry) {
     if (
-      this.activeTrailFlightId !== entry.flight.id ||
+      this.activeTrailFlightId !== entry.flight.id_icao ||
       !this.activeTrailHasGluePoint ||
       this.activeTrailPositions.length < 2 ||
       this.selectedTrailSegments.length === 0
@@ -1262,7 +1266,7 @@ function buildFlightApiCartesian(flight: FlightRecord) {
   return Cartesian3.fromDegrees(
     flight.longitude,
     flight.latitude,
-    Math.max(0, flight.altitudeMeters),
+    Math.max(0, flight.altitude_baro_m),
   );
 }
 
@@ -1291,7 +1295,7 @@ function getTrailSegmentColor(referenceFlight: FlightRecord | null, altitudeMete
   const css = getFlightAltitudeColorCss(
     {
       ...referenceFlight,
-      altitudeMeters,
+      altitude_baro_m: altitudeMeters,
     },
     false,
   );
@@ -1398,37 +1402,37 @@ function getAirportAppearance(airport: AirportRecord): AirportAppearance | null 
       return {
         collectionKey: 'local',
         image: SMALL_AIRPORT_ICON_IMAGE,
-        size: 18,
+        size: 34,
         color: Color.WHITE.withAlpha(1),
-        scaleByDistance: new NearFarScalar(15_000, 1.08, 2_500_000, 0.32),
-        distanceDisplayCondition: new DistanceDisplayCondition(0.0, 2_500_000.0),
+        scaleByDistance: new NearFarScalar(18_000, 1.35, 4_500_000, 0.7),
+        distanceDisplayCondition: new DistanceDisplayCondition(0.0, 4_500_000.0),
       };
     case 'heliport':
       return {
         collectionKey: 'heli',
         image: HELIPAD_ICON_IMAGE,
-        size: 16,
+        size: 32,
         color: Color.WHITE.withAlpha(1),
-        scaleByDistance: new NearFarScalar(15_000, 0.92, 1_500_000, 0.28),
-        distanceDisplayCondition: new DistanceDisplayCondition(0.0, 1_500_000.0),
+        scaleByDistance: new NearFarScalar(18_000, 1.3, 3_500_000, 0.66),
+        distanceDisplayCondition: new DistanceDisplayCondition(0.0, 3_500_000.0),
       };
     case 'seaplane_base':
       return {
         collectionKey: 'seaplane',
         image: SEAPLANE_ICON_IMAGE,
-        size: 18,
+        size: 34,
         color: Color.WHITE.withAlpha(1),
-        scaleByDistance: new NearFarScalar(15_000, 1.08, 2_500_000, 0.32),
-        distanceDisplayCondition: new DistanceDisplayCondition(0.0, 2_500_000.0),
+        scaleByDistance: new NearFarScalar(18_000, 1.35, 4_500_000, 0.7),
+        distanceDisplayCondition: new DistanceDisplayCondition(0.0, 4_500_000.0),
       };
     case 'closed':
       return {
         collectionKey: 'closed',
         image: CLOSED_AIRPORT_ICON_IMAGE,
-        size: 22,
+        size: 38,
         color: Color.WHITE.withAlpha(1),
-        scaleByDistance: new NearFarScalar(12_000, 1.0, 1_000_000, 0.24),
-        distanceDisplayCondition: new DistanceDisplayCondition(0.0, 1_000_000.0),
+        scaleByDistance: new NearFarScalar(16_000, 1.4, 3_000_000, 0.78),
+        distanceDisplayCondition: new DistanceDisplayCondition(0.0, 3_000_000.0),
       };
     default:
       return null;

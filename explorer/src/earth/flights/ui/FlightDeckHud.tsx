@@ -21,7 +21,7 @@ export default function FlightDeckHud({
     <div className="cockpit-hud" aria-label="Flight deck HUD">
       <div className="cockpit-hud__badge">FLIGHT DECK LINK</div>
       <div className="cockpit-hud__flight">
-        {flight.callsign?.trim() || flight.id.toUpperCase()}
+        {flight.callsign?.trim() || flight.id_icao.toUpperCase()}
       </div>
       {route?.found && route.origin && route.destination && (
         <div className="cockpit-hud__route">
@@ -37,11 +37,11 @@ export default function FlightDeckHud({
         </div>
       )}
       <div className="cockpit-hud__stats">
-        <span>{formatAltitudeMeters(flight.altitudeMeters)}</span>
+        <span>{formatAltitudeMeters(flight.altitude_baro_m)}</span>
         <span className="cockpit-hud__sep">·</span>
-        <span>{formatSpeed(flight.speedMetersPerSecond)}</span>
+        <span>{formatSpeed(flight.velocity_mps)}</span>
         <span className="cockpit-hud__sep">·</span>
-        <span>{formatHeading(flight.headingDegrees)}</span>
+        <span>{formatHeading(flight.heading_true_deg)}</span>
       </div>
       <div className="cockpit-hud__hint">Drag to look · Click map to release</div>
     </div>

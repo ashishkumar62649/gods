@@ -267,7 +267,7 @@ export default function Viewer() {
     flightRecordsRef.current.clear();
 
     for (const flight of flights) {
-      flightRecordsRef.current.set(flight.id, flight);
+      flightRecordsRef.current.set(flight.id_icao, flight);
     }
 
     if (selectedFlightIdRef.current && !flightRecordsRef.current.has(selectedFlightIdRef.current)) {
@@ -638,7 +638,7 @@ export default function Viewer() {
     cancelAutoLandmarkExperience();
     releaseSensorLink();
 
-    const flightId = selectedFlight.id;
+    const flightId = selectedFlight.id_icao;
     const viewer = viewerRef.current?.cesiumElement;
     if (!viewer || viewer.isDestroyed()) return;
 

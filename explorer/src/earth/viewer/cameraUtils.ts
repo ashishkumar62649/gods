@@ -196,7 +196,7 @@ export function getCockpitCameraPose(
   pitchRad: number,
 ) {
   const target = getFlightCameraTarget(flight, secondsAhead);
-  const headingRad = CesiumMath.toRadians(flight.headingDegrees);
+  const headingRad = CesiumMath.toRadians(flight.heading_true_deg);
   const enuTransform = Transforms.eastNorthUpToFixedFrame(target);
   const localUp = new Cartesian3(0, 0, 30);
   const worldPos = Matrix4.multiplyByPoint(enuTransform, localUp, new Cartesian3());

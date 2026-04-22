@@ -92,22 +92,15 @@ export function useFlightData({
 
         syncFlightLayers(snapshot.flights);
         setFlightFeed({
-          status: snapshot.source === 'mock' ? 'fallback' : 'live',
+          status: 'live',
           sourceLabel:
-            snapshot.source === 'mock'
-              ? 'Mock fallback'
-              : snapshot.authMode === 'oauth'
-                ? 'OpenSky OAuth'
-                : 'OpenSky anonymous',
-          message:
-            snapshot.source === 'mock'
-              ? snapshot.error
-                ? `Fallback active: ${snapshot.error}`
-                : 'Using fallback traffic feed.'
-              : `${snapshot.flights.length} flights visible on the globe.`,
-          fetchedAt: snapshot.fetchedAt,
+            snapshot.meta.lastDarkFleetSource
+              ? `Fused (${snapshot.meta.lastOpenSkyCount} OpenSky + ${snapshot.meta.lastDarkFleetCount} Community)`
+              : `OpenSky (${snapshot.meta.lastOpenSkyCount})`,
+          message: `${snapshot.flights.length} flights active on the globe.`,
+          fetchedAt: snapshot.meta.lastSweepAt ?? new Date().toISOString(),
           flightCount: snapshot.flights.length,
-          totalAvailable: snapshot.totalAvailable,
+          totalAvailable: snapshot.meta.count,
         });
       } catch (error) {
         if (cancelled || activeController.signal.aborted) return;

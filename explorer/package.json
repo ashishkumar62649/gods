@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "dev:flights": "node server/flights-proxy.mjs",
+    "dev:flights": "node server/index.mjs",
+    "dev:flights:legacy": "node server/flights-proxy.mjs",
     "build": "tsc -b && vite build",
     "preview": "vite preview"
   },

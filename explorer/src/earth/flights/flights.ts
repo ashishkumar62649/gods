@@ -1,9 +1,5 @@
 import largeAirportIconPng from '../../assets/map-icons/generated/airport-large-blue.png?inline';
 import mediumAirportIconPng from '../../assets/map-icons/generated/airport-medium-yellow.png?inline';
-import smallAirportIconPng from '../../assets/map-icons/generated/airport-small-green.png?inline';
-import helipadIconPng from '../../assets/map-icons/generated/helipad-gold.png?inline';
-import seaplaneIconPng from '../../assets/map-icons/generated/seaplane-teal.png?inline';
-import closedFacilityIconPng from '../../assets/map-icons/generated/closed-facility.png?inline';
 import commsTowerIconPng from '../../assets/map-icons/generated/tower-comms-blue.png?inline';
 import hfdlTowerIconPng from '../../assets/map-icons/generated/tower-hfdl-red.png?inline';
 
@@ -14,22 +10,37 @@ export interface FlightTrailPoint {
 }
 
 export interface FlightRecord {
-  id: string;
+  // ── Identity ──────────────────────────────────────────────
+  id_icao: string;
   callsign: string | null;
+  registration: string | null;
+  aircraft_type: string | null;
+  description: string | null;
+  owner_operator: string | null;
+  country_origin: string | null;
+
+  // ── Telemetry ─────────────────────────────────────────────
   latitude: number;
   longitude: number;
-  altitudeMeters: number;
-  headingDegrees: number;
-  speedMetersPerSecond: number;
+  altitude_baro_m: number;
+  altitude_geom_m: number | null;
+  velocity_mps: number;
+  heading_true_deg: number;
+  heading_mag_deg: number | null;
+  vertical_rate_mps: number;
+  on_ground: boolean;
+  is_estimated?: boolean; // Oceanic coasting flag
+
+  // ── Avionics & Intel ──────────────────────────────────────
+  squawk: string | null;
+  is_military: boolean;
+  is_interesting: boolean;
+  is_pia: boolean;
+  is_ladd: boolean;
+
+  // ── System ────────────────────────────────────────────────
+  data_source: string;
   timestamp: number;
-  originCountry?: string | null;
-  categoryCode?: number | null;
-  aircraftTypeCode?: string | null;
-  aircraftModel?: string | null;
-  aircraftManufacturer?: string | null;
-  aircraftRegistration?: string | null;
-  aircraftOperator?: string | null;
-  trail: FlightTrailPoint[];
 }
 
 export interface AirportRecord {
@@ -74,13 +85,19 @@ export interface FlightTraceSnapshot {
   error?: string;
 }
 
+export interface FlightFeedMeta {
+  count: number;
+  timestamp: number;
+  sweepCount: number;
+  lastSweepAt: string | null;
+  lastOpenSkyCount: number;
+  lastDarkFleetCount: number;
+  lastDarkFleetSource: string | null;
+}
+
 export interface FlightFeedSnapshot {
-  source: 'opensky' | 'mock';
-  authMode: 'oauth' | 'anonymous' | 'fallback';
-  fetchedAt: string;
-  totalAvailable: number;
   flights: FlightRecord[];
-  error?: string;
+  meta: FlightFeedMeta;
 }
 
 export type FlightFeedStatus = 'idle' | 'loading' | 'live' | 'fallback' | 'error';
@@ -154,6 +171,49 @@ const DESTINATION_AIRPORT_ICON_SVG = `
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 84 84">
     <circle cx="42" cy="42" r="32" fill="#291914" stroke="#ffb089" stroke-width="5" />
     <path fill="#fff1e8" d="M42 22 46.9 34.8 57.1 38.9 57.1 43.3 47.6 42.3 44.6 47.4 49.2 61.8 45.9 63.6 42 53.4 38.1 63.6 34.8 61.8 39.4 47.4 36.4 42.3 26.9 43.3 26.9 38.9 37.1 34.8Z"/>
+  </svg>
+`;
+
+const SMALL_AIRPORT_ICON_SVG = `
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 84 84">
+    <circle cx="42" cy="42" r="31" fill="#0b3d2b" stroke="#49d18d" stroke-width="5" />
+    <path fill="#effff6" d="M42 18 46.5 31.2 57 35.2 57 39.5 47.3 38.8 44.4 44 49.3 58.8 45.8 60.6 42 50.1 38.2 60.6 34.7 58.8 39.6 44 36.7 38.8 27 39.5 27 35.2 37.5 31.2Z"/>
+    <circle cx="42" cy="42" r="4.2" fill="#49d18d" />
+  </svg>
+`;
+
+const HELIPAD_ICON_SVG = `
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 84 84">
+    <circle cx="42" cy="42" r="31" fill="#4d3500" stroke="#ffd166" stroke-width="5" />
+    <circle cx="42" cy="42" r="21" fill="#fff4cf" />
+    <path d="M31 27 V57 M53 27 V57 M31 42 H53" stroke="#7a4b00" stroke-width="7" stroke-linecap="round" />
+  </svg>
+`;
+
+const SEAPLANE_ICON_SVG = `
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 84 84">
+    <circle cx="42" cy="42" r="31" fill="#073b46" stroke="#38bdf8" stroke-width="5" />
+    <path fill="#e6fbff" d="M42 20 46.5 31.3 58.5 35.8 58.5 39.9 47.8 39.1 44.5 44.6 50.4 51.8 47 54 42 48.4 37 54 33.6 51.8 39.5 44.6 36.2 39.1 25.5 39.9 25.5 35.8 37.5 31.3Z"/>
+    <path d="M24 58 C29 55, 34 55, 39 58 C44 61, 49 61, 54 58 C59 55, 64 55, 68 58" stroke="#67e8f9" stroke-width="4.5" fill="none" stroke-linecap="round" />
+  </svg>
+`;
+
+const CLOSED_AIRPORT_ICON_SVG = `
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 84 84">
+    <defs>
+      <filter id="warningGlow" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="2.5" result="blur" />
+        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+      </filter>
+    </defs>
+    <g filter="url(#warningGlow)">
+      <circle cx="42" cy="42" r="31" fill="#2f0d0d" stroke="#ff6b57" stroke-width="5" />
+      <circle cx="42" cy="42" r="22" fill="#ffb347" opacity="0.95" />
+      <path d="M42 24 L57 54 H27 Z" fill="#7c1d12" />
+      <rect x="39.25" y="33" width="5.5" height="12.5" rx="2.75" fill="#fff7ed" />
+      <circle cx="42" cy="49.5" r="3" fill="#fff7ed" />
+      <path d="M26 58 L58 26" stroke="#ffebe6" stroke-width="5" stroke-linecap="round" />
+    </g>
   </svg>
 `;
 
@@ -243,15 +303,23 @@ export const LARGE_AIRPORT_ICON_IMAGE = largeAirportIconPng;
 
 export const MEDIUM_AIRPORT_ICON_IMAGE = mediumAirportIconPng;
 
-export const SMALL_AIRPORT_ICON_IMAGE = smallAirportIconPng;
+export const SMALL_AIRPORT_ICON_IMAGE = `data:image/svg+xml;utf8,${encodeURIComponent(
+  SMALL_AIRPORT_ICON_SVG,
+)}`;
 
 export const AIRPORT_ICON_IMAGE = LARGE_AIRPORT_ICON_IMAGE;
 
-export const HELIPAD_ICON_IMAGE = helipadIconPng;
+export const HELIPAD_ICON_IMAGE = `data:image/svg+xml;utf8,${encodeURIComponent(
+  HELIPAD_ICON_SVG,
+)}`;
 
-export const SEAPLANE_ICON_IMAGE = seaplaneIconPng;
+export const SEAPLANE_ICON_IMAGE = `data:image/svg+xml;utf8,${encodeURIComponent(
+  SEAPLANE_ICON_SVG,
+)}`;
 
-export const CLOSED_AIRPORT_ICON_IMAGE = closedFacilityIconPng;
+export const CLOSED_AIRPORT_ICON_IMAGE = `data:image/svg+xml;utf8,${encodeURIComponent(
+  CLOSED_AIRPORT_ICON_SVG,
+)}`;
 
 export const COMMS_TOWER_ICON_IMAGE = commsTowerIconPng;
 
@@ -271,7 +339,7 @@ export const DESTINATION_AIRPORT_ICON_IMAGE = `data:image/svg+xml;utf8,${encodeU
 
 export function getFlightDisplayName(flight: FlightRecord) {
   const callsign = flight.callsign?.trim();
-  return callsign && callsign.length > 0 ? callsign : flight.id.toUpperCase();
+  return callsign && callsign.length > 0 ? callsign : flight.id_icao.toUpperCase();
 }
 
 export function getAirportDisplayCode(airport: AirportRecord) {
@@ -282,12 +350,13 @@ export function getFlightRenderMode(cameraHeightMeters: number): FlightRenderMod
   return cameraHeightMeters > FLIGHT_ICON_ALTITUDE_THRESHOLD ? 'dot' : 'icon';
 }
 
-export async function fetchFlightSnapshot(signal?: AbortSignal) {
+export async function fetchFlightSnapshot(signal?: AbortSignal): Promise<FlightFeedSnapshot> {
   const response = await fetch(FLIGHT_API_URL, { signal });
   if (!response.ok) {
     throw new Error(`Flight feed returned ${response.status}`);
   }
 
+  // New backend returns { flights: FlightRecord[], meta: FlightFeedMeta }
   return (await response.json()) as FlightFeedSnapshot;
 }
 
@@ -369,22 +438,26 @@ export function predictFlightPosition(
   flight: FlightRecord,
   secondsAhead: number,
 ) {
+  const speed = flight.velocity_mps;
+  const heading = flight.heading_true_deg;
+  const altM = flight.altitude_baro_m;
+
   if (
-    !Number.isFinite(flight.speedMetersPerSecond) ||
-    flight.speedMetersPerSecond <= 0 ||
-    !Number.isFinite(flight.headingDegrees)
+    !Number.isFinite(speed) ||
+    speed <= 0 ||
+    !Number.isFinite(heading)
   ) {
     return {
       latitude: flight.latitude,
       longitude: flight.longitude,
-      altitudeMeters: flight.altitudeMeters,
+      altitudeMeters: altM,
     };
   }
 
   const earthRadiusMeters = 6_371_000;
-  const distanceMeters = Math.max(0, secondsAhead) * flight.speedMetersPerSecond;
+  const distanceMeters = Math.max(0, secondsAhead) * speed;
   const angularDistance = distanceMeters / earthRadiusMeters;
-  const headingRadians = (flight.headingDegrees * Math.PI) / 180;
+  const headingRadians = (heading * Math.PI) / 180;
   const lat1 = (flight.latitude * Math.PI) / 180;
   const lon1 = (flight.longitude * Math.PI) / 180;
 
@@ -408,7 +481,7 @@ export function predictFlightPosition(
   return {
     latitude: (lat2 * 180) / Math.PI,
     longitude: ((((lon2 * 180) / Math.PI) + 540) % 360) - 180,
-    altitudeMeters: flight.altitudeMeters,
+    altitudeMeters: altM,
   };
 }
 

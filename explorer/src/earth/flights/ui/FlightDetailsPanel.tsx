@@ -152,30 +152,30 @@ export default function FlightDetailsPanel({
       <div className="flight-panel__body flex-1 overflow-y-auto custom-scrollbar p-3">
         <div className="flight-panel__row flex justify-between items-center w-full py-1.5 aether-data-row">
           <span className="flight-panel__label aether-kicker text-[9px] tracking-[0.25em]">ICAO24</span>
-          <span className="flight-panel__value aether-value aether-glow-text text-[11px] leading-tight">{flight.id.toUpperCase()}</span>
+          <span className="flight-panel__value aether-value aether-glow-text text-[11px] leading-tight">{flight.id_icao.toUpperCase()}</span>
         </div>
         <div className="flight-panel__row flex justify-between items-center w-full py-1.5 aether-data-row">
           <span className="flight-panel__label aether-kicker text-[9px] tracking-[0.25em]">Altitude</span>
           <span className="flight-panel__value aether-value aether-glow-text text-[11px] leading-tight">
-            {formatAltitudeMeters(flight.altitudeMeters)}
+            {formatAltitudeMeters(flight.altitude_baro_m)}
           </span>
         </div>
         <div className="flight-panel__row flex justify-between items-center w-full py-1.5 aether-data-row">
           <span className="flight-panel__label aether-kicker text-[9px] tracking-[0.25em]">Speed</span>
           <span className="flight-panel__value aether-value aether-glow-text text-[11px] leading-tight">
-            {formatSpeed(flight.speedMetersPerSecond)}
+            {formatSpeed(flight.velocity_mps)}
           </span>
         </div>
         <div className="flight-panel__row flex justify-between items-center w-full py-1.5 aether-data-row">
           <span className="flight-panel__label aether-kicker text-[9px] tracking-[0.25em]">Heading</span>
           <span className="flight-panel__value aether-value aether-glow-text text-[11px] leading-tight">
-            {formatHeading(flight.headingDegrees)}
+            {formatHeading(flight.heading_true_deg)}
           </span>
         </div>
         <div className="flight-panel__row flex justify-between items-center w-full py-1.5 aether-data-row">
           <span className="flight-panel__label aether-kicker text-[9px] tracking-[0.25em]">Country</span>
           <span className="flight-panel__value aether-value aether-glow-text text-[11px] leading-tight">
-            {flight.originCountry?.trim() || 'Unknown'}
+            {flight.country_origin?.trim() || 'Unknown'}
           </span>
         </div>
         <div className="flight-panel__row flex justify-between items-center w-full py-1.5 aether-data-row">
