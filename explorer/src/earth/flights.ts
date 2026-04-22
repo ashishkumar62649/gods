@@ -1,6 +1,9 @@
 import largeAirportIconPng from '../assets/map-icons/generated/airport-large-blue.png?inline';
 import mediumAirportIconPng from '../assets/map-icons/generated/airport-medium-yellow.png?inline';
 import smallAirportIconPng from '../assets/map-icons/generated/airport-small-green.png?inline';
+import helipadIconPng from '../assets/map-icons/generated/helipad-gold.png?inline';
+import seaplaneIconPng from '../assets/map-icons/generated/seaplane-teal.png?inline';
+import closedFacilityIconPng from '../assets/map-icons/generated/closed-facility.png?inline';
 import commsTowerIconPng from '../assets/map-icons/generated/tower-comms-blue.png?inline';
 import hfdlTowerIconPng from '../assets/map-icons/generated/tower-hfdl-red.png?inline';
 
@@ -243,6 +246,12 @@ export const MEDIUM_AIRPORT_ICON_IMAGE = mediumAirportIconPng;
 export const SMALL_AIRPORT_ICON_IMAGE = smallAirportIconPng;
 
 export const AIRPORT_ICON_IMAGE = LARGE_AIRPORT_ICON_IMAGE;
+
+export const HELIPAD_ICON_IMAGE = helipadIconPng;
+
+export const SEAPLANE_ICON_IMAGE = seaplaneIconPng;
+
+export const CLOSED_AIRPORT_ICON_IMAGE = closedFacilityIconPng;
 
 export const COMMS_TOWER_ICON_IMAGE = commsTowerIconPng;
 

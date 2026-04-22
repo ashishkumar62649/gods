@@ -32,6 +32,7 @@ import { CesiumComponentRef, Viewer as ResiumViewer } from 'resium';
 import FlightDetailsPanel from './FlightDetailsPanel';
 import SearchBox from './SearchBox';
 import {
+  AviationGridState,
   FlightAssetView,
   FlightSceneLayerManager,
   GroundStationsState,
@@ -74,6 +75,27 @@ const BUILDINGS_ALTITUDE_THRESHOLD = 300_000;
 // Terrain.fromWorldTerrain() configures CWT (Ion asset 1) synchronously;
 // the actual tile data streams in after the viewer mounts.
 const WORLD_TERRAIN = Terrain.fromWorldTerrain();
+
+const INITIAL_AVIATION_GRID: AviationGridState = {
+  major: true,
+  regional: true,
+  local: false,
+  heli: false,
+  seaplane: false,
+  closed: false,
+};
+
+const AVIATION_GRID_OPTIONS: Array<{
+  key: keyof AviationGridState;
+  label: string;
+}> = [
+  { key: 'major', label: 'Major Airports' },
+  { key: 'regional', label: 'Regional Airports' },
+  { key: 'local', label: 'Local Airstrips' },
+  { key: 'heli', label: 'Helicopter Pads' },
+  { key: 'seaplane', label: 'Seaplane Bases' },
+  { key: 'closed', label: 'Closed Facilities' },
+];
 
 // Pull the token from Vite's env. Using `import.meta.env` keeps the value
 // out of source — it's injected at build time from `.env` (gitignored).
@@ -584,7 +606,7 @@ export default function Viewer() {
   const flightInteractionHandlerRef = useRef<ScreenSpaceEventHandler | null>(null);
   const flightRenderModeRef = useRef<FlightRenderMode>('dot');
   const flightsEnabledRef = useRef(false);
-  const showAirportsRef = useRef(false);
+  const aviationGridRef = useRef<AviationGridState>(INITIAL_AVIATION_GRID);
   const groundStationsRef = useRef<GroundStationsState>({
     hfdl: false,
     comms: false,
@@ -622,7 +644,8 @@ export default function Viewer() {
     return preferredOption?.id ?? '';
   });
   const [flightsEnabled, setFlightsEnabled] = useState(false);
-  const [showAirports, setShowAirports] = useState(false);
+  const [aviationGrid, setAviationGrid] = useState<AviationGridState>(INITIAL_AVIATION_GRID);
+  const [isGridMenuOpen, setIsGridMenuOpen] = useState(false);
   const [groundStations, setGroundStations] = useState<GroundStationsState>({
     hfdl: false,
     comms: false,
@@ -638,7 +661,7 @@ export default function Viewer() {
   const [flightRenderMode, setFlightRenderMode] = useState<FlightRenderMode>('dot');
   const [selectedFlightRoute, setSelectedFlightRoute] = useState<FlightRouteSnapshot | null>(null);
   const [airportLayerMessage, setAirportLayerMessage] = useState(
-    'Render every airport with zoom-aware visibility.',
+    'Major and regional airports are online. Expand the grid to refine visibility.',
   );
 
   // User toggle state for the buildings layer. Effective visibility is
@@ -873,11 +896,11 @@ export default function Viewer() {
     }
   }, [releaseSensorLink, updateSelectedFlight]);
 
-  const toggleAirports = useCallback(() => {
-    const nextEnabled = !showAirportsRef.current;
-    showAirportsRef.current = nextEnabled;
-    setShowAirports(nextEnabled);
-    flightLayerManagerRef.current?.setAirportsVisible(nextEnabled);
+  const toggleAviationGridCategory = useCallback((layer: keyof AviationGridState) => {
+    setAviationGrid((current) => ({
+      ...current,
+      [layer]: !current[layer],
+    }));
   }, []);
 
   const toggleGroundStationLayer = useCallback((layer: keyof GroundStationsState) => {
@@ -1576,9 +1599,9 @@ export default function Viewer() {
   }, [sensorLink]);
 
   useEffect(() => {
-    showAirportsRef.current = showAirports;
-    flightLayerManagerRef.current?.setAirportsVisible(showAirports);
-  }, [showAirports]);
+    aviationGridRef.current = aviationGrid;
+    flightLayerManagerRef.current?.setAviationGridState(aviationGrid);
+  }, [aviationGrid]);
 
   useEffect(() => {
     groundStationsRef.current = groundStations;
@@ -1622,7 +1645,7 @@ export default function Viewer() {
       viewerUsed = viewer!;
       const layerManager = new FlightSceneLayerManager(viewerUsed);
       layerManager.setFlightsVisible(flightsEnabledRef.current);
-      layerManager.setAirportsVisible(showAirportsRef.current);
+      layerManager.setAviationGridState(aviationGridRef.current);
       layerManager.setGroundStationsState(groundStationsRef.current);
       layerManager.setAssetViewState(assetViewRef.current);
       layerManager.setSensorLinkState(sensorLinkRef.current);
@@ -1808,7 +1831,7 @@ export default function Viewer() {
 
   useEffect(() => {
     const needsAirportDataset =
-      showAirports || groundStations.hfdl || groundStations.comms;
+      Object.values(aviationGrid).some(Boolean) || groundStations.hfdl || groundStations.comms;
     if (!needsAirportDataset) return;
     if (airportsLoadedRef.current || airportsLoadingRef.current) return;
 
@@ -1842,7 +1865,7 @@ export default function Viewer() {
       cancelled = true;
       controller.abort();
     };
-  }, [groundStations.comms, groundStations.hfdl, showAirports]);
+  }, [aviationGrid, groundStations.comms, groundStations.hfdl]);
 
   useEffect(() => {
     selectedFlightRouteRef.current = selectedFlightRoute;
@@ -2145,10 +2168,17 @@ export default function Viewer() {
 
   const activeLayerCount =
     Number(flightsEnabled) +
+    Number(Object.values(aviationGrid).some(Boolean)) +
     Number(groundStations.hfdl) +
     Number(groundStations.comms) +
     Number(Boolean(buildingsEnabled || autoBuildingsEnabled)) +
     Number(orbitEnabled);
+
+  const activeAviationGridCount = Object.values(aviationGrid).filter(Boolean).length;
+  const aviationGridSummary =
+    activeAviationGridCount > 0
+      ? `${activeAviationGridCount} of 6 categories active.`
+      : 'All aviation categories are currently filtered out.';
 
   const currentSection =
     SECTION_TABS.find((section) => section.id === activeSection) ??
@@ -2281,33 +2311,50 @@ export default function Viewer() {
                 </span>
               </span>
             </button>
-            <button
-              type="button"
-              className={
-                showAirports
-                  ? 'layer-card layer-card--toggle layer-card--intel layer-card--active flex justify-between items-center w-full py-1.5 aether-data-row'
-                  : 'layer-card layer-card--toggle layer-card--intel flex justify-between items-center w-full py-1.5 aether-data-row'
-              }
-              onClick={toggleAirports}
-            >
-              <span className="layer-card__body">
-                <span className="layer-card__label">Airports</span>
-                <span className="layer-card__meta">
-                  {showAirports
-                    ? airportLayerMessage
-                    : 'Show every airport with zoom-aware visibility.'}
-                </span>
-              </span>
-              <span
-                className={showAirports ? 'layer-switch layer-switch--on' : 'layer-switch'}
-                aria-hidden="true"
+            <div className="layer-card layer-card--status flex flex-col w-full py-1.5 aether-data-row">
+              <button
+                type="button"
+                className="flex justify-between items-center w-full"
+                onClick={() => setIsGridMenuOpen((open) => !open)}
+                aria-expanded={isGridMenuOpen}
               >
-                <span className="layer-switch__thumb" />
-                <span className="layer-switch__text">
-                  {showAirports ? 'On' : 'Off'}
+                <span className="layer-card__body">
+                  <span className="layer-card__label">Aviation Grid</span>
+                  <span className="layer-card__meta">
+                    {airportLayerMessage}
+                  </span>
+                  <span className="layer-card__meta">
+                    {aviationGridSummary}
+                  </span>
                 </span>
-              </span>
-            </button>
+                <span className="layer-badge">
+                  {isGridMenuOpen ? 'Open' : 'Closed'}
+                </span>
+              </button>
+              {isGridMenuOpen && (
+                <div className="mt-3 rounded-2xl border border-cyan-900/35 bg-slate-950/35 p-2">
+                  <div className="flex flex-col gap-1.5">
+                    {AVIATION_GRID_OPTIONS.map(({ key, label }) => (
+                      <button
+                        key={key}
+                        type="button"
+                        className={
+                          aviationGrid[key]
+                            ? 'flex justify-between items-center w-full rounded-xl px-3 py-2 text-left text-[10px] font-semibold tracking-[0.18em] uppercase bg-gradient-to-r from-cyan-900/40 to-blue-900/20 border border-cyan-500/40 text-cyan-300 aether-glow-text'
+                            : 'flex justify-between items-center w-full rounded-xl px-3 py-2 text-left text-[10px] font-semibold tracking-[0.18em] uppercase border border-cyan-900/40 text-slate-300 bg-slate-950/30'
+                        }
+                        onClick={() => toggleAviationGridCategory(key)}
+                      >
+                        <span>{label}</span>
+                        <span className="text-[9px] tracking-[0.2em]">
+                          {aviationGrid[key] ? 'ON' : 'OFF'}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
             <div className="layer-card layer-card--status flex flex-col w-full py-1.5 aether-data-row">
               <button
                 type="button"

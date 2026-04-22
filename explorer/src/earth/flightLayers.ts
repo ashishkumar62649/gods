@@ -27,13 +27,15 @@ import {
   Viewer as CesiumViewer,
 } from 'cesium';
 import {
-  AUX_AIRPORT_ICON_IMAGE,
   AirportRecord,
+  CLOSED_AIRPORT_ICON_IMAGE,
   COMMS_TOWER_ICON_IMAGE,
   DESTINATION_AIRPORT_ICON_IMAGE,
   HFDL_TOWER_ICON_IMAGE,
+  HELIPAD_ICON_IMAGE,
   LARGE_AIRPORT_ICON_IMAGE,
   MEDIUM_AIRPORT_ICON_IMAGE,
+  SEAPLANE_ICON_IMAGE,
   SELECTED_FLIGHT_MODEL_URL,
   SMALL_AIRPORT_ICON_IMAGE,
   fetchFlightTrace,
@@ -79,6 +81,15 @@ interface AirportPickId {
 export interface GroundStationsState {
   hfdl: boolean;
   comms: boolean;
+}
+
+export interface AviationGridState {
+  major: boolean;
+  regional: boolean;
+  local: boolean;
+  heli: boolean;
+  seaplane: boolean;
+  closed: boolean;
 }
 
 export type FlightAssetView = 'symbology' | 'airframe';
@@ -133,7 +144,12 @@ export class FlightSceneLayerManager {
   private readonly root: PrimitiveCollection;
   private readonly flightDots: PointPrimitiveCollection;
   private readonly flightBillboards: BillboardCollection;
-  private readonly airportBillboards: BillboardCollection;
+  private readonly majorBillboards: BillboardCollection;
+  private readonly regionalBillboards: BillboardCollection;
+  private readonly localBillboards: BillboardCollection;
+  private readonly heliBillboards: BillboardCollection;
+  private readonly seaplaneBillboards: BillboardCollection;
+  private readonly closedBillboards: BillboardCollection;
   private readonly hfdlBillboards: BillboardCollection;
   private readonly vdlBillboards: BillboardCollection;
   private readonly acarsBillboards: BillboardCollection;
@@ -155,10 +171,17 @@ export class FlightSceneLayerManager {
   private activeTrailLastAnchorTimestamp: number | null = null;
   private activeTrailHasGluePoint = false;
   private flightsVisible = false;
-  private airportsVisible = false;
   private renderMode: FlightRenderMode = 'dot';
   private assetViewState: FlightAssetView = 'symbology';
   private sensorLinkState: FlightSensorLinkState = 'release';
+  private aviationGridState: AviationGridState = {
+    major: true,
+    regional: true,
+    local: false,
+    heli: false,
+    seaplane: false,
+    closed: false,
+  };
   private groundStationsState: GroundStationsState = {
     hfdl: false,
     comms: false,
@@ -179,7 +202,12 @@ export class FlightSceneLayerManager {
     this.root = new PrimitiveCollection();
     this.flightDots = this.root.add(new PointPrimitiveCollection()) as PointPrimitiveCollection;
     this.flightBillboards = this.root.add(new BillboardCollection()) as BillboardCollection;
-    this.airportBillboards = this.root.add(new BillboardCollection()) as BillboardCollection;
+    this.majorBillboards = this.root.add(new BillboardCollection()) as BillboardCollection;
+    this.regionalBillboards = this.root.add(new BillboardCollection()) as BillboardCollection;
+    this.localBillboards = this.root.add(new BillboardCollection()) as BillboardCollection;
+    this.heliBillboards = this.root.add(new BillboardCollection()) as BillboardCollection;
+    this.seaplaneBillboards = this.root.add(new BillboardCollection()) as BillboardCollection;
+    this.closedBillboards = this.root.add(new BillboardCollection()) as BillboardCollection;
     this.hfdlBillboards = this.root.add(new BillboardCollection()) as BillboardCollection;
     this.vdlBillboards = this.root.add(new BillboardCollection()) as BillboardCollection;
     this.acarsBillboards = this.root.add(new BillboardCollection()) as BillboardCollection;
@@ -236,7 +264,12 @@ export class FlightSceneLayerManager {
       color: Color.fromCssColorString('#ffc09b'),
     });
 
-    this.airportBillboards.show = false;
+    this.majorBillboards.show = this.aviationGridState.major;
+    this.regionalBillboards.show = this.aviationGridState.regional;
+    this.localBillboards.show = this.aviationGridState.local;
+    this.heliBillboards.show = this.aviationGridState.heli;
+    this.seaplaneBillboards.show = this.aviationGridState.seaplane;
+    this.closedBillboards.show = this.aviationGridState.closed;
     this.hfdlBillboards.show = false;
     this.vdlBillboards.show = false;
     this.acarsBillboards.show = false;
@@ -482,14 +515,23 @@ export class FlightSceneLayerManager {
   }
 
   setGlobalAirports(airports: AirportRecord[]) {
-    this.airportBillboards.removeAll();
+    this.majorBillboards.removeAll();
+    this.regionalBillboards.removeAll();
+    this.localBillboards.removeAll();
+    this.heliBillboards.removeAll();
+    this.seaplaneBillboards.removeAll();
+    this.closedBillboards.removeAll();
     this.hfdlBillboards.removeAll();
     this.vdlBillboards.removeAll();
     this.acarsBillboards.removeAll();
 
     for (const airport of airports) {
       const appearance = getAirportAppearance(airport);
-      this.airportBillboards.add({
+      if (!appearance) {
+        continue;
+      }
+
+      this.getAirportCollection(appearance.collectionKey).add({
         id: { kind: 'airport', airportId: airport.id } satisfies AirportPickId,
         image: appearance.image,
         position: Cartesian3.fromDegrees(airport.longitude, airport.latitude, 0),
@@ -546,14 +588,14 @@ export class FlightSceneLayerManager {
       });
     }
 
-    this.airportBillboards.show = this.airportsVisible;
+    this.applyAviationGridVisibility();
     this.applyGroundStationVisibility();
     this.requestRender();
   }
 
-  setAirportsVisible(visible: boolean) {
-    this.airportsVisible = visible;
-    this.airportBillboards.show = visible;
+  setAviationGridState(nextState: AviationGridState) {
+    this.aviationGridState = { ...nextState };
+    this.applyAviationGridVisibility();
     this.requestRender();
   }
 
@@ -572,10 +614,40 @@ export class FlightSceneLayerManager {
     this.requestRender();
   }
 
+  private applyAviationGridVisibility() {
+    this.majorBillboards.show = this.aviationGridState.major;
+    this.regionalBillboards.show = this.aviationGridState.regional;
+    this.localBillboards.show = this.aviationGridState.local;
+    this.heliBillboards.show = this.aviationGridState.heli;
+    this.seaplaneBillboards.show = this.aviationGridState.seaplane;
+    this.closedBillboards.show = this.aviationGridState.closed;
+  }
+
   private applyGroundStationVisibility() {
     this.hfdlBillboards.show = this.groundStationsState.hfdl;
     this.vdlBillboards.show = this.groundStationsState.comms;
     this.acarsBillboards.show = this.groundStationsState.comms;
+  }
+
+  private getAirportCollection(
+    key: keyof AviationGridState,
+  ) {
+    switch (key) {
+      case 'major':
+        return this.majorBillboards;
+      case 'regional':
+        return this.regionalBillboards;
+      case 'local':
+        return this.localBillboards;
+      case 'heli':
+        return this.heliBillboards;
+      case 'seaplane':
+        return this.seaplaneBillboards;
+      case 'closed':
+        return this.closedBillboards;
+      default:
+        return this.majorBillboards;
+    }
   }
 
   pickFlight(windowPosition: Cartesian2) {
@@ -1293,10 +1365,20 @@ function buildFutureArcPositions(
   return positions;
 }
 
-function getAirportAppearance(airport: AirportRecord) {
+type AirportAppearance = {
+  collectionKey: keyof AviationGridState;
+  image: string;
+  size: number;
+  color: Color;
+  scaleByDistance: NearFarScalar;
+  distanceDisplayCondition?: DistanceDisplayCondition;
+};
+
+function getAirportAppearance(airport: AirportRecord): AirportAppearance | null {
   switch (airport.type) {
     case 'large_airport':
       return {
+        collectionKey: 'major',
         image: LARGE_AIRPORT_ICON_IMAGE,
         size: 38,
         color: Color.WHITE.withAlpha(1),
@@ -1305,6 +1387,7 @@ function getAirportAppearance(airport: AirportRecord) {
       };
     case 'medium_airport':
       return {
+        collectionKey: 'regional',
         image: MEDIUM_AIRPORT_ICON_IMAGE,
         size: 30,
         color: Color.WHITE.withAlpha(1),
@@ -1312,22 +1395,43 @@ function getAirportAppearance(airport: AirportRecord) {
         distanceDisplayCondition: new DistanceDisplayCondition(0, 8_500_000),
       };
     case 'small_airport':
-    case 'heliport':
       return {
+        collectionKey: 'local',
         image: SMALL_AIRPORT_ICON_IMAGE,
         size: 18,
         color: Color.WHITE.withAlpha(1),
         scaleByDistance: new NearFarScalar(15_000, 1.08, 2_500_000, 0.32),
         distanceDisplayCondition: new DistanceDisplayCondition(0.0, 2_500_000.0),
       };
-    default:
+    case 'heliport':
       return {
-        image: AUX_AIRPORT_ICON_IMAGE,
+        collectionKey: 'heli',
+        image: HELIPAD_ICON_IMAGE,
         size: 16,
         color: Color.WHITE.withAlpha(1),
-        scaleByDistance: new NearFarScalar(12_000, 0.94, 1_000_000, 0.28),
-        distanceDisplayCondition: new DistanceDisplayCondition(0, 1_200_000),
+        scaleByDistance: new NearFarScalar(15_000, 0.92, 1_500_000, 0.28),
+        distanceDisplayCondition: new DistanceDisplayCondition(0.0, 1_500_000.0),
       };
+    case 'seaplane_base':
+      return {
+        collectionKey: 'seaplane',
+        image: SEAPLANE_ICON_IMAGE,
+        size: 18,
+        color: Color.WHITE.withAlpha(1),
+        scaleByDistance: new NearFarScalar(15_000, 1.08, 2_500_000, 0.32),
+        distanceDisplayCondition: new DistanceDisplayCondition(0.0, 2_500_000.0),
+      };
+    case 'closed':
+      return {
+        collectionKey: 'closed',
+        image: CLOSED_AIRPORT_ICON_IMAGE,
+        size: 22,
+        color: Color.WHITE.withAlpha(1),
+        scaleByDistance: new NearFarScalar(12_000, 1.0, 1_000_000, 0.24),
+        distanceDisplayCondition: new DistanceDisplayCondition(0.0, 1_000_000.0),
+      };
+    default:
+      return null;
   }
 }
 
