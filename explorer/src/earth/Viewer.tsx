@@ -34,6 +34,7 @@ import SearchBox from './SearchBox';
 import {
   FlightAssetView,
   FlightSceneLayerManager,
+  GroundStationsState,
   FlightSensorLinkState,
 } from './flightLayers';
 import {
@@ -584,6 +585,11 @@ export default function Viewer() {
   const flightRenderModeRef = useRef<FlightRenderMode>('dot');
   const flightsEnabledRef = useRef(false);
   const showAirportsRef = useRef(false);
+  const groundStationsRef = useRef<GroundStationsState>({
+    hfdl: false,
+    vdl: false,
+    acars: false,
+  });
   const selectedFlightIdRef = useRef<string | null>(null);
   const assetViewRef = useRef<FlightAssetView>('symbology');
   const sensorLinkRef = useRef<FlightSensorLinkState>('release');
@@ -618,6 +624,12 @@ export default function Viewer() {
   });
   const [flightsEnabled, setFlightsEnabled] = useState(false);
   const [showAirports, setShowAirports] = useState(false);
+  const [groundStations, setGroundStations] = useState<GroundStationsState>({
+    hfdl: false,
+    vdl: false,
+    acars: false,
+  });
+  const [sigintInfrastructureOpen, setSigintInfrastructureOpen] = useState(true);
   const [selectedFlightId, setSelectedFlightId] = useState<string | null>(null);
   const [assetView, setAssetView] = useState<FlightAssetView>('symbology');
   const [sensorLink, setSensorLink] = useState<FlightSensorLinkState>('release');
@@ -868,6 +880,13 @@ export default function Viewer() {
     showAirportsRef.current = nextEnabled;
     setShowAirports(nextEnabled);
     flightLayerManagerRef.current?.setAirportsVisible(nextEnabled);
+  }, []);
+
+  const toggleGroundStationLayer = useCallback((layer: keyof GroundStationsState) => {
+    setGroundStations((current) => ({
+      ...current,
+      [layer]: !current[layer],
+    }));
   }, []);
 
   const toggleSelectedFlightRoute = useCallback(() => {
@@ -1564,6 +1583,11 @@ export default function Viewer() {
   }, [showAirports]);
 
   useEffect(() => {
+    groundStationsRef.current = groundStations;
+    flightLayerManagerRef.current?.setGroundStationsState(groundStations);
+  }, [groundStations]);
+
+  useEffect(() => {
     if (sensorLink === 'release') return;
     if (!flightsEnabled || !selectedFlightId) {
       releaseSensorLink();
@@ -1601,6 +1625,7 @@ export default function Viewer() {
       const layerManager = new FlightSceneLayerManager(viewerUsed);
       layerManager.setFlightsVisible(flightsEnabledRef.current);
       layerManager.setAirportsVisible(showAirportsRef.current);
+      layerManager.setGroundStationsState(groundStationsRef.current);
       layerManager.setAssetViewState(assetViewRef.current);
       layerManager.setSensorLinkState(sensorLinkRef.current);
       flightLayerManagerRef.current = layerManager;
@@ -1784,7 +1809,9 @@ export default function Viewer() {
   }, [flightsEnabled, syncFlightLayers]);
 
   useEffect(() => {
-    if (!showAirports) return;
+    const needsAirportDataset =
+      showAirports || groundStations.hfdl || groundStations.vdl || groundStations.acars;
+    if (!needsAirportDataset) return;
     if (airportsLoadedRef.current || airportsLoadingRef.current) return;
 
     let cancelled = false;
@@ -1817,7 +1844,7 @@ export default function Viewer() {
       cancelled = true;
       controller.abort();
     };
-  }, [showAirports]);
+  }, [groundStations.acars, groundStations.hfdl, groundStations.vdl, showAirports]);
 
   useEffect(() => {
     selectedFlightRouteRef.current = selectedFlightRoute;
@@ -2120,6 +2147,9 @@ export default function Viewer() {
 
   const activeLayerCount =
     Number(flightsEnabled) +
+    Number(groundStations.hfdl) +
+    Number(groundStations.vdl) +
+    Number(groundStations.acars) +
     Number(Boolean(buildingsEnabled || autoBuildingsEnabled)) +
     Number(orbitEnabled);
 
@@ -2281,6 +2311,46 @@ export default function Viewer() {
                 </span>
               </span>
             </button>
+            <div className="layer-card layer-card--status flex flex-col w-full py-1.5 aether-data-row">
+              <button
+                type="button"
+                className="flex justify-between items-center w-full"
+                onClick={() => setSigintInfrastructureOpen((open) => !open)}
+                aria-expanded={sigintInfrastructureOpen}
+              >
+                <span className="layer-card__body">
+                  <span className="layer-card__label">SIGINT Infrastructure</span>
+                  <span className="layer-card__meta">
+                    Map physical HFDL, VDL, and ACARS ground stations.
+                  </span>
+                </span>
+                <span className="layer-badge">
+                  {sigintInfrastructureOpen ? 'Open' : 'Closed'}
+                </span>
+              </button>
+              {sigintInfrastructureOpen && (
+                <div className="grid grid-cols-3 gap-2 pt-3">
+                  {([
+                    ['hfdl', 'HFDL'],
+                    ['vdl', 'VDL'],
+                    ['acars', 'ACARS'],
+                  ] as const).map(([layerKey, label]) => (
+                    <button
+                      key={layerKey}
+                      type="button"
+                      className={
+                        groundStations[layerKey]
+                          ? 'rounded-xl px-2 py-2 text-[10px] font-semibold tracking-[0.18em] uppercase bg-gradient-to-r from-cyan-900/40 to-blue-900/20 border border-cyan-500/40 text-cyan-300 aether-glow-text'
+                          : 'rounded-xl px-2 py-2 text-[10px] font-semibold tracking-[0.18em] uppercase border border-cyan-900/40 text-slate-300 bg-slate-950/30'
+                      }
+                      onClick={() => toggleGroundStationLayer(layerKey)}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
             <div className="layer-card layer-card--status flex justify-between items-center w-full py-1.5 aether-data-row">
               <div className="layer-card__body">
                 <p className="layer-card__label">Flight Feed</p>

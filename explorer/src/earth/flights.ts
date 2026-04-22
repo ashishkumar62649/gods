@@ -127,24 +127,24 @@ const SELECTED_FLIGHT_ICON_SVG = `
   </svg>
 `;
 
-const AIRPORT_ICON_SVG = `
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72">
-    <circle cx="36" cy="36" r="26" fill="#122038" stroke="#89d8ff" stroke-width="4" />
-    <path fill="#f4fbff" d="M35.7 15 40.3 26.9 49 30.3 49 34.6 40.9 33.8 38.4 38.3 42.2 50.4 39.3 52 35.7 43.3 32.2 52 29.3 50.4 33.1 38.3 30.5 33.8 22.4 34.6 22.4 30.3 31.1 26.9Z"/>
+const LARGE_AIRPORT_SVG = `
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+    <circle cx="32" cy="32" r="23" fill="rgba(6, 15, 28, 0.92)" stroke="#67e8f9" stroke-width="3" />
+    <circle cx="32" cy="32" r="7" fill="#a5f3fc" />
   </svg>
 `;
 
-const MEDIUM_AIRPORT_ICON_SVG = `
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72">
-    <path fill="#132033" stroke="#80c7ff" stroke-width="4" d="M36 10 58 36 36 62 14 36Z" />
-    <path fill="#f4fbff" d="M35.8 20 40 31 48 34.2 48 38.1 40.6 37.4 38.2 41.5 41.6 52.7 38.8 54.2 35.8 46 32.8 54.2 30 52.7 33.4 41.5 31 37.4 23.6 38.1 23.6 34.2 31.6 31Z"/>
+const MEDIUM_AIRPORT_SVG = `
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+    <circle cx="24" cy="24" r="17" fill="rgba(8, 17, 34, 0.9)" stroke="#5eead4" stroke-width="2" />
+    <circle cx="24" cy="24" r="5" fill="#99f6e4" />
   </svg>
 `;
 
-const SMALL_AIRPORT_ICON_SVG = `
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72">
-    <circle cx="36" cy="36" r="12" fill="#d9f3ff" />
-    <circle cx="36" cy="36" r="20" fill="none" stroke="#6ebcff" stroke-width="4" stroke-dasharray="7 6" />
+const SMALL_AIRPORT_SVG = `
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+    <circle cx="16" cy="16" r="11" fill="rgba(8, 16, 30, 0.75)" stroke="rgba(103, 232, 249, 0.72)" stroke-width="1.5" />
+    <circle cx="16" cy="16" r="3.2" fill="rgba(165, 243, 252, 0.82)" />
   </svg>
 `;
 
@@ -251,17 +251,19 @@ export const SELECTED_FLIGHT_ICON_IMAGE = `data:image/svg+xml;utf8,${encodeURICo
   SELECTED_FLIGHT_ICON_SVG,
 )}`;
 
-export const AIRPORT_ICON_IMAGE = `data:image/svg+xml;utf8,${encodeURIComponent(
-  AIRPORT_ICON_SVG,
+export const LARGE_AIRPORT_ICON_IMAGE = `data:image/svg+xml;utf8,${encodeURIComponent(
+  LARGE_AIRPORT_SVG,
 )}`;
 
 export const MEDIUM_AIRPORT_ICON_IMAGE = `data:image/svg+xml;utf8,${encodeURIComponent(
-  MEDIUM_AIRPORT_ICON_SVG,
+  MEDIUM_AIRPORT_SVG,
 )}`;
 
 export const SMALL_AIRPORT_ICON_IMAGE = `data:image/svg+xml;utf8,${encodeURIComponent(
-  SMALL_AIRPORT_ICON_SVG,
+  SMALL_AIRPORT_SVG,
 )}`;
+
+export const AIRPORT_ICON_IMAGE = LARGE_AIRPORT_ICON_IMAGE;
 
 export const AUX_AIRPORT_ICON_IMAGE = `data:image/svg+xml;utf8,${encodeURIComponent(
   AUX_AIRPORT_ICON_SVG,

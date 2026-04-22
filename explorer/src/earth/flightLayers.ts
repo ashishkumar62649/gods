@@ -27,19 +27,19 @@ import {
   Viewer as CesiumViewer,
 } from 'cesium';
 import {
-  AIRPORT_ICON_IMAGE,
   AUX_AIRPORT_ICON_IMAGE,
   AirportRecord,
   DESTINATION_AIRPORT_ICON_IMAGE,
+  LARGE_AIRPORT_ICON_IMAGE,
+  MEDIUM_AIRPORT_ICON_IMAGE,
+  SELECTED_FLIGHT_MODEL_URL,
+  SMALL_AIRPORT_ICON_IMAGE,
   fetchFlightTrace,
   FlightRecord,
   FlightRenderMode,
   FlightRouteSnapshot,
-  MEDIUM_AIRPORT_ICON_IMAGE,
-  SELECTED_FLIGHT_MODEL_URL,
   getFlightDisplayName,
   predictFlightPosition,
-  SMALL_AIRPORT_ICON_IMAGE,
 } from './flights';
 import {
   getFlightAltitudeColorCss,
@@ -50,6 +50,36 @@ import {
 
 const TARGET_OPTIC_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><defs><filter id="cyanGlow"><feGaussianBlur stdDeviation="3" result="blur" /><feComposite in="SourceGraphic" in2="blur" operator="over" /></filter></defs><g filter="url(#cyanGlow)"><path d="M 20 10 L 10 10 L 10 20 M 60 10 L 70 10 L 70 20 M 10 60 L 10 70 L 20 70 M 70 60 L 70 70 L 60 70" fill="none" stroke="#22d3ee" stroke-width="3" /><path d="M 40 15 L 40 25 M 40 55 L 40 65 M 15 40 L 25 40 M 55 40 L 65 40" fill="none" stroke="#67e8f9" stroke-width="2" opacity="0.8" /><circle cx="40" cy="40" r="18" fill="none" stroke="#a5f3fc" stroke-width="1" stroke-dasharray="4 4" opacity="0.6"/></g></svg>';
 const TARGET_OPTIC_IMAGE = `data:image/svg+xml;utf8,${encodeURIComponent(TARGET_OPTIC_SVG)}`;
+const RECEIVER_TOWER_SVG = (accent: string, fill: string) => `
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80">
+    <defs>
+      <filter id="towerGlow" x="-25%" y="-25%" width="150%" height="150%">
+        <feGaussianBlur stdDeviation="3.5" result="blur" />
+        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+      </filter>
+    </defs>
+    <g filter="url(#towerGlow)">
+      <path d="M40 12 L54 64 H48 L44 50 H36 L32 64 H26 Z" fill="${fill}" stroke="${accent}" stroke-width="2.5" stroke-linejoin="round" />
+      <path d="M40 18 L40 6" stroke="${accent}" stroke-width="3" stroke-linecap="round" />
+      <path d="M26 26 Q40 14 54 26" fill="none" stroke="${accent}" stroke-width="2.4" stroke-linecap="round" opacity="0.95" />
+      <path d="M20 34 Q40 18 60 34" fill="none" stroke="${accent}" stroke-width="2" stroke-linecap="round" opacity="0.75" />
+      <circle cx="40" cy="18" r="4" fill="${accent}" />
+    </g>
+  </svg>
+`;
+const VDL_TOWER_IMAGE = `data:image/svg+xml;utf8,${encodeURIComponent(RECEIVER_TOWER_SVG('#67e8f9', 'rgba(7, 18, 34, 0.9)'))}`;
+const ACARS_TOWER_IMAGE = `data:image/svg+xml;utf8,${encodeURIComponent(RECEIVER_TOWER_SVG('#60a5fa', 'rgba(8, 16, 36, 0.9)'))}`;
+const HFDL_TOWER_IMAGE = `data:image/svg+xml;utf8,${encodeURIComponent(RECEIVER_TOWER_SVG('#fb7185', 'rgba(34, 8, 14, 0.92)'))}`;
+const GROUND_STATION_OFFSET_DEGREES = 0.005;
+const HFDL_STATIONS = [
+  { id: 'hfdl-1', lat: 37.619, lon: -122.374 }, { id: 'hfdl-2', lat: 64.13, lon: -21.94 },
+  { id: 'hfdl-3', lat: 52.699, lon: -8.921 }, { id: 'hfdl-4', lat: -26.139, lon: 28.246 },
+  { id: 'hfdl-5', lat: 56.172, lon: 92.493 }, { id: 'hfdl-6', lat: -37.008, lon: 174.785 },
+  { id: 'hfdl-7', lat: -17.769, lon: -63.162 }, { id: 'hfdl-8', lat: 71.285, lon: -156.683 },
+  { id: 'hfdl-9', lat: 26.27, lon: 50.633 }, { id: 'hfdl-10', lat: 8.973, lon: -79.553 },
+  { id: 'hfdl-11', lat: 21.152, lon: -157.096 }, { id: 'hfdl-12', lat: 26.195, lon: 127.645 },
+  { id: 'hfdl-13', lat: 6.933, lon: 100.393 }, { id: 'hfdl-14', lat: 13.483, lon: 144.796 },
+] as const;
 
 interface FlightPickId {
   kind: 'flight';
@@ -59,6 +89,12 @@ interface FlightPickId {
 interface AirportPickId {
   kind: 'airport';
   airportId: string;
+}
+
+export interface GroundStationsState {
+  hfdl: boolean;
+  vdl: boolean;
+  acars: boolean;
 }
 
 export type FlightAssetView = 'symbology' | 'airframe';
@@ -114,6 +150,9 @@ export class FlightSceneLayerManager {
   private readonly flightDots: PointPrimitiveCollection;
   private readonly flightBillboards: BillboardCollection;
   private readonly airportBillboards: BillboardCollection;
+  private readonly hfdlBillboards: BillboardCollection;
+  private readonly vdlBillboards: BillboardCollection;
+  private readonly acarsBillboards: BillboardCollection;
   private readonly routeAirportBillboards: BillboardCollection;
   private readonly targetOpticBillboard: Billboard;
   private readonly routeDestinationBillboard: Billboard;
@@ -136,6 +175,11 @@ export class FlightSceneLayerManager {
   private renderMode: FlightRenderMode = 'dot';
   private assetViewState: FlightAssetView = 'symbology';
   private sensorLinkState: FlightSensorLinkState = 'release';
+  private groundStationsState: GroundStationsState = {
+    hfdl: false,
+    vdl: false,
+    acars: false,
+  };
   private selectedFlightId: string | null = null;
   private showSelectedTrail = false;
   private routeState: RouteState = {
@@ -153,6 +197,9 @@ export class FlightSceneLayerManager {
     this.flightDots = this.root.add(new PointPrimitiveCollection()) as PointPrimitiveCollection;
     this.flightBillboards = this.root.add(new BillboardCollection()) as BillboardCollection;
     this.airportBillboards = this.root.add(new BillboardCollection()) as BillboardCollection;
+    this.hfdlBillboards = this.root.add(new BillboardCollection()) as BillboardCollection;
+    this.vdlBillboards = this.root.add(new BillboardCollection()) as BillboardCollection;
+    this.acarsBillboards = this.root.add(new BillboardCollection()) as BillboardCollection;
     this.routeAirportBillboards = this.root.add(new BillboardCollection()) as BillboardCollection;
     this.flightLabels = this.root.add(new LabelCollection()) as LabelCollection;
     this.trailPolylines = this.root.add(new PolylineCollection()) as PolylineCollection;
@@ -207,6 +254,9 @@ export class FlightSceneLayerManager {
     });
 
     this.airportBillboards.show = false;
+    this.hfdlBillboards.show = false;
+    this.vdlBillboards.show = false;
+    this.acarsBillboards.show = false;
     this.routeAirportBillboards.show = true;
 
     this.viewer.scene.primitives.add(this.root);
@@ -450,6 +500,9 @@ export class FlightSceneLayerManager {
 
   setGlobalAirports(airports: AirportRecord[]) {
     this.airportBillboards.removeAll();
+    this.hfdlBillboards.removeAll();
+    this.vdlBillboards.removeAll();
+    this.acarsBillboards.removeAll();
 
     for (const airport of airports) {
       const appearance = getAirportAppearance(airport);
@@ -465,15 +518,65 @@ export class FlightSceneLayerManager {
         distanceDisplayCondition: appearance.distanceDisplayCondition,
         color: appearance.color,
       });
+
+      if (airport.type === 'large_airport' || airport.type === 'medium_airport') {
+        this.vdlBillboards.add({
+          image: VDL_TOWER_IMAGE,
+          position: Cartesian3.fromDegrees(
+            airport.longitude + GROUND_STATION_OFFSET_DEGREES,
+            airport.latitude + GROUND_STATION_OFFSET_DEGREES,
+            0,
+          ),
+          verticalOrigin: VerticalOrigin.BOTTOM,
+          horizontalOrigin: HorizontalOrigin.CENTER,
+          width: 28,
+          height: 28,
+          scaleByDistance: new NearFarScalar(15_000, 1.0, 8_000_000, 0.26),
+        });
+
+        this.acarsBillboards.add({
+          image: ACARS_TOWER_IMAGE,
+          position: Cartesian3.fromDegrees(
+            airport.longitude - GROUND_STATION_OFFSET_DEGREES,
+            airport.latitude - GROUND_STATION_OFFSET_DEGREES,
+            0,
+          ),
+          verticalOrigin: VerticalOrigin.BOTTOM,
+          horizontalOrigin: HorizontalOrigin.CENTER,
+          width: 28,
+          height: 28,
+          scaleByDistance: new NearFarScalar(15_000, 1.0, 8_000_000, 0.26),
+        });
+      }
+    }
+
+    for (const station of HFDL_STATIONS) {
+      this.hfdlBillboards.add({
+        image: HFDL_TOWER_IMAGE,
+        position: Cartesian3.fromDegrees(station.lon, station.lat, 0),
+        verticalOrigin: VerticalOrigin.BOTTOM,
+        horizontalOrigin: HorizontalOrigin.CENTER,
+        width: 30,
+        height: 30,
+        scaleByDistance: new NearFarScalar(20_000, 1.06, 10_000_000, 0.3),
+        distanceDisplayCondition: new DistanceDisplayCondition(0, 25_000_000),
+      });
     }
 
     this.airportBillboards.show = this.airportsVisible;
+    this.applyGroundStationVisibility();
     this.requestRender();
   }
 
   setAirportsVisible(visible: boolean) {
     this.airportsVisible = visible;
     this.airportBillboards.show = visible;
+    this.requestRender();
+  }
+
+  setGroundStationsState(nextState: GroundStationsState) {
+    this.groundStationsState = { ...nextState };
+    this.applyGroundStationVisibility();
     this.requestRender();
   }
 
@@ -484,6 +587,12 @@ export class FlightSceneLayerManager {
     this.refreshRouteOverlay();
     this.updateTrailSegmentVisibility();
     this.requestRender();
+  }
+
+  private applyGroundStationVisibility() {
+    this.hfdlBillboards.show = this.groundStationsState.hfdl;
+    this.vdlBillboards.show = this.groundStationsState.vdl;
+    this.acarsBillboards.show = this.groundStationsState.acars;
   }
 
   pickFlight(windowPosition: Cartesian2) {
@@ -1205,7 +1314,7 @@ function getAirportAppearance(airport: AirportRecord) {
   switch (airport.type) {
     case 'large_airport':
       return {
-        image: AIRPORT_ICON_IMAGE,
+        image: LARGE_AIRPORT_ICON_IMAGE,
         size: 18,
         color: Color.fromCssColorString('#a6e5ff').withAlpha(0.86),
         scaleByDistance: new NearFarScalar(30_000, 1.12, 15_000_000, 0.26),
@@ -1220,12 +1329,13 @@ function getAirportAppearance(airport: AirportRecord) {
         distanceDisplayCondition: new DistanceDisplayCondition(0, 8_500_000),
       };
     case 'small_airport':
+    case 'heliport':
       return {
         image: SMALL_AIRPORT_ICON_IMAGE,
         size: 10,
         color: Color.fromCssColorString('#8ef0a5').withAlpha(0.86),
         scaleByDistance: new NearFarScalar(15_000, 0.84, 2_500_000, 0.14),
-        distanceDisplayCondition: new DistanceDisplayCondition(0, 2_800_000),
+        distanceDisplayCondition: new DistanceDisplayCondition(0.0, 2_500_000.0),
       };
     default:
       return {
