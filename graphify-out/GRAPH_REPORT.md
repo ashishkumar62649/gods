@@ -1,7 +1,7 @@
 # Graph Report - E:\ashis\god eyes  (2026-04-22)
 
 ## Corpus Check
-- 50 files · ~581,495 words
+- 50 files · ~581,860 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -271,12 +271,12 @@ Nodes (0):
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `bl` connect `Community 10` to `Community 0`, `Community 1`, `Community 2`, `Community 4`, `Community 5`?**
-  _High betweenness centrality (0.029) - this node is a cross-community bridge._
 - **Why does `im()` connect `Community 5` to `Community 0`, `Community 1`, `Community 2`, `Community 3`, `Community 4`, `Community 6`, `Community 7`, `Community 8`, `Community 9`, `Community 12`, `Community 13`?**
-  _High betweenness centrality (0.028) - this node is a cross-community bridge._
-- **Why does `wm()` connect `Community 13` to `Community 1`, `Community 2`, `Community 5`, `Community 6`?**
-  _High betweenness centrality (0.025) - this node is a cross-community bridge._
+  _High betweenness centrality (0.031) - this node is a cross-community bridge._
+- **Why does `fs()` connect `Community 14` to `Community 1`, `Community 2`, `Community 3`?**
+  _High betweenness centrality (0.027) - this node is a cross-community bridge._
+- **Why does `getExtent()` connect `Community 1` to `Community 0`, `Community 2`, `Community 3`, `Community 4`, `Community 5`, `Community 8`, `Community 9`, `Community 10`, `Community 12`, `Community 14`?**
+  _High betweenness centrality (0.026) - this node is a cross-community bridge._
 - **Are the 2 inferred relationships involving `im()` (e.g. with `l()` and `A()`) actually correct?**
   _`im()` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 2 inferred relationships involving `getExtent()` (e.g. with `ol_map_init()` and `ol_map_init()`) actually correct?**

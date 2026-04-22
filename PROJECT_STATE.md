@@ -27,6 +27,9 @@ Main application files:
 - `E:\ashis\god eyes\explorer\src\earth\SearchBox.tsx`
 - `E:\ashis\god eyes\explorer\src\earth\FlightDetailsPanel.tsx`
 - `E:\ashis\god eyes\explorer\src\earth\flights.ts`
+- `E:\ashis\god eyes\explorer\src\earth\flightLayers.ts`
+- `E:\ashis\god eyes\explorer\src\earth\flightVisuals.ts`
+- `E:\ashis\god eyes\explorer\src\earth\tar1090.generated.ts`
 - `E:\ashis\god eyes\explorer\src\app.css`
 
 Flight proxy / backend:
@@ -55,7 +58,7 @@ It currently owns:
 - zoom tuning
 - buildings loading and visibility
 - orbit logic
-- flight layer lifecycle and rendering
+- flight layer lifecycle (via `FlightSceneLayerManager`)
 - HUD/sidebar state
 - developer status panel
 
@@ -63,6 +66,9 @@ Support components / helpers now exist:
 - `SearchBox.tsx`
 - `FlightDetailsPanel.tsx`
 - `flights.ts`
+- `flightLayers.ts` (High-performance rendering)
+- `flightVisuals.ts` (Dynamic icon & color logic)
+- `tar1090.generated.ts` (Aircraft shape data)
 
 ### Backend
 
@@ -110,6 +116,8 @@ Current placeholder controls:
 Current implemented controls:
 - `Flights`
 - `Flight Feed` status card
+- `Aviation Grid` (Airports: Major, Regional, Local, etc.)
+- `Ground Stations` (HFDL, Comms)
 
 Current placeholder controls:
 - `Satellites`
@@ -150,6 +158,8 @@ These are currently considered working and should be treated carefully:
 - selected-flight `Focus` / `Track` controls are working
 - selected-flight camera now preserves the user's current view angle
 - flight icon heading no longer rotates with camera movement
+- 60fps smooth dead-reckoning movement via Error Vector Decay
+- dynamic aviation grid (airports) with categorized visibility
 
 Important rule:
 - do not casually change zoom, terrain, or buildings setup unless there is a clear bug
@@ -247,6 +257,7 @@ Frontend behavior:
 - selected-flight `Chase` (camera follows strictly behind)
 - selected-flight `Cockpit` (camera rides on plane, 360° free-look, includes data HUD)
 - de-emphasis of non-selected flights
+- aviation grid (airports) and ground stations toggle
 
 Current flight data flow:
 - frontend fetches `/api/flights`
@@ -254,10 +265,12 @@ Current flight data flow:
 - proxy normalizes raw state vectors into internal records
 - proxy keeps recently-missing flights alive for a short grace window
 - proxy reuses the last good live snapshot on transient feed failure
-- frontend drives smooth 60fps motion via `viewer.scene.preRender` and direct primitive mutation (bypassing React)
+- frontend drives smooth 60fps motion via `viewer.scene.preRender` and `FlightSceneLayerManager.tickPositions()` (bypassing React)
 - frontend uses **Error Vector Decay** kinematics to smoothly absorb incoming delayed API positions without backwards jumping.
 - route arcs are generated dynamically as geodesic parabolas anchored to the aircraft's live position.
 - flights are rendered using highly performant `PointPrimitiveCollection`, `BillboardCollection`, and `PolylineCollection`
+- aircraft icons are dynamically resolved from `tar1090` shapes based on type code and model.
+- altitude-based coloring is applied to aircraft icons.
 
 Internal flight record shape currently supports:
 - `id`
@@ -276,7 +289,30 @@ Current rendering states:
 - `selected highlight`
 
 `selected 3D model` is intentionally not implemented yet.
-
+ 
++### FlightSceneLayerManager
++
++A dedicated class (`flightLayers.ts`) that manages all flight-related Cesium primitives.
++It decouples React state from high-frequency rendering updates.
++
++Responsibilities:
++- collection management for dots, billboards, labels, and polylines
++- per-frame `tickPositions` loop
++- smooth kinematics (Error Vector Decay)
++- dynamic trail and arc generation
++- aviation grid (airports) and ground station rendering
++- camera mode coordination (Focus, Track, Chase, Cockpit)
++
++### Error Vector Decay Kinematics
++
++A custom motion algorithm that provides zero-jump, 60fps movement for sparse flight updates.
++
++Logic:
++1. **Dead Reckoning**: Projects the next target position using current heading and speed.
++2. **Correction Vector**: When a new API snapshot arrives, calculates the gap between the rendered position and the new truth.
++3. **Smooth Decay**: Instead of jumping to the new truth, it stores the gap as a "correction vector" and decays it to zero over ~1 second while continuing to dead-reckon from the truth.
++4. **Result**: The plane glides smoothly into the new trajectory without backtracking or stuttering.
++
 ## 7. Current User-Verified Status
 
 ### User-verified working
@@ -531,6 +567,9 @@ Those issues were patched in code; camera behavior was then user-confirmed as go
 - `E:\ashis\god eyes\explorer\src\earth\SearchBox.tsx`
 - `E:\ashis\god eyes\explorer\src\earth\FlightDetailsPanel.tsx`
 - `E:\ashis\god eyes\explorer\src\earth\flights.ts`
+- `E:\ashis\god eyes\explorer\src\earth\flightLayers.ts`
+- `E:\ashis\god eyes\explorer\src\earth\flightVisuals.ts`
+- `E:\ashis\god eyes\explorer\src\earth\tar1090.generated.ts`
 - `E:\ashis\god eyes\explorer\src\app.css`
 - `E:\ashis\god eyes\explorer\server\flights-proxy.mjs`
 - `E:\ashis\god eyes\explorer\.env`
