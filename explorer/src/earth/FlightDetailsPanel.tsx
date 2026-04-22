@@ -55,11 +55,11 @@ export default function FlightDetailsPanel({
       : 'Enable Route Arc to load endpoints and arc.';
 
   return (
-    <aside className="flight-panel" aria-label="Selected flight details">
+    <aside className="flight-panel aether-details-shell aether-panel aether-radius-2xl" aria-label="Selected flight details">
       <div className="flight-panel__header">
         <div>
-          <p className="flight-panel__eyebrow">Selected Flight</p>
-          <h2 className="flight-panel__title">{getFlightDisplayName(flight)}</h2>
+          <p className="flight-panel__eyebrow aether-kicker">Selected Flight</p>
+          <h2 className="flight-panel__title aether-glow-text">{getFlightDisplayName(flight)}</h2>
         </div>
         <button
           type="button"
@@ -102,13 +102,13 @@ export default function FlightDetailsPanel({
 
       <div className="flight-panel__controls">
         <div className="flight-panel__row">
-          <span className="flight-panel__label">Asset View</span>
+          <span className="flight-panel__label aether-kicker">Asset View</span>
           <div className="flight-panel__segmented" role="group" aria-label="Asset view">
             <button
               type="button"
               className={
                 assetView === 'symbology'
-                  ? 'flight-panel__action flight-panel__action--active'
+                  ? 'flight-panel__action flight-panel__action--active aether-control-active'
                   : 'flight-panel__action'
               }
               onClick={() => onAssetViewChange('symbology')}
@@ -119,7 +119,7 @@ export default function FlightDetailsPanel({
               type="button"
               className={
                 assetView === 'airframe'
-                  ? 'flight-panel__action flight-panel__action--active'
+                  ? 'flight-panel__action flight-panel__action--active aether-control-active'
                   : 'flight-panel__action'
               }
               onClick={() => onAssetViewChange('airframe')}
@@ -130,13 +130,13 @@ export default function FlightDetailsPanel({
         </div>
 
         <div className="flight-panel__row">
-          <span className="flight-panel__label">Sensor Link</span>
+          <span className="flight-panel__label aether-kicker">Sensor Link</span>
           <div className="flight-panel__segmented" role="group" aria-label="Sensor link">
             <button
               type="button"
               className={
                 sensorLink === 'release'
-                  ? 'flight-panel__action flight-panel__action--active'
+                  ? 'flight-panel__action flight-panel__action--active aether-control-active'
                   : 'flight-panel__action'
               }
               onClick={() => onSensorLinkChange('release')}
@@ -147,7 +147,7 @@ export default function FlightDetailsPanel({
               type="button"
               className={
                 sensorLink === 'tactical'
-                  ? 'flight-panel__action flight-panel__action--active'
+                  ? 'flight-panel__action flight-panel__action--active aether-control-active'
                   : 'flight-panel__action'
               }
               onClick={() => onSensorLinkChange('tactical')}
@@ -158,7 +158,7 @@ export default function FlightDetailsPanel({
               type="button"
               className={
                 sensorLink === 'pursuit'
-                  ? 'flight-panel__action flight-panel__action--active'
+                  ? 'flight-panel__action flight-panel__action--active aether-control-active'
                   : 'flight-panel__action'
               }
               onClick={() => onSensorLinkChange('pursuit')}
@@ -169,7 +169,7 @@ export default function FlightDetailsPanel({
               type="button"
               className={
                 sensorLink === 'flight-deck'
-                  ? 'flight-panel__action flight-panel__action--active'
+                  ? 'flight-panel__action flight-panel__action--active aether-control-active'
                   : 'flight-panel__action'
               }
               onClick={() => onSensorLinkChange('flight-deck')}
@@ -183,7 +183,7 @@ export default function FlightDetailsPanel({
           type="button"
           className={
             showRoute
-              ? 'flight-panel__action flight-panel__action--active'
+              ? 'flight-panel__action flight-panel__action--active aether-control-active'
               : 'flight-panel__action'
           }
           onClick={onToggleRoute}
@@ -194,7 +194,7 @@ export default function FlightDetailsPanel({
           type="button"
           className={
             showTrail
-              ? 'flight-panel__action flight-panel__action--active'
+              ? 'flight-panel__action flight-panel__action--active aether-control-active'
               : 'flight-panel__action'
           }
           onClick={onToggleTrail}
@@ -204,51 +204,51 @@ export default function FlightDetailsPanel({
       </div>
 
       <div className="flight-panel__body">
-        <div className="flight-panel__row">
-          <span className="flight-panel__label">ICAO24</span>
-          <span className="flight-panel__value">{flight.id.toUpperCase()}</span>
+        <div className="flight-panel__row aether-data-row">
+          <span className="flight-panel__label aether-kicker">ICAO24</span>
+          <span className="flight-panel__value aether-value aether-glow-text">{flight.id.toUpperCase()}</span>
         </div>
-        <div className="flight-panel__row">
-          <span className="flight-panel__label">Altitude</span>
-          <span className="flight-panel__value">
+        <div className="flight-panel__row aether-data-row">
+          <span className="flight-panel__label aether-kicker">Altitude</span>
+          <span className="flight-panel__value aether-value aether-glow-text">
             {formatAltitudeMeters(flight.altitudeMeters)}
           </span>
         </div>
-        <div className="flight-panel__row">
-          <span className="flight-panel__label">Speed</span>
-          <span className="flight-panel__value">
+        <div className="flight-panel__row aether-data-row">
+          <span className="flight-panel__label aether-kicker">Speed</span>
+          <span className="flight-panel__value aether-value aether-glow-text">
             {formatSpeed(flight.speedMetersPerSecond)}
           </span>
         </div>
-        <div className="flight-panel__row">
-          <span className="flight-panel__label">Heading</span>
-          <span className="flight-panel__value">
+        <div className="flight-panel__row aether-data-row">
+          <span className="flight-panel__label aether-kicker">Heading</span>
+          <span className="flight-panel__value aether-value aether-glow-text">
             {formatHeading(flight.headingDegrees)}
           </span>
         </div>
-        <div className="flight-panel__row">
-          <span className="flight-panel__label">Country</span>
-          <span className="flight-panel__value">
+        <div className="flight-panel__row aether-data-row">
+          <span className="flight-panel__label aether-kicker">Country</span>
+          <span className="flight-panel__value aether-value aether-glow-text">
             {flight.originCountry?.trim() || 'Unknown'}
           </span>
         </div>
-        <div className="flight-panel__row">
-          <span className="flight-panel__label">Type</span>
-          <span className="flight-panel__value">{getFlightVisualTypeLabel(flight)}</span>
+        <div className="flight-panel__row aether-data-row">
+          <span className="flight-panel__label aether-kicker">Type</span>
+          <span className="flight-panel__value aether-value aether-glow-text">{getFlightVisualTypeLabel(flight)}</span>
         </div>
-        <div className="flight-panel__row">
-          <span className="flight-panel__label">Updated</span>
-          <span className="flight-panel__value">
+        <div className="flight-panel__row aether-data-row">
+          <span className="flight-panel__label aether-kicker">Updated</span>
+          <span className="flight-panel__value aether-value aether-glow-text">
             {formatLastUpdated(flight.timestamp)}
           </span>
         </div>
-        <div className="flight-panel__row">
-          <span className="flight-panel__label">Feed</span>
-          <span className="flight-panel__value">{feed.sourceLabel}</span>
+        <div className="flight-panel__row aether-data-row">
+          <span className="flight-panel__label aether-kicker">Feed</span>
+          <span className="flight-panel__value aether-value aether-glow-text">{feed.sourceLabel}</span>
         </div>
-        <div className="flight-panel__row">
-          <span className="flight-panel__label">Route</span>
-          <span className="flight-panel__value">{routeSummary}</span>
+        <div className="flight-panel__row aether-data-row">
+          <span className="flight-panel__label aether-kicker">Route</span>
+          <span className="flight-panel__value aether-value aether-glow-text">{routeSummary}</span>
         </div>
       </div>
     </aside>

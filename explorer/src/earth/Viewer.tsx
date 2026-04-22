@@ -2475,8 +2475,8 @@ export default function Viewer() {
       <div className="hud-shell" ref={hudRef}>
         <SearchBox onSearch={flyToPlace} />
 
-        <aside className="layer-sidebar" aria-label="Layer controls">
-          <div className="layer-sidebar__panel">
+        <aside className="layer-sidebar aether-sidebar-shell" aria-label="Layer controls">
+          <div className="layer-sidebar__panel aether-panel aether-radius-2xl">
             <div className="layer-tabs" role="tablist" aria-label="Layer groups">
               {SECTION_TABS.map((section) => (
                 <button
@@ -2498,8 +2498,8 @@ export default function Viewer() {
 
             <section className={`layer-section layer-section--${activeSection}`}>
               <div className="layer-section__header">
-                <p className="layer-section__eyebrow">{currentSection.label}</p>
-                <h2 className="layer-section__title">{currentSection.title}</h2>
+                <p className="layer-section__eyebrow aether-kicker">{currentSection.label}</p>
+                <h2 className="layer-section__title aether-glow-text">{currentSection.title}</h2>
               </div>
               <div className="layer-section__body">{renderSectionBody()}</div>
             </section>
