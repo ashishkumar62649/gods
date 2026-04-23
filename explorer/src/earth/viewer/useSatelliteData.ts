@@ -14,6 +14,7 @@ const INITIAL_SATELLITE_FEED: SatelliteFeedState = {
   fetchedAt: null,
   satelliteCount: 0,
   totalAvailable: 0,
+  decayingCount: 0,
 };
 
 interface UseSatelliteDataOptions {
@@ -68,6 +69,9 @@ export function useSatelliteData({
         const propagatedAt = snapshot.meta?.propagation?.propagatedAt ?? null;
         const tleCount = snapshot.meta?.tle?.count ?? satellites.length;
         const tleError = snapshot.meta?.tle?.error ?? null;
+        const decayingCount = satellites.filter(
+          (satellite) => satellite.decay_status === 'DECAYING',
+        ).length;
 
         syncSatelliteLayers(satellites);
         setSatelliteFeed({
@@ -79,6 +83,7 @@ export function useSatelliteData({
           fetchedAt: propagatedAt ?? new Date().toISOString(),
           satelliteCount: satellites.length,
           totalAvailable: tleCount,
+          decayingCount,
         });
       } catch (error) {
         if (cancelled || activeController.signal.aborted) return;
@@ -94,6 +99,7 @@ export function useSatelliteData({
           fetchedAt: null,
           satelliteCount: 0,
           totalAvailable: 0,
+          decayingCount: 0,
         });
       }
     };

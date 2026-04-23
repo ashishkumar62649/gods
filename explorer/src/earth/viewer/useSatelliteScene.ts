@@ -7,7 +7,10 @@ import {
 } from 'cesium';
 import type { CesiumComponentRef } from 'resium';
 import { SatelliteSceneLayerManager } from '../satellites/SatelliteSceneLayerManager';
-import type { SatelliteRecord } from '../satellites/satellites';
+import type {
+  SatelliteMissionFilters,
+  SatelliteRecord,
+} from '../satellites/satellites';
 
 interface UseSatelliteSceneOptions {
   viewerRef: MutableRefObject<CesiumComponentRef<CesiumViewer> | null>;
@@ -15,9 +18,13 @@ interface UseSatelliteSceneOptions {
   satelliteRecordsRef: MutableRefObject<Map<string, SatelliteRecord>>;
   satellitesEnabledRef: MutableRefObject<boolean>;
   starlinkFocusEnabledRef: MutableRefObject<boolean>;
+  networkViewEnabledRef: MutableRefObject<boolean>;
+  missionFiltersRef: MutableRefObject<SatelliteMissionFilters>;
   selectedSatelliteIdRef: MutableRefObject<string | null>;
   satellitesEnabled: boolean;
   starlinkFocusEnabled: boolean;
+  networkViewEnabled: boolean;
+  missionFilters: SatelliteMissionFilters;
   selectedSatelliteId: string | null;
   updateSelectedSatellite: (satelliteId: string | null) => void;
 }
@@ -28,9 +35,13 @@ export function useSatelliteScene({
   satelliteRecordsRef,
   satellitesEnabledRef,
   starlinkFocusEnabledRef,
+  networkViewEnabledRef,
+  missionFiltersRef,
   selectedSatelliteIdRef,
   satellitesEnabled,
   starlinkFocusEnabled,
+  networkViewEnabled,
+  missionFilters,
   selectedSatelliteId,
   updateSelectedSatellite,
 }: UseSatelliteSceneOptions) {
@@ -47,11 +58,20 @@ export function useSatelliteScene({
   }, [satelliteLayerManagerRef, starlinkFocusEnabled]);
 
   useEffect(() => {
+    satelliteLayerManagerRef.current?.setNetworkViewEnabled(networkViewEnabled);
+  }, [networkViewEnabled, satelliteLayerManagerRef]);
+
+  useEffect(() => {
+    satelliteLayerManagerRef.current?.setMissionFilters(missionFilters);
+  }, [missionFilters, satelliteLayerManagerRef]);
+
+  useEffect(() => {
     let cancelled = false;
     let rafId = 0;
     let localLayerManager: SatelliteSceneLayerManager | null = null;
     let localHandler: ScreenSpaceEventHandler | null = null;
     let removeCameraListener: (() => void) | null = null;
+    let removePreRender: (() => void) | null = null;
     let attempts = 0;
     const maxAttempts = 600;
 
@@ -72,6 +92,8 @@ export function useSatelliteScene({
       const layerManager = new SatelliteSceneLayerManager(viewerUsed);
       layerManager.setSatellitesVisible(satellitesEnabledRef.current);
       layerManager.setStarlinkFocusEnabled(starlinkFocusEnabledRef.current);
+      layerManager.setNetworkViewEnabled(networkViewEnabledRef.current);
+      layerManager.setMissionFilters(missionFiltersRef.current);
       layerManager.setSelectedSatelliteId(selectedSatelliteIdRef.current);
       satelliteLayerManagerRef.current = layerManager;
       localLayerManager = layerManager;
@@ -96,6 +118,9 @@ export function useSatelliteScene({
       removeCameraListener = viewerUsed.camera.changed.addEventListener(() => {
         layerManager.updateCameraFading();
       });
+      removePreRender = viewerUsed.scene.preRender.addEventListener(() => {
+        layerManager.tickIntelligence();
+      });
     };
 
     rafId = requestAnimationFrame(pollForViewer);
@@ -105,6 +130,7 @@ export function useSatelliteScene({
       if (rafId) cancelAnimationFrame(rafId);
       localHandler?.destroy();
       removeCameraListener?.();
+      removePreRender?.();
       if (localLayerManager) {
         localLayerManager.destroy();
       }
@@ -118,6 +144,8 @@ export function useSatelliteScene({
     satelliteRecordsRef,
     satellitesEnabledRef,
     starlinkFocusEnabledRef,
+    networkViewEnabledRef,
+    missionFiltersRef,
     selectedSatelliteIdRef,
     updateSelectedSatellite,
     viewerRef,

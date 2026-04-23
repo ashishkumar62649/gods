@@ -3,7 +3,6 @@ import {
   BoundingSphere,
   Cartesian3,
   Cesium3DTileset,
-  HeadingPitchRange,
   IonGeocoderService,
   ImageryLayer,
   Math as CesiumMath,
@@ -28,10 +27,15 @@ import {
   FlightRecord,
 } from '../flights/flights';
 import { SatelliteSceneLayerManager } from '../satellites/SatelliteSceneLayerManager';
-import { type SatelliteRecord } from '../satellites/satellites';
+import {
+  INITIAL_SATELLITE_MISSION_FILTERS,
+  type SatelliteMissionFilters,
+  type SatelliteRecord,
+} from '../satellites/satellites';
 import {
   buildHome,
   flyObliqueToDestination,
+  flyObliqueToPoint,
   getCameraCartographic,
   getCockpitCameraPose,
   getFlightCameraOffset,
@@ -81,6 +85,10 @@ export default function Viewer() {
   const satelliteRecordsRef = useRef<Map<string, SatelliteRecord>>(new Map());
   const satellitesEnabledRef = useRef(false);
   const starlinkFocusEnabledRef = useRef(false);
+  const networkViewEnabledRef = useRef(false);
+  const satelliteMissionFiltersRef = useRef<SatelliteMissionFilters>(
+    INITIAL_SATELLITE_MISSION_FILTERS,
+  );
   const aviationGridRef = useRef<AviationGridState>(INITIAL_AVIATION_GRID);
   const groundStationsRef = useRef<GroundStationsState>({
     hfdl: false,
@@ -129,6 +137,9 @@ export default function Viewer() {
   const [selectedFlightId, setSelectedFlightId] = useState<string | null>(null);
   const [satellitesEnabled, setSatellitesEnabled] = useState(false);
   const [starlinkFocusEnabled, setStarlinkFocusEnabled] = useState(false);
+  const [networkViewEnabled, setNetworkViewEnabled] = useState(false);
+  const [satelliteMissionFilters, setSatelliteMissionFilters] =
+    useState<SatelliteMissionFilters>(INITIAL_SATELLITE_MISSION_FILTERS);
   const [selectedSatelliteId, setSelectedSatelliteId] = useState<string | null>(null);
   const [assetView, setAssetView] = useState<FlightAssetView>('symbology');
   const [sensorLink, setSensorLink] = useState<FlightSensorLinkState>('release');
@@ -301,35 +312,24 @@ export default function Viewer() {
     const viewer = viewerRef.current?.cesiumElement;
     if (!viewer || viewer.isDestroyed()) return;
 
-    const target =
-      satelliteLayerManagerRef.current?.getSatellitePosition(satellite.id_norad) ??
-      Cartesian3.fromDegrees(
-        satellite.longitude,
-        satellite.latitude,
-        satellite.altitude_km * 1000,
-      );
     const altitudeM = Math.max(0, satellite.altitude_km * 1000);
     const range = Math.min(
       20_000_000,
       Math.max(350_000, altitudeM * 0.22),
     );
-    const boundingRadius = Math.min(
-      3_500_000,
-      Math.max(75_000, altitudeM * 0.025),
+    const interceptAltitude = Math.min(
+      Math.max(altitudeM + range, 450_000),
+      42_000_000,
     );
 
     viewer.camera.lookAtTransform(Matrix4.IDENTITY);
-    viewer.camera.flyToBoundingSphere(
-      new BoundingSphere(target, boundingRadius),
-      {
-        duration: altitudeM > 5_000_000 ? 2.4 : 1.6,
-        offset: new HeadingPitchRange(
-          CesiumMath.toRadians(18),
-          CesiumMath.toRadians(-28),
-          range,
-        ),
-        easingFunction: FLIGHT_EASING,
-      },
+    flyObliqueToPoint(
+      viewer,
+      satellite.longitude,
+      satellite.latitude,
+      interceptAltitude,
+      altitudeM > 5_000_000 ? -24 : -36,
+      altitudeM > 5_000_000 ? 2.4 : 1.6,
     );
   }, []);
 
@@ -427,9 +427,13 @@ export default function Viewer() {
     satelliteRecordsRef,
     satellitesEnabledRef,
     starlinkFocusEnabledRef,
+    networkViewEnabledRef,
+    missionFiltersRef: satelliteMissionFiltersRef,
     selectedSatelliteIdRef,
     satellitesEnabled,
     starlinkFocusEnabled,
+    networkViewEnabled,
+    missionFilters: satelliteMissionFilters,
     selectedSatelliteId,
     updateSelectedSatellite,
   });
@@ -463,6 +467,36 @@ export default function Viewer() {
     setStarlinkFocusEnabled(nextEnabled);
     satelliteLayerManagerRef.current?.setStarlinkFocusEnabled(nextEnabled);
   }, []);
+
+  const toggleNetworkView = useCallback(() => {
+    const nextEnabled = !networkViewEnabledRef.current;
+    networkViewEnabledRef.current = nextEnabled;
+    setNetworkViewEnabled(nextEnabled);
+    satelliteLayerManagerRef.current?.setNetworkViewEnabled(nextEnabled);
+  }, []);
+
+  const toggleSatelliteMissionCategory = useCallback((category: keyof SatelliteMissionFilters) => {
+    setSatelliteMissionFilters((current) => {
+      const next = {
+        ...current,
+        [category]: !current[category],
+      };
+
+      satelliteMissionFiltersRef.current = next;
+      satelliteLayerManagerRef.current?.setMissionFilters(next);
+
+      const selectedId = selectedSatelliteIdRef.current;
+      if (
+        selectedId &&
+        !next[category] &&
+        satelliteRecordsRef.current.get(selectedId)?.mission_category === category
+      ) {
+        updateSelectedSatellite(null);
+      }
+
+      return next;
+    });
+  }, [updateSelectedSatellite]);
 
   const toggleAviationGridCategory = useCallback((layer: keyof AviationGridState) => {
     setAviationGrid((current) => ({
@@ -849,6 +883,14 @@ export default function Viewer() {
   }, [starlinkFocusEnabled]);
 
   useEffect(() => {
+    networkViewEnabledRef.current = networkViewEnabled;
+  }, [networkViewEnabled]);
+
+  useEffect(() => {
+    satelliteMissionFiltersRef.current = satelliteMissionFilters;
+  }, [satelliteMissionFilters]);
+
+  useEffect(() => {
     selectedFlightIdRef.current = selectedFlightId;
     setSelectedFlight(
       selectedFlightId ? flightRecordsRef.current.get(selectedFlightId) ?? null : null,
@@ -959,6 +1001,8 @@ export default function Viewer() {
           flightsEnabled={flightsEnabled}
           satellitesEnabled={satellitesEnabled}
           starlinkFocusEnabled={starlinkFocusEnabled}
+          networkViewEnabled={networkViewEnabled}
+          satelliteMissionFilters={satelliteMissionFilters}
           aviationGrid={aviationGrid}
           isGridMenuOpen={isGridMenuOpen}
           groundStations={groundStations}
@@ -974,6 +1018,8 @@ export default function Viewer() {
           onToggleFlights={toggleFlights}
           onToggleSatellites={toggleSatellites}
           onToggleStarlinkFocus={toggleStarlinkFocus}
+          onToggleNetworkView={toggleNetworkView}
+          onToggleSatelliteMissionCategory={toggleSatelliteMissionCategory}
           onToggleGridMenu={() => setIsGridMenuOpen((open) => !open)}
           onToggleAviationGridCategory={toggleAviationGridCategory}
           onToggleSigintInfrastructure={() => setSigintInfrastructureOpen((open) => !open)}
@@ -1015,6 +1061,11 @@ export default function Viewer() {
           onFocus={focusSatellite}
           onClose={() => updateSelectedSatellite(null)}
         />
+        {satelliteFeed.decayingCount > 0 && (
+          <div className="absolute top-24 right-4 z-40 rounded-2xl border border-red-500/50 bg-red-950/70 px-4 py-3 text-xs font-semibold uppercase tracking-[0.22em] text-red-200 shadow-[0_0_24px_rgba(248,113,113,0.28)]">
+            Critical Re-entry Warning: {satelliteFeed.decayingCount}
+          </div>
+        )}
 
         <div className="hud-quick-actions">
           <button

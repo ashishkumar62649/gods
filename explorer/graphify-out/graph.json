@@ -9,7 +9,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\vite.config.d.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_vite_config_d_ts",
-      "community": 26,
+      "community": 27,
       "norm_label": "vite.config.d.ts"
     },
     {
@@ -18,7 +18,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\vite.config.js",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_vite_config_js",
-      "community": 27,
+      "community": 28,
       "norm_label": "vite.config.js"
     },
     {
@@ -27,7 +27,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\vite.config.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_vite_config_ts",
-      "community": 28,
+      "community": 29,
       "norm_label": "vite.config.ts"
     },
     {
@@ -36,7 +36,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\scripts\\generate-tar1090-visuals.mjs",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_scripts_generate_tar1090_visuals_mjs",
-      "community": 9,
+      "community": 10,
       "norm_label": "generate-tar1090-visuals.mjs"
     },
     {
@@ -45,7 +45,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\scripts\\generate-tar1090-visuals.mjs",
       "source_location": "L53",
       "id": "generate_tar1090_visuals_evaluateobject",
-      "community": 9,
+      "community": 10,
       "norm_label": "evaluateobject()"
     },
     {
@@ -54,7 +54,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\scripts\\generate-tar1090-visuals.mjs",
       "source_location": "L57",
       "id": "generate_tar1090_visuals_evaluateexpression",
-      "community": 9,
+      "community": 10,
       "norm_label": "evaluateexpression()"
     },
     {
@@ -63,7 +63,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\scripts\\generate-tar1090-visuals.mjs",
       "source_location": "L61",
       "id": "generate_tar1090_visuals_extractobject",
-      "community": 9,
+      "community": 10,
       "norm_label": "extractobject()"
     },
     {
@@ -72,7 +72,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\scripts\\generate-tar1090-visuals.mjs",
       "source_location": "L75",
       "id": "generate_tar1090_visuals_extractexpression",
-      "community": 9,
+      "community": 10,
       "norm_label": "extractexpression()"
     },
     {
@@ -81,7 +81,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\scripts\\generate-tar1090-visuals.mjs",
       "source_location": "L90",
       "id": "generate_tar1090_visuals_extractbalanced",
-      "community": 9,
+      "community": 10,
       "norm_label": "extractbalanced()"
     },
     {
@@ -90,7 +90,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\scripts\\generate-tar1090-visuals.mjs",
       "source_location": "L163",
       "id": "generate_tar1090_visuals_extractstringliteral",
-      "community": 9,
+      "community": 10,
       "norm_label": "extractstringliteral()"
     },
     {
@@ -99,7 +99,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\scripts\\generate-tar1090-visuals.mjs",
       "source_location": "L172",
       "id": "generate_tar1090_visuals_extractnumberliteral",
-      "community": 9,
+      "community": 10,
       "norm_label": "extractnumberliteral()"
     },
     {
@@ -108,7 +108,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\scripts\\generate-tar1090-visuals.mjs",
       "source_location": "L181",
       "id": "generate_tar1090_visuals_escaperegexp",
-      "community": 9,
+      "community": 10,
       "norm_label": "escaperegexp()"
     },
     {
@@ -117,7 +117,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\scripts\\generate-tar1090-visuals.mjs",
       "source_location": "L185",
       "id": "generate_tar1090_visuals_serialize",
-      "community": 9,
+      "community": 10,
       "norm_label": "serialize()"
     },
     {
@@ -558,7 +558,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\index.mjs",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_server_index_mjs",
-      "community": 3,
+      "community": 5,
       "norm_label": "index.mjs"
     },
     {
@@ -567,7 +567,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\index.mjs",
       "source_location": "L28",
       "id": "index_setcorsheaders",
-      "community": 3,
+      "community": 5,
       "norm_label": "setcorsheaders()"
     },
     {
@@ -576,7 +576,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\index.mjs",
       "source_location": "L34",
       "id": "index_sendjson",
-      "community": 3,
+      "community": 5,
       "norm_label": "sendjson()"
     },
     {
@@ -585,7 +585,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\index.mjs",
       "source_location": "L47",
       "id": "index_runsweep",
-      "community": 3,
+      "community": 5,
       "norm_label": "runsweep()"
     },
     {
@@ -594,7 +594,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\config\\constants.mjs",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_server_config_constants_mjs",
-      "community": 3,
+      "community": 5,
       "norm_label": "constants.mjs"
     },
     {
@@ -603,7 +603,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\config\\env.mjs",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_server_config_env_mjs",
-      "community": 3,
+      "community": 5,
       "norm_label": "env.mjs"
     },
     {
@@ -612,7 +612,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\config\\env.mjs",
       "source_location": "L10",
       "id": "env_loaddotenv",
-      "community": 3,
+      "community": 5,
       "norm_label": "loaddotenv()"
     },
     {
@@ -621,7 +621,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\airportIndex.mjs",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_server_services_airportindex_mjs",
-      "community": 8,
+      "community": 9,
       "norm_label": "airportindex.mjs"
     },
     {
@@ -630,7 +630,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\airportIndex.mjs",
       "source_location": "L14",
       "id": "airportindex_getairportstats",
-      "community": 8,
+      "community": 9,
       "norm_label": "getairportstats()"
     },
     {
@@ -639,7 +639,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\airportIndex.mjs",
       "source_location": "L24",
       "id": "airportindex_loadairportindex",
-      "community": 8,
+      "community": 9,
       "norm_label": "loadairportindex()"
     },
     {
@@ -648,7 +648,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\airportIndex.mjs",
       "source_location": "L76",
       "id": "airportindex_emptyairportindex",
-      "community": 8,
+      "community": 9,
       "norm_label": "emptyairportindex()"
     },
     {
@@ -657,7 +657,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\airportIndex.mjs",
       "source_location": "L87",
       "id": "airportindex_normalizeairportrow",
-      "community": 8,
+      "community": 9,
       "norm_label": "normalizeairportrow()"
     },
     {
@@ -666,7 +666,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\airportIndex.mjs",
       "source_location": "L112",
       "id": "airportindex_buildairportcodes",
-      "community": 8,
+      "community": 9,
       "norm_label": "buildairportcodes()"
     },
     {
@@ -675,7 +675,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\airportIndex.mjs",
       "source_location": "L121",
       "id": "airportindex_serializeairport",
-      "community": 8,
+      "community": 9,
       "norm_label": "serializeairport()"
     },
     {
@@ -684,7 +684,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\airportIndex.mjs",
       "source_location": "L136",
       "id": "airportindex_isroutecandidateairport",
-      "community": 8,
+      "community": 9,
       "norm_label": "isroutecandidateairport()"
     },
     {
@@ -693,7 +693,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\airportIndex.mjs",
       "source_location": "L144",
       "id": "airportindex_resolveairportcsvpath",
-      "community": 8,
+      "community": 9,
       "norm_label": "resolveairportcsvpath()"
     },
     {
@@ -702,7 +702,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\airportIndex.mjs",
       "source_location": "L155",
       "id": "airportindex_normalizeairportcode",
-      "community": 8,
+      "community": 9,
       "norm_label": "normalizeairportcode()"
     },
     {
@@ -711,7 +711,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\airportIndex.mjs",
       "source_location": "L160",
       "id": "airportindex_tofinitenumber",
-      "community": 8,
+      "community": 9,
       "norm_label": "tofinitenumber()"
     },
     {
@@ -720,7 +720,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\fetchers.mjs",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_server_services_fetchers_mjs",
-      "community": 3,
+      "community": 5,
       "norm_label": "fetchers.mjs"
     },
     {
@@ -729,7 +729,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\fetchers.mjs",
       "source_location": "L39",
       "id": "fetchers_fetchwithtimeout",
-      "community": 3,
+      "community": 5,
       "norm_label": "fetchwithtimeout()"
     },
     {
@@ -738,7 +738,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\fetchers.mjs",
       "source_location": "L46",
       "id": "fetchers_buildfreshsnapshoturl",
-      "community": 3,
+      "community": 5,
       "norm_label": "buildfreshsnapshoturl()"
     },
     {
@@ -747,7 +747,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\fetchers.mjs",
       "source_location": "L55",
       "id": "fetchers_getsweeepstats",
-      "community": 3,
+      "community": 5,
       "norm_label": "getsweeepstats()"
     },
     {
@@ -756,7 +756,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\fetchers.mjs",
       "source_location": "L65",
       "id": "fetchers_fetchprimaryradar",
-      "community": 3,
+      "community": 5,
       "norm_label": "fetchprimaryradar()"
     },
     {
@@ -765,7 +765,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\fetchers.mjs",
       "source_location": "L133",
       "id": "fetchers_fetchcustomradar",
-      "community": 3,
+      "community": 5,
       "norm_label": "fetchcustomradar()"
     },
     {
@@ -774,7 +774,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\intelFetcher.mjs",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_server_services_intelfetcher_mjs",
-      "community": 7,
+      "community": 8,
       "norm_label": "intelfetcher.mjs"
     },
     {
@@ -783,7 +783,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\intelFetcher.mjs",
       "source_location": "L61",
       "id": "intelfetcher_getintelstats",
-      "community": 7,
+      "community": 8,
       "norm_label": "getintelstats()"
     },
     {
@@ -792,7 +792,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\intelFetcher.mjs",
       "source_location": "L64",
       "id": "intelfetcher_fetchwithtimeout",
-      "community": 7,
+      "community": 8,
       "norm_label": "fetchwithtimeout()"
     },
     {
@@ -801,7 +801,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\intelFetcher.mjs",
       "source_location": "L72",
       "id": "intelfetcher_ingestendpoint",
-      "community": 7,
+      "community": 8,
       "norm_label": "ingestendpoint()"
     },
     {
@@ -810,7 +810,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\intelFetcher.mjs",
       "source_location": "L111",
       "id": "intelfetcher_runintelsweep",
-      "community": 7,
+      "community": 8,
       "norm_label": "runintelsweep()"
     },
     {
@@ -819,7 +819,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\intelFetcher.mjs",
       "source_location": "L146",
       "id": "intelfetcher_startintelloop",
-      "community": 7,
+      "community": 8,
       "norm_label": "startintelloop()"
     },
     {
@@ -828,7 +828,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\intelFetcher.mjs",
       "source_location": "L161",
       "id": "intelfetcher_mergeintel",
-      "community": 7,
+      "community": 8,
       "norm_label": "mergeintel()"
     },
     {
@@ -837,7 +837,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\intelFetcher.mjs",
       "source_location": "L194",
       "id": "intelfetcher_fetchbyhex",
-      "community": 7,
+      "community": 8,
       "norm_label": "fetchbyhex()"
     },
     {
@@ -846,7 +846,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\intelFetcher.mjs",
       "source_location": "L207",
       "id": "intelfetcher_fetchbyregistration",
-      "community": 7,
+      "community": 8,
       "norm_label": "fetchbyregistration()"
     },
     {
@@ -855,7 +855,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\intelFetcher.mjs",
       "source_location": "L220",
       "id": "intelfetcher_fetchbycallsign",
-      "community": 7,
+      "community": 8,
       "norm_label": "fetchbycallsign()"
     },
     {
@@ -864,7 +864,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\intelFetcher.mjs",
       "source_location": "L233",
       "id": "intelfetcher_fetchairportinfo",
-      "community": 7,
+      "community": 8,
       "norm_label": "fetchairportinfo()"
     },
     {
@@ -873,7 +873,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\intelFetcher.mjs",
       "source_location": "L246",
       "id": "intelfetcher_fetchrouteset",
-      "community": 7,
+      "community": 8,
       "norm_label": "fetchrouteset()"
     },
     {
@@ -882,7 +882,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\normalizer.mjs",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_server_services_normalizer_mjs",
-      "community": 3,
+      "community": 5,
       "norm_label": "normalizer.mjs"
     },
     {
@@ -891,7 +891,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\normalizer.mjs",
       "source_location": "L31",
       "id": "normalizer_fttom",
-      "community": 3,
+      "community": 5,
       "norm_label": "fttom()"
     },
     {
@@ -900,7 +900,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\normalizer.mjs",
       "source_location": "L32",
       "id": "normalizer_knottomps",
-      "community": 3,
+      "community": 5,
       "norm_label": "knottomps()"
     },
     {
@@ -909,7 +909,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\normalizer.mjs",
       "source_location": "L33",
       "id": "normalizer_safenum",
-      "community": 3,
+      "community": 5,
       "norm_label": "safenum()"
     },
     {
@@ -918,7 +918,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\normalizer.mjs",
       "source_location": "L34",
       "id": "normalizer_safestr",
-      "community": 3,
+      "community": 5,
       "norm_label": "safestr()"
     },
     {
@@ -927,7 +927,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\normalizer.mjs",
       "source_location": "L49",
       "id": "normalizer_squawktoemergency",
-      "community": 3,
+      "community": 5,
       "norm_label": "squawktoemergency()"
     },
     {
@@ -936,7 +936,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\normalizer.mjs",
       "source_location": "L81",
       "id": "normalizer_normalizeopensky",
-      "community": 3,
+      "community": 5,
       "norm_label": "normalizeopensky()"
     },
     {
@@ -945,7 +945,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\normalizer.mjs",
       "source_location": "L150",
       "id": "normalizer_normalizereadsb",
-      "community": 3,
+      "community": 5,
       "norm_label": "normalizereadsb()"
     },
     {
@@ -954,7 +954,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\normalizer.mjs",
       "source_location": "L253",
       "id": "normalizer_normalizecustomapi",
-      "community": 3,
+      "community": 5,
       "norm_label": "normalizecustomapi()"
     },
     {
@@ -970,7 +970,7 @@
       "label": "startOrbitPropagationLoop()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\orbitPropagator.mjs",
-      "source_location": "L13",
+      "source_location": "L15",
       "id": "orbitpropagator_startorbitpropagationloop",
       "community": 4,
       "norm_label": "startorbitpropagationloop()"
@@ -979,7 +979,7 @@
       "label": "stopOrbitPropagationLoop()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\orbitPropagator.mjs",
-      "source_location": "L21",
+      "source_location": "L23",
       "id": "orbitpropagator_stoporbitpropagationloop",
       "community": 4,
       "norm_label": "stoporbitpropagationloop()"
@@ -988,7 +988,7 @@
       "label": "propagateNow()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\orbitPropagator.mjs",
-      "source_location": "L29",
+      "source_location": "L31",
       "id": "orbitpropagator_propagatenow",
       "community": 4,
       "norm_label": "propagatenow()"
@@ -997,7 +997,7 @@
       "label": "getSatrecCache()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\orbitPropagator.mjs",
-      "source_location": "L73",
+      "source_location": "L75",
       "id": "orbitpropagator_getsatreccache",
       "community": 4,
       "norm_label": "getsatreccache()"
@@ -1006,7 +1006,7 @@
       "label": "normalizeSatellite()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\orbitPropagator.mjs",
-      "source_location": "L103",
+      "source_location": "L106",
       "id": "orbitpropagator_normalizesatellite",
       "community": 4,
       "norm_label": "normalizesatellite()"
@@ -1015,10 +1015,37 @@
       "label": "buildOrbitMeta()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\orbitPropagator.mjs",
-      "source_location": "L146",
+      "source_location": "L156",
       "id": "orbitpropagator_buildorbitmeta",
       "community": 4,
       "norm_label": "buildorbitmeta()"
+    },
+    {
+      "label": "buildIntelligenceMeta()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\orbitPropagator.mjs",
+      "source_location": "L179",
+      "id": "orbitpropagator_buildintelligencemeta",
+      "community": 4,
+      "norm_label": "buildintelligencemeta()"
+    },
+    {
+      "label": "classifyMission()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\orbitPropagator.mjs",
+      "source_location": "L196",
+      "id": "orbitpropagator_classifymission",
+      "community": 4,
+      "norm_label": "classifymission()"
+    },
+    {
+      "label": "classifyConstellation()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\orbitPropagator.mjs",
+      "source_location": "L223",
+      "id": "orbitpropagator_classifyconstellation",
+      "community": 4,
+      "norm_label": "classifyconstellation()"
     },
     {
       "label": "satelliteFetcher.mjs",
@@ -1098,7 +1125,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\flightCache.mjs",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_server_store_flightcache_mjs",
-      "community": 3,
+      "community": 5,
       "norm_label": "flightcache.mjs"
     },
     {
@@ -1107,7 +1134,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\flightCache.mjs",
       "source_location": "L28",
       "id": "flightcache_upsertflight",
-      "community": 3,
+      "community": 5,
       "norm_label": "upsertflight()"
     },
     {
@@ -1116,7 +1143,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\flightCache.mjs",
       "source_location": "L45",
       "id": "flightcache_getallflights",
-      "community": 3,
+      "community": 5,
       "norm_label": "getallflights()"
     },
     {
@@ -1125,7 +1152,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\flightCache.mjs",
       "source_location": "L54",
       "id": "flightcache_removestaleflights",
-      "community": 3,
+      "community": 5,
       "norm_label": "removestaleflights()"
     },
     {
@@ -1215,7 +1242,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\App.tsx",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_app_tsx",
-      "community": 13,
+      "community": 14,
       "norm_label": "app.tsx"
     },
     {
@@ -1224,7 +1251,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\App.tsx",
       "source_location": "L3",
       "id": "app_app",
-      "community": 13,
+      "community": 14,
       "norm_label": "app()"
     },
     {
@@ -1233,7 +1260,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\main.tsx",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_main_tsx",
-      "community": 29,
+      "community": 30,
       "norm_label": "main.tsx"
     },
     {
@@ -1242,7 +1269,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\vite-env.d.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_vite_env_d_ts",
-      "community": 30,
+      "community": 31,
       "norm_label": "vite-env.d.ts"
     },
     {
@@ -1251,7 +1278,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\BuildingsToggle.tsx",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_buildingstoggle_tsx",
-      "community": 14,
+      "community": 15,
       "norm_label": "buildingstoggle.tsx"
     },
     {
@@ -1260,7 +1287,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\BuildingsToggle.tsx",
       "source_location": "L11",
       "id": "buildingstoggle_buildingstoggle",
-      "community": 14,
+      "community": 15,
       "norm_label": "buildingstoggle()"
     },
     {
@@ -1350,7 +1377,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
       "source_location": "L323",
       "id": "flightlayers_flightscenelayermanager_adjustflightdecklook",
-      "community": 2,
+      "community": 3,
       "norm_label": ".adjustflightdecklook()"
     },
     {
@@ -1503,7 +1530,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
       "source_location": "L823",
       "id": "flightlayers_flightscenelayermanager_applyflightvisual",
-      "community": 2,
+      "community": 3,
       "norm_label": ".applyflightvisual()"
     },
     {
@@ -1521,7 +1548,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
       "source_location": "L890",
       "id": "flightlayers_flightscenelayermanager_ensureairframemodel",
-      "community": 2,
+      "community": 3,
       "norm_label": ".ensureairframemodel()"
     },
     {
@@ -1746,7 +1773,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flights.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_flights_flights_ts",
-      "community": 5,
+      "community": 7,
       "norm_label": "flights.ts"
     },
     {
@@ -1755,7 +1782,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flights.ts",
       "source_location": "L317",
       "id": "flights_getflightdisplayname",
-      "community": 5,
+      "community": 0,
       "norm_label": "getflightdisplayname()"
     },
     {
@@ -1764,7 +1791,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flights.ts",
       "source_location": "L322",
       "id": "flights_getairportdisplaycode",
-      "community": 5,
+      "community": 7,
       "norm_label": "getairportdisplaycode()"
     },
     {
@@ -1773,7 +1800,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flights.ts",
       "source_location": "L326",
       "id": "flights_getflightrendermode",
-      "community": 5,
+      "community": 7,
       "norm_label": "getflightrendermode()"
     },
     {
@@ -1782,7 +1809,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flights.ts",
       "source_location": "L330",
       "id": "flights_fetchflightsnapshot",
-      "community": 5,
+      "community": 7,
       "norm_label": "fetchflightsnapshot()"
     },
     {
@@ -1791,7 +1818,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flights.ts",
       "source_location": "L340",
       "id": "flights_fetchflightroute",
-      "community": 5,
+      "community": 7,
       "norm_label": "fetchflightroute()"
     },
     {
@@ -1800,7 +1827,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flights.ts",
       "source_location": "L357",
       "id": "flights_fetchflighttrace",
-      "community": 5,
+      "community": 7,
       "norm_label": "fetchflighttrace()"
     },
     {
@@ -1809,7 +1836,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flights.ts",
       "source_location": "L374",
       "id": "flights_fetchairports",
-      "community": 5,
+      "community": 7,
       "norm_label": "fetchairports()"
     },
     {
@@ -1818,7 +1845,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flights.ts",
       "source_location": "L383",
       "id": "flights_formataltitudemeters",
-      "community": 5,
+      "community": 7,
       "norm_label": "formataltitudemeters()"
     },
     {
@@ -1827,7 +1854,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flights.ts",
       "source_location": "L389",
       "id": "flights_formatspeed",
-      "community": 5,
+      "community": 7,
       "norm_label": "formatspeed()"
     },
     {
@@ -1836,7 +1863,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flights.ts",
       "source_location": "L397",
       "id": "flights_formatheading",
-      "community": 5,
+      "community": 7,
       "norm_label": "formatheading()"
     },
     {
@@ -1845,7 +1872,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flights.ts",
       "source_location": "L402",
       "id": "flights_formatlastupdated",
-      "community": 5,
+      "community": 7,
       "norm_label": "formatlastupdated()"
     },
     {
@@ -1854,7 +1881,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flights.ts",
       "source_location": "L414",
       "id": "flights_predictflightposition",
-      "community": 5,
+      "community": 7,
       "norm_label": "predictflightposition()"
     },
     {
@@ -1863,7 +1890,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flights.ts",
       "source_location": "L465",
       "id": "flights_readerrormessage",
-      "community": 5,
+      "community": 7,
       "norm_label": "readerrormessage()"
     },
     {
@@ -1872,7 +1899,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_flights_flightvisuals_ts",
-      "community": 2,
+      "community": 3,
       "norm_label": "flightvisuals.ts"
     },
     {
@@ -1881,7 +1908,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L72",
       "id": "flightvisuals_isicontuple",
-      "community": 2,
+      "community": 3,
       "norm_label": "isicontuple()"
     },
     {
@@ -1890,7 +1917,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L116",
       "id": "flightvisuals_getflighticonimage",
-      "community": 2,
+      "community": 3,
       "norm_label": "getflighticonimage()"
     },
     {
@@ -1899,7 +1926,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L128",
       "id": "flightvisuals_getflighticondimensions",
-      "community": 2,
+      "community": 3,
       "norm_label": "getflighticondimensions()"
     },
     {
@@ -1908,7 +1935,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L139",
       "id": "flightvisuals_getflightfamilylabel",
-      "community": 2,
+      "community": 3,
       "norm_label": "getflightfamilylabel()"
     },
     {
@@ -1917,7 +1944,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L144",
       "id": "flightvisuals_getflightvisualtypelabel",
-      "community": 2,
+      "community": 3,
       "norm_label": "getflightvisualtypelabel()"
     },
     {
@@ -1926,7 +1953,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L163",
       "id": "flightvisuals_getflighticonkey",
-      "community": 2,
+      "community": 3,
       "norm_label": "getflighticonkey()"
     },
     {
@@ -1935,7 +1962,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L167",
       "id": "flightvisuals_getflighticonrotationradians",
-      "community": 2,
+      "community": 3,
       "norm_label": "getflighticonrotationradians()"
     },
     {
@@ -1944,7 +1971,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L178",
       "id": "flightvisuals_getflightaltitudecolorcss",
-      "community": 2,
+      "community": 3,
       "norm_label": "getflightaltitudecolorcss()"
     },
     {
@@ -1953,7 +1980,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L204",
       "id": "flightvisuals_resolveflighticonpreset",
-      "community": 2,
+      "community": 3,
       "norm_label": "resolveflighticonpreset()"
     },
     {
@@ -1962,7 +1989,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L238",
       "id": "flightvisuals_normalizeiconpreset",
-      "community": 2,
+      "community": 3,
       "norm_label": "normalizeiconpreset()"
     },
     {
@@ -1971,7 +1998,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L252",
       "id": "flightvisuals_infertypedesignator",
-      "community": 2,
+      "community": 3,
       "norm_label": "infertypedesignator()"
     },
     {
@@ -1980,7 +2007,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L296",
       "id": "flightvisuals_infertypedescription",
-      "community": 2,
+      "community": 3,
       "norm_label": "infertypedescription()"
     },
     {
@@ -1989,7 +2016,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L327",
       "id": "flightvisuals_altitudecolor",
-      "community": 2,
+      "community": 3,
       "norm_label": "altitudecolor()"
     },
     {
@@ -1998,7 +2025,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L350",
       "id": "flightvisuals_interpolatealtitudehue",
-      "community": 2,
+      "community": 3,
       "norm_label": "interpolatealtitudehue()"
     },
     {
@@ -2007,7 +2034,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L372",
       "id": "flightvisuals_interpolatehuelightness",
-      "community": 2,
+      "community": 3,
       "norm_label": "interpolatehuelightness()"
     },
     {
@@ -2016,7 +2043,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L394",
       "id": "flightvisuals_roundaltitudeforcolor",
-      "community": 2,
+      "community": 3,
       "norm_label": "roundaltitudeforcolor()"
     },
     {
@@ -2025,7 +2052,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L402",
       "id": "flightvisuals_islikelyground",
-      "community": 2,
+      "community": 3,
       "norm_label": "islikelyground()"
     },
     {
@@ -2034,7 +2061,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L406",
       "id": "flightvisuals_svgshapetosvg",
-      "community": 2,
+      "community": 3,
       "norm_label": "svgshapetosvg()"
     },
     {
@@ -2043,7 +2070,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L446",
       "id": "flightvisuals_svgshapetouri",
-      "community": 2,
+      "community": 3,
       "norm_label": "svgshapetouri()"
     },
     {
@@ -2052,7 +2079,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L451",
       "id": "flightvisuals_normalizetoken",
-      "community": 2,
+      "community": 3,
       "norm_label": "normalizetoken()"
     },
     {
@@ -2061,7 +2088,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L457",
       "id": "flightvisuals_normalizetext",
-      "community": 2,
+      "community": 3,
       "norm_label": "normalizetext()"
     },
     {
@@ -2070,7 +2097,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L462",
       "id": "flightvisuals_normalizehue",
-      "community": 2,
+      "community": 3,
       "norm_label": "normalizehue()"
     },
     {
@@ -2079,7 +2106,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L472",
       "id": "flightvisuals_clamp",
-      "community": 2,
+      "community": 3,
       "norm_label": "clamp()"
     },
     {
@@ -2088,7 +2115,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L476",
       "id": "flightvisuals_formatnumber",
-      "community": 2,
+      "community": 3,
       "norm_label": "formatnumber()"
     },
     {
@@ -2097,7 +2124,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\tar1090.generated.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_flights_tar1090_generated_ts",
-      "community": 31,
+      "community": 32,
       "norm_label": "tar1090.generated.ts"
     },
     {
@@ -2106,7 +2133,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\ui\\FlightDeckHud.tsx",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_flights_ui_flightdeckhud_tsx",
-      "community": 32,
+      "community": 33,
       "norm_label": "flightdeckhud.tsx"
     },
     {
@@ -2115,7 +2142,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\ui\\FlightDetailsPanel.tsx",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_flights_ui_flightdetailspanel_tsx",
-      "community": 5,
+      "community": 7,
       "norm_label": "flightdetailspanel.tsx"
     },
     {
@@ -2124,8 +2151,89 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\ui\\FlightDetailsPanel.tsx",
       "source_location": "L33",
       "id": "flightdetailspanel_flightdetailspanel",
-      "community": 5,
+      "community": 7,
       "norm_label": "flightdetailspanel()"
+    },
+    {
+      "label": "satelliteIntelligence.ts",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satelliteIntelligence.ts",
+      "source_location": "L1",
+      "id": "e_ashis_god_eyes_explorer_src_earth_satellites_satelliteintelligence_ts",
+      "community": 6,
+      "norm_label": "satelliteintelligence.ts"
+    },
+    {
+      "label": "getSelectedSatelliteSignalStatus()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satelliteIntelligence.ts",
+      "source_location": "L36",
+      "id": "satelliteintelligence_getselectedsatellitesignalstatus",
+      "community": 6,
+      "norm_label": "getselectedsatellitesignalstatus()"
+    },
+    {
+      "label": "getNearestGroundStation()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satelliteIntelligence.ts",
+      "source_location": "L64",
+      "id": "satelliteintelligence_getnearestgroundstation",
+      "community": 6,
+      "norm_label": "getnearestgroundstation()"
+    },
+    {
+      "label": "hasLineOfSight()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satelliteIntelligence.ts",
+      "source_location": "L84",
+      "id": "satelliteintelligence_haslineofsight",
+      "community": 6,
+      "norm_label": "haslineofsight()"
+    },
+    {
+      "label": "groundStationToCartesian()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satelliteIntelligence.ts",
+      "source_location": "L101",
+      "id": "satelliteintelligence_groundstationtocartesian",
+      "community": 6,
+      "norm_label": "groundstationtocartesian()"
+    },
+    {
+      "label": "formatSignalCountdown()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satelliteIntelligence.ts",
+      "source_location": "L105",
+      "id": "satelliteintelligence_formatsignalcountdown",
+      "community": 6,
+      "norm_label": "formatsignalcountdown()"
+    },
+    {
+      "label": "findNextSignalTransitionSeconds()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satelliteIntelligence.ts",
+      "source_location": "L115",
+      "id": "satelliteintelligence_findnextsignaltransitionseconds",
+      "community": 6,
+      "norm_label": "findnextsignaltransitionseconds()"
+    },
+    {
+      "label": "centralAngleRadians()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satelliteIntelligence.ts",
+      "source_location": "L155",
+      "id": "satelliteintelligence_centralangleradians",
+      "community": 6,
+      "norm_label": "centralangleradians()"
+    },
+    {
+      "label": "toRadians()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satelliteIntelligence.ts",
+      "source_location": "L171",
+      "id": "satelliteintelligence_toradians",
+      "community": 6,
+      "norm_label": "toradians()"
     },
     {
       "label": "satellites.ts",
@@ -2133,53 +2241,62 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satellites.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_satellites_satellites_ts",
-      "community": 10,
+      "community": 11,
       "norm_label": "satellites.ts"
     },
     {
       "label": "fetchSatelliteSnapshot()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satellites.ts",
-      "source_location": "L61",
+      "source_location": "L98",
       "id": "satellites_fetchsatellitesnapshot",
-      "community": 10,
+      "community": 11,
       "norm_label": "fetchsatellitesnapshot()"
     },
     {
       "label": "getSatelliteDisplayName()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satellites.ts",
-      "source_location": "L72",
+      "source_location": "L109",
       "id": "satellites_getsatellitedisplayname",
-      "community": 10,
+      "community": 11,
       "norm_label": "getsatellitedisplayname()"
     },
     {
       "label": "formatSatelliteAltitude()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satellites.ts",
-      "source_location": "L76",
+      "source_location": "L113",
       "id": "satellites_formatsatellitealtitude",
-      "community": 10,
+      "community": 11,
       "norm_label": "formatsatellitealtitude()"
     },
     {
       "label": "formatSatelliteVelocity()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satellites.ts",
-      "source_location": "L81",
+      "source_location": "L118",
       "id": "satellites_formatsatellitevelocity",
-      "community": 10,
+      "community": 11,
       "norm_label": "formatsatellitevelocity()"
     },
     {
       "label": "formatOrbitValue()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satellites.ts",
-      "source_location": "L86",
+      "source_location": "L123",
       "id": "satellites_formatorbitvalue",
-      "community": 10,
+      "community": 11,
       "norm_label": "formatorbitvalue()"
+    },
+    {
+      "label": "formatSatelliteMission()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satellites.ts",
+      "source_location": "L128",
+      "id": "satellites_formatsatellitemission",
+      "community": 11,
+      "norm_label": "formatsatellitemission()"
     },
     {
       "label": "SatelliteSceneLayerManager.ts",
@@ -2187,151 +2304,385 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_satellites_satellitescenelayermanager_ts",
-      "community": 6,
+      "community": 2,
       "norm_label": "satellitescenelayermanager.ts"
     },
     {
       "label": "SatelliteSceneLayerManager",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L42",
+      "source_location": "L73",
       "id": "satellitescenelayermanager_satellitescenelayermanager",
-      "community": 6,
+      "community": 2,
       "norm_label": "satellitescenelayermanager"
     },
     {
       "label": ".constructor()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L51",
+      "source_location": "L99",
       "id": "satellitescenelayermanager_satellitescenelayermanager_constructor",
-      "community": 6,
+      "community": 2,
       "norm_label": ".constructor()"
     },
     {
       "label": ".destroy()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L59",
+      "source_location": "L146",
       "id": "satellitescenelayermanager_satellitescenelayermanager_destroy",
-      "community": 6,
+      "community": 2,
       "norm_label": ".destroy()"
     },
     {
       "label": ".setSatellitesVisible()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L68",
+      "source_location": "L157",
       "id": "satellitescenelayermanager_satellitescenelayermanager_setsatellitesvisible",
-      "community": 6,
+      "community": 2,
       "norm_label": ".setsatellitesvisible()"
+    },
+    {
+      "label": ".setStarlinkFocusEnabled()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L174",
+      "id": "satellitescenelayermanager_satellitescenelayermanager_setstarlinkfocusenabled",
+      "community": 2,
+      "norm_label": ".setstarlinkfocusenabled()"
+    },
+    {
+      "label": ".setNetworkViewEnabled()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L181",
+      "id": "satellitescenelayermanager_satellitescenelayermanager_setnetworkviewenabled",
+      "community": 2,
+      "norm_label": ".setnetworkviewenabled()"
+    },
+    {
+      "label": ".setMissionFilters()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L189",
+      "id": "satellitescenelayermanager_satellitescenelayermanager_setmissionfilters",
+      "community": 2,
+      "norm_label": ".setmissionfilters()"
+    },
+    {
+      "label": ".updateCameraFading()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L198",
+      "id": "satellitescenelayermanager_satellitescenelayermanager_updatecamerafading",
+      "community": 2,
+      "norm_label": ".updatecamerafading()"
+    },
+    {
+      "label": ".tickIntelligence()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L206",
+      "id": "satellitescenelayermanager_satellitescenelayermanager_tickintelligence",
+      "community": 2,
+      "norm_label": ".tickintelligence()"
     },
     {
       "label": ".setSelectedSatelliteId()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L77",
+      "source_location": "L214",
       "id": "satellitescenelayermanager_satellitescenelayermanager_setselectedsatelliteid",
-      "community": 6,
+      "community": 2,
       "norm_label": ".setselectedsatelliteid()"
     },
     {
       "label": ".syncSatellites()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L100",
+      "source_location": "L242",
       "id": "satellitescenelayermanager_satellitescenelayermanager_syncsatellites",
-      "community": 6,
+      "community": 2,
       "norm_label": ".syncsatellites()"
     },
     {
       "label": ".pickSatellite()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L155",
+      "source_location": "L302",
       "id": "satellitescenelayermanager_satellitescenelayermanager_picksatellite",
-      "community": 6,
+      "community": 2,
       "norm_label": ".picksatellite()"
     },
     {
       "label": ".getSatellitePosition()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L161",
+      "source_location": "L308",
       "id": "satellitescenelayermanager_satellitescenelayermanager_getsatelliteposition",
-      "community": 6,
+      "community": 2,
       "norm_label": ".getsatelliteposition()"
     },
     {
-      "label": ".applyPointStyle()",
+      "label": ".applySatelliteVisual()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L166",
-      "id": "satellitescenelayermanager_satellitescenelayermanager_applypointstyle",
-      "community": 6,
-      "norm_label": ".applypointstyle()"
+      "source_location": "L313",
+      "id": "satellitescenelayermanager_satellitescenelayermanager_applysatellitevisual",
+      "community": 2,
+      "norm_label": ".applysatellitevisual()"
+    },
+    {
+      "label": ".refreshSatelliteVisuals()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L340",
+      "id": "satellitescenelayermanager_satellitescenelayermanager_refreshsatellitevisuals",
+      "community": 2,
+      "norm_label": ".refreshsatellitevisuals()"
+    },
+    {
+      "label": ".getSatelliteColor()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L346",
+      "id": "satellitescenelayermanager_satellitescenelayermanager_getsatellitecolor",
+      "community": 2,
+      "norm_label": ".getsatellitecolor()"
+    },
+    {
+      "label": ".isMissionVisible()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L352",
+      "id": "satellitescenelayermanager_satellitescenelayermanager_ismissionvisible",
+      "community": 2,
+      "norm_label": ".ismissionvisible()"
     },
     {
       "label": ".rebuildSelectedPath()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L174",
+      "source_location": "L358",
       "id": "satellitescenelayermanager_satellitescenelayermanager_rebuildselectedpath",
-      "community": 6,
+      "community": 2,
       "norm_label": ".rebuildselectedpath()"
     },
     {
       "label": ".clearSelectedPath()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L201",
+      "source_location": "L385",
       "id": "satellitescenelayermanager_satellitescenelayermanager_clearselectedpath",
-      "community": 6,
+      "community": 2,
       "norm_label": ".clearselectedpath()"
+    },
+    {
+      "label": ".rebuildSensorCone()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L393",
+      "id": "satellitescenelayermanager_satellitescenelayermanager_rebuildsensorcone",
+      "community": 2,
+      "norm_label": ".rebuildsensorcone()"
+    },
+    {
+      "label": ".clearSensorCone()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L426",
+      "id": "satellitescenelayermanager_satellitescenelayermanager_clearsensorcone",
+      "community": 2,
+      "norm_label": ".clearsensorcone()"
+    },
+    {
+      "label": ".refreshSelectionOverlays()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L434",
+      "id": "satellitescenelayermanager_satellitescenelayermanager_refreshselectionoverlays",
+      "community": 2,
+      "norm_label": ".refreshselectionoverlays()"
+    },
+    {
+      "label": ".getCameraOpacity()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L453",
+      "id": "satellitescenelayermanager_satellitescenelayermanager_getcameraopacity",
+      "community": 2,
+      "norm_label": ".getcameraopacity()"
+    },
+    {
+      "label": ".refreshSignalLink()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L458",
+      "id": "satellitescenelayermanager_satellitescenelayermanager_refreshsignallink",
+      "community": 2,
+      "norm_label": ".refreshsignallink()"
+    },
+    {
+      "label": ".hideSignalLink()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L482",
+      "id": "satellitescenelayermanager_satellitescenelayermanager_hidesignallink",
+      "community": 2,
+      "norm_label": ".hidesignallink()"
+    },
+    {
+      "label": ".updateSignalPulse()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L486",
+      "id": "satellitescenelayermanager_satellitescenelayermanager_updatesignalpulse",
+      "community": 2,
+      "norm_label": ".updatesignalpulse()"
+    },
+    {
+      "label": ".updateDecayPulse()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L497",
+      "id": "satellitescenelayermanager_satellitescenelayermanager_updatedecaypulse",
+      "community": 2,
+      "norm_label": ".updatedecaypulse()"
+    },
+    {
+      "label": ".refreshNetworkLinks()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L505",
+      "id": "satellitescenelayermanager_satellitescenelayermanager_refreshnetworklinks",
+      "community": 2,
+      "norm_label": ".refreshnetworklinks()"
+    },
+    {
+      "label": ".updateSunDirection()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L567",
+      "id": "satellitescenelayermanager_satellitescenelayermanager_updatesundirection",
+      "community": 2,
+      "norm_label": ".updatesundirection()"
+    },
+    {
+      "label": ".getShadowOpacityFactor()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L584",
+      "id": "satellitescenelayermanager_satellitescenelayermanager_getshadowopacityfactor",
+      "community": 2,
+      "norm_label": ".getshadowopacityfactor()"
+    },
+    {
+      "label": ".isGlintAligned()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L601",
+      "id": "satellitescenelayermanager_satellitescenelayermanager_isglintaligned",
+      "community": 2,
+      "norm_label": ".isglintaligned()"
     },
     {
       "label": ".requestRender()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L209",
+      "source_location": "L609",
       "id": "satellitescenelayermanager_satellitescenelayermanager_requestrender",
-      "community": 6,
+      "community": 2,
       "norm_label": ".requestrender()"
+    },
+    {
+      "label": "cloneColorWithAlpha()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L616",
+      "id": "satellitescenelayermanager_clonecolorwithalpha",
+      "community": 2,
+      "norm_label": "clonecolorwithalpha()"
+    },
+    {
+      "label": "isStarlinkSatellite()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L620",
+      "id": "satellitescenelayermanager_isstarlinksatellite",
+      "community": 2,
+      "norm_label": "isstarlinksatellite()"
+    },
+    {
+      "label": "getConstellationId()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L624",
+      "id": "satellitescenelayermanager_getconstellationid",
+      "community": 2,
+      "norm_label": "getconstellationid()"
+    },
+    {
+      "label": "getPulse()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L633",
+      "id": "satellitescenelayermanager_getpulse",
+      "community": 2,
+      "norm_label": "getpulse()"
+    },
+    {
+      "label": "getNetworkCell()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L639",
+      "id": "satellitescenelayermanager_getnetworkcell",
+      "community": 2,
+      "norm_label": "getnetworkcell()"
+    },
+    {
+      "label": "getNeighborCells()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L647",
+      "id": "satellitescenelayermanager_getneighborcells",
+      "community": 2,
+      "norm_label": "getneighborcells()"
     },
     {
       "label": "buildPredictedPathPositions()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L216",
+      "source_location": "L660",
       "id": "satellitescenelayermanager_buildpredictedpathpositions",
-      "community": 6,
+      "community": 2,
       "norm_label": "buildpredictedpathpositions()"
     },
     {
       "label": "satelliteToCartesian()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L251",
+      "source_location": "L695",
       "id": "satellitescenelayermanager_satellitetocartesian",
-      "community": 6,
+      "community": 2,
       "norm_label": "satellitetocartesian()"
     },
     {
       "label": "isRenderableSatellite()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L259",
+      "source_location": "L703",
       "id": "satellitescenelayermanager_isrenderablesatellite",
-      "community": 6,
+      "community": 2,
       "norm_label": "isrenderablesatellite()"
     },
     {
       "label": "extractSatellitePickId()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L268",
+      "source_location": "L712",
       "id": "satellitescenelayermanager_extractsatellitepickid",
-      "community": 6,
+      "community": 2,
       "norm_label": "extractsatellitepickid()"
     },
     {
@@ -2340,7 +2691,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\ui\\SatelliteDetailsPanel.tsx",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_satellites_ui_satellitedetailspanel_tsx",
-      "community": 33,
+      "community": 34,
       "norm_label": "satellitedetailspanel.tsx"
     },
     {
@@ -2349,7 +2700,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\search\\SearchBox.tsx",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_search_searchbox_tsx",
-      "community": 11,
+      "community": 12,
       "norm_label": "searchbox.tsx"
     },
     {
@@ -2358,7 +2709,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\search\\SearchBox.tsx",
       "source_location": "L15",
       "id": "searchbox_loadrecentsearches",
-      "community": 11,
+      "community": 12,
       "norm_label": "loadrecentsearches()"
     },
     {
@@ -2367,7 +2718,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\search\\SearchBox.tsx",
       "source_location": "L33",
       "id": "searchbox_saverecentsearches",
-      "community": 11,
+      "community": 12,
       "norm_label": "saverecentsearches()"
     },
     {
@@ -2376,7 +2727,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\search\\SearchBox.tsx",
       "source_location": "L48",
       "id": "searchbox_searchbox",
-      "community": 11,
+      "community": 12,
       "norm_label": "searchbox()"
     },
     {
@@ -2385,7 +2736,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\cameraUtils.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_viewer_camerautils_ts",
-      "community": 5,
+      "community": 6,
       "norm_label": "camerautils.ts"
     },
     {
@@ -2394,7 +2745,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\cameraUtils.ts",
       "source_location": "L17",
       "id": "camerautils_flyobliquetopoint",
-      "community": 5,
+      "community": 6,
       "norm_label": "flyobliquetopoint()"
     },
     {
@@ -2403,7 +2754,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\cameraUtils.ts",
       "source_location": "L44",
       "id": "camerautils_flyobliquetodestination",
-      "community": 5,
+      "community": 6,
       "norm_label": "flyobliquetodestination()"
     },
     {
@@ -2412,7 +2763,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\cameraUtils.ts",
       "source_location": "L139",
       "id": "camerautils_buildhome",
-      "community": 5,
+      "community": 6,
       "norm_label": "buildhome()"
     },
     {
@@ -2421,7 +2772,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\cameraUtils.ts",
       "source_location": "L154",
       "id": "camerautils_getcameracartographic",
-      "community": 5,
+      "community": 6,
       "norm_label": "getcameracartographic()"
     },
     {
@@ -2430,7 +2781,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\cameraUtils.ts",
       "source_location": "L168",
       "id": "camerautils_getflightcameratarget",
-      "community": 5,
+      "community": 6,
       "norm_label": "getflightcameratarget()"
     },
     {
@@ -2439,7 +2790,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\cameraUtils.ts",
       "source_location": "L180",
       "id": "camerautils_getflightcameraoffset",
-      "community": 5,
+      "community": 6,
       "norm_label": "getflightcameraoffset()"
     },
     {
@@ -2448,7 +2799,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\cameraUtils.ts",
       "source_location": "L192",
       "id": "camerautils_getcockpitcamerapose",
-      "community": 5,
+      "community": 6,
       "norm_label": "getcockpitcamerapose()"
     },
     {
@@ -2457,7 +2808,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\DevStatusPanel.tsx",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_viewer_devstatuspanel_tsx",
-      "community": 15,
+      "community": 16,
       "norm_label": "devstatuspanel.tsx"
     },
     {
@@ -2466,7 +2817,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\DevStatusPanel.tsx",
       "source_location": "L16",
       "id": "devstatuspanel_devstatuspanel",
-      "community": 15,
+      "community": 16,
       "norm_label": "devstatuspanel()"
     },
     {
@@ -2475,7 +2826,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\ImageryFlyout.tsx",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_viewer_imageryflyout_tsx",
-      "community": 16,
+      "community": 17,
       "norm_label": "imageryflyout.tsx"
     },
     {
@@ -2484,7 +2835,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\ImageryFlyout.tsx",
       "source_location": "L9",
       "id": "imageryflyout_imageryflyout",
-      "community": 16,
+      "community": 17,
       "norm_label": "imageryflyout()"
     },
     {
@@ -2493,7 +2844,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\imageryOptions.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_viewer_imageryoptions_ts",
-      "community": 12,
+      "community": 13,
       "norm_label": "imageryoptions.ts"
     },
     {
@@ -2502,7 +2853,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\imageryOptions.ts",
       "source_location": "L12",
       "id": "imageryoptions_toimageryid",
-      "community": 12,
+      "community": 13,
       "norm_label": "toimageryid()"
     },
     {
@@ -2511,7 +2862,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\imageryOptions.ts",
       "source_location": "L16",
       "id": "imageryoptions_buildimageryoptions",
-      "community": 12,
+      "community": 13,
       "norm_label": "buildimageryoptions()"
     },
     {
@@ -2520,16 +2871,16 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\LayerSidebar.tsx",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_viewer_layersidebar_tsx",
-      "community": 17,
+      "community": 18,
       "norm_label": "layersidebar.tsx"
     },
     {
       "label": "renderSoonCard()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\LayerSidebar.tsx",
-      "source_location": "L41",
+      "source_location": "L51",
       "id": "layersidebar_rendersooncard",
-      "community": 17,
+      "community": 18,
       "norm_label": "rendersooncard()"
     },
     {
@@ -2538,7 +2889,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\useBuildingsTileset.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_viewer_usebuildingstileset_ts",
-      "community": 18,
+      "community": 19,
       "norm_label": "usebuildingstileset.ts"
     },
     {
@@ -2547,7 +2898,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\useBuildingsTileset.ts",
       "source_location": "L15",
       "id": "usebuildingstileset_usebuildingstileset",
-      "community": 18,
+      "community": 19,
       "norm_label": "usebuildingstileset()"
     },
     {
@@ -2556,7 +2907,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\useFlightData.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_viewer_useflightdata_ts",
-      "community": 19,
+      "community": 20,
       "norm_label": "useflightdata.ts"
     },
     {
@@ -2565,7 +2916,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\useFlightData.ts",
       "source_location": "L44",
       "id": "useflightdata_useflightdata",
-      "community": 19,
+      "community": 20,
       "norm_label": "useflightdata()"
     },
     {
@@ -2574,7 +2925,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\useFlightScene.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_viewer_useflightscene_ts",
-      "community": 20,
+      "community": 21,
       "norm_label": "useflightscene.ts"
     },
     {
@@ -2583,7 +2934,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\useFlightScene.ts",
       "source_location": "L50",
       "id": "useflightscene_useflightscene",
-      "community": 20,
+      "community": 21,
       "norm_label": "useflightscene()"
     },
     {
@@ -2592,7 +2943,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\useInteractionGuards.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_viewer_useinteractionguards_ts",
-      "community": 21,
+      "community": 22,
       "norm_label": "useinteractionguards.ts"
     },
     {
@@ -2601,7 +2952,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\useInteractionGuards.ts",
       "source_location": "L29",
       "id": "useinteractionguards_useinteractionguards",
-      "community": 21,
+      "community": 22,
       "norm_label": "useinteractionguards()"
     },
     {
@@ -2610,7 +2961,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\useOrbitControls.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_viewer_useorbitcontrols_ts",
-      "community": 22,
+      "community": 23,
       "norm_label": "useorbitcontrols.ts"
     },
     {
@@ -2619,7 +2970,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\useOrbitControls.ts",
       "source_location": "L23",
       "id": "useorbitcontrols_useorbitcontrols",
-      "community": 22,
+      "community": 23,
       "norm_label": "useorbitcontrols()"
     },
     {
@@ -2628,16 +2979,16 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\useSatelliteData.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_viewer_usesatellitedata_ts",
-      "community": 23,
+      "community": 24,
       "norm_label": "usesatellitedata.ts"
     },
     {
       "label": "useSatelliteData()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\useSatelliteData.ts",
-      "source_location": "L25",
+      "source_location": "L26",
       "id": "usesatellitedata_usesatellitedata",
-      "community": 23,
+      "community": 24,
       "norm_label": "usesatellitedata()"
     },
     {
@@ -2646,16 +2997,16 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\useSatelliteScene.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_viewer_usesatellitescene_ts",
-      "community": 24,
+      "community": 25,
       "norm_label": "usesatellitescene.ts"
     },
     {
       "label": "useSatelliteScene()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\useSatelliteScene.ts",
-      "source_location": "L23",
+      "source_location": "L32",
       "id": "usesatellitescene_usesatellitescene",
-      "community": 24,
+      "community": 25,
       "norm_label": "usesatellitescene()"
     },
     {
@@ -2664,7 +3015,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\useViewerSetup.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_viewer_useviewersetup_ts",
-      "community": 25,
+      "community": 26,
       "norm_label": "useviewersetup.ts"
     },
     {
@@ -2673,7 +3024,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\useViewerSetup.ts",
       "source_location": "L17",
       "id": "useviewersetup_useviewersetup",
-      "community": 25,
+      "community": 26,
       "norm_label": "useviewersetup()"
     },
     {
@@ -2682,7 +3033,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\Viewer.tsx",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_viewer_viewer_tsx",
-      "community": 34,
+      "community": 35,
       "norm_label": "viewer.tsx"
     },
     {
@@ -2691,7 +3042,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\viewerConfig.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_viewer_viewerconfig_ts",
-      "community": 35,
+      "community": 36,
       "norm_label": "viewerconfig.ts"
     },
     {
@@ -2700,7 +3051,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\viewerTypes.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_viewer_viewertypes_ts",
-      "community": 36,
+      "community": 37,
       "norm_label": "viewertypes.ts"
     }
   ],
@@ -5049,7 +5400,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\orbitPropagator.mjs",
-      "source_location": "L13",
+      "source_location": "L15",
       "weight": 1.0,
       "_src": "e_ashis_god_eyes_explorer_server_services_orbitpropagator_mjs",
       "_tgt": "orbitpropagator_startorbitpropagationloop",
@@ -5061,7 +5412,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\orbitPropagator.mjs",
-      "source_location": "L21",
+      "source_location": "L23",
       "weight": 1.0,
       "_src": "e_ashis_god_eyes_explorer_server_services_orbitpropagator_mjs",
       "_tgt": "orbitpropagator_stoporbitpropagationloop",
@@ -5073,7 +5424,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\orbitPropagator.mjs",
-      "source_location": "L29",
+      "source_location": "L31",
       "weight": 1.0,
       "_src": "e_ashis_god_eyes_explorer_server_services_orbitpropagator_mjs",
       "_tgt": "orbitpropagator_propagatenow",
@@ -5085,7 +5436,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\orbitPropagator.mjs",
-      "source_location": "L73",
+      "source_location": "L75",
       "weight": 1.0,
       "_src": "e_ashis_god_eyes_explorer_server_services_orbitpropagator_mjs",
       "_tgt": "orbitpropagator_getsatreccache",
@@ -5097,7 +5448,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\orbitPropagator.mjs",
-      "source_location": "L103",
+      "source_location": "L106",
       "weight": 1.0,
       "_src": "e_ashis_god_eyes_explorer_server_services_orbitpropagator_mjs",
       "_tgt": "orbitpropagator_normalizesatellite",
@@ -5109,7 +5460,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\orbitPropagator.mjs",
-      "source_location": "L146",
+      "source_location": "L156",
       "weight": 1.0,
       "_src": "e_ashis_god_eyes_explorer_server_services_orbitpropagator_mjs",
       "_tgt": "orbitpropagator_buildorbitmeta",
@@ -5118,10 +5469,46 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\orbitPropagator.mjs",
+      "source_location": "L179",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_services_orbitpropagator_mjs",
+      "_tgt": "orbitpropagator_buildintelligencemeta",
+      "source": "e_ashis_god_eyes_explorer_server_services_orbitpropagator_mjs",
+      "target": "orbitpropagator_buildintelligencemeta",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\orbitPropagator.mjs",
+      "source_location": "L196",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_services_orbitpropagator_mjs",
+      "_tgt": "orbitpropagator_classifymission",
+      "source": "e_ashis_god_eyes_explorer_server_services_orbitpropagator_mjs",
+      "target": "orbitpropagator_classifymission",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\orbitPropagator.mjs",
+      "source_location": "L223",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_services_orbitpropagator_mjs",
+      "_tgt": "orbitpropagator_classifyconstellation",
+      "source": "e_ashis_god_eyes_explorer_server_services_orbitpropagator_mjs",
+      "target": "orbitpropagator_classifyconstellation",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\orbitPropagator.mjs",
-      "source_location": "L18",
+      "source_location": "L20",
       "weight": 1.0,
       "_src": "orbitpropagator_startorbitpropagationloop",
       "_tgt": "orbitpropagator_propagatenow",
@@ -5157,7 +5544,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\orbitPropagator.mjs",
-      "source_location": "L31",
+      "source_location": "L33",
       "weight": 1.0,
       "_src": "orbitpropagator_propagatenow",
       "_tgt": "orbitpropagator_getsatreccache",
@@ -5169,7 +5556,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\orbitPropagator.mjs",
-      "source_location": "L53",
+      "source_location": "L55",
       "weight": 1.0,
       "_src": "orbitpropagator_propagatenow",
       "_tgt": "orbitpropagator_normalizesatellite",
@@ -5205,12 +5592,48 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\orbitPropagator.mjs",
-      "source_location": "L90",
+      "source_location": "L92",
       "weight": 1.0,
       "_src": "orbitpropagator_getsatreccache",
       "_tgt": "orbitpropagator_buildorbitmeta",
       "source": "orbitpropagator_getsatreccache",
       "target": "orbitpropagator_buildorbitmeta",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\orbitPropagator.mjs",
+      "source_location": "L93",
+      "weight": 1.0,
+      "_src": "orbitpropagator_getsatreccache",
+      "_tgt": "orbitpropagator_buildintelligencemeta",
+      "source": "orbitpropagator_getsatreccache",
+      "target": "orbitpropagator_buildintelligencemeta",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\orbitPropagator.mjs",
+      "source_location": "L180",
+      "weight": 1.0,
+      "_src": "orbitpropagator_buildintelligencemeta",
+      "_tgt": "orbitpropagator_classifymission",
+      "source": "orbitpropagator_buildintelligencemeta",
+      "target": "orbitpropagator_classifymission",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\orbitPropagator.mjs",
+      "source_location": "L181",
+      "weight": 1.0,
+      "_src": "orbitpropagator_buildintelligencemeta",
+      "_tgt": "orbitpropagator_classifyconstellation",
+      "source": "orbitpropagator_buildintelligencemeta",
+      "target": "orbitpropagator_classifyconstellation",
       "confidence_score": 1.0
     },
     {
@@ -6838,6 +7261,18 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
+      "source_location": "L739",
+      "weight": 1.0,
+      "_src": "flightlayers_flightscenelayermanager_tickpositions",
+      "_tgt": "satelliteintelligence_toradians",
+      "source": "flightlayers_flightscenelayermanager_tickpositions",
+      "target": "satelliteintelligence_toradians"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
       "source_location": "L804",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_updatetargetapiposition",
@@ -6976,6 +7411,18 @@
       "source": "flightlayers_flightscenelayermanager_updatesensorlinkcamera",
       "target": "flightlayers_flightscenelayermanager_capturefocusoffset",
       "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
+      "source_location": "L990",
+      "weight": 1.0,
+      "_src": "flightlayers_flightscenelayermanager_updatesensorlinkcamera",
+      "_tgt": "satelliteintelligence_toradians",
+      "source": "flightlayers_flightscenelayermanager_updatesensorlinkcamera",
+      "target": "satelliteintelligence_toradians"
     },
     {
       "relation": "calls",
@@ -7926,6 +8373,18 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L347",
+      "weight": 1.0,
+      "_src": "flightvisuals_clamp",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_getcameraopacity",
+      "source": "flightvisuals_clamp",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_getcameraopacity"
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\ui\\FlightDetailsPanel.tsx",
@@ -7940,8 +8399,260 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satelliteIntelligence.ts",
+      "source_location": "L36",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_src_earth_satellites_satelliteintelligence_ts",
+      "_tgt": "satelliteintelligence_getselectedsatellitesignalstatus",
+      "source": "e_ashis_god_eyes_explorer_src_earth_satellites_satelliteintelligence_ts",
+      "target": "satelliteintelligence_getselectedsatellitesignalstatus",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satelliteIntelligence.ts",
+      "source_location": "L64",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_src_earth_satellites_satelliteintelligence_ts",
+      "_tgt": "satelliteintelligence_getnearestgroundstation",
+      "source": "e_ashis_god_eyes_explorer_src_earth_satellites_satelliteintelligence_ts",
+      "target": "satelliteintelligence_getnearestgroundstation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satelliteIntelligence.ts",
+      "source_location": "L84",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_src_earth_satellites_satelliteintelligence_ts",
+      "_tgt": "satelliteintelligence_haslineofsight",
+      "source": "e_ashis_god_eyes_explorer_src_earth_satellites_satelliteintelligence_ts",
+      "target": "satelliteintelligence_haslineofsight",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satelliteIntelligence.ts",
+      "source_location": "L101",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_src_earth_satellites_satelliteintelligence_ts",
+      "_tgt": "satelliteintelligence_groundstationtocartesian",
+      "source": "e_ashis_god_eyes_explorer_src_earth_satellites_satelliteintelligence_ts",
+      "target": "satelliteintelligence_groundstationtocartesian",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satelliteIntelligence.ts",
+      "source_location": "L105",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_src_earth_satellites_satelliteintelligence_ts",
+      "_tgt": "satelliteintelligence_formatsignalcountdown",
+      "source": "e_ashis_god_eyes_explorer_src_earth_satellites_satelliteintelligence_ts",
+      "target": "satelliteintelligence_formatsignalcountdown",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satelliteIntelligence.ts",
+      "source_location": "L115",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_src_earth_satellites_satelliteintelligence_ts",
+      "_tgt": "satelliteintelligence_findnextsignaltransitionseconds",
+      "source": "e_ashis_god_eyes_explorer_src_earth_satellites_satelliteintelligence_ts",
+      "target": "satelliteintelligence_findnextsignaltransitionseconds",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satelliteIntelligence.ts",
+      "source_location": "L155",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_src_earth_satellites_satelliteintelligence_ts",
+      "_tgt": "satelliteintelligence_centralangleradians",
+      "source": "e_ashis_god_eyes_explorer_src_earth_satellites_satelliteintelligence_ts",
+      "target": "satelliteintelligence_centralangleradians",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satelliteIntelligence.ts",
+      "source_location": "L171",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_src_earth_satellites_satelliteintelligence_ts",
+      "_tgt": "satelliteintelligence_toradians",
+      "source": "e_ashis_god_eyes_explorer_src_earth_satellites_satelliteintelligence_ts",
+      "target": "satelliteintelligence_toradians",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satelliteIntelligence.ts",
+      "source_location": "L39",
+      "weight": 1.0,
+      "_src": "satelliteintelligence_getselectedsatellitesignalstatus",
+      "_tgt": "satelliteintelligence_getnearestgroundstation",
+      "source": "satelliteintelligence_getselectedsatellitesignalstatus",
+      "target": "satelliteintelligence_getnearestgroundstation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satelliteIntelligence.ts",
+      "source_location": "L49",
+      "weight": 1.0,
+      "_src": "satelliteintelligence_getselectedsatellitesignalstatus",
+      "_tgt": "satelliteintelligence_haslineofsight",
+      "source": "satelliteintelligence_getselectedsatellitesignalstatus",
+      "target": "satelliteintelligence_haslineofsight",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satelliteIntelligence.ts",
+      "source_location": "L50",
+      "weight": 1.0,
+      "_src": "satelliteintelligence_getselectedsatellitesignalstatus",
+      "_tgt": "satelliteintelligence_findnextsignaltransitionseconds",
+      "source": "satelliteintelligence_getselectedsatellitesignalstatus",
+      "target": "satelliteintelligence_findnextsignaltransitionseconds",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satelliteIntelligence.ts",
+      "source_location": "L69",
+      "weight": 1.0,
+      "_src": "satelliteintelligence_getnearestgroundstation",
+      "_tgt": "satelliteintelligence_centralangleradians",
+      "source": "satelliteintelligence_getnearestgroundstation",
+      "target": "satelliteintelligence_centralangleradians",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L469",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_refreshsignallink",
+      "_tgt": "satelliteintelligence_getnearestgroundstation",
+      "source": "satelliteintelligence_getnearestgroundstation",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_refreshsignallink"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satelliteIntelligence.ts",
+      "source_location": "L88",
+      "weight": 1.0,
+      "_src": "satelliteintelligence_haslineofsight",
+      "_tgt": "satelliteintelligence_centralangleradians",
+      "source": "satelliteintelligence_haslineofsight",
+      "target": "satelliteintelligence_centralangleradians",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satelliteIntelligence.ts",
+      "source_location": "L147",
+      "weight": 1.0,
+      "_src": "satelliteintelligence_findnextsignaltransitionseconds",
+      "_tgt": "satelliteintelligence_haslineofsight",
+      "source": "satelliteintelligence_haslineofsight",
+      "target": "satelliteintelligence_findnextsignaltransitionseconds",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L470",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_refreshsignallink",
+      "_tgt": "satelliteintelligence_haslineofsight",
+      "source": "satelliteintelligence_haslineofsight",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_refreshsignallink"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L477",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_refreshsignallink",
+      "_tgt": "satelliteintelligence_groundstationtocartesian",
+      "source": "satelliteintelligence_groundstationtocartesian",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_refreshsignallink"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satelliteIntelligence.ts",
+      "source_location": "L161",
+      "weight": 1.0,
+      "_src": "satelliteintelligence_centralangleradians",
+      "_tgt": "satelliteintelligence_toradians",
+      "source": "satelliteintelligence_centralangleradians",
+      "target": "satelliteintelligence_toradians",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\cameraUtils.ts",
+      "source_location": "L26",
+      "weight": 1.0,
+      "_src": "camerautils_flyobliquetopoint",
+      "_tgt": "satelliteintelligence_toradians",
+      "source": "satelliteintelligence_toradians",
+      "target": "camerautils_flyobliquetopoint"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\cameraUtils.ts",
+      "source_location": "L147",
+      "weight": 1.0,
+      "_src": "camerautils_buildhome",
+      "_tgt": "satelliteintelligence_toradians",
+      "source": "satelliteintelligence_toradians",
+      "target": "camerautils_buildhome"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\cameraUtils.ts",
+      "source_location": "L199",
+      "weight": 1.0,
+      "_src": "camerautils_getcockpitcamerapose",
+      "_tgt": "satelliteintelligence_toradians",
+      "source": "satelliteintelligence_toradians",
+      "target": "camerautils_getcockpitcamerapose"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satellites.ts",
-      "source_location": "L61",
+      "source_location": "L98",
       "weight": 1.0,
       "_src": "e_ashis_god_eyes_explorer_src_earth_satellites_satellites_ts",
       "_tgt": "satellites_fetchsatellitesnapshot",
@@ -7953,7 +8664,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satellites.ts",
-      "source_location": "L72",
+      "source_location": "L109",
       "weight": 1.0,
       "_src": "e_ashis_god_eyes_explorer_src_earth_satellites_satellites_ts",
       "_tgt": "satellites_getsatellitedisplayname",
@@ -7965,7 +8676,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satellites.ts",
-      "source_location": "L76",
+      "source_location": "L113",
       "weight": 1.0,
       "_src": "e_ashis_god_eyes_explorer_src_earth_satellites_satellites_ts",
       "_tgt": "satellites_formatsatellitealtitude",
@@ -7977,7 +8688,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satellites.ts",
-      "source_location": "L81",
+      "source_location": "L118",
       "weight": 1.0,
       "_src": "e_ashis_god_eyes_explorer_src_earth_satellites_satellites_ts",
       "_tgt": "satellites_formatsatellitevelocity",
@@ -7989,7 +8700,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satellites.ts",
-      "source_location": "L86",
+      "source_location": "L123",
       "weight": 1.0,
       "_src": "e_ashis_god_eyes_explorer_src_earth_satellites_satellites_ts",
       "_tgt": "satellites_formatorbitvalue",
@@ -8000,8 +8711,20 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satellites.ts",
+      "source_location": "L128",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_src_earth_satellites_satellites_ts",
+      "_tgt": "satellites_formatsatellitemission",
+      "source": "e_ashis_god_eyes_explorer_src_earth_satellites_satellites_ts",
+      "target": "satellites_formatsatellitemission",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L42",
+      "source_location": "L73",
       "weight": 1.0,
       "_src": "e_ashis_god_eyes_explorer_src_earth_satellites_satellitescenelayermanager_ts",
       "_tgt": "satellitescenelayermanager_satellitescenelayermanager",
@@ -8013,7 +8736,79 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L216",
+      "source_location": "L616",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_src_earth_satellites_satellitescenelayermanager_ts",
+      "_tgt": "satellitescenelayermanager_clonecolorwithalpha",
+      "source": "e_ashis_god_eyes_explorer_src_earth_satellites_satellitescenelayermanager_ts",
+      "target": "satellitescenelayermanager_clonecolorwithalpha",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L620",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_src_earth_satellites_satellitescenelayermanager_ts",
+      "_tgt": "satellitescenelayermanager_isstarlinksatellite",
+      "source": "e_ashis_god_eyes_explorer_src_earth_satellites_satellitescenelayermanager_ts",
+      "target": "satellitescenelayermanager_isstarlinksatellite",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L624",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_src_earth_satellites_satellitescenelayermanager_ts",
+      "_tgt": "satellitescenelayermanager_getconstellationid",
+      "source": "e_ashis_god_eyes_explorer_src_earth_satellites_satellitescenelayermanager_ts",
+      "target": "satellitescenelayermanager_getconstellationid",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L633",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_src_earth_satellites_satellitescenelayermanager_ts",
+      "_tgt": "satellitescenelayermanager_getpulse",
+      "source": "e_ashis_god_eyes_explorer_src_earth_satellites_satellitescenelayermanager_ts",
+      "target": "satellitescenelayermanager_getpulse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L639",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_src_earth_satellites_satellitescenelayermanager_ts",
+      "_tgt": "satellitescenelayermanager_getnetworkcell",
+      "source": "e_ashis_god_eyes_explorer_src_earth_satellites_satellitescenelayermanager_ts",
+      "target": "satellitescenelayermanager_getnetworkcell",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L647",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_src_earth_satellites_satellitescenelayermanager_ts",
+      "_tgt": "satellitescenelayermanager_getneighborcells",
+      "source": "e_ashis_god_eyes_explorer_src_earth_satellites_satellitescenelayermanager_ts",
+      "target": "satellitescenelayermanager_getneighborcells",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L660",
       "weight": 1.0,
       "_src": "e_ashis_god_eyes_explorer_src_earth_satellites_satellitescenelayermanager_ts",
       "_tgt": "satellitescenelayermanager_buildpredictedpathpositions",
@@ -8025,7 +8820,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L251",
+      "source_location": "L695",
       "weight": 1.0,
       "_src": "e_ashis_god_eyes_explorer_src_earth_satellites_satellitescenelayermanager_ts",
       "_tgt": "satellitescenelayermanager_satellitetocartesian",
@@ -8037,7 +8832,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L259",
+      "source_location": "L703",
       "weight": 1.0,
       "_src": "e_ashis_god_eyes_explorer_src_earth_satellites_satellitescenelayermanager_ts",
       "_tgt": "satellitescenelayermanager_isrenderablesatellite",
@@ -8049,7 +8844,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L268",
+      "source_location": "L712",
       "weight": 1.0,
       "_src": "e_ashis_god_eyes_explorer_src_earth_satellites_satellitescenelayermanager_ts",
       "_tgt": "satellitescenelayermanager_extractsatellitepickid",
@@ -8061,7 +8856,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L51",
+      "source_location": "L99",
       "weight": 1.0,
       "_src": "satellitescenelayermanager_satellitescenelayermanager",
       "_tgt": "satellitescenelayermanager_satellitescenelayermanager_constructor",
@@ -8073,7 +8868,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L59",
+      "source_location": "L146",
       "weight": 1.0,
       "_src": "satellitescenelayermanager_satellitescenelayermanager",
       "_tgt": "satellitescenelayermanager_satellitescenelayermanager_destroy",
@@ -8085,7 +8880,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L68",
+      "source_location": "L157",
       "weight": 1.0,
       "_src": "satellitescenelayermanager_satellitescenelayermanager",
       "_tgt": "satellitescenelayermanager_satellitescenelayermanager_setsatellitesvisible",
@@ -8097,7 +8892,67 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L77",
+      "source_location": "L174",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_setstarlinkfocusenabled",
+      "source": "satellitescenelayermanager_satellitescenelayermanager",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_setstarlinkfocusenabled",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L181",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_setnetworkviewenabled",
+      "source": "satellitescenelayermanager_satellitescenelayermanager",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_setnetworkviewenabled",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L189",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_setmissionfilters",
+      "source": "satellitescenelayermanager_satellitescenelayermanager",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_setmissionfilters",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L198",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_updatecamerafading",
+      "source": "satellitescenelayermanager_satellitescenelayermanager",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_updatecamerafading",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L206",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_tickintelligence",
+      "source": "satellitescenelayermanager_satellitescenelayermanager",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_tickintelligence",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L214",
       "weight": 1.0,
       "_src": "satellitescenelayermanager_satellitescenelayermanager",
       "_tgt": "satellitescenelayermanager_satellitescenelayermanager_setselectedsatelliteid",
@@ -8109,7 +8964,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L100",
+      "source_location": "L242",
       "weight": 1.0,
       "_src": "satellitescenelayermanager_satellitescenelayermanager",
       "_tgt": "satellitescenelayermanager_satellitescenelayermanager_syncsatellites",
@@ -8121,7 +8976,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L155",
+      "source_location": "L302",
       "weight": 1.0,
       "_src": "satellitescenelayermanager_satellitescenelayermanager",
       "_tgt": "satellitescenelayermanager_satellitescenelayermanager_picksatellite",
@@ -8133,7 +8988,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L161",
+      "source_location": "L308",
       "weight": 1.0,
       "_src": "satellitescenelayermanager_satellitescenelayermanager",
       "_tgt": "satellitescenelayermanager_satellitescenelayermanager_getsatelliteposition",
@@ -8145,19 +9000,55 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L166",
+      "source_location": "L313",
       "weight": 1.0,
       "_src": "satellitescenelayermanager_satellitescenelayermanager",
-      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_applypointstyle",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_applysatellitevisual",
       "source": "satellitescenelayermanager_satellitescenelayermanager",
-      "target": "satellitescenelayermanager_satellitescenelayermanager_applypointstyle",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_applysatellitevisual",
       "confidence_score": 1.0
     },
     {
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L174",
+      "source_location": "L340",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_refreshsatellitevisuals",
+      "source": "satellitescenelayermanager_satellitescenelayermanager",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_refreshsatellitevisuals",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L346",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_getsatellitecolor",
+      "source": "satellitescenelayermanager_satellitescenelayermanager",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_getsatellitecolor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L352",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_ismissionvisible",
+      "source": "satellitescenelayermanager_satellitescenelayermanager",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_ismissionvisible",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L358",
       "weight": 1.0,
       "_src": "satellitescenelayermanager_satellitescenelayermanager",
       "_tgt": "satellitescenelayermanager_satellitescenelayermanager_rebuildselectedpath",
@@ -8169,7 +9060,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L201",
+      "source_location": "L385",
       "weight": 1.0,
       "_src": "satellitescenelayermanager_satellitescenelayermanager",
       "_tgt": "satellitescenelayermanager_satellitescenelayermanager_clearselectedpath",
@@ -8181,7 +9072,151 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L209",
+      "source_location": "L393",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_rebuildsensorcone",
+      "source": "satellitescenelayermanager_satellitescenelayermanager",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_rebuildsensorcone",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L426",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_clearsensorcone",
+      "source": "satellitescenelayermanager_satellitescenelayermanager",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_clearsensorcone",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L434",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_refreshselectionoverlays",
+      "source": "satellitescenelayermanager_satellitescenelayermanager",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_refreshselectionoverlays",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L453",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_getcameraopacity",
+      "source": "satellitescenelayermanager_satellitescenelayermanager",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_getcameraopacity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L458",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_refreshsignallink",
+      "source": "satellitescenelayermanager_satellitescenelayermanager",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_refreshsignallink",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L482",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_hidesignallink",
+      "source": "satellitescenelayermanager_satellitescenelayermanager",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_hidesignallink",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L486",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_updatesignalpulse",
+      "source": "satellitescenelayermanager_satellitescenelayermanager",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_updatesignalpulse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L497",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_updatedecaypulse",
+      "source": "satellitescenelayermanager_satellitescenelayermanager",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_updatedecaypulse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L505",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_refreshnetworklinks",
+      "source": "satellitescenelayermanager_satellitescenelayermanager",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_refreshnetworklinks",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L567",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_updatesundirection",
+      "source": "satellitescenelayermanager_satellitescenelayermanager",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_updatesundirection",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L584",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_getshadowopacityfactor",
+      "source": "satellitescenelayermanager_satellitescenelayermanager",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_getshadowopacityfactor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L601",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_isglintaligned",
+      "source": "satellitescenelayermanager_satellitescenelayermanager",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_isglintaligned",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L609",
       "weight": 1.0,
       "_src": "satellitescenelayermanager_satellitescenelayermanager",
       "_tgt": "satellitescenelayermanager_satellitescenelayermanager_requestrender",
@@ -8193,7 +9228,31 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L60",
+      "source_location": "L141",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_constructor",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_getcameraopacity",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_constructor",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_getcameraopacity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L142",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_constructor",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_updatesundirection",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_constructor",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_updatesundirection",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L147",
       "weight": 1.0,
       "_src": "satellitescenelayermanager_satellitescenelayermanager_destroy",
       "_tgt": "satellitescenelayermanager_satellitescenelayermanager_clearselectedpath",
@@ -8205,7 +9264,43 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L74",
+      "source_location": "L148",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_destroy",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_clearsensorcone",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_destroy",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_clearsensorcone",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L169",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_setsatellitesvisible",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_refreshselectionoverlays",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_setsatellitesvisible",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_refreshselectionoverlays",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L170",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_setsatellitesvisible",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_refreshsignallink",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_setsatellitesvisible",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_refreshsignallink",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L171",
       "weight": 1.0,
       "_src": "satellitescenelayermanager_satellitescenelayermanager_setsatellitesvisible",
       "_tgt": "satellitescenelayermanager_satellitescenelayermanager_requestrender",
@@ -8217,19 +9312,223 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L84",
+      "source_location": "L177",
       "weight": 1.0,
-      "_src": "satellitescenelayermanager_satellitescenelayermanager_setselectedsatelliteid",
-      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_applypointstyle",
-      "source": "satellitescenelayermanager_satellitescenelayermanager_setselectedsatelliteid",
-      "target": "satellitescenelayermanager_satellitescenelayermanager_applypointstyle",
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_setstarlinkfocusenabled",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_refreshsatellitevisuals",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_setstarlinkfocusenabled",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_refreshsatellitevisuals",
       "confidence_score": 1.0
     },
     {
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L92",
+      "source_location": "L178",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_setstarlinkfocusenabled",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_requestrender",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_setstarlinkfocusenabled",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_requestrender",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L185",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_setnetworkviewenabled",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_refreshnetworklinks",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_setnetworkviewenabled",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_refreshnetworklinks",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L186",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_setnetworkviewenabled",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_requestrender",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_setnetworkviewenabled",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_requestrender",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L191",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_setmissionfilters",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_refreshsatellitevisuals",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_setmissionfilters",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_refreshsatellitevisuals",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L192",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_setmissionfilters",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_refreshnetworklinks",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_setmissionfilters",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_refreshnetworklinks",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L193",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_setmissionfilters",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_refreshselectionoverlays",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_setmissionfilters",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_refreshselectionoverlays",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L194",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_setmissionfilters",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_refreshsignallink",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_setmissionfilters",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_refreshsignallink",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L195",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_setmissionfilters",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_requestrender",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_setmissionfilters",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_requestrender",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L199",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_updatecamerafading",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_getcameraopacity",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_updatecamerafading",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_getcameraopacity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L202",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_updatecamerafading",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_refreshsatellitevisuals",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_updatecamerafading",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_refreshsatellitevisuals",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L203",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_updatecamerafading",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_requestrender",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_updatecamerafading",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_requestrender",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L207",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_tickintelligence",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_updatecamerafading",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_updatecamerafading",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_tickintelligence",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L208",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_tickintelligence",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_updatesundirection",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_tickintelligence",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_updatesundirection",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L209",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_tickintelligence",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_updatesignalpulse",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_tickintelligence",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_updatesignalpulse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L210",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_tickintelligence",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_updatedecaypulse",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_tickintelligence",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_updatedecaypulse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L211",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_tickintelligence",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_refreshselectionoverlays",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_tickintelligence",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_refreshselectionoverlays",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L221",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_setselectedsatelliteid",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_applysatellitevisual",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_setselectedsatelliteid",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_applysatellitevisual",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L229",
       "weight": 1.0,
       "_src": "satellitescenelayermanager_satellitescenelayermanager_setselectedsatelliteid",
       "_tgt": "satellitescenelayermanager_satellitescenelayermanager_rebuildselectedpath",
@@ -8241,7 +9540,31 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L94",
+      "source_location": "L230",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_setselectedsatelliteid",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_rebuildsensorcone",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_setselectedsatelliteid",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_rebuildsensorcone",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L231",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_setselectedsatelliteid",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_refreshsignallink",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_setselectedsatelliteid",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_refreshsignallink",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L233",
       "weight": 1.0,
       "_src": "satellitescenelayermanager_satellitescenelayermanager_setselectedsatelliteid",
       "_tgt": "satellitescenelayermanager_satellitescenelayermanager_clearselectedpath",
@@ -8253,7 +9576,43 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L97",
+      "source_location": "L234",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_setselectedsatelliteid",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_clearsensorcone",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_setselectedsatelliteid",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_clearsensorcone",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L235",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_setselectedsatelliteid",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_hidesignallink",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_setselectedsatelliteid",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_hidesignallink",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L238",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_setselectedsatelliteid",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_refreshselectionoverlays",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_setselectedsatelliteid",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_refreshselectionoverlays",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L239",
       "weight": 1.0,
       "_src": "satellitescenelayermanager_satellitescenelayermanager_setselectedsatelliteid",
       "_tgt": "satellitescenelayermanager_satellitescenelayermanager_requestrender",
@@ -8265,7 +9624,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L104",
+      "source_location": "L246",
       "weight": 1.0,
       "_src": "satellitescenelayermanager_satellitescenelayermanager_syncsatellites",
       "_tgt": "satellitescenelayermanager_isrenderablesatellite",
@@ -8277,7 +9636,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L107",
+      "source_location": "L249",
       "weight": 1.0,
       "_src": "satellitescenelayermanager_satellitescenelayermanager_syncsatellites",
       "_tgt": "satellitescenelayermanager_satellitetocartesian",
@@ -8289,19 +9648,31 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L113",
+      "source_location": "L255",
       "weight": 1.0,
       "_src": "satellitescenelayermanager_satellitescenelayermanager_syncsatellites",
-      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_applypointstyle",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_applysatellitevisual",
       "source": "satellitescenelayermanager_satellitescenelayermanager_syncsatellites",
-      "target": "satellitescenelayermanager_satellitescenelayermanager_applypointstyle",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_applysatellitevisual",
       "confidence_score": 1.0
     },
     {
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L141",
+      "source_location": "L263",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_syncsatellites",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_getsatellitecolor",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_syncsatellites",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_getsatellitecolor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L283",
       "weight": 1.0,
       "_src": "satellitescenelayermanager_satellitescenelayermanager_syncsatellites",
       "_tgt": "satellitescenelayermanager_satellitescenelayermanager_clearselectedpath",
@@ -8313,7 +9684,19 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L149",
+      "source_location": "L284",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_syncsatellites",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_clearsensorcone",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_syncsatellites",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_clearsensorcone",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L292",
       "weight": 1.0,
       "_src": "satellitescenelayermanager_satellitescenelayermanager_syncsatellites",
       "_tgt": "satellitescenelayermanager_satellitescenelayermanager_rebuildselectedpath",
@@ -8325,7 +9708,55 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L152",
+      "source_location": "L293",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_syncsatellites",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_rebuildsensorcone",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_syncsatellites",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_rebuildsensorcone",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L294",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_syncsatellites",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_refreshsignallink",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_syncsatellites",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_refreshsignallink",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L297",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_syncsatellites",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_refreshselectionoverlays",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_syncsatellites",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_refreshselectionoverlays",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L298",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_syncsatellites",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_refreshnetworklinks",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_syncsatellites",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_refreshnetworklinks",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L299",
       "weight": 1.0,
       "_src": "satellitescenelayermanager_satellitescenelayermanager_syncsatellites",
       "_tgt": "satellitescenelayermanager_satellitescenelayermanager_requestrender",
@@ -8337,7 +9768,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L157",
+      "source_location": "L304",
       "weight": 1.0,
       "_src": "satellitescenelayermanager_satellitescenelayermanager_picksatellite",
       "_tgt": "satellitescenelayermanager_extractsatellitepickid",
@@ -8349,7 +9780,115 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L175",
+      "source_location": "L315",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_applysatellitevisual",
+      "_tgt": "satellitescenelayermanager_isstarlinksatellite",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_applysatellitevisual",
+      "target": "satellitescenelayermanager_isstarlinksatellite",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L319",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_applysatellitevisual",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_getsatellitecolor",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_applysatellitevisual",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_getsatellitecolor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L321",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_applysatellitevisual",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_getshadowopacityfactor",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_applysatellitevisual",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_getshadowopacityfactor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L322",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_applysatellitevisual",
+      "_tgt": "satellitescenelayermanager_getpulse",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_applysatellitevisual",
+      "target": "satellitescenelayermanager_getpulse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L329",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_applysatellitevisual",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_ismissionvisible",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_applysatellitevisual",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_ismissionvisible",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L333",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_applysatellitevisual",
+      "_tgt": "satellitescenelayermanager_clonecolorwithalpha",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_applysatellitevisual",
+      "target": "satellitescenelayermanager_clonecolorwithalpha",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L342",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_refreshsatellitevisuals",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_applysatellitevisual",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_applysatellitevisual",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_refreshsatellitevisuals",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L500",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_updatedecaypulse",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_applysatellitevisual",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_applysatellitevisual",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_updatedecaypulse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L404",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_rebuildsensorcone",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_getsatellitecolor",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_getsatellitecolor",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_rebuildsensorcone",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L359",
       "weight": 1.0,
       "_src": "satellitescenelayermanager_satellitescenelayermanager_rebuildselectedpath",
       "_tgt": "satellitescenelayermanager_buildpredictedpathpositions",
@@ -8361,12 +9900,132 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
-      "source_location": "L177",
+      "source_location": "L361",
       "weight": 1.0,
       "_src": "satellitescenelayermanager_satellitescenelayermanager_rebuildselectedpath",
       "_tgt": "satellitescenelayermanager_satellitescenelayermanager_clearselectedpath",
       "source": "satellitescenelayermanager_satellitescenelayermanager_rebuildselectedpath",
       "target": "satellitescenelayermanager_satellitescenelayermanager_clearselectedpath",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L394",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_rebuildsensorcone",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_clearsensorcone",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_rebuildsensorcone",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_clearsensorcone",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L418",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_rebuildsensorcone",
+      "_tgt": "satellitescenelayermanager_clonecolorwithalpha",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_rebuildsensorcone",
+      "target": "satellitescenelayermanager_clonecolorwithalpha",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L449",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_refreshselectionoverlays",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_getshadowopacityfactor",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_refreshselectionoverlays",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_getshadowopacityfactor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L450",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_refreshselectionoverlays",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_isglintaligned",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_refreshselectionoverlays",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_isglintaligned",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L465",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_refreshsignallink",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_hidesignallink",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_refreshsignallink",
+      "target": "satellitescenelayermanager_satellitescenelayermanager_hidesignallink",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L488",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_updatesignalpulse",
+      "_tgt": "satellitescenelayermanager_getpulse",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_updatesignalpulse",
+      "target": "satellitescenelayermanager_getpulse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L513",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_refreshnetworklinks",
+      "_tgt": "satellitescenelayermanager_getconstellationid",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_refreshnetworklinks",
+      "target": "satellitescenelayermanager_getconstellationid",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L526",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_refreshnetworklinks",
+      "_tgt": "satellitescenelayermanager_getnetworkcell",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_refreshnetworklinks",
+      "target": "satellitescenelayermanager_getnetworkcell",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L527",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_satellitescenelayermanager_refreshnetworklinks",
+      "_tgt": "satellitescenelayermanager_getneighborcells",
+      "source": "satellitescenelayermanager_satellitescenelayermanager_refreshnetworklinks",
+      "target": "satellitescenelayermanager_getneighborcells",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
+      "source_location": "L621",
+      "weight": 1.0,
+      "_src": "satellitescenelayermanager_isstarlinksatellite",
+      "_tgt": "satellitescenelayermanager_getconstellationid",
+      "source": "satellitescenelayermanager_isstarlinksatellite",
+      "target": "satellitescenelayermanager_getconstellationid",
       "confidence_score": 1.0
     },
     {
@@ -8577,7 +10236,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\LayerSidebar.tsx",
-      "source_location": "L41",
+      "source_location": "L51",
       "weight": 1.0,
       "_src": "e_ashis_god_eyes_explorer_src_earth_viewer_layersidebar_tsx",
       "_tgt": "layersidebar_rendersooncard",
@@ -8649,7 +10308,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\useSatelliteData.ts",
-      "source_location": "L25",
+      "source_location": "L26",
       "weight": 1.0,
       "_src": "e_ashis_god_eyes_explorer_src_earth_viewer_usesatellitedata_ts",
       "_tgt": "usesatellitedata_usesatellitedata",
@@ -8661,7 +10320,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\useSatelliteScene.ts",
-      "source_location": "L23",
+      "source_location": "L32",
       "weight": 1.0,
       "_src": "e_ashis_god_eyes_explorer_src_earth_viewer_usesatellitescene_ts",
       "_tgt": "usesatellitescene_usesatellitescene",

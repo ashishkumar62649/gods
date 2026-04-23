@@ -6,6 +6,8 @@ import {
   setSatelliteLoopActive,
 } from '../store/satelliteCache.mjs';
 
+const EARTH_RADIUS_KM = 6378.137;
+
 let propagationTimer = null;
 let satrecCacheVersion = '';
 let satrecCache = [];
@@ -88,6 +90,7 @@ function getSatrecCache(tleRecords) {
         tle,
         satrec,
         orbitMeta: buildOrbitMeta(satrec),
+        intelligenceMeta: buildIntelligenceMeta(tle, satrec),
       });
     } catch {
       // Bad TLEs are skipped; the next Space-Track refresh may repair them.
@@ -101,7 +104,7 @@ function getSatrecCache(tleRecords) {
 }
 
 function normalizeSatellite(entry, geodetic, velocityKps, date) {
-  const { tle, orbitMeta } = entry;
+  const { tle, orbitMeta, intelligenceMeta } = entry;
   const latitude = satellite.degreesLat(geodetic.latitude);
   const longitude = satellite.degreesLong(geodetic.longitude);
   const altitudeKm = geodetic.height;
@@ -133,8 +136,15 @@ function normalizeSatellite(entry, geodetic, velocityKps, date) {
     inclination_deg: orbitMeta.inclination_deg,
     period_minutes: orbitMeta.period_minutes,
     mean_motion_rev_per_day: orbitMeta.mean_motion_rev_per_day,
+    perigee_km: orbitMeta.perigee_km,
+    apogee_km: orbitMeta.apogee_km,
     line1: tle.line1,
     line2: tle.line2,
+
+    // Intelligence
+    constellation_id: intelligenceMeta.constellation_id,
+    mission_category: intelligenceMeta.mission_category,
+    decay_status: intelligenceMeta.decay_status,
 
     // System
     data_source: 'SPACETRACK_GP_SGP4',
@@ -157,5 +167,71 @@ function buildOrbitMeta(satrec) {
       meanMotionRevPerDay && meanMotionRevPerDay > 0
         ? 1440 / meanMotionRevPerDay
         : null,
+    perigee_km: Number.isFinite(satrec.altp)
+      ? satrec.altp * EARTH_RADIUS_KM
+      : null,
+    apogee_km: Number.isFinite(satrec.alta)
+      ? satrec.alta * EARTH_RADIUS_KM
+      : null,
   };
+}
+
+function buildIntelligenceMeta(tle, satrec) {
+  const missionCategory = classifyMission(tle);
+  const constellationId = classifyConstellation(tle, missionCategory);
+  const perigeeKm = Number.isFinite(satrec.altp)
+    ? satrec.altp * EARTH_RADIUS_KM
+    : null;
+
+  return {
+    constellation_id: constellationId,
+    mission_category: missionCategory,
+    decay_status:
+      Number.isFinite(perigeeKm) && perigeeKm < 200
+        ? 'DECAYING'
+        : 'STABLE',
+  };
+}
+
+function classifyMission(tle) {
+  const name = (tle.object_name ?? '').toUpperCase();
+  const type = (tle.object_type ?? '').toUpperCase();
+
+  if (/\b(NROL|USA |LACROSSE|KEYHOLE|KH-|MENTOR|TRUMPET|ORION|MERIDIAN|YAOGAN|OFQ|SAR-LUPE|TOPAZ|COSMO-SKYMED)\b/.test(name)) {
+    return 'SIGINT';
+  }
+
+  if (/\b(GPS|NAVSTAR|GLONASS|GALILEO|BEIDOU|QZSS|IRNSS|NAVIC)\b/.test(name)) {
+    return 'NAV';
+  }
+
+  if (/\b(STARLINK|ONEWEB|IRIDIUM|GLOBALSTAR|INTELSAT|INMARSAT|SES-|EUTELSAT|VIASAT|TDRS|ORBCOMM|SKYNET)\b/.test(name)) {
+    return 'COMMS';
+  }
+
+  if (/\b(GOES|NOAA|METEOSAT|HIMAWARI|FENGYUN|FY-|METOP|DMSP|AQUA|TERRA|SUOMI|JPSS|LANDSAT|SENTINEL)\b/.test(name)) {
+    return 'WEATHER';
+  }
+
+  if (type.includes('PAYLOAD')) {
+    return 'OTHER';
+  }
+
+  return 'OTHER';
+}
+
+function classifyConstellation(tle, missionCategory) {
+  const name = (tle.object_name ?? '').toUpperCase();
+
+  if (name.includes('STARLINK')) return 'starlink';
+  if (name.includes('ONEWEB')) return 'oneweb';
+  if (name.includes('IRIDIUM')) return 'iridium';
+  if (name.includes('GPS') || name.includes('NAVSTAR')) return 'gps';
+  if (name.includes('GLONASS')) return 'glonass';
+  if (name.includes('GALILEO')) return 'galileo';
+  if (name.includes('BEIDOU')) return 'beidou';
+  if (name.includes('GOES')) return 'goes';
+  if (name.includes('NOAA')) return 'noaa';
+
+  return missionCategory === 'OTHER' ? null : missionCategory.toLowerCase();
 }

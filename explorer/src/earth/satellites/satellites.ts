@@ -1,3 +1,34 @@
+export type SatelliteMissionCategory =
+  | 'SIGINT'
+  | 'NAV'
+  | 'COMMS'
+  | 'WEATHER'
+  | 'OTHER';
+
+export type SatelliteDecayStatus = 'STABLE' | 'DECAYING';
+
+export type SatelliteMissionFilters = Record<
+  Exclude<SatelliteMissionCategory, 'OTHER'>,
+  boolean
+>;
+
+export const SATELLITE_MISSION_FILTERS: Array<{
+  key: Exclude<SatelliteMissionCategory, 'OTHER'>;
+  label: string;
+}> = [
+  { key: 'SIGINT', label: 'SIGINT' },
+  { key: 'NAV', label: 'NAV' },
+  { key: 'COMMS', label: 'COMMS' },
+  { key: 'WEATHER', label: 'WEATHER' },
+];
+
+export const INITIAL_SATELLITE_MISSION_FILTERS: SatelliteMissionFilters = {
+  SIGINT: true,
+  NAV: true,
+  COMMS: true,
+  WEATHER: true,
+};
+
 export interface SatelliteRecord {
   id_norad: string;
   object_name: string;
@@ -12,6 +43,11 @@ export interface SatelliteRecord {
   inclination_deg: number | null;
   period_minutes: number | null;
   mean_motion_rev_per_day: number | null;
+  perigee_km: number | null;
+  apogee_km: number | null;
+  constellation_id: string | null;
+  mission_category: SatelliteMissionCategory;
+  decay_status: SatelliteDecayStatus;
   line1: string;
   line2: string;
   data_source: string;
@@ -51,6 +87,7 @@ export interface SatelliteFeedState {
   fetchedAt: string | null;
   satelliteCount: number;
   totalAvailable: number;
+  decayingCount: number;
 }
 
 const SATELLITE_API_BASE = import.meta.env.VITE_FLIGHT_API_BASE?.trim() ?? '';
@@ -86,4 +123,8 @@ export function formatSatelliteVelocity(velocityKps: number | null) {
 export function formatOrbitValue(value: number | null, unit: string, digits = 1) {
   if (!Number.isFinite(value)) return 'Unknown';
   return `${value!.toFixed(digits)} ${unit}`;
+}
+
+export function formatSatelliteMission(satellite: SatelliteRecord) {
+  return satellite.mission_category ?? 'OTHER';
 }

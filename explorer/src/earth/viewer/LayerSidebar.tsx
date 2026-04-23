@@ -3,7 +3,11 @@ import type {
   GroundStationsState,
 } from '../flights/flightLayers';
 import type { FlightFeedState } from '../flights/flights';
-import type { SatelliteFeedState } from '../satellites/satellites';
+import {
+  SATELLITE_MISSION_FILTERS,
+  type SatelliteFeedState,
+  type SatelliteMissionFilters,
+} from '../satellites/satellites';
 import { AVIATION_GRID_OPTIONS } from './viewerConfig';
 import type { SidebarSection } from './viewerTypes';
 
@@ -18,6 +22,8 @@ interface LayerSidebarProps {
   flightsEnabled: boolean;
   satellitesEnabled: boolean;
   starlinkFocusEnabled: boolean;
+  networkViewEnabled: boolean;
+  satelliteMissionFilters: SatelliteMissionFilters;
   aviationGrid: AviationGridState;
   isGridMenuOpen: boolean;
   groundStations: GroundStationsState;
@@ -33,6 +39,8 @@ interface LayerSidebarProps {
   onToggleFlights: () => void;
   onToggleSatellites: () => void;
   onToggleStarlinkFocus: () => void;
+  onToggleNetworkView: () => void;
+  onToggleSatelliteMissionCategory: (category: keyof SatelliteMissionFilters) => void;
   onToggleGridMenu: () => void;
   onToggleAviationGridCategory: (layer: keyof AviationGridState) => void;
   onToggleSigintInfrastructure: () => void;
@@ -65,6 +73,8 @@ export default function LayerSidebar({
   flightsEnabled,
   satellitesEnabled,
   starlinkFocusEnabled,
+  networkViewEnabled,
+  satelliteMissionFilters,
   aviationGrid,
   isGridMenuOpen,
   groundStations,
@@ -80,6 +90,8 @@ export default function LayerSidebar({
   onToggleFlights,
   onToggleSatellites,
   onToggleStarlinkFocus,
+  onToggleNetworkView,
+  onToggleSatelliteMissionCategory,
   onToggleGridMenu,
   onToggleAviationGridCategory,
   onToggleSigintInfrastructure,
@@ -359,6 +371,55 @@ export default function LayerSidebar({
                 </span>
               </span>
             </button>
+            <button
+              type="button"
+              className={
+                networkViewEnabled
+                  ? 'layer-card layer-card--toggle layer-card--intel layer-card--active flex justify-between items-center w-full py-1.5 aether-data-row'
+                  : 'layer-card layer-card--toggle layer-card--intel flex justify-between items-center w-full py-1.5 aether-data-row'
+              }
+              onClick={onToggleNetworkView}
+            >
+              <span className="layer-card__body">
+                <span className="layer-card__label">Network View</span>
+                <span className="layer-card__meta">
+                  Draw close-range inter-satellite links inside constellations.
+                </span>
+              </span>
+              <span
+                className={networkViewEnabled ? 'layer-switch layer-switch--on' : 'layer-switch'}
+                aria-hidden="true"
+              >
+                <span className="layer-switch__thumb" />
+                <span className="layer-switch__text">
+                  {networkViewEnabled ? 'On' : 'Off'}
+                </span>
+              </span>
+            </button>
+            <div className="layer-card layer-card--status flex flex-col w-full py-1.5 aether-data-row">
+              <div className="layer-card__body pb-2">
+                <p className="layer-card__label">Mission Filters</p>
+                <p className="layer-card__meta">
+                  Reduce orbital clutter by intelligence role.
+                </p>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                {SATELLITE_MISSION_FILTERS.map(({ key, label }) => (
+                  <button
+                    key={key}
+                    type="button"
+                    className={
+                      satelliteMissionFilters[key]
+                        ? 'rounded-xl px-2 py-2 text-[10px] font-semibold tracking-[0.18em] uppercase bg-gradient-to-r from-cyan-900/40 to-blue-900/20 border border-cyan-500/40 text-cyan-300 aether-glow-text'
+                        : 'rounded-xl px-2 py-2 text-[10px] font-semibold tracking-[0.18em] uppercase border border-cyan-900/40 text-slate-300 bg-slate-950/30'
+                    }
+                    onClick={() => onToggleSatelliteMissionCategory(key)}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
             <div className="layer-card layer-card--status flex justify-between items-center w-full py-1.5 aether-data-row">
               <div className="layer-card__body">
                 <p className="layer-card__label">Satellite Feed</p>

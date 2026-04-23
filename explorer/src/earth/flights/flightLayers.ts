@@ -57,7 +57,7 @@ const VDL_TOWER_IMAGE = COMMS_TOWER_ICON_IMAGE;
 const ACARS_TOWER_IMAGE = COMMS_TOWER_ICON_IMAGE;
 const HFDL_TOWER_IMAGE = HFDL_TOWER_ICON_IMAGE;
 const GROUND_STATION_OFFSET_DEGREES = 0.005;
-const HFDL_STATIONS = [
+export const HFDL_STATIONS = [
   { id: 'hfdl-1', lat: 37.619, lon: -122.374 }, { id: 'hfdl-2', lat: 64.13, lon: -21.94 },
   { id: 'hfdl-3', lat: 52.699, lon: -8.921 }, { id: 'hfdl-4', lat: -26.139, lon: 28.246 },
   { id: 'hfdl-5', lat: 56.172, lon: 92.493 }, { id: 'hfdl-6', lat: -37.008, lon: 174.785 },
