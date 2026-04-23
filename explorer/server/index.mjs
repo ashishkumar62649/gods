@@ -19,6 +19,7 @@ import { PORT, RADAR_SWEEP_INTERVAL_MS } from './config/constants.mjs';
 import { getAllFlights, removeStaleFlights } from './store/flightCache.mjs';
 import { fetchPrimaryRadar, fetchCustomRadar, getSweeepStats } from './services/fetchers.mjs';
 import { startIntelLoop, mergeIntel, getIntelStats, rawIntelStore } from './services/intelFetcher.mjs';
+import { airportIndex, getAirportStats } from './services/airportIndex.mjs';
 
 // ─── CORS + JSON helpers ──────────────────────────────────────
 function setCorsHeaders(res) {
@@ -105,6 +106,19 @@ const server = http.createServer((req, res) => {
   }
 
   // ── GET /api/health ───────────────────────────────────────
+  if (req.method === 'GET' && url.pathname === '/api/airports') {
+    if (!airportIndex.available) {
+      sendJson(res, 503, {
+        error: 'airports.csv is unavailable. Add the OurAirports CSV to enable airport layers.',
+        path: airportIndex.sourcePath,
+      });
+      return;
+    }
+
+    sendJson(res, 200, airportIndex.airports);
+    return;
+  }
+
   if (req.method === 'GET' && url.pathname === '/api/health') {
     const { source, lastCount } = getSweeepStats();
     const intel = getIntelStats();
@@ -116,6 +130,7 @@ const server = http.createServer((req, res) => {
       lastSweepAt,
       activeSource: source,
       lastCount,
+      airports:      getAirportStats(),
       intel,
     });
     return;

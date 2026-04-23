@@ -32,14 +32,21 @@ const requestHeaders = {
   'Referer':         'https://globe.airplanes.live/',
   'Origin':          'https://globe.airplanes.live',
   'Cache-Control':   'no-cache',
+  'Pragma':          'no-cache',
 };
 
 // ─── Timeout-aware fetch ─────────────────────────────────────
 function fetchWithTimeout(url, options = {}) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
-  return fetch(url, { ...options, signal: controller.signal })
+  return fetch(url, { cache: 'no-store', ...options, signal: controller.signal })
     .finally(() => clearTimeout(timer));
+}
+
+function buildFreshSnapshotUrl(sourceUrl) {
+  const url = new URL(sourceUrl);
+  url.searchParams.set('_', String(Date.now()));
+  return url.toString();
 }
 
 // ─── Sweep stats (read by index.mjs for /api/health) ─────────
@@ -57,7 +64,8 @@ export function getSweeepStats() {
  */
 export async function fetchPrimaryRadar() {
   try {
-    const response = await fetchWithTimeout(PRIMARY_FEED_URL, {
+    const snapshotUrl = buildFreshSnapshotUrl(PRIMARY_FEED_URL);
+    const response = await fetchWithTimeout(snapshotUrl, {
       headers: requestHeaders,
     });
 
@@ -87,6 +95,10 @@ export async function fetchPrimaryRadar() {
     // The CDN's data.now can be minutes old (cached response), which would
     // make every record appear stale and get purged immediately.
     const ingestNowSec = Math.floor(Date.now() / 1000);
+    const feedNowSec = Number(data.now);
+    const feedAgeSec = Number.isFinite(feedNowSec)
+      ? Math.max(0, ingestNowSec - feedNowSec)
+      : null;
     let processed = 0;
 
     for (const target of targets) {
@@ -99,6 +111,9 @@ export async function fetchPrimaryRadar() {
     _lastCount  = processed;
     _lastSource = 'airplanes.live CDN';
     console.log(`[Primary Radar] ✓ ${processed.toLocaleString()} targets ingested`);
+    if (feedAgeSec != null && feedAgeSec > 30) {
+      console.warn(`[Primary Radar] airplanes.live snapshot is ${feedAgeSec}s behind local ingest time`);
+    }
 
   } catch (err) {
     console.error(`[Primary Radar] ✗ Failed: ${err.message}`);
