@@ -9,6 +9,7 @@ import {
   type SatelliteMissionFilters,
 } from '../satellites/satellites';
 import type { InfrastructureFeedState } from '../infrastructure/infrastructure';
+import type { MaritimeFeedState } from '../maritime/maritime';
 import { AVIATION_GRID_OPTIONS } from './viewerConfig';
 import type { SidebarSection } from './viewerTypes';
 
@@ -36,6 +37,7 @@ interface LayerSidebarProps {
   flightFeed: FlightFeedState;
   satelliteFeed: SatelliteFeedState;
   infrastructureFeed: InfrastructureFeedState;
+  maritimeFeed: MaritimeFeedState;
   onSectionChange: (section: SidebarSection) => void;
   onToggleImageryPicker: () => void;
   onToggleBuildings: () => void;
@@ -92,6 +94,7 @@ export default function LayerSidebar({
   flightFeed,
   satelliteFeed,
   infrastructureFeed,
+  maritimeFeed,
   onSectionChange,
   onToggleImageryPicker,
   onToggleBuildings,
@@ -523,7 +526,9 @@ export default function LayerSidebar({
               <span className="layer-card__body">
                 <span className="layer-card__label">Maritime Traffic</span>
                 <span className="layer-card__meta">
-                  Watch research, military, tug, and special vessels near cables.
+                  {maritimeTrafficEnabled
+                    ? maritimeFeed.message
+                    : 'Render live cargo and tanker vessels from Global Fishing Watch.'}
                 </span>
               </span>
               <span
@@ -558,6 +563,32 @@ export default function LayerSidebar({
                   : infrastructureFeed.status === 'loading'
                     ? 'Loading'
                     : infrastructureFeed.status === 'error'
+                      ? 'Error'
+                      : 'Idle'}
+              </span>
+            </div>
+
+            <div className="layer-card layer-card--status flex justify-between items-center w-full py-1.5 aether-data-row">
+              <div className="layer-card__body">
+                <p className="layer-card__label">Maritime Feed</p>
+                <p className="layer-card__meta">
+                  {maritimeFeed.fetchedAt
+                    ? `${maritimeFeed.vesselCount.toLocaleString()} vessels from Global Fishing Watch.`
+                    : 'Waiting for maritime snapshot.'}
+                </p>
+              </div>
+              <span
+                className={
+                  maritimeFeed.status === 'live'
+                    ? 'layer-badge layer-badge--live'
+                    : 'layer-badge'
+                }
+              >
+                {maritimeFeed.status === 'live'
+                  ? 'Live'
+                  : maritimeFeed.status === 'loading'
+                    ? 'Loading'
+                    : maritimeFeed.status === 'error'
                       ? 'Error'
                       : 'Idle'}
               </span>

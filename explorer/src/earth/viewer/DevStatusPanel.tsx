@@ -1,5 +1,6 @@
 import type { FlightFeedState } from '../flights/flights';
 import type { InfrastructureFeedState } from '../infrastructure/infrastructure';
+import type { MaritimeFeedState } from '../maritime/maritime';
 import type { SatelliteFeedState } from '../satellites/satellites';
 
 interface DevStatusPanelProps {
@@ -14,6 +15,7 @@ interface DevStatusPanelProps {
   flightFeed: FlightFeedState;
   satelliteFeed: SatelliteFeedState;
   infrastructureFeed: InfrastructureFeedState;
+  maritimeFeed: MaritimeFeedState;
   orbitEnabled: boolean;
 }
 
@@ -29,6 +31,7 @@ export default function DevStatusPanel({
   flightFeed,
   satelliteFeed,
   infrastructureFeed,
+  maritimeFeed,
   orbitEnabled,
 }: DevStatusPanelProps) {
   return (
@@ -90,8 +93,12 @@ export default function DevStatusPanel({
         <div className="dev-status-row flex justify-between items-center w-full py-1.5 aether-data-row">
           <span className="dev-status-row__label">Maritime traffic</span>
           <span className="dev-status-row__value">
-            {maritimeTrafficEnabled ? `${infrastructureFeed.shipCount} watched` : 'Off'}
+            {maritimeTrafficEnabled ? `${maritimeFeed.vesselCount} active` : 'Off'}
           </span>
+        </div>
+        <div className="dev-status-row flex justify-between items-center w-full py-1.5 aether-data-row">
+          <span className="dev-status-row__label">Maritime feed</span>
+          <span className="dev-status-row__value">{maritimeFeed.sourceLabel}</span>
         </div>
         <div className="dev-status-row flex justify-between items-center w-full py-1.5 aether-data-row">
           <span className="dev-status-row__label">Orbit</span>

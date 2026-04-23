@@ -31,6 +31,13 @@ export const AISSTREAM_URL = 'wss://stream.aisstream.io/v0/stream';
 export const SHIP_STALE_TIMEOUT_MS = 3 * 60 * 1000;
 export const CABLE_RISK_DISTANCE_M = 500;
 export const CABLE_RISK_SPEED_KNOTS = 3;
+export const GFW_API_KEY =
+  process.env.GFW_API_KEY ||
+  process.env.GLOBAL_FISHING_WATCH_API_KEY ||
+  null;
+export const GFW_API_BASE_URL = 'https://gateway.api.globalfishingwatch.org/v3';
+export const GFW_VESSEL_DATASET = 'public-global-vessel-identity:latest';
+export const GFW_MARITIME_REFRESH_INTERVAL_MS = 15 * 60 * 1000;
 
 /** Space-Track credentials. Required to fetch live GP/TLE catalog data. */
 export const SPACETRACK_EMAIL = process.env.SPACETRACK_EMAIL || null;

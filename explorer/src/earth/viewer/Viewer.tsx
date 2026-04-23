@@ -15,6 +15,7 @@ import SearchBox from '../search/SearchBox';
 import FlightDeckHud from '../flights/ui/FlightDeckHud';
 import FlightDetailsPanel from '../flights/ui/FlightDetailsPanel';
 import SatelliteDetailsPanel from '../satellites/ui/SatelliteDetailsPanel';
+import { MaritimeLayerManager } from '../maritime/MaritimeLayerManager';
 import {
   AviationGridState,
   FlightAssetView,
@@ -33,6 +34,7 @@ import type {
   GodsEyeShip,
   InfrastructureNode,
 } from '../infrastructure/infrastructure';
+import type { MaritimeVesselRecord } from '../maritime/maritime';
 import {
   INITIAL_SATELLITE_MISSION_FILTERS,
   type SatelliteMissionFilters,
@@ -56,6 +58,8 @@ import { useFlightData } from './useFlightData';
 import { useFlightScene } from './useFlightScene';
 import { useCableScene } from './useCableScene';
 import { useInfrastructureData } from './useInfrastructureData';
+import { useMaritimeData } from './useMaritimeData';
+import { useMaritimeScene } from './useMaritimeScene';
 import { useSatelliteData } from './useSatelliteData';
 import { useSatelliteScene } from './useSatelliteScene';
 import {
@@ -91,8 +95,10 @@ export default function Viewer() {
   const flightsEnabledRef = useRef(false);
   const satelliteLayerManagerRef = useRef<SatelliteSceneLayerManager | null>(null);
   const cableLayerManagerRef = useRef<CableSceneLayerManager | null>(null);
+  const maritimeLayerManagerRef = useRef<MaritimeLayerManager | null>(null);
   const satelliteRecordsRef = useRef<Map<string, SatelliteRecord>>(new Map());
   const cableRecordsRef = useRef<Map<string, GodsEyeInfrastructure>>(new Map());
+  const maritimeRecordsRef = useRef<Map<string, MaritimeVesselRecord>>(new Map());
   const satellitesEnabledRef = useRef(false);
   const subseaCablesEnabledRef = useRef(false);
   const maritimeTrafficEnabledRef = useRef(false);
@@ -399,6 +405,17 @@ export default function Viewer() {
     cableLayerManagerRef.current?.syncInfrastructure(cables, ships, nodes);
   }, []);
 
+  const syncMaritimeLayer = useCallback((vessels: MaritimeVesselRecord[]) => {
+    maritimeRecordsRef.current.clear();
+
+    for (const vessel of vessels) {
+      const id = vessel.mmsi || `${vessel.name}:${vessel.timestamp}`;
+      maritimeRecordsRef.current.set(id, vessel);
+    }
+
+    maritimeLayerManagerRef.current?.syncVessels(vessels);
+  }, []);
+
   const {
     airportLayerMessage,
     flightFeed,
@@ -422,6 +439,12 @@ export default function Viewer() {
     satellitesEnabled,
     syncSatelliteLayers,
     satelliteLayerManagerRef,
+  });
+
+  const { maritimeFeed } = useMaritimeData({
+    maritimeEnabled: maritimeTrafficEnabled,
+    syncMaritimeLayer,
+    maritimeLayerManagerRef,
   });
 
   const { infrastructureFeed } = useInfrastructureData({
@@ -469,6 +492,14 @@ export default function Viewer() {
     missionFilters: satelliteMissionFilters,
     selectedSatelliteId,
     updateSelectedSatellite,
+  });
+
+  useMaritimeScene({
+    viewerRef,
+    maritimeLayerManagerRef,
+    maritimeRecordsRef,
+    maritimeEnabledRef: maritimeTrafficEnabledRef,
+    maritimeEnabled: maritimeTrafficEnabled,
   });
 
   const handleCablePicked = useCallback(({ lon, lat }: { lon: number; lat: number }) => {
@@ -1087,6 +1118,7 @@ export default function Viewer() {
           flightFeed={flightFeed}
           satelliteFeed={satelliteFeed}
           infrastructureFeed={infrastructureFeed}
+          maritimeFeed={maritimeFeed}
           onSectionChange={setActiveSection}
           onToggleImageryPicker={() => setImageryPickerOpen((open) => !open)}
           onToggleBuildings={toggleBuildings}
@@ -1201,6 +1233,7 @@ export default function Viewer() {
           flightFeed={flightFeed}
           satelliteFeed={satelliteFeed}
           infrastructureFeed={infrastructureFeed}
+          maritimeFeed={maritimeFeed}
           orbitEnabled={orbitEnabled}
         />
       </div>

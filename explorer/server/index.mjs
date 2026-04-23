@@ -23,6 +23,7 @@ import { airportIndex, getAirportStats } from './services/airportIndex.mjs';
 import { getAllSatellites, getSatelliteStats } from './store/satelliteCache.mjs';
 import { startSatelliteTleRefreshLoop } from './services/satelliteFetcher.mjs';
 import { startOrbitPropagationLoop } from './services/orbitPropagator.mjs';
+import { getGfwTradeSnapshot } from './services/gfwService.mjs';
 import {
   getAllCables,
   getAllInfrastructureNodes,
@@ -71,7 +72,7 @@ async function runSweep() {
 }
 
 // ─── HTTP Server ──────────────────────────────────────────────
-const server = http.createServer((req, res) => {
+const server = http.createServer(async (req, res) => {
   setCorsHeaders(res);
 
   if (req.method === 'OPTIONS') {
@@ -158,6 +159,25 @@ const server = http.createServer((req, res) => {
         ...getInfrastructureStats(),
       },
     });
+    return;
+  }
+
+  if (req.method === 'GET' && url.pathname === '/api/maritime') {
+    try {
+      const snapshot = await getGfwTradeSnapshot();
+      sendJson(res, 200, snapshot);
+    } catch (error) {
+      console.error('[GFW] Maritime route failed:', error);
+      sendJson(res, 502, {
+        vessels: [],
+        meta: {
+          count: 0,
+          fetchedAt: null,
+          source: 'Global Fishing Watch',
+          error: error instanceof Error ? error.message : 'Maritime feed unavailable.',
+        },
+      });
+    }
     return;
   }
 
