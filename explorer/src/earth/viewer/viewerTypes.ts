@@ -1,4 +1,4 @@
-export type SidebarSection = 'base' | 'intel' | 'visual' | 'system';
+export type SidebarSection = 'base' | 'intel' | 'infrastructure' | 'visual' | 'system';
 
 export interface ImageryOption {
   id: string;

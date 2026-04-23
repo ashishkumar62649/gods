@@ -27,6 +27,12 @@ import {
   FlightRecord,
 } from '../flights/flights';
 import { SatelliteSceneLayerManager } from '../satellites/SatelliteSceneLayerManager';
+import { CableSceneLayerManager } from '../infrastructure/CableSceneLayerManager';
+import type {
+  GodsEyeInfrastructure,
+  GodsEyeShip,
+  InfrastructureNode,
+} from '../infrastructure/infrastructure';
 import {
   INITIAL_SATELLITE_MISSION_FILTERS,
   type SatelliteMissionFilters,
@@ -48,6 +54,8 @@ import LayerSidebar from './LayerSidebar';
 import { useBuildingsTileset } from './useBuildingsTileset';
 import { useFlightData } from './useFlightData';
 import { useFlightScene } from './useFlightScene';
+import { useCableScene } from './useCableScene';
+import { useInfrastructureData } from './useInfrastructureData';
 import { useSatelliteData } from './useSatelliteData';
 import { useSatelliteScene } from './useSatelliteScene';
 import {
@@ -82,8 +90,12 @@ export default function Viewer() {
   const flightRecordsRef = useRef<Map<string, FlightRecord>>(new Map());
   const flightsEnabledRef = useRef(false);
   const satelliteLayerManagerRef = useRef<SatelliteSceneLayerManager | null>(null);
+  const cableLayerManagerRef = useRef<CableSceneLayerManager | null>(null);
   const satelliteRecordsRef = useRef<Map<string, SatelliteRecord>>(new Map());
+  const cableRecordsRef = useRef<Map<string, GodsEyeInfrastructure>>(new Map());
   const satellitesEnabledRef = useRef(false);
+  const subseaCablesEnabledRef = useRef(false);
+  const maritimeTrafficEnabledRef = useRef(false);
   const starlinkFocusEnabledRef = useRef(false);
   const networkViewEnabledRef = useRef(false);
   const satelliteMissionFiltersRef = useRef<SatelliteMissionFilters>(
@@ -136,6 +148,8 @@ export default function Viewer() {
   const [sigintInfrastructureOpen, setSigintInfrastructureOpen] = useState(true);
   const [selectedFlightId, setSelectedFlightId] = useState<string | null>(null);
   const [satellitesEnabled, setSatellitesEnabled] = useState(false);
+  const [subseaCablesEnabled, setSubseaCablesEnabled] = useState(false);
+  const [maritimeTrafficEnabled, setMaritimeTrafficEnabled] = useState(false);
   const [starlinkFocusEnabled, setStarlinkFocusEnabled] = useState(false);
   const [networkViewEnabled, setNetworkViewEnabled] = useState(false);
   const [satelliteMissionFilters, setSatelliteMissionFilters] =
@@ -372,6 +386,19 @@ export default function Viewer() {
     satelliteLayerManagerRef.current?.syncSatellites(satellites);
   }, [updateSelectedSatellite]);
 
+  const syncInfrastructureLayers = useCallback((
+    cables: GodsEyeInfrastructure[],
+    ships: GodsEyeShip[],
+    nodes: InfrastructureNode[],
+  ) => {
+    cableRecordsRef.current.clear();
+    for (const cable of cables) {
+      cableRecordsRef.current.set(cable.asset_id, cable);
+    }
+
+    cableLayerManagerRef.current?.syncInfrastructure(cables, ships, nodes);
+  }, []);
+
   const {
     airportLayerMessage,
     flightFeed,
@@ -395,6 +422,12 @@ export default function Viewer() {
     satellitesEnabled,
     syncSatelliteLayers,
     satelliteLayerManagerRef,
+  });
+
+  const { infrastructureFeed } = useInfrastructureData({
+    infrastructureEnabled: subseaCablesEnabled || maritimeTrafficEnabled,
+    syncInfrastructureLayers,
+    cableLayerManagerRef,
   });
 
   useFlightScene({
@@ -438,6 +471,22 @@ export default function Viewer() {
     updateSelectedSatellite,
   });
 
+  const handleCablePicked = useCallback(({ lon, lat }: { lon: number; lat: number }) => {
+    const viewer = viewerRef.current?.cesiumElement;
+    if (!viewer || viewer.isDestroyed()) return;
+    flyObliqueToPoint(viewer, lon, lat, 12_000, -68, 1.8);
+  }, []);
+
+  useCableScene({
+    viewerRef,
+    cableLayerManagerRef,
+    cablesVisibleRef: subseaCablesEnabledRef,
+    shipsVisibleRef: maritimeTrafficEnabledRef,
+    cablesVisible: subseaCablesEnabled,
+    shipsVisible: maritimeTrafficEnabled,
+    onCablePicked: handleCablePicked,
+  });
+
   const toggleFlights = useCallback(() => {
     const nextEnabled = !flightsEnabledRef.current;
     flightsEnabledRef.current = nextEnabled;
@@ -460,6 +509,20 @@ export default function Viewer() {
       updateSelectedSatellite(null);
     }
   }, [updateSelectedSatellite]);
+
+  const toggleSubseaCables = useCallback(() => {
+    const nextEnabled = !subseaCablesEnabledRef.current;
+    subseaCablesEnabledRef.current = nextEnabled;
+    setSubseaCablesEnabled(nextEnabled);
+    cableLayerManagerRef.current?.setCablesVisible(nextEnabled);
+  }, []);
+
+  const toggleMaritimeTraffic = useCallback(() => {
+    const nextEnabled = !maritimeTrafficEnabledRef.current;
+    maritimeTrafficEnabledRef.current = nextEnabled;
+    setMaritimeTrafficEnabled(nextEnabled);
+    cableLayerManagerRef.current?.setShipsVisible(nextEnabled);
+  }, []);
 
   const toggleStarlinkFocus = useCallback(() => {
     const nextEnabled = !starlinkFocusEnabledRef.current;
@@ -879,6 +942,14 @@ export default function Viewer() {
   }, [satellitesEnabled]);
 
   useEffect(() => {
+    subseaCablesEnabledRef.current = subseaCablesEnabled;
+  }, [subseaCablesEnabled]);
+
+  useEffect(() => {
+    maritimeTrafficEnabledRef.current = maritimeTrafficEnabled;
+  }, [maritimeTrafficEnabled]);
+
+  useEffect(() => {
     starlinkFocusEnabledRef.current = starlinkFocusEnabled;
   }, [starlinkFocusEnabled]);
 
@@ -951,6 +1022,8 @@ export default function Viewer() {
   const activeLayerCount =
     Number(flightsEnabled) +
     Number(satellitesEnabled) +
+    Number(subseaCablesEnabled) +
+    Number(maritimeTrafficEnabled) +
     Number(Object.values(aviationGrid).some(Boolean)) +
     Number(groundStations.hfdl) +
     Number(groundStations.comms) +
@@ -1002,6 +1075,8 @@ export default function Viewer() {
           satellitesEnabled={satellitesEnabled}
           starlinkFocusEnabled={starlinkFocusEnabled}
           networkViewEnabled={networkViewEnabled}
+          subseaCablesEnabled={subseaCablesEnabled}
+          maritimeTrafficEnabled={maritimeTrafficEnabled}
           satelliteMissionFilters={satelliteMissionFilters}
           aviationGrid={aviationGrid}
           isGridMenuOpen={isGridMenuOpen}
@@ -1011,6 +1086,7 @@ export default function Viewer() {
           aviationGridSummary={aviationGridSummary}
           flightFeed={flightFeed}
           satelliteFeed={satelliteFeed}
+          infrastructureFeed={infrastructureFeed}
           onSectionChange={setActiveSection}
           onToggleImageryPicker={() => setImageryPickerOpen((open) => !open)}
           onToggleBuildings={toggleBuildings}
@@ -1019,6 +1095,8 @@ export default function Viewer() {
           onToggleSatellites={toggleSatellites}
           onToggleStarlinkFocus={toggleStarlinkFocus}
           onToggleNetworkView={toggleNetworkView}
+          onToggleSubseaCables={toggleSubseaCables}
+          onToggleMaritimeTraffic={toggleMaritimeTraffic}
           onToggleSatelliteMissionCategory={toggleSatelliteMissionCategory}
           onToggleGridMenu={() => setIsGridMenuOpen((open) => !open)}
           onToggleAviationGridCategory={toggleAviationGridCategory}
@@ -1064,6 +1142,11 @@ export default function Viewer() {
         {satelliteFeed.decayingCount > 0 && (
           <div className="absolute top-24 right-4 z-40 rounded-2xl border border-red-500/50 bg-red-950/70 px-4 py-3 text-xs font-semibold uppercase tracking-[0.22em] text-red-200 shadow-[0_0_24px_rgba(248,113,113,0.28)]">
             Critical Re-entry Warning: {satelliteFeed.decayingCount}
+          </div>
+        )}
+        {(infrastructureFeed.riskShipCount > 0 || infrastructureFeed.nodeCount > 0) && (
+          <div className="absolute top-40 right-4 z-40 rounded-2xl border border-orange-400/50 bg-slate-950/75 px-4 py-3 text-xs font-semibold uppercase tracking-[0.22em] text-orange-200 shadow-[0_0_24px_rgba(251,146,60,0.24)]">
+            Cable Vulnerability Alert: {infrastructureFeed.riskShipCount} vessel / {infrastructureFeed.nodeCount} node
           </div>
         )}
 
@@ -1113,8 +1196,11 @@ export default function Viewer() {
           buildingsEnabled={buildingsEnabled || autoBuildingsEnabled}
           flightsEnabled={flightsEnabled}
           satellitesEnabled={satellitesEnabled}
+          subseaCablesEnabled={subseaCablesEnabled}
+          maritimeTrafficEnabled={maritimeTrafficEnabled}
           flightFeed={flightFeed}
           satelliteFeed={satelliteFeed}
+          infrastructureFeed={infrastructureFeed}
           orbitEnabled={orbitEnabled}
         />
       </div>

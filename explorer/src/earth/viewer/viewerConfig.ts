@@ -50,6 +50,7 @@ export const SECTION_TABS: Array<{
 }> = [
   { id: 'base', label: 'Base', title: 'Base Layers' },
   { id: 'intel', label: 'Intel', title: 'Intel Layers' },
+  { id: 'infrastructure', label: 'Infra', title: 'Global Infrastructure' },
   { id: 'visual', label: 'Visual', title: 'Visual Modes' },
   { id: 'system', label: 'System', title: 'System Controls' },
 ];

@@ -9,7 +9,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\vite.config.d.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_vite_config_d_ts",
-      "community": 27,
+      "community": 32,
       "norm_label": "vite.config.d.ts"
     },
     {
@@ -18,7 +18,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\vite.config.js",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_vite_config_js",
-      "community": 28,
+      "community": 33,
       "norm_label": "vite.config.js"
     },
     {
@@ -27,7 +27,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\vite.config.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_vite_config_ts",
-      "community": 29,
+      "community": 34,
       "norm_label": "vite.config.ts"
     },
     {
@@ -36,7 +36,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\scripts\\generate-tar1090-visuals.mjs",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_scripts_generate_tar1090_visuals_mjs",
-      "community": 10,
+      "community": 12,
       "norm_label": "generate-tar1090-visuals.mjs"
     },
     {
@@ -45,7 +45,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\scripts\\generate-tar1090-visuals.mjs",
       "source_location": "L53",
       "id": "generate_tar1090_visuals_evaluateobject",
-      "community": 10,
+      "community": 12,
       "norm_label": "evaluateobject()"
     },
     {
@@ -54,7 +54,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\scripts\\generate-tar1090-visuals.mjs",
       "source_location": "L57",
       "id": "generate_tar1090_visuals_evaluateexpression",
-      "community": 10,
+      "community": 12,
       "norm_label": "evaluateexpression()"
     },
     {
@@ -63,7 +63,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\scripts\\generate-tar1090-visuals.mjs",
       "source_location": "L61",
       "id": "generate_tar1090_visuals_extractobject",
-      "community": 10,
+      "community": 12,
       "norm_label": "extractobject()"
     },
     {
@@ -72,7 +72,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\scripts\\generate-tar1090-visuals.mjs",
       "source_location": "L75",
       "id": "generate_tar1090_visuals_extractexpression",
-      "community": 10,
+      "community": 12,
       "norm_label": "extractexpression()"
     },
     {
@@ -81,7 +81,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\scripts\\generate-tar1090-visuals.mjs",
       "source_location": "L90",
       "id": "generate_tar1090_visuals_extractbalanced",
-      "community": 10,
+      "community": 12,
       "norm_label": "extractbalanced()"
     },
     {
@@ -90,7 +90,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\scripts\\generate-tar1090-visuals.mjs",
       "source_location": "L163",
       "id": "generate_tar1090_visuals_extractstringliteral",
-      "community": 10,
+      "community": 12,
       "norm_label": "extractstringliteral()"
     },
     {
@@ -99,7 +99,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\scripts\\generate-tar1090-visuals.mjs",
       "source_location": "L172",
       "id": "generate_tar1090_visuals_extractnumberliteral",
-      "community": 10,
+      "community": 12,
       "norm_label": "extractnumberliteral()"
     },
     {
@@ -108,7 +108,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\scripts\\generate-tar1090-visuals.mjs",
       "source_location": "L181",
       "id": "generate_tar1090_visuals_escaperegexp",
-      "community": 10,
+      "community": 12,
       "norm_label": "escaperegexp()"
     },
     {
@@ -117,7 +117,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\scripts\\generate-tar1090-visuals.mjs",
       "source_location": "L185",
       "id": "generate_tar1090_visuals_serialize",
-      "community": 10,
+      "community": 12,
       "norm_label": "serialize()"
     },
     {
@@ -565,7 +565,7 @@
       "label": "setCorsHeaders()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\index.mjs",
-      "source_location": "L28",
+      "source_location": "L36",
       "id": "index_setcorsheaders",
       "community": 5,
       "norm_label": "setcorsheaders()"
@@ -574,7 +574,7 @@
       "label": "sendJson()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\index.mjs",
-      "source_location": "L34",
+      "source_location": "L42",
       "id": "index_sendjson",
       "community": 5,
       "norm_label": "sendjson()"
@@ -583,7 +583,7 @@
       "label": "runSweep()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\index.mjs",
-      "source_location": "L47",
+      "source_location": "L55",
       "id": "index_runsweep",
       "community": 5,
       "norm_label": "runsweep()"
@@ -621,7 +621,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\airportIndex.mjs",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_server_services_airportindex_mjs",
-      "community": 9,
+      "community": 11,
       "norm_label": "airportindex.mjs"
     },
     {
@@ -630,7 +630,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\airportIndex.mjs",
       "source_location": "L14",
       "id": "airportindex_getairportstats",
-      "community": 9,
+      "community": 11,
       "norm_label": "getairportstats()"
     },
     {
@@ -639,7 +639,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\airportIndex.mjs",
       "source_location": "L24",
       "id": "airportindex_loadairportindex",
-      "community": 9,
+      "community": 11,
       "norm_label": "loadairportindex()"
     },
     {
@@ -648,7 +648,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\airportIndex.mjs",
       "source_location": "L76",
       "id": "airportindex_emptyairportindex",
-      "community": 9,
+      "community": 11,
       "norm_label": "emptyairportindex()"
     },
     {
@@ -657,7 +657,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\airportIndex.mjs",
       "source_location": "L87",
       "id": "airportindex_normalizeairportrow",
-      "community": 9,
+      "community": 11,
       "norm_label": "normalizeairportrow()"
     },
     {
@@ -666,7 +666,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\airportIndex.mjs",
       "source_location": "L112",
       "id": "airportindex_buildairportcodes",
-      "community": 9,
+      "community": 11,
       "norm_label": "buildairportcodes()"
     },
     {
@@ -675,7 +675,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\airportIndex.mjs",
       "source_location": "L121",
       "id": "airportindex_serializeairport",
-      "community": 9,
+      "community": 11,
       "norm_label": "serializeairport()"
     },
     {
@@ -684,7 +684,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\airportIndex.mjs",
       "source_location": "L136",
       "id": "airportindex_isroutecandidateairport",
-      "community": 9,
+      "community": 11,
       "norm_label": "isroutecandidateairport()"
     },
     {
@@ -693,7 +693,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\airportIndex.mjs",
       "source_location": "L144",
       "id": "airportindex_resolveairportcsvpath",
-      "community": 9,
+      "community": 11,
       "norm_label": "resolveairportcsvpath()"
     },
     {
@@ -702,7 +702,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\airportIndex.mjs",
       "source_location": "L155",
       "id": "airportindex_normalizeairportcode",
-      "community": 9,
+      "community": 11,
       "norm_label": "normalizeairportcode()"
     },
     {
@@ -711,7 +711,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\airportIndex.mjs",
       "source_location": "L160",
       "id": "airportindex_tofinitenumber",
-      "community": 9,
+      "community": 11,
       "norm_label": "tofinitenumber()"
     },
     {
@@ -769,12 +769,84 @@
       "norm_label": "fetchcustomradar()"
     },
     {
+      "label": "infrastructureFetcher.mjs",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\infrastructureFetcher.mjs",
+      "source_location": "L1",
+      "id": "e_ashis_god_eyes_explorer_server_services_infrastructurefetcher_mjs",
+      "community": 3,
+      "norm_label": "infrastructurefetcher.mjs"
+    },
+    {
+      "label": "fetchWithTimeout()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\infrastructureFetcher.mjs",
+      "source_location": "L14",
+      "id": "infrastructurefetcher_fetchwithtimeout",
+      "community": 3,
+      "norm_label": "fetchwithtimeout()"
+    },
+    {
+      "label": "fetchSubseaCables()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\infrastructureFetcher.mjs",
+      "source_location": "L21",
+      "id": "infrastructurefetcher_fetchsubseacables",
+      "community": 3,
+      "norm_label": "fetchsubseacables()"
+    },
+    {
+      "label": "startInfrastructureRefreshLoop()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\infrastructureFetcher.mjs",
+      "source_location": "L44",
+      "id": "infrastructurefetcher_startinfrastructurerefreshloop",
+      "community": 3,
+      "norm_label": "startinfrastructurerefreshloop()"
+    },
+    {
+      "label": "normalizeCableFeature()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\infrastructureFetcher.mjs",
+      "source_location": "L66",
+      "id": "infrastructurefetcher_normalizecablefeature",
+      "community": 3,
+      "norm_label": "normalizecablefeature()"
+    },
+    {
+      "label": "extractSegments()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\infrastructureFetcher.mjs",
+      "source_location": "L101",
+      "id": "infrastructurefetcher_extractsegments",
+      "community": 3,
+      "norm_label": "extractsegments()"
+    },
+    {
+      "label": "stableCableId()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\infrastructureFetcher.mjs",
+      "source_location": "L108",
+      "id": "infrastructurefetcher_stablecableid",
+      "community": 3,
+      "norm_label": "stablecableid()"
+    },
+    {
+      "label": "safeStr()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\infrastructureFetcher.mjs",
+      "source_location": "L115",
+      "id": "infrastructurefetcher_safestr",
+      "community": 3,
+      "norm_label": "safestr()"
+    },
+    {
       "label": "intelFetcher.mjs",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\intelFetcher.mjs",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_server_services_intelfetcher_mjs",
-      "community": 8,
+      "community": 10,
       "norm_label": "intelfetcher.mjs"
     },
     {
@@ -783,7 +855,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\intelFetcher.mjs",
       "source_location": "L61",
       "id": "intelfetcher_getintelstats",
-      "community": 8,
+      "community": 10,
       "norm_label": "getintelstats()"
     },
     {
@@ -792,7 +864,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\intelFetcher.mjs",
       "source_location": "L64",
       "id": "intelfetcher_fetchwithtimeout",
-      "community": 8,
+      "community": 10,
       "norm_label": "fetchwithtimeout()"
     },
     {
@@ -801,7 +873,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\intelFetcher.mjs",
       "source_location": "L72",
       "id": "intelfetcher_ingestendpoint",
-      "community": 8,
+      "community": 10,
       "norm_label": "ingestendpoint()"
     },
     {
@@ -810,7 +882,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\intelFetcher.mjs",
       "source_location": "L111",
       "id": "intelfetcher_runintelsweep",
-      "community": 8,
+      "community": 10,
       "norm_label": "runintelsweep()"
     },
     {
@@ -819,7 +891,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\intelFetcher.mjs",
       "source_location": "L146",
       "id": "intelfetcher_startintelloop",
-      "community": 8,
+      "community": 10,
       "norm_label": "startintelloop()"
     },
     {
@@ -828,7 +900,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\intelFetcher.mjs",
       "source_location": "L161",
       "id": "intelfetcher_mergeintel",
-      "community": 8,
+      "community": 10,
       "norm_label": "mergeintel()"
     },
     {
@@ -837,7 +909,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\intelFetcher.mjs",
       "source_location": "L194",
       "id": "intelfetcher_fetchbyhex",
-      "community": 8,
+      "community": 10,
       "norm_label": "fetchbyhex()"
     },
     {
@@ -846,7 +918,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\intelFetcher.mjs",
       "source_location": "L207",
       "id": "intelfetcher_fetchbyregistration",
-      "community": 8,
+      "community": 10,
       "norm_label": "fetchbyregistration()"
     },
     {
@@ -855,7 +927,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\intelFetcher.mjs",
       "source_location": "L220",
       "id": "intelfetcher_fetchbycallsign",
-      "community": 8,
+      "community": 10,
       "norm_label": "fetchbycallsign()"
     },
     {
@@ -864,7 +936,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\intelFetcher.mjs",
       "source_location": "L233",
       "id": "intelfetcher_fetchairportinfo",
-      "community": 8,
+      "community": 10,
       "norm_label": "fetchairportinfo()"
     },
     {
@@ -873,7 +945,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\intelFetcher.mjs",
       "source_location": "L246",
       "id": "intelfetcher_fetchrouteset",
-      "community": 8,
+      "community": 10,
       "norm_label": "fetchrouteset()"
     },
     {
@@ -1120,6 +1192,105 @@
       "norm_label": "parsesetcookieheader()"
     },
     {
+      "label": "shipFetcher.mjs",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\shipFetcher.mjs",
+      "source_location": "L1",
+      "id": "e_ashis_god_eyes_explorer_server_services_shipfetcher_mjs",
+      "community": 3,
+      "norm_label": "shipfetcher.mjs"
+    },
+    {
+      "label": "startShipStream()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\shipFetcher.mjs",
+      "source_location": "L18",
+      "id": "shipfetcher_startshipstream",
+      "community": 3,
+      "norm_label": "startshipstream()"
+    },
+    {
+      "label": "connectShipStream()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\shipFetcher.mjs",
+      "source_location": "L38",
+      "id": "shipfetcher_connectshipstream",
+      "community": 3,
+      "norm_label": "connectshipstream()"
+    },
+    {
+      "label": "scheduleReconnect()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\shipFetcher.mjs",
+      "source_location": "L76",
+      "id": "shipfetcher_schedulereconnect",
+      "community": 3,
+      "norm_label": "schedulereconnect()"
+    },
+    {
+      "label": "handleAisMessage()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\shipFetcher.mjs",
+      "source_location": "L84",
+      "id": "shipfetcher_handleaismessage",
+      "community": 3,
+      "norm_label": "handleaismessage()"
+    },
+    {
+      "label": "extractPosition()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\shipFetcher.mjs",
+      "source_location": "L116",
+      "id": "shipfetcher_extractposition",
+      "community": 3,
+      "norm_label": "extractposition()"
+    },
+    {
+      "label": "extractShipType()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\shipFetcher.mjs",
+      "source_location": "L134",
+      "id": "shipfetcher_extractshiptype",
+      "community": 3,
+      "norm_label": "extractshiptype()"
+    },
+    {
+      "label": "describeShipType()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\shipFetcher.mjs",
+      "source_location": "L150",
+      "id": "shipfetcher_describeshiptype",
+      "community": 3,
+      "norm_label": "describeshiptype()"
+    },
+    {
+      "label": "isInterestingVesselType()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\shipFetcher.mjs",
+      "source_location": "L159",
+      "id": "shipfetcher_isinterestingvesseltype",
+      "community": 3,
+      "norm_label": "isinterestingvesseltype()"
+    },
+    {
+      "label": "finiteOrNull()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\shipFetcher.mjs",
+      "source_location": "L163",
+      "id": "shipfetcher_finiteornull",
+      "community": 3,
+      "norm_label": "finiteornull()"
+    },
+    {
+      "label": "safeStr()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\shipFetcher.mjs",
+      "source_location": "L168",
+      "id": "shipfetcher_safestr",
+      "community": 3,
+      "norm_label": "safestr()"
+    },
+    {
       "label": "flightCache.mjs",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\flightCache.mjs",
@@ -1154,6 +1325,132 @@
       "id": "flightcache_removestaleflights",
       "community": 5,
       "norm_label": "removestaleflights()"
+    },
+    {
+      "label": "infrastructureStore.mjs",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\infrastructureStore.mjs",
+      "source_location": "L1",
+      "id": "e_ashis_god_eyes_explorer_server_store_infrastructurestore_mjs",
+      "community": 3,
+      "norm_label": "infrastructurestore.mjs"
+    },
+    {
+      "label": "replaceCables()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\infrastructureStore.mjs",
+      "source_location": "L26",
+      "id": "infrastructurestore_replacecables",
+      "community": 3,
+      "norm_label": "replacecables()"
+    },
+    {
+      "label": "setCableFetchError()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\infrastructureStore.mjs",
+      "source_location": "L46",
+      "id": "infrastructurestore_setcablefetcherror",
+      "community": 3,
+      "norm_label": "setcablefetcherror()"
+    },
+    {
+      "label": "upsertShip()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\infrastructureStore.mjs",
+      "source_location": "L53",
+      "id": "infrastructurestore_upsertship",
+      "community": 3,
+      "norm_label": "upsertship()"
+    },
+    {
+      "label": "removeStaleShips()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\infrastructureStore.mjs",
+      "source_location": "L97",
+      "id": "infrastructurestore_removestaleships",
+      "community": 3,
+      "norm_label": "removestaleships()"
+    },
+    {
+      "label": "setShipConnectionState()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\infrastructureStore.mjs",
+      "source_location": "L125",
+      "id": "infrastructurestore_setshipconnectionstate",
+      "community": 3,
+      "norm_label": "setshipconnectionstate()"
+    },
+    {
+      "label": "getAllCables()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\infrastructureStore.mjs",
+      "source_location": "L133",
+      "id": "infrastructurestore_getallcables",
+      "community": 3,
+      "norm_label": "getallcables()"
+    },
+    {
+      "label": "getAllShips()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\infrastructureStore.mjs",
+      "source_location": "L137",
+      "id": "infrastructurestore_getallships",
+      "community": 3,
+      "norm_label": "getallships()"
+    },
+    {
+      "label": "getAllInfrastructureNodes()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\infrastructureStore.mjs",
+      "source_location": "L141",
+      "id": "infrastructurestore_getallinfrastructurenodes",
+      "community": 3,
+      "norm_label": "getallinfrastructurenodes()"
+    },
+    {
+      "label": "getInfrastructureStats()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\infrastructureStore.mjs",
+      "source_location": "L145",
+      "id": "infrastructurestore_getinfrastructurestats",
+      "community": 3,
+      "norm_label": "getinfrastructurestats()"
+    },
+    {
+      "label": "addIntelligenceNode()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\infrastructureStore.mjs",
+      "source_location": "L155",
+      "id": "infrastructurestore_addintelligencenode",
+      "community": 3,
+      "norm_label": "addintelligencenode()"
+    },
+    {
+      "label": "findNearestCable()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\infrastructureStore.mjs",
+      "source_location": "L177",
+      "id": "infrastructurestore_findnearestcable",
+      "community": 3,
+      "norm_label": "findnearestcable()"
+    },
+    {
+      "label": "distanceToSegmentMeters()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\infrastructureStore.mjs",
+      "source_location": "L199",
+      "id": "infrastructurestore_distancetosegmentmeters",
+      "community": 3,
+      "norm_label": "distancetosegmentmeters()"
+    },
+    {
+      "label": "toRadians()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\infrastructureStore.mjs",
+      "source_location": "L222",
+      "id": "infrastructurestore_toradians",
+      "community": 3,
+      "norm_label": "toradians()"
     },
     {
       "label": "satelliteCache.mjs",
@@ -1242,7 +1539,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\App.tsx",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_app_tsx",
-      "community": 14,
+      "community": 16,
       "norm_label": "app.tsx"
     },
     {
@@ -1251,7 +1548,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\App.tsx",
       "source_location": "L3",
       "id": "app_app",
-      "community": 14,
+      "community": 16,
       "norm_label": "app()"
     },
     {
@@ -1260,7 +1557,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\main.tsx",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_main_tsx",
-      "community": 30,
+      "community": 35,
       "norm_label": "main.tsx"
     },
     {
@@ -1269,7 +1566,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\vite-env.d.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_vite_env_d_ts",
-      "community": 31,
+      "community": 36,
       "norm_label": "vite-env.d.ts"
     },
     {
@@ -1278,7 +1575,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\BuildingsToggle.tsx",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_buildingstoggle_tsx",
-      "community": 15,
+      "community": 17,
       "norm_label": "buildingstoggle.tsx"
     },
     {
@@ -1287,7 +1584,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\BuildingsToggle.tsx",
       "source_location": "L11",
       "id": "buildingstoggle_buildingstoggle",
-      "community": 15,
+      "community": 17,
       "norm_label": "buildingstoggle()"
     },
     {
@@ -1377,7 +1674,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
       "source_location": "L323",
       "id": "flightlayers_flightscenelayermanager_adjustflightdecklook",
-      "community": 3,
+      "community": 6,
       "norm_label": ".adjustflightdecklook()"
     },
     {
@@ -1530,7 +1827,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
       "source_location": "L823",
       "id": "flightlayers_flightscenelayermanager_applyflightvisual",
-      "community": 3,
+      "community": 0,
       "norm_label": ".applyflightvisual()"
     },
     {
@@ -1548,7 +1845,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
       "source_location": "L890",
       "id": "flightlayers_flightscenelayermanager_ensureairframemodel",
-      "community": 3,
+      "community": 0,
       "norm_label": ".ensureairframemodel()"
     },
     {
@@ -1773,7 +2070,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flights.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_flights_flights_ts",
-      "community": 7,
+      "community": 8,
       "norm_label": "flights.ts"
     },
     {
@@ -1791,7 +2088,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flights.ts",
       "source_location": "L322",
       "id": "flights_getairportdisplaycode",
-      "community": 7,
+      "community": 8,
       "norm_label": "getairportdisplaycode()"
     },
     {
@@ -1800,7 +2097,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flights.ts",
       "source_location": "L326",
       "id": "flights_getflightrendermode",
-      "community": 7,
+      "community": 8,
       "norm_label": "getflightrendermode()"
     },
     {
@@ -1809,7 +2106,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flights.ts",
       "source_location": "L330",
       "id": "flights_fetchflightsnapshot",
-      "community": 7,
+      "community": 8,
       "norm_label": "fetchflightsnapshot()"
     },
     {
@@ -1818,7 +2115,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flights.ts",
       "source_location": "L340",
       "id": "flights_fetchflightroute",
-      "community": 7,
+      "community": 8,
       "norm_label": "fetchflightroute()"
     },
     {
@@ -1827,7 +2124,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flights.ts",
       "source_location": "L357",
       "id": "flights_fetchflighttrace",
-      "community": 7,
+      "community": 8,
       "norm_label": "fetchflighttrace()"
     },
     {
@@ -1836,7 +2133,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flights.ts",
       "source_location": "L374",
       "id": "flights_fetchairports",
-      "community": 7,
+      "community": 8,
       "norm_label": "fetchairports()"
     },
     {
@@ -1845,7 +2142,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flights.ts",
       "source_location": "L383",
       "id": "flights_formataltitudemeters",
-      "community": 7,
+      "community": 8,
       "norm_label": "formataltitudemeters()"
     },
     {
@@ -1854,7 +2151,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flights.ts",
       "source_location": "L389",
       "id": "flights_formatspeed",
-      "community": 7,
+      "community": 8,
       "norm_label": "formatspeed()"
     },
     {
@@ -1863,7 +2160,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flights.ts",
       "source_location": "L397",
       "id": "flights_formatheading",
-      "community": 7,
+      "community": 8,
       "norm_label": "formatheading()"
     },
     {
@@ -1872,7 +2169,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flights.ts",
       "source_location": "L402",
       "id": "flights_formatlastupdated",
-      "community": 7,
+      "community": 8,
       "norm_label": "formatlastupdated()"
     },
     {
@@ -1881,7 +2178,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flights.ts",
       "source_location": "L414",
       "id": "flights_predictflightposition",
-      "community": 7,
+      "community": 8,
       "norm_label": "predictflightposition()"
     },
     {
@@ -1890,7 +2187,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flights.ts",
       "source_location": "L465",
       "id": "flights_readerrormessage",
-      "community": 7,
+      "community": 8,
       "norm_label": "readerrormessage()"
     },
     {
@@ -1899,7 +2196,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_flights_flightvisuals_ts",
-      "community": 3,
+      "community": 6,
       "norm_label": "flightvisuals.ts"
     },
     {
@@ -1908,7 +2205,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L72",
       "id": "flightvisuals_isicontuple",
-      "community": 3,
+      "community": 6,
       "norm_label": "isicontuple()"
     },
     {
@@ -1917,7 +2214,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L116",
       "id": "flightvisuals_getflighticonimage",
-      "community": 3,
+      "community": 6,
       "norm_label": "getflighticonimage()"
     },
     {
@@ -1926,7 +2223,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L128",
       "id": "flightvisuals_getflighticondimensions",
-      "community": 3,
+      "community": 6,
       "norm_label": "getflighticondimensions()"
     },
     {
@@ -1935,7 +2232,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L139",
       "id": "flightvisuals_getflightfamilylabel",
-      "community": 3,
+      "community": 6,
       "norm_label": "getflightfamilylabel()"
     },
     {
@@ -1944,7 +2241,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L144",
       "id": "flightvisuals_getflightvisualtypelabel",
-      "community": 3,
+      "community": 6,
       "norm_label": "getflightvisualtypelabel()"
     },
     {
@@ -1953,7 +2250,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L163",
       "id": "flightvisuals_getflighticonkey",
-      "community": 3,
+      "community": 6,
       "norm_label": "getflighticonkey()"
     },
     {
@@ -1962,7 +2259,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L167",
       "id": "flightvisuals_getflighticonrotationradians",
-      "community": 3,
+      "community": 6,
       "norm_label": "getflighticonrotationradians()"
     },
     {
@@ -1971,7 +2268,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L178",
       "id": "flightvisuals_getflightaltitudecolorcss",
-      "community": 3,
+      "community": 6,
       "norm_label": "getflightaltitudecolorcss()"
     },
     {
@@ -1980,7 +2277,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L204",
       "id": "flightvisuals_resolveflighticonpreset",
-      "community": 3,
+      "community": 6,
       "norm_label": "resolveflighticonpreset()"
     },
     {
@@ -1989,7 +2286,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L238",
       "id": "flightvisuals_normalizeiconpreset",
-      "community": 3,
+      "community": 6,
       "norm_label": "normalizeiconpreset()"
     },
     {
@@ -1998,7 +2295,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L252",
       "id": "flightvisuals_infertypedesignator",
-      "community": 3,
+      "community": 6,
       "norm_label": "infertypedesignator()"
     },
     {
@@ -2007,7 +2304,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L296",
       "id": "flightvisuals_infertypedescription",
-      "community": 3,
+      "community": 6,
       "norm_label": "infertypedescription()"
     },
     {
@@ -2016,7 +2313,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L327",
       "id": "flightvisuals_altitudecolor",
-      "community": 3,
+      "community": 6,
       "norm_label": "altitudecolor()"
     },
     {
@@ -2025,7 +2322,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L350",
       "id": "flightvisuals_interpolatealtitudehue",
-      "community": 3,
+      "community": 6,
       "norm_label": "interpolatealtitudehue()"
     },
     {
@@ -2034,7 +2331,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L372",
       "id": "flightvisuals_interpolatehuelightness",
-      "community": 3,
+      "community": 6,
       "norm_label": "interpolatehuelightness()"
     },
     {
@@ -2043,7 +2340,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L394",
       "id": "flightvisuals_roundaltitudeforcolor",
-      "community": 3,
+      "community": 6,
       "norm_label": "roundaltitudeforcolor()"
     },
     {
@@ -2052,7 +2349,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L402",
       "id": "flightvisuals_islikelyground",
-      "community": 3,
+      "community": 6,
       "norm_label": "islikelyground()"
     },
     {
@@ -2061,7 +2358,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L406",
       "id": "flightvisuals_svgshapetosvg",
-      "community": 3,
+      "community": 6,
       "norm_label": "svgshapetosvg()"
     },
     {
@@ -2070,7 +2367,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L446",
       "id": "flightvisuals_svgshapetouri",
-      "community": 3,
+      "community": 6,
       "norm_label": "svgshapetouri()"
     },
     {
@@ -2079,7 +2376,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L451",
       "id": "flightvisuals_normalizetoken",
-      "community": 3,
+      "community": 6,
       "norm_label": "normalizetoken()"
     },
     {
@@ -2088,7 +2385,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L457",
       "id": "flightvisuals_normalizetext",
-      "community": 3,
+      "community": 6,
       "norm_label": "normalizetext()"
     },
     {
@@ -2097,7 +2394,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L462",
       "id": "flightvisuals_normalizehue",
-      "community": 3,
+      "community": 6,
       "norm_label": "normalizehue()"
     },
     {
@@ -2106,7 +2403,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L472",
       "id": "flightvisuals_clamp",
-      "community": 3,
+      "community": 6,
       "norm_label": "clamp()"
     },
     {
@@ -2115,7 +2412,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightVisuals.ts",
       "source_location": "L476",
       "id": "flightvisuals_formatnumber",
-      "community": 3,
+      "community": 6,
       "norm_label": "formatnumber()"
     },
     {
@@ -2124,7 +2421,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\tar1090.generated.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_flights_tar1090_generated_ts",
-      "community": 32,
+      "community": 37,
       "norm_label": "tar1090.generated.ts"
     },
     {
@@ -2133,7 +2430,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\ui\\FlightDeckHud.tsx",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_flights_ui_flightdeckhud_tsx",
-      "community": 33,
+      "community": 38,
       "norm_label": "flightdeckhud.tsx"
     },
     {
@@ -2142,7 +2439,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\ui\\FlightDetailsPanel.tsx",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_flights_ui_flightdetailspanel_tsx",
-      "community": 7,
+      "community": 8,
       "norm_label": "flightdetailspanel.tsx"
     },
     {
@@ -2151,8 +2448,161 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\ui\\FlightDetailsPanel.tsx",
       "source_location": "L33",
       "id": "flightdetailspanel_flightdetailspanel",
-      "community": 7,
+      "community": 8,
       "norm_label": "flightdetailspanel()"
+    },
+    {
+      "label": "CableSceneLayerManager.ts",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\CableSceneLayerManager.ts",
+      "source_location": "L1",
+      "id": "e_ashis_god_eyes_explorer_src_earth_infrastructure_cablescenelayermanager_ts",
+      "community": 9,
+      "norm_label": "cablescenelayermanager.ts"
+    },
+    {
+      "label": "CableSceneLayerManager",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\CableSceneLayerManager.ts",
+      "source_location": "L33",
+      "id": "cablescenelayermanager_cablescenelayermanager",
+      "community": 9,
+      "norm_label": "cablescenelayermanager"
+    },
+    {
+      "label": ".constructor()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\CableSceneLayerManager.ts",
+      "source_location": "L45",
+      "id": "cablescenelayermanager_cablescenelayermanager_constructor",
+      "community": 9,
+      "norm_label": ".constructor()"
+    },
+    {
+      "label": ".destroy()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\CableSceneLayerManager.ts",
+      "source_location": "L59",
+      "id": "cablescenelayermanager_cablescenelayermanager_destroy",
+      "community": 9,
+      "norm_label": ".destroy()"
+    },
+    {
+      "label": ".setCablesVisible()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\CableSceneLayerManager.ts",
+      "source_location": "L71",
+      "id": "cablescenelayermanager_cablescenelayermanager_setcablesvisible",
+      "community": 9,
+      "norm_label": ".setcablesvisible()"
+    },
+    {
+      "label": ".setShipsVisible()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\CableSceneLayerManager.ts",
+      "source_location": "L77",
+      "id": "cablescenelayermanager_cablescenelayermanager_setshipsvisible",
+      "community": 9,
+      "norm_label": ".setshipsvisible()"
+    },
+    {
+      "label": ".syncInfrastructure()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\CableSceneLayerManager.ts",
+      "source_location": "L84",
+      "id": "cablescenelayermanager_cablescenelayermanager_syncinfrastructure",
+      "community": 9,
+      "norm_label": ".syncinfrastructure()"
+    },
+    {
+      "label": ".pickCable()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\CableSceneLayerManager.ts",
+      "source_location": "L95",
+      "id": "cablescenelayermanager_cablescenelayermanager_pickcable",
+      "community": 9,
+      "norm_label": ".pickcable()"
+    },
+    {
+      "label": ".syncCables()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\CableSceneLayerManager.ts",
+      "source_location": "L101",
+      "id": "cablescenelayermanager_cablescenelayermanager_synccables",
+      "community": 9,
+      "norm_label": ".synccables()"
+    },
+    {
+      "label": ".syncShips()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\CableSceneLayerManager.ts",
+      "source_location": "L137",
+      "id": "cablescenelayermanager_cablescenelayermanager_syncships",
+      "community": 9,
+      "norm_label": ".syncships()"
+    },
+    {
+      "label": ".syncNodes()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\CableSceneLayerManager.ts",
+      "source_location": "L195",
+      "id": "cablescenelayermanager_cablescenelayermanager_syncnodes",
+      "community": 9,
+      "norm_label": ".syncnodes()"
+    },
+    {
+      "label": ".requestRender()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\CableSceneLayerManager.ts",
+      "source_location": "L211",
+      "id": "cablescenelayermanager_cablescenelayermanager_requestrender",
+      "community": 9,
+      "norm_label": ".requestrender()"
+    },
+    {
+      "label": "extractCablePickId()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\CableSceneLayerManager.ts",
+      "source_location": "L218",
+      "id": "cablescenelayermanager_extractcablepickid",
+      "community": 9,
+      "norm_label": "extractcablepickid()"
+    },
+    {
+      "label": "headingToRotation()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\CableSceneLayerManager.ts",
+      "source_location": "L229",
+      "id": "cablescenelayermanager_headingtorotation",
+      "community": 9,
+      "norm_label": "headingtorotation()"
+    },
+    {
+      "label": "getPulse()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\CableSceneLayerManager.ts",
+      "source_location": "L235",
+      "id": "cablescenelayermanager_getpulse",
+      "community": 9,
+      "norm_label": "getpulse()"
+    },
+    {
+      "label": "infrastructure.ts",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\infrastructure.ts",
+      "source_location": "L1",
+      "id": "e_ashis_god_eyes_explorer_src_earth_infrastructure_infrastructure_ts",
+      "community": 18,
+      "norm_label": "infrastructure.ts"
+    },
+    {
+      "label": "fetchInfrastructureSnapshot()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\infrastructure.ts",
+      "source_location": "L88",
+      "id": "infrastructure_fetchinfrastructuresnapshot",
+      "community": 18,
+      "norm_label": "fetchinfrastructuresnapshot()"
     },
     {
       "label": "satelliteIntelligence.ts",
@@ -2160,7 +2610,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satelliteIntelligence.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_satellites_satelliteintelligence_ts",
-      "community": 6,
+      "community": 7,
       "norm_label": "satelliteintelligence.ts"
     },
     {
@@ -2169,7 +2619,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satelliteIntelligence.ts",
       "source_location": "L36",
       "id": "satelliteintelligence_getselectedsatellitesignalstatus",
-      "community": 6,
+      "community": 7,
       "norm_label": "getselectedsatellitesignalstatus()"
     },
     {
@@ -2178,7 +2628,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satelliteIntelligence.ts",
       "source_location": "L64",
       "id": "satelliteintelligence_getnearestgroundstation",
-      "community": 6,
+      "community": 7,
       "norm_label": "getnearestgroundstation()"
     },
     {
@@ -2187,7 +2637,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satelliteIntelligence.ts",
       "source_location": "L84",
       "id": "satelliteintelligence_haslineofsight",
-      "community": 6,
+      "community": 7,
       "norm_label": "haslineofsight()"
     },
     {
@@ -2196,7 +2646,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satelliteIntelligence.ts",
       "source_location": "L101",
       "id": "satelliteintelligence_groundstationtocartesian",
-      "community": 6,
+      "community": 7,
       "norm_label": "groundstationtocartesian()"
     },
     {
@@ -2205,7 +2655,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satelliteIntelligence.ts",
       "source_location": "L105",
       "id": "satelliteintelligence_formatsignalcountdown",
-      "community": 6,
+      "community": 7,
       "norm_label": "formatsignalcountdown()"
     },
     {
@@ -2214,7 +2664,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satelliteIntelligence.ts",
       "source_location": "L115",
       "id": "satelliteintelligence_findnextsignaltransitionseconds",
-      "community": 6,
+      "community": 7,
       "norm_label": "findnextsignaltransitionseconds()"
     },
     {
@@ -2223,7 +2673,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satelliteIntelligence.ts",
       "source_location": "L155",
       "id": "satelliteintelligence_centralangleradians",
-      "community": 6,
+      "community": 7,
       "norm_label": "centralangleradians()"
     },
     {
@@ -2232,7 +2682,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satelliteIntelligence.ts",
       "source_location": "L171",
       "id": "satelliteintelligence_toradians",
-      "community": 6,
+      "community": 7,
       "norm_label": "toradians()"
     },
     {
@@ -2241,7 +2691,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satellites.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_satellites_satellites_ts",
-      "community": 11,
+      "community": 13,
       "norm_label": "satellites.ts"
     },
     {
@@ -2250,7 +2700,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satellites.ts",
       "source_location": "L98",
       "id": "satellites_fetchsatellitesnapshot",
-      "community": 11,
+      "community": 13,
       "norm_label": "fetchsatellitesnapshot()"
     },
     {
@@ -2259,7 +2709,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satellites.ts",
       "source_location": "L109",
       "id": "satellites_getsatellitedisplayname",
-      "community": 11,
+      "community": 13,
       "norm_label": "getsatellitedisplayname()"
     },
     {
@@ -2268,7 +2718,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satellites.ts",
       "source_location": "L113",
       "id": "satellites_formatsatellitealtitude",
-      "community": 11,
+      "community": 13,
       "norm_label": "formatsatellitealtitude()"
     },
     {
@@ -2277,7 +2727,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satellites.ts",
       "source_location": "L118",
       "id": "satellites_formatsatellitevelocity",
-      "community": 11,
+      "community": 13,
       "norm_label": "formatsatellitevelocity()"
     },
     {
@@ -2286,7 +2736,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satellites.ts",
       "source_location": "L123",
       "id": "satellites_formatorbitvalue",
-      "community": 11,
+      "community": 13,
       "norm_label": "formatorbitvalue()"
     },
     {
@@ -2295,7 +2745,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satellites.ts",
       "source_location": "L128",
       "id": "satellites_formatsatellitemission",
-      "community": 11,
+      "community": 13,
       "norm_label": "formatsatellitemission()"
     },
     {
@@ -2691,7 +3141,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\ui\\SatelliteDetailsPanel.tsx",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_satellites_ui_satellitedetailspanel_tsx",
-      "community": 34,
+      "community": 39,
       "norm_label": "satellitedetailspanel.tsx"
     },
     {
@@ -2700,7 +3150,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\search\\SearchBox.tsx",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_search_searchbox_tsx",
-      "community": 12,
+      "community": 14,
       "norm_label": "searchbox.tsx"
     },
     {
@@ -2709,7 +3159,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\search\\SearchBox.tsx",
       "source_location": "L15",
       "id": "searchbox_loadrecentsearches",
-      "community": 12,
+      "community": 14,
       "norm_label": "loadrecentsearches()"
     },
     {
@@ -2718,7 +3168,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\search\\SearchBox.tsx",
       "source_location": "L33",
       "id": "searchbox_saverecentsearches",
-      "community": 12,
+      "community": 14,
       "norm_label": "saverecentsearches()"
     },
     {
@@ -2727,7 +3177,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\search\\SearchBox.tsx",
       "source_location": "L48",
       "id": "searchbox_searchbox",
-      "community": 12,
+      "community": 14,
       "norm_label": "searchbox()"
     },
     {
@@ -2736,7 +3186,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\cameraUtils.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_viewer_camerautils_ts",
-      "community": 6,
+      "community": 7,
       "norm_label": "camerautils.ts"
     },
     {
@@ -2745,7 +3195,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\cameraUtils.ts",
       "source_location": "L17",
       "id": "camerautils_flyobliquetopoint",
-      "community": 6,
+      "community": 7,
       "norm_label": "flyobliquetopoint()"
     },
     {
@@ -2754,7 +3204,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\cameraUtils.ts",
       "source_location": "L44",
       "id": "camerautils_flyobliquetodestination",
-      "community": 6,
+      "community": 7,
       "norm_label": "flyobliquetodestination()"
     },
     {
@@ -2763,7 +3213,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\cameraUtils.ts",
       "source_location": "L139",
       "id": "camerautils_buildhome",
-      "community": 6,
+      "community": 7,
       "norm_label": "buildhome()"
     },
     {
@@ -2772,7 +3222,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\cameraUtils.ts",
       "source_location": "L154",
       "id": "camerautils_getcameracartographic",
-      "community": 6,
+      "community": 7,
       "norm_label": "getcameracartographic()"
     },
     {
@@ -2781,7 +3231,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\cameraUtils.ts",
       "source_location": "L168",
       "id": "camerautils_getflightcameratarget",
-      "community": 6,
+      "community": 7,
       "norm_label": "getflightcameratarget()"
     },
     {
@@ -2790,7 +3240,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\cameraUtils.ts",
       "source_location": "L180",
       "id": "camerautils_getflightcameraoffset",
-      "community": 6,
+      "community": 7,
       "norm_label": "getflightcameraoffset()"
     },
     {
@@ -2799,7 +3249,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\cameraUtils.ts",
       "source_location": "L192",
       "id": "camerautils_getcockpitcamerapose",
-      "community": 6,
+      "community": 7,
       "norm_label": "getcockpitcamerapose()"
     },
     {
@@ -2808,16 +3258,16 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\DevStatusPanel.tsx",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_viewer_devstatuspanel_tsx",
-      "community": 16,
+      "community": 19,
       "norm_label": "devstatuspanel.tsx"
     },
     {
       "label": "DevStatusPanel()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\DevStatusPanel.tsx",
-      "source_location": "L16",
+      "source_location": "L20",
       "id": "devstatuspanel_devstatuspanel",
-      "community": 16,
+      "community": 19,
       "norm_label": "devstatuspanel()"
     },
     {
@@ -2826,7 +3276,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\ImageryFlyout.tsx",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_viewer_imageryflyout_tsx",
-      "community": 17,
+      "community": 20,
       "norm_label": "imageryflyout.tsx"
     },
     {
@@ -2835,7 +3285,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\ImageryFlyout.tsx",
       "source_location": "L9",
       "id": "imageryflyout_imageryflyout",
-      "community": 17,
+      "community": 20,
       "norm_label": "imageryflyout()"
     },
     {
@@ -2844,7 +3294,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\imageryOptions.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_viewer_imageryoptions_ts",
-      "community": 13,
+      "community": 15,
       "norm_label": "imageryoptions.ts"
     },
     {
@@ -2853,7 +3303,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\imageryOptions.ts",
       "source_location": "L12",
       "id": "imageryoptions_toimageryid",
-      "community": 13,
+      "community": 15,
       "norm_label": "toimageryid()"
     },
     {
@@ -2862,7 +3312,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\imageryOptions.ts",
       "source_location": "L16",
       "id": "imageryoptions_buildimageryoptions",
-      "community": 13,
+      "community": 15,
       "norm_label": "buildimageryoptions()"
     },
     {
@@ -2871,16 +3321,16 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\LayerSidebar.tsx",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_viewer_layersidebar_tsx",
-      "community": 18,
+      "community": 21,
       "norm_label": "layersidebar.tsx"
     },
     {
       "label": "renderSoonCard()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\LayerSidebar.tsx",
-      "source_location": "L51",
+      "source_location": "L57",
       "id": "layersidebar_rendersooncard",
-      "community": 18,
+      "community": 21,
       "norm_label": "rendersooncard()"
     },
     {
@@ -2889,7 +3339,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\useBuildingsTileset.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_viewer_usebuildingstileset_ts",
-      "community": 19,
+      "community": 22,
       "norm_label": "usebuildingstileset.ts"
     },
     {
@@ -2898,8 +3348,26 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\useBuildingsTileset.ts",
       "source_location": "L15",
       "id": "usebuildingstileset_usebuildingstileset",
-      "community": 19,
+      "community": 22,
       "norm_label": "usebuildingstileset()"
+    },
+    {
+      "label": "useCableScene.ts",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\useCableScene.ts",
+      "source_location": "L1",
+      "id": "e_ashis_god_eyes_explorer_src_earth_viewer_usecablescene_ts",
+      "community": 23,
+      "norm_label": "usecablescene.ts"
+    },
+    {
+      "label": "useCableScene()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\useCableScene.ts",
+      "source_location": "L21",
+      "id": "usecablescene_usecablescene",
+      "community": 23,
+      "norm_label": "usecablescene()"
     },
     {
       "label": "useFlightData.ts",
@@ -2907,7 +3375,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\useFlightData.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_viewer_useflightdata_ts",
-      "community": 20,
+      "community": 24,
       "norm_label": "useflightdata.ts"
     },
     {
@@ -2916,7 +3384,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\useFlightData.ts",
       "source_location": "L44",
       "id": "useflightdata_useflightdata",
-      "community": 20,
+      "community": 24,
       "norm_label": "useflightdata()"
     },
     {
@@ -2925,7 +3393,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\useFlightScene.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_viewer_useflightscene_ts",
-      "community": 21,
+      "community": 25,
       "norm_label": "useflightscene.ts"
     },
     {
@@ -2934,8 +3402,26 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\useFlightScene.ts",
       "source_location": "L50",
       "id": "useflightscene_useflightscene",
-      "community": 21,
+      "community": 25,
       "norm_label": "useflightscene()"
+    },
+    {
+      "label": "useInfrastructureData.ts",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\useInfrastructureData.ts",
+      "source_location": "L1",
+      "id": "e_ashis_god_eyes_explorer_src_earth_viewer_useinfrastructuredata_ts",
+      "community": 26,
+      "norm_label": "useinfrastructuredata.ts"
+    },
+    {
+      "label": "useInfrastructureData()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\useInfrastructureData.ts",
+      "source_location": "L33",
+      "id": "useinfrastructuredata_useinfrastructuredata",
+      "community": 26,
+      "norm_label": "useinfrastructuredata()"
     },
     {
       "label": "useInteractionGuards.ts",
@@ -2943,7 +3429,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\useInteractionGuards.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_viewer_useinteractionguards_ts",
-      "community": 22,
+      "community": 27,
       "norm_label": "useinteractionguards.ts"
     },
     {
@@ -2952,7 +3438,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\useInteractionGuards.ts",
       "source_location": "L29",
       "id": "useinteractionguards_useinteractionguards",
-      "community": 22,
+      "community": 27,
       "norm_label": "useinteractionguards()"
     },
     {
@@ -2961,7 +3447,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\useOrbitControls.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_viewer_useorbitcontrols_ts",
-      "community": 23,
+      "community": 28,
       "norm_label": "useorbitcontrols.ts"
     },
     {
@@ -2970,7 +3456,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\useOrbitControls.ts",
       "source_location": "L23",
       "id": "useorbitcontrols_useorbitcontrols",
-      "community": 23,
+      "community": 28,
       "norm_label": "useorbitcontrols()"
     },
     {
@@ -2979,7 +3465,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\useSatelliteData.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_viewer_usesatellitedata_ts",
-      "community": 24,
+      "community": 29,
       "norm_label": "usesatellitedata.ts"
     },
     {
@@ -2988,7 +3474,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\useSatelliteData.ts",
       "source_location": "L26",
       "id": "usesatellitedata_usesatellitedata",
-      "community": 24,
+      "community": 29,
       "norm_label": "usesatellitedata()"
     },
     {
@@ -2997,7 +3483,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\useSatelliteScene.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_viewer_usesatellitescene_ts",
-      "community": 25,
+      "community": 30,
       "norm_label": "usesatellitescene.ts"
     },
     {
@@ -3006,7 +3492,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\useSatelliteScene.ts",
       "source_location": "L32",
       "id": "usesatellitescene_usesatellitescene",
-      "community": 25,
+      "community": 30,
       "norm_label": "usesatellitescene()"
     },
     {
@@ -3015,7 +3501,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\useViewerSetup.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_viewer_useviewersetup_ts",
-      "community": 26,
+      "community": 31,
       "norm_label": "useviewersetup.ts"
     },
     {
@@ -3024,7 +3510,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\useViewerSetup.ts",
       "source_location": "L17",
       "id": "useviewersetup_useviewersetup",
-      "community": 26,
+      "community": 31,
       "norm_label": "useviewersetup()"
     },
     {
@@ -3033,7 +3519,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\Viewer.tsx",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_viewer_viewer_tsx",
-      "community": 35,
+      "community": 40,
       "norm_label": "viewer.tsx"
     },
     {
@@ -3042,7 +3528,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\viewerConfig.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_viewer_viewerconfig_ts",
-      "community": 36,
+      "community": 41,
       "norm_label": "viewerconfig.ts"
     },
     {
@@ -3051,7 +3537,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\viewerTypes.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_viewer_viewertypes_ts",
-      "community": 37,
+      "community": 42,
       "norm_label": "viewertypes.ts"
     }
   ],
@@ -4413,10 +4899,46 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\index.mjs",
+      "source_location": "L26",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_index_mjs",
+      "_tgt": "e_ashis_god_eyes_explorer_server_store_infrastructurestore_mjs",
+      "source": "e_ashis_god_eyes_explorer_server_index_mjs",
+      "target": "e_ashis_god_eyes_explorer_server_store_infrastructurestore_mjs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\index.mjs",
+      "source_location": "L32",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_index_mjs",
+      "_tgt": "e_ashis_god_eyes_explorer_server_services_infrastructurefetcher_mjs",
+      "source": "e_ashis_god_eyes_explorer_server_index_mjs",
+      "target": "e_ashis_god_eyes_explorer_server_services_infrastructurefetcher_mjs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\index.mjs",
+      "source_location": "L33",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_index_mjs",
+      "_tgt": "e_ashis_god_eyes_explorer_server_services_shipfetcher_mjs",
+      "source": "e_ashis_god_eyes_explorer_server_index_mjs",
+      "target": "e_ashis_god_eyes_explorer_server_services_shipfetcher_mjs",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\index.mjs",
-      "source_location": "L28",
+      "source_location": "L36",
       "weight": 1.0,
       "_src": "e_ashis_god_eyes_explorer_server_index_mjs",
       "_tgt": "index_setcorsheaders",
@@ -4428,7 +4950,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\index.mjs",
-      "source_location": "L34",
+      "source_location": "L42",
       "weight": 1.0,
       "_src": "e_ashis_god_eyes_explorer_server_index_mjs",
       "_tgt": "index_sendjson",
@@ -4440,7 +4962,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\index.mjs",
-      "source_location": "L47",
+      "source_location": "L55",
       "weight": 1.0,
       "_src": "e_ashis_god_eyes_explorer_server_index_mjs",
       "_tgt": "index_runsweep",
@@ -4523,6 +5045,18 @@
     {
       "relation": "imports_from",
       "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\infrastructureFetcher.mjs",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_services_infrastructurefetcher_mjs",
+      "_tgt": "e_ashis_god_eyes_explorer_server_config_constants_mjs",
+      "source": "e_ashis_god_eyes_explorer_server_config_constants_mjs",
+      "target": "e_ashis_god_eyes_explorer_server_services_infrastructurefetcher_mjs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\intelFetcher.mjs",
       "source_location": "L16",
       "weight": 1.0,
@@ -4571,6 +5105,18 @@
     {
       "relation": "imports_from",
       "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\shipFetcher.mjs",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_services_shipfetcher_mjs",
+      "_tgt": "e_ashis_god_eyes_explorer_server_config_constants_mjs",
+      "source": "e_ashis_god_eyes_explorer_server_config_constants_mjs",
+      "target": "e_ashis_god_eyes_explorer_server_services_shipfetcher_mjs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\flightCache.mjs",
       "source_location": "L9",
       "weight": 1.0,
@@ -4578,6 +5124,18 @@
       "_tgt": "e_ashis_god_eyes_explorer_server_config_constants_mjs",
       "source": "e_ashis_god_eyes_explorer_server_config_constants_mjs",
       "target": "e_ashis_god_eyes_explorer_server_store_flightcache_mjs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\infrastructureStore.mjs",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_store_infrastructurestore_mjs",
+      "_tgt": "e_ashis_god_eyes_explorer_server_config_constants_mjs",
+      "source": "e_ashis_god_eyes_explorer_server_config_constants_mjs",
+      "target": "e_ashis_god_eyes_explorer_server_store_infrastructurestore_mjs",
       "confidence_score": 1.0
     },
     {
@@ -4963,6 +5521,162 @@
       "_tgt": "flightcache_upsertflight",
       "source": "fetchers_fetchcustomradar",
       "target": "flightcache_upsertflight"
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\infrastructureFetcher.mjs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_services_infrastructurefetcher_mjs",
+      "_tgt": "e_ashis_god_eyes_explorer_server_store_infrastructurestore_mjs",
+      "source": "e_ashis_god_eyes_explorer_server_services_infrastructurefetcher_mjs",
+      "target": "e_ashis_god_eyes_explorer_server_store_infrastructurestore_mjs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\infrastructureFetcher.mjs",
+      "source_location": "L14",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_services_infrastructurefetcher_mjs",
+      "_tgt": "infrastructurefetcher_fetchwithtimeout",
+      "source": "e_ashis_god_eyes_explorer_server_services_infrastructurefetcher_mjs",
+      "target": "infrastructurefetcher_fetchwithtimeout",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\infrastructureFetcher.mjs",
+      "source_location": "L21",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_services_infrastructurefetcher_mjs",
+      "_tgt": "infrastructurefetcher_fetchsubseacables",
+      "source": "e_ashis_god_eyes_explorer_server_services_infrastructurefetcher_mjs",
+      "target": "infrastructurefetcher_fetchsubseacables",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\infrastructureFetcher.mjs",
+      "source_location": "L44",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_services_infrastructurefetcher_mjs",
+      "_tgt": "infrastructurefetcher_startinfrastructurerefreshloop",
+      "source": "e_ashis_god_eyes_explorer_server_services_infrastructurefetcher_mjs",
+      "target": "infrastructurefetcher_startinfrastructurerefreshloop",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\infrastructureFetcher.mjs",
+      "source_location": "L66",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_services_infrastructurefetcher_mjs",
+      "_tgt": "infrastructurefetcher_normalizecablefeature",
+      "source": "e_ashis_god_eyes_explorer_server_services_infrastructurefetcher_mjs",
+      "target": "infrastructurefetcher_normalizecablefeature",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\infrastructureFetcher.mjs",
+      "source_location": "L101",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_services_infrastructurefetcher_mjs",
+      "_tgt": "infrastructurefetcher_extractsegments",
+      "source": "e_ashis_god_eyes_explorer_server_services_infrastructurefetcher_mjs",
+      "target": "infrastructurefetcher_extractsegments",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\infrastructureFetcher.mjs",
+      "source_location": "L108",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_services_infrastructurefetcher_mjs",
+      "_tgt": "infrastructurefetcher_stablecableid",
+      "source": "e_ashis_god_eyes_explorer_server_services_infrastructurefetcher_mjs",
+      "target": "infrastructurefetcher_stablecableid",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\infrastructureFetcher.mjs",
+      "source_location": "L115",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_services_infrastructurefetcher_mjs",
+      "_tgt": "infrastructurefetcher_safestr",
+      "source": "e_ashis_god_eyes_explorer_server_services_infrastructurefetcher_mjs",
+      "target": "infrastructurefetcher_safestr",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\infrastructureFetcher.mjs",
+      "source_location": "L22",
+      "weight": 1.0,
+      "_src": "infrastructurefetcher_fetchsubseacables",
+      "_tgt": "infrastructurefetcher_fetchwithtimeout",
+      "source": "infrastructurefetcher_fetchwithtimeout",
+      "target": "infrastructurefetcher_fetchsubseacables",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\infrastructureFetcher.mjs",
+      "source_location": "L39",
+      "weight": 1.0,
+      "_src": "infrastructurefetcher_fetchsubseacables",
+      "_tgt": "infrastructurestore_replacecables",
+      "source": "infrastructurefetcher_fetchsubseacables",
+      "target": "infrastructurestore_replacecables"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\infrastructureFetcher.mjs",
+      "source_location": "L69",
+      "weight": 1.0,
+      "_src": "infrastructurefetcher_normalizecablefeature",
+      "_tgt": "infrastructurefetcher_extractsegments",
+      "source": "infrastructurefetcher_normalizecablefeature",
+      "target": "infrastructurefetcher_extractsegments",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\infrastructureFetcher.mjs",
+      "source_location": "L83",
+      "weight": 1.0,
+      "_src": "infrastructurefetcher_normalizecablefeature",
+      "_tgt": "infrastructurefetcher_safestr",
+      "source": "infrastructurefetcher_normalizecablefeature",
+      "target": "infrastructurefetcher_safestr",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\infrastructureFetcher.mjs",
+      "source_location": "L92",
+      "weight": 1.0,
+      "_src": "infrastructurefetcher_normalizecablefeature",
+      "_tgt": "infrastructurefetcher_stablecableid",
+      "source": "infrastructurefetcher_normalizecablefeature",
+      "target": "infrastructurefetcher_stablecableid",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -5805,6 +6519,246 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\shipFetcher.mjs",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_services_shipfetcher_mjs",
+      "_tgt": "e_ashis_god_eyes_explorer_server_store_infrastructurestore_mjs",
+      "source": "e_ashis_god_eyes_explorer_server_services_shipfetcher_mjs",
+      "target": "e_ashis_god_eyes_explorer_server_store_infrastructurestore_mjs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\shipFetcher.mjs",
+      "source_location": "L18",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_services_shipfetcher_mjs",
+      "_tgt": "shipfetcher_startshipstream",
+      "source": "e_ashis_god_eyes_explorer_server_services_shipfetcher_mjs",
+      "target": "shipfetcher_startshipstream",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\shipFetcher.mjs",
+      "source_location": "L38",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_services_shipfetcher_mjs",
+      "_tgt": "shipfetcher_connectshipstream",
+      "source": "e_ashis_god_eyes_explorer_server_services_shipfetcher_mjs",
+      "target": "shipfetcher_connectshipstream",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\shipFetcher.mjs",
+      "source_location": "L76",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_services_shipfetcher_mjs",
+      "_tgt": "shipfetcher_schedulereconnect",
+      "source": "e_ashis_god_eyes_explorer_server_services_shipfetcher_mjs",
+      "target": "shipfetcher_schedulereconnect",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\shipFetcher.mjs",
+      "source_location": "L84",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_services_shipfetcher_mjs",
+      "_tgt": "shipfetcher_handleaismessage",
+      "source": "e_ashis_god_eyes_explorer_server_services_shipfetcher_mjs",
+      "target": "shipfetcher_handleaismessage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\shipFetcher.mjs",
+      "source_location": "L116",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_services_shipfetcher_mjs",
+      "_tgt": "shipfetcher_extractposition",
+      "source": "e_ashis_god_eyes_explorer_server_services_shipfetcher_mjs",
+      "target": "shipfetcher_extractposition",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\shipFetcher.mjs",
+      "source_location": "L134",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_services_shipfetcher_mjs",
+      "_tgt": "shipfetcher_extractshiptype",
+      "source": "e_ashis_god_eyes_explorer_server_services_shipfetcher_mjs",
+      "target": "shipfetcher_extractshiptype",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\shipFetcher.mjs",
+      "source_location": "L150",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_services_shipfetcher_mjs",
+      "_tgt": "shipfetcher_describeshiptype",
+      "source": "e_ashis_god_eyes_explorer_server_services_shipfetcher_mjs",
+      "target": "shipfetcher_describeshiptype",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\shipFetcher.mjs",
+      "source_location": "L159",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_services_shipfetcher_mjs",
+      "_tgt": "shipfetcher_isinterestingvesseltype",
+      "source": "e_ashis_god_eyes_explorer_server_services_shipfetcher_mjs",
+      "target": "shipfetcher_isinterestingvesseltype",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\shipFetcher.mjs",
+      "source_location": "L163",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_services_shipfetcher_mjs",
+      "_tgt": "shipfetcher_finiteornull",
+      "source": "e_ashis_god_eyes_explorer_server_services_shipfetcher_mjs",
+      "target": "shipfetcher_finiteornull",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\shipFetcher.mjs",
+      "source_location": "L168",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_services_shipfetcher_mjs",
+      "_tgt": "shipfetcher_safestr",
+      "source": "e_ashis_god_eyes_explorer_server_services_shipfetcher_mjs",
+      "target": "shipfetcher_safestr",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\shipFetcher.mjs",
+      "source_location": "L35",
+      "weight": 1.0,
+      "_src": "shipfetcher_startshipstream",
+      "_tgt": "shipfetcher_connectshipstream",
+      "source": "shipfetcher_startshipstream",
+      "target": "shipfetcher_connectshipstream",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\shipFetcher.mjs",
+      "source_location": "L24",
+      "weight": 1.0,
+      "_src": "shipfetcher_startshipstream",
+      "_tgt": "infrastructurestore_setshipconnectionstate",
+      "source": "shipfetcher_startshipstream",
+      "target": "infrastructurestore_setshipconnectionstate"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\shipFetcher.mjs",
+      "source_location": "L90",
+      "weight": 1.0,
+      "_src": "shipfetcher_handleaismessage",
+      "_tgt": "shipfetcher_extractshiptype",
+      "source": "shipfetcher_handleaismessage",
+      "target": "shipfetcher_extractshiptype",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\shipFetcher.mjs",
+      "source_location": "L96",
+      "weight": 1.0,
+      "_src": "shipfetcher_handleaismessage",
+      "_tgt": "shipfetcher_isinterestingvesseltype",
+      "source": "shipfetcher_handleaismessage",
+      "target": "shipfetcher_isinterestingvesseltype",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\shipFetcher.mjs",
+      "source_location": "L99",
+      "weight": 1.0,
+      "_src": "shipfetcher_handleaismessage",
+      "_tgt": "shipfetcher_extractposition",
+      "source": "shipfetcher_handleaismessage",
+      "target": "shipfetcher_extractposition",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\shipFetcher.mjs",
+      "source_location": "L105",
+      "weight": 1.0,
+      "_src": "shipfetcher_handleaismessage",
+      "_tgt": "shipfetcher_safestr",
+      "source": "shipfetcher_handleaismessage",
+      "target": "shipfetcher_safestr",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\shipFetcher.mjs",
+      "source_location": "L102",
+      "weight": 1.0,
+      "_src": "shipfetcher_handleaismessage",
+      "_tgt": "infrastructurestore_upsertship",
+      "source": "shipfetcher_handleaismessage",
+      "target": "infrastructurestore_upsertship"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\shipFetcher.mjs",
+      "source_location": "L129",
+      "weight": 1.0,
+      "_src": "shipfetcher_extractposition",
+      "_tgt": "shipfetcher_finiteornull",
+      "source": "shipfetcher_extractposition",
+      "target": "shipfetcher_finiteornull",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\shipFetcher.mjs",
+      "source_location": "L144",
+      "weight": 1.0,
+      "_src": "shipfetcher_extractshiptype",
+      "_tgt": "shipfetcher_describeshiptype",
+      "source": "shipfetcher_extractshiptype",
+      "target": "shipfetcher_describeshiptype",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\flightCache.mjs",
@@ -5838,6 +6792,210 @@
       "_tgt": "flightcache_removestaleflights",
       "source": "e_ashis_god_eyes_explorer_server_store_flightcache_mjs",
       "target": "flightcache_removestaleflights",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\infrastructureStore.mjs",
+      "source_location": "L26",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_store_infrastructurestore_mjs",
+      "_tgt": "infrastructurestore_replacecables",
+      "source": "e_ashis_god_eyes_explorer_server_store_infrastructurestore_mjs",
+      "target": "infrastructurestore_replacecables",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\infrastructureStore.mjs",
+      "source_location": "L46",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_store_infrastructurestore_mjs",
+      "_tgt": "infrastructurestore_setcablefetcherror",
+      "source": "e_ashis_god_eyes_explorer_server_store_infrastructurestore_mjs",
+      "target": "infrastructurestore_setcablefetcherror",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\infrastructureStore.mjs",
+      "source_location": "L53",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_store_infrastructurestore_mjs",
+      "_tgt": "infrastructurestore_upsertship",
+      "source": "e_ashis_god_eyes_explorer_server_store_infrastructurestore_mjs",
+      "target": "infrastructurestore_upsertship",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\infrastructureStore.mjs",
+      "source_location": "L97",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_store_infrastructurestore_mjs",
+      "_tgt": "infrastructurestore_removestaleships",
+      "source": "e_ashis_god_eyes_explorer_server_store_infrastructurestore_mjs",
+      "target": "infrastructurestore_removestaleships",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\infrastructureStore.mjs",
+      "source_location": "L125",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_store_infrastructurestore_mjs",
+      "_tgt": "infrastructurestore_setshipconnectionstate",
+      "source": "e_ashis_god_eyes_explorer_server_store_infrastructurestore_mjs",
+      "target": "infrastructurestore_setshipconnectionstate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\infrastructureStore.mjs",
+      "source_location": "L133",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_store_infrastructurestore_mjs",
+      "_tgt": "infrastructurestore_getallcables",
+      "source": "e_ashis_god_eyes_explorer_server_store_infrastructurestore_mjs",
+      "target": "infrastructurestore_getallcables",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\infrastructureStore.mjs",
+      "source_location": "L137",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_store_infrastructurestore_mjs",
+      "_tgt": "infrastructurestore_getallships",
+      "source": "e_ashis_god_eyes_explorer_server_store_infrastructurestore_mjs",
+      "target": "infrastructurestore_getallships",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\infrastructureStore.mjs",
+      "source_location": "L141",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_store_infrastructurestore_mjs",
+      "_tgt": "infrastructurestore_getallinfrastructurenodes",
+      "source": "e_ashis_god_eyes_explorer_server_store_infrastructurestore_mjs",
+      "target": "infrastructurestore_getallinfrastructurenodes",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\infrastructureStore.mjs",
+      "source_location": "L145",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_store_infrastructurestore_mjs",
+      "_tgt": "infrastructurestore_getinfrastructurestats",
+      "source": "e_ashis_god_eyes_explorer_server_store_infrastructurestore_mjs",
+      "target": "infrastructurestore_getinfrastructurestats",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\infrastructureStore.mjs",
+      "source_location": "L155",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_store_infrastructurestore_mjs",
+      "_tgt": "infrastructurestore_addintelligencenode",
+      "source": "e_ashis_god_eyes_explorer_server_store_infrastructurestore_mjs",
+      "target": "infrastructurestore_addintelligencenode",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\infrastructureStore.mjs",
+      "source_location": "L177",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_store_infrastructurestore_mjs",
+      "_tgt": "infrastructurestore_findnearestcable",
+      "source": "e_ashis_god_eyes_explorer_server_store_infrastructurestore_mjs",
+      "target": "infrastructurestore_findnearestcable",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\infrastructureStore.mjs",
+      "source_location": "L199",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_store_infrastructurestore_mjs",
+      "_tgt": "infrastructurestore_distancetosegmentmeters",
+      "source": "e_ashis_god_eyes_explorer_server_store_infrastructurestore_mjs",
+      "target": "infrastructurestore_distancetosegmentmeters",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\infrastructureStore.mjs",
+      "source_location": "L222",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_server_store_infrastructurestore_mjs",
+      "_tgt": "infrastructurestore_toradians",
+      "source": "e_ashis_god_eyes_explorer_server_store_infrastructurestore_mjs",
+      "target": "infrastructurestore_toradians",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\infrastructureStore.mjs",
+      "source_location": "L65",
+      "weight": 1.0,
+      "_src": "infrastructurestore_upsertship",
+      "_tgt": "infrastructurestore_findnearestcable",
+      "source": "infrastructurestore_upsertship",
+      "target": "infrastructurestore_findnearestcable",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\infrastructureStore.mjs",
+      "source_location": "L107",
+      "weight": 1.0,
+      "_src": "infrastructurestore_removestaleships",
+      "_tgt": "infrastructurestore_addintelligencenode",
+      "source": "infrastructurestore_removestaleships",
+      "target": "infrastructurestore_addintelligencenode",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\infrastructureStore.mjs",
+      "source_location": "L185",
+      "weight": 1.0,
+      "_src": "infrastructurestore_findnearestcable",
+      "_tgt": "infrastructurestore_distancetosegmentmeters",
+      "source": "infrastructurestore_findnearestcable",
+      "target": "infrastructurestore_distancetosegmentmeters",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\infrastructureStore.mjs",
+      "source_location": "L203",
+      "weight": 1.0,
+      "_src": "infrastructurestore_distancetosegmentmeters",
+      "_tgt": "infrastructurestore_toradians",
+      "source": "infrastructurestore_distancetosegmentmeters",
+      "target": "infrastructurestore_toradians",
       "confidence_score": 1.0
     },
     {
@@ -8399,6 +9557,294 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\CableSceneLayerManager.ts",
+      "source_location": "L33",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_src_earth_infrastructure_cablescenelayermanager_ts",
+      "_tgt": "cablescenelayermanager_cablescenelayermanager",
+      "source": "e_ashis_god_eyes_explorer_src_earth_infrastructure_cablescenelayermanager_ts",
+      "target": "cablescenelayermanager_cablescenelayermanager",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\CableSceneLayerManager.ts",
+      "source_location": "L218",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_src_earth_infrastructure_cablescenelayermanager_ts",
+      "_tgt": "cablescenelayermanager_extractcablepickid",
+      "source": "e_ashis_god_eyes_explorer_src_earth_infrastructure_cablescenelayermanager_ts",
+      "target": "cablescenelayermanager_extractcablepickid",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\CableSceneLayerManager.ts",
+      "source_location": "L229",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_src_earth_infrastructure_cablescenelayermanager_ts",
+      "_tgt": "cablescenelayermanager_headingtorotation",
+      "source": "e_ashis_god_eyes_explorer_src_earth_infrastructure_cablescenelayermanager_ts",
+      "target": "cablescenelayermanager_headingtorotation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\CableSceneLayerManager.ts",
+      "source_location": "L235",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_src_earth_infrastructure_cablescenelayermanager_ts",
+      "_tgt": "cablescenelayermanager_getpulse",
+      "source": "e_ashis_god_eyes_explorer_src_earth_infrastructure_cablescenelayermanager_ts",
+      "target": "cablescenelayermanager_getpulse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\CableSceneLayerManager.ts",
+      "source_location": "L45",
+      "weight": 1.0,
+      "_src": "cablescenelayermanager_cablescenelayermanager",
+      "_tgt": "cablescenelayermanager_cablescenelayermanager_constructor",
+      "source": "cablescenelayermanager_cablescenelayermanager",
+      "target": "cablescenelayermanager_cablescenelayermanager_constructor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\CableSceneLayerManager.ts",
+      "source_location": "L59",
+      "weight": 1.0,
+      "_src": "cablescenelayermanager_cablescenelayermanager",
+      "_tgt": "cablescenelayermanager_cablescenelayermanager_destroy",
+      "source": "cablescenelayermanager_cablescenelayermanager",
+      "target": "cablescenelayermanager_cablescenelayermanager_destroy",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\CableSceneLayerManager.ts",
+      "source_location": "L71",
+      "weight": 1.0,
+      "_src": "cablescenelayermanager_cablescenelayermanager",
+      "_tgt": "cablescenelayermanager_cablescenelayermanager_setcablesvisible",
+      "source": "cablescenelayermanager_cablescenelayermanager",
+      "target": "cablescenelayermanager_cablescenelayermanager_setcablesvisible",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\CableSceneLayerManager.ts",
+      "source_location": "L77",
+      "weight": 1.0,
+      "_src": "cablescenelayermanager_cablescenelayermanager",
+      "_tgt": "cablescenelayermanager_cablescenelayermanager_setshipsvisible",
+      "source": "cablescenelayermanager_cablescenelayermanager",
+      "target": "cablescenelayermanager_cablescenelayermanager_setshipsvisible",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\CableSceneLayerManager.ts",
+      "source_location": "L84",
+      "weight": 1.0,
+      "_src": "cablescenelayermanager_cablescenelayermanager",
+      "_tgt": "cablescenelayermanager_cablescenelayermanager_syncinfrastructure",
+      "source": "cablescenelayermanager_cablescenelayermanager",
+      "target": "cablescenelayermanager_cablescenelayermanager_syncinfrastructure",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\CableSceneLayerManager.ts",
+      "source_location": "L95",
+      "weight": 1.0,
+      "_src": "cablescenelayermanager_cablescenelayermanager",
+      "_tgt": "cablescenelayermanager_cablescenelayermanager_pickcable",
+      "source": "cablescenelayermanager_cablescenelayermanager",
+      "target": "cablescenelayermanager_cablescenelayermanager_pickcable",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\CableSceneLayerManager.ts",
+      "source_location": "L101",
+      "weight": 1.0,
+      "_src": "cablescenelayermanager_cablescenelayermanager",
+      "_tgt": "cablescenelayermanager_cablescenelayermanager_synccables",
+      "source": "cablescenelayermanager_cablescenelayermanager",
+      "target": "cablescenelayermanager_cablescenelayermanager_synccables",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\CableSceneLayerManager.ts",
+      "source_location": "L137",
+      "weight": 1.0,
+      "_src": "cablescenelayermanager_cablescenelayermanager",
+      "_tgt": "cablescenelayermanager_cablescenelayermanager_syncships",
+      "source": "cablescenelayermanager_cablescenelayermanager",
+      "target": "cablescenelayermanager_cablescenelayermanager_syncships",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\CableSceneLayerManager.ts",
+      "source_location": "L195",
+      "weight": 1.0,
+      "_src": "cablescenelayermanager_cablescenelayermanager",
+      "_tgt": "cablescenelayermanager_cablescenelayermanager_syncnodes",
+      "source": "cablescenelayermanager_cablescenelayermanager",
+      "target": "cablescenelayermanager_cablescenelayermanager_syncnodes",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\CableSceneLayerManager.ts",
+      "source_location": "L211",
+      "weight": 1.0,
+      "_src": "cablescenelayermanager_cablescenelayermanager",
+      "_tgt": "cablescenelayermanager_cablescenelayermanager_requestrender",
+      "source": "cablescenelayermanager_cablescenelayermanager",
+      "target": "cablescenelayermanager_cablescenelayermanager_requestrender",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\CableSceneLayerManager.ts",
+      "source_location": "L74",
+      "weight": 1.0,
+      "_src": "cablescenelayermanager_cablescenelayermanager_setcablesvisible",
+      "_tgt": "cablescenelayermanager_cablescenelayermanager_requestrender",
+      "source": "cablescenelayermanager_cablescenelayermanager_setcablesvisible",
+      "target": "cablescenelayermanager_cablescenelayermanager_requestrender",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\CableSceneLayerManager.ts",
+      "source_location": "L81",
+      "weight": 1.0,
+      "_src": "cablescenelayermanager_cablescenelayermanager_setshipsvisible",
+      "_tgt": "cablescenelayermanager_cablescenelayermanager_requestrender",
+      "source": "cablescenelayermanager_cablescenelayermanager_setshipsvisible",
+      "target": "cablescenelayermanager_cablescenelayermanager_requestrender",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\CableSceneLayerManager.ts",
+      "source_location": "L89",
+      "weight": 1.0,
+      "_src": "cablescenelayermanager_cablescenelayermanager_syncinfrastructure",
+      "_tgt": "cablescenelayermanager_cablescenelayermanager_synccables",
+      "source": "cablescenelayermanager_cablescenelayermanager_syncinfrastructure",
+      "target": "cablescenelayermanager_cablescenelayermanager_synccables",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\CableSceneLayerManager.ts",
+      "source_location": "L90",
+      "weight": 1.0,
+      "_src": "cablescenelayermanager_cablescenelayermanager_syncinfrastructure",
+      "_tgt": "cablescenelayermanager_cablescenelayermanager_syncships",
+      "source": "cablescenelayermanager_cablescenelayermanager_syncinfrastructure",
+      "target": "cablescenelayermanager_cablescenelayermanager_syncships",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\CableSceneLayerManager.ts",
+      "source_location": "L91",
+      "weight": 1.0,
+      "_src": "cablescenelayermanager_cablescenelayermanager_syncinfrastructure",
+      "_tgt": "cablescenelayermanager_cablescenelayermanager_syncnodes",
+      "source": "cablescenelayermanager_cablescenelayermanager_syncinfrastructure",
+      "target": "cablescenelayermanager_cablescenelayermanager_syncnodes",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\CableSceneLayerManager.ts",
+      "source_location": "L92",
+      "weight": 1.0,
+      "_src": "cablescenelayermanager_cablescenelayermanager_syncinfrastructure",
+      "_tgt": "cablescenelayermanager_cablescenelayermanager_requestrender",
+      "source": "cablescenelayermanager_cablescenelayermanager_syncinfrastructure",
+      "target": "cablescenelayermanager_cablescenelayermanager_requestrender",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\CableSceneLayerManager.ts",
+      "source_location": "L97",
+      "weight": 1.0,
+      "_src": "cablescenelayermanager_cablescenelayermanager_pickcable",
+      "_tgt": "cablescenelayermanager_extractcablepickid",
+      "source": "cablescenelayermanager_cablescenelayermanager_pickcable",
+      "target": "cablescenelayermanager_extractcablepickid",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\CableSceneLayerManager.ts",
+      "source_location": "L146",
+      "weight": 1.0,
+      "_src": "cablescenelayermanager_cablescenelayermanager_syncships",
+      "_tgt": "cablescenelayermanager_getpulse",
+      "source": "cablescenelayermanager_cablescenelayermanager_syncships",
+      "target": "cablescenelayermanager_getpulse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\CableSceneLayerManager.ts",
+      "source_location": "L151",
+      "weight": 1.0,
+      "_src": "cablescenelayermanager_cablescenelayermanager_syncships",
+      "_tgt": "cablescenelayermanager_headingtorotation",
+      "source": "cablescenelayermanager_cablescenelayermanager_syncships",
+      "target": "cablescenelayermanager_headingtorotation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\infrastructure\\infrastructure.ts",
+      "source_location": "L88",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_src_earth_infrastructure_infrastructure_ts",
+      "_tgt": "infrastructure_fetchinfrastructuresnapshot",
+      "source": "e_ashis_god_eyes_explorer_src_earth_infrastructure_infrastructure_ts",
+      "target": "infrastructure_fetchinfrastructuresnapshot",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\satelliteIntelligence.ts",
       "source_location": "L36",
       "weight": 1.0,
@@ -8547,8 +9993,8 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
       "source_location": "L469",
       "weight": 1.0,
-      "_src": "satellitescenelayermanager_satellitescenelayermanager_refreshsignallink",
-      "_tgt": "satelliteintelligence_getnearestgroundstation",
+      "_src": "satelliteintelligence_getnearestgroundstation",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_refreshsignallink",
       "source": "satelliteintelligence_getnearestgroundstation",
       "target": "satellitescenelayermanager_satellitescenelayermanager_refreshsignallink"
     },
@@ -8583,8 +10029,8 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
       "source_location": "L470",
       "weight": 1.0,
-      "_src": "satellitescenelayermanager_satellitescenelayermanager_refreshsignallink",
-      "_tgt": "satelliteintelligence_haslineofsight",
+      "_src": "satelliteintelligence_haslineofsight",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_refreshsignallink",
       "source": "satelliteintelligence_haslineofsight",
       "target": "satellitescenelayermanager_satellitescenelayermanager_refreshsignallink"
     },
@@ -8595,8 +10041,8 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\satellites\\SatelliteSceneLayerManager.ts",
       "source_location": "L477",
       "weight": 1.0,
-      "_src": "satellitescenelayermanager_satellitescenelayermanager_refreshsignallink",
-      "_tgt": "satelliteintelligence_groundstationtocartesian",
+      "_src": "satelliteintelligence_groundstationtocartesian",
+      "_tgt": "satellitescenelayermanager_satellitescenelayermanager_refreshsignallink",
       "source": "satelliteintelligence_groundstationtocartesian",
       "target": "satellitescenelayermanager_satellitescenelayermanager_refreshsignallink"
     },
@@ -8619,8 +10065,8 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\cameraUtils.ts",
       "source_location": "L26",
       "weight": 1.0,
-      "_src": "camerautils_flyobliquetopoint",
-      "_tgt": "satelliteintelligence_toradians",
+      "_src": "satelliteintelligence_toradians",
+      "_tgt": "camerautils_flyobliquetopoint",
       "source": "satelliteintelligence_toradians",
       "target": "camerautils_flyobliquetopoint"
     },
@@ -8631,8 +10077,8 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\cameraUtils.ts",
       "source_location": "L147",
       "weight": 1.0,
-      "_src": "camerautils_buildhome",
-      "_tgt": "satelliteintelligence_toradians",
+      "_src": "satelliteintelligence_toradians",
+      "_tgt": "camerautils_buildhome",
       "source": "satelliteintelligence_toradians",
       "target": "camerautils_buildhome"
     },
@@ -8643,8 +10089,8 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\cameraUtils.ts",
       "source_location": "L199",
       "weight": 1.0,
-      "_src": "camerautils_getcockpitcamerapose",
-      "_tgt": "satelliteintelligence_toradians",
+      "_src": "satelliteintelligence_toradians",
+      "_tgt": "camerautils_getcockpitcamerapose",
       "source": "satelliteintelligence_toradians",
       "target": "camerautils_getcockpitcamerapose"
     },
@@ -10188,7 +11634,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\DevStatusPanel.tsx",
-      "source_location": "L16",
+      "source_location": "L20",
       "weight": 1.0,
       "_src": "e_ashis_god_eyes_explorer_src_earth_viewer_devstatuspanel_tsx",
       "_tgt": "devstatuspanel_devstatuspanel",
@@ -10236,7 +11682,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\LayerSidebar.tsx",
-      "source_location": "L51",
+      "source_location": "L57",
       "weight": 1.0,
       "_src": "e_ashis_god_eyes_explorer_src_earth_viewer_layersidebar_tsx",
       "_tgt": "layersidebar_rendersooncard",
@@ -10254,6 +11700,18 @@
       "_tgt": "usebuildingstileset_usebuildingstileset",
       "source": "e_ashis_god_eyes_explorer_src_earth_viewer_usebuildingstileset_ts",
       "target": "usebuildingstileset_usebuildingstileset",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\useCableScene.ts",
+      "source_location": "L21",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_src_earth_viewer_usecablescene_ts",
+      "_tgt": "usecablescene_usecablescene",
+      "source": "e_ashis_god_eyes_explorer_src_earth_viewer_usecablescene_ts",
+      "target": "usecablescene_usecablescene",
       "confidence_score": 1.0
     },
     {
@@ -10278,6 +11736,18 @@
       "_tgt": "useflightscene_useflightscene",
       "source": "e_ashis_god_eyes_explorer_src_earth_viewer_useflightscene_ts",
       "target": "useflightscene_useflightscene",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\viewer\\useInfrastructureData.ts",
+      "source_location": "L33",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_src_earth_viewer_useinfrastructuredata_ts",
+      "_tgt": "useinfrastructuredata_useinfrastructuredata",
+      "source": "e_ashis_god_eyes_explorer_src_earth_viewer_useinfrastructuredata_ts",
+      "target": "useinfrastructuredata_useinfrastructuredata",
       "confidence_score": 1.0
     },
     {

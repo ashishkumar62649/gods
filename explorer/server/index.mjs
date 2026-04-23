@@ -23,6 +23,14 @@ import { airportIndex, getAirportStats } from './services/airportIndex.mjs';
 import { getAllSatellites, getSatelliteStats } from './store/satelliteCache.mjs';
 import { startSatelliteTleRefreshLoop } from './services/satelliteFetcher.mjs';
 import { startOrbitPropagationLoop } from './services/orbitPropagator.mjs';
+import {
+  getAllCables,
+  getAllInfrastructureNodes,
+  getAllShips,
+  getInfrastructureStats,
+} from './store/infrastructureStore.mjs';
+import { startInfrastructureRefreshLoop } from './services/infrastructureFetcher.mjs';
+import { startShipStream } from './services/shipFetcher.mjs';
 
 // ─── CORS + JSON helpers ──────────────────────────────────────
 function setCorsHeaders(res) {
@@ -135,6 +143,24 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  if (req.method === 'GET' && url.pathname === '/api/infrastructure') {
+    const cables = getAllCables();
+    const ships = getAllShips();
+    const nodes = getAllInfrastructureNodes();
+
+    sendJson(res, 200, {
+      cables,
+      ships,
+      nodes,
+      meta: {
+        count: cables.length,
+        timestamp: Date.now(),
+        ...getInfrastructureStats(),
+      },
+    });
+    return;
+  }
+
   if (req.method === 'GET' && url.pathname === '/api/health') {
     const { source, lastCount } = getSweeepStats();
     const intel = getIntelStats();
@@ -148,6 +174,7 @@ const server = http.createServer((req, res) => {
       lastCount,
       airports:      getAirportStats(),
       satellites:    getSatelliteStats(),
+      infrastructure: getInfrastructureStats(),
       intel,
     });
     return;
@@ -176,6 +203,8 @@ server.listen(PORT, async () => {
   startIntelLoop();
   startSatelliteTleRefreshLoop();
   startOrbitPropagationLoop();
+  startInfrastructureRefreshLoop();
+  startShipStream();
 
   console.log('[Boot] Both layers active. Ready.');
 });

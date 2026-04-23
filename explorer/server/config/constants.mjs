@@ -22,6 +22,16 @@ export const SATELLITE_TLE_REFRESH_INTERVAL_MS = 6 * 60 * 60 * 1000;
 /** Satellite position propagation cadence (ms). */
 export const SATELLITE_PROPAGATION_INTERVAL_MS = 1_000;
 
+/** Public subsea cable map and maritime intelligence configuration. */
+export const SUBMARINE_CABLE_GEOJSON_URL =
+  'https://submarinecablemap.com/api/v3/cable/cable-geo.json';
+export const INFRASTRUCTURE_REFRESH_INTERVAL_MS = 24 * 60 * 60 * 1000;
+export const AISSTREAM_API_KEY = process.env.AISSTREAM_API_KEY || null;
+export const AISSTREAM_URL = 'wss://stream.aisstream.io/v0/stream';
+export const SHIP_STALE_TIMEOUT_MS = 3 * 60 * 1000;
+export const CABLE_RISK_DISTANCE_M = 500;
+export const CABLE_RISK_SPEED_KNOTS = 3;
+
 /** Space-Track credentials. Required to fetch live GP/TLE catalog data. */
 export const SPACETRACK_EMAIL = process.env.SPACETRACK_EMAIL || null;
 export const SPACETRACK_PASSWORD = process.env.SPACETRACK_PASSWORD || null;

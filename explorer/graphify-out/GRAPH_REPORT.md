@@ -1,12 +1,12 @@
 # Graph Report - E:\ashis\god eyes\explorer  (2026-04-23)
 
 ## Corpus Check
-- 47 files · ~68,347 words
+- 54 files · ~74,337 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 339 nodes · 607 edges · 38 communities detected
-- Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 35 edges (avg confidence: 0.8)
+- 393 nodes · 689 edges · 43 communities detected
+- Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 38 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
@@ -48,18 +48,23 @@
 - [[_COMMUNITY_Community 35|Community 35]]
 - [[_COMMUNITY_Community 36|Community 36]]
 - [[_COMMUNITY_Community 37|Community 37]]
+- [[_COMMUNITY_Community 38|Community 38]]
+- [[_COMMUNITY_Community 39|Community 39]]
+- [[_COMMUNITY_Community 40|Community 40]]
+- [[_COMMUNITY_Community 41|Community 41]]
+- [[_COMMUNITY_Community 42|Community 42]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `FlightSceneLayerManager` - 42 edges
 2. `SatelliteSceneLayerManager` - 32 edges
-3. `resolveFlightIconPreset()` - 9 edges
-4. `normalizeReadsb()` - 8 edges
-5. `getFlightAltitudeColorCss()` - 8 edges
-6. `fetchWithTimeout()` - 7 edges
-7. `toRadians()` - 7 edges
-8. `fetchRouteForCallsign()` - 6 edges
-9. `normalizeAircraftMetadataRow()` - 6 edges
-10. `pickEstimatedRouteAirport()` - 6 edges
+3. `CableSceneLayerManager` - 11 edges
+4. `resolveFlightIconPreset()` - 9 edges
+5. `normalizeReadsb()` - 8 edges
+6. `getFlightAltitudeColorCss()` - 8 edges
+7. `fetchWithTimeout()` - 7 edges
+8. `toRadians()` - 7 edges
+9. `fetchRouteForCallsign()` - 6 edges
+10. `normalizeAircraftMetadataRow()` - 6 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `runSweep()` --calls--> `getSweeepStats()`  [INFERRED]
@@ -88,8 +93,8 @@ Cohesion: 0.12
 Nodes (11): buildPredictedPathPositions(), cloneColorWithAlpha(), extractSatellitePickId(), getConstellationId(), getNeighborCells(), getNetworkCell(), getPulse(), isRenderableSatellite() (+3 more)
 
 ### Community 3 - "Community 3"
-Cohesion: 0.14
-Nodes (24): altitudeColor(), clamp(), formatNumber(), getFlightAltitudeColorCss(), getFlightFamilyLabel(), getFlightIconDimensions(), getFlightIconImage(), getFlightIconKey() (+16 more)
+Cohesion: 0.09
+Nodes (23): extractSegments(), fetchSubseaCables(), fetchWithTimeout(), normalizeCableFeature(), safeStr(), stableCableId(), addIntelligenceNode(), distanceToSegmentMeters() (+15 more)
 
 ### Community 4 - "Community 4"
 Cohesion: 0.13
@@ -100,43 +105,43 @@ Cohesion: 0.15
 Nodes (16): buildFreshSnapshotUrl(), fetchCustomRadar(), fetchPrimaryRadar(), fetchWithTimeout(), getSweeepStats(), getAllFlights(), upsertFlight(), runSweep() (+8 more)
 
 ### Community 6 - "Community 6"
+Cohesion: 0.14
+Nodes (24): altitudeColor(), clamp(), formatNumber(), getFlightAltitudeColorCss(), getFlightFamilyLabel(), getFlightIconDimensions(), getFlightIconImage(), getFlightIconKey() (+16 more)
+
+### Community 7 - "Community 7"
 Cohesion: 0.21
 Nodes (13): buildHome(), flyObliqueToDestination(), flyObliqueToPoint(), getCameraCartographic(), getCockpitCameraPose(), getFlightCameraTarget(), centralAngleRadians(), findNextSignalTransitionSeconds() (+5 more)
 
-### Community 7 - "Community 7"
+### Community 8 - "Community 8"
 Cohesion: 0.16
 Nodes (7): FlightDetailsPanel(), fetchAirports(), fetchFlightRoute(), fetchFlightTrace(), getAirportDisplayCode(), predictFlightPosition(), readErrorMessage()
 
-### Community 8 - "Community 8"
-Cohesion: 0.27
-Nodes (9): fetchAirportInfo(), fetchByCallsign(), fetchByHex(), fetchByRegistration(), fetchRouteSet(), fetchWithTimeout(), ingestEndpoint(), runIntelSweep() (+1 more)
-
 ### Community 9 - "Community 9"
-Cohesion: 0.31
-Nodes (8): buildAirportCodes(), emptyAirportIndex(), isRouteCandidateAirport(), loadAirportIndex(), normalizeAirportCode(), normalizeAirportRow(), serializeAirport(), toFiniteNumber()
+Cohesion: 0.22
+Nodes (4): CableSceneLayerManager, extractCablePickId(), getPulse(), headingToRotation()
 
 ### Community 10 - "Community 10"
 Cohesion: 0.27
-Nodes (5): escapeRegExp(), extractBalanced(), extractNumberLiteral(), extractObject(), extractStringLiteral()
+Nodes (9): fetchAirportInfo(), fetchByCallsign(), fetchByHex(), fetchByRegistration(), fetchRouteSet(), fetchWithTimeout(), ingestEndpoint(), runIntelSweep() (+1 more)
 
 ### Community 11 - "Community 11"
+Cohesion: 0.31
+Nodes (8): buildAirportCodes(), emptyAirportIndex(), isRouteCandidateAirport(), loadAirportIndex(), normalizeAirportCode(), normalizeAirportRow(), serializeAirport(), toFiniteNumber()
+
+### Community 12 - "Community 12"
+Cohesion: 0.27
+Nodes (5): escapeRegExp(), extractBalanced(), extractNumberLiteral(), extractObject(), extractStringLiteral()
+
+### Community 13 - "Community 13"
 Cohesion: 0.29
 Nodes (0): 
 
-### Community 12 - "Community 12"
+### Community 14 - "Community 14"
 Cohesion: 0.5
 Nodes (0): 
 
-### Community 13 - "Community 13"
-Cohesion: 0.67
-Nodes (0): 
-
-### Community 14 - "Community 14"
-Cohesion: 1.0
-Nodes (0): 
-
 ### Community 15 - "Community 15"
-Cohesion: 1.0
+Cohesion: 0.67
 Nodes (0): 
 
 ### Community 16 - "Community 16"
@@ -227,65 +232,89 @@ Nodes (0):
 Cohesion: 1.0
 Nodes (0): 
 
+### Community 38 - "Community 38"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 39 - "Community 39"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 40 - "Community 40"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 41 - "Community 41"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 42 - "Community 42"
+Cohesion: 1.0
+Nodes (0): 
+
 ## Knowledge Gaps
-- **Thin community `Community 14`** (2 nodes): `App()`, `App.tsx`
+- **Thin community `Community 16`** (2 nodes): `App()`, `App.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 15`** (2 nodes): `BuildingsToggle()`, `BuildingsToggle.tsx`
+- **Thin community `Community 17`** (2 nodes): `BuildingsToggle()`, `BuildingsToggle.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 16`** (2 nodes): `DevStatusPanel()`, `DevStatusPanel.tsx`
+- **Thin community `Community 18`** (2 nodes): `infrastructure.ts`, `fetchInfrastructureSnapshot()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 17`** (2 nodes): `ImageryFlyout.tsx`, `ImageryFlyout()`
+- **Thin community `Community 19`** (2 nodes): `DevStatusPanel()`, `DevStatusPanel.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 18`** (2 nodes): `LayerSidebar.tsx`, `renderSoonCard()`
+- **Thin community `Community 20`** (2 nodes): `ImageryFlyout.tsx`, `ImageryFlyout()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 19`** (2 nodes): `useBuildingsTileset.ts`, `useBuildingsTileset()`
+- **Thin community `Community 21`** (2 nodes): `LayerSidebar.tsx`, `renderSoonCard()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 20`** (2 nodes): `useFlightData.ts`, `useFlightData()`
+- **Thin community `Community 22`** (2 nodes): `useBuildingsTileset.ts`, `useBuildingsTileset()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 21`** (2 nodes): `useFlightScene.ts`, `useFlightScene()`
+- **Thin community `Community 23`** (2 nodes): `useCableScene.ts`, `useCableScene()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 22`** (2 nodes): `useInteractionGuards.ts`, `useInteractionGuards()`
+- **Thin community `Community 24`** (2 nodes): `useFlightData.ts`, `useFlightData()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 23`** (2 nodes): `useOrbitControls.ts`, `useOrbitControls()`
+- **Thin community `Community 25`** (2 nodes): `useFlightScene.ts`, `useFlightScene()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 24`** (2 nodes): `useSatelliteData.ts`, `useSatelliteData()`
+- **Thin community `Community 26`** (2 nodes): `useInfrastructureData.ts`, `useInfrastructureData()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 25`** (2 nodes): `useSatelliteScene.ts`, `useSatelliteScene()`
+- **Thin community `Community 27`** (2 nodes): `useInteractionGuards.ts`, `useInteractionGuards()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 26`** (2 nodes): `useViewerSetup.ts`, `useViewerSetup()`
+- **Thin community `Community 28`** (2 nodes): `useOrbitControls.ts`, `useOrbitControls()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 27`** (1 nodes): `vite.config.d.ts`
+- **Thin community `Community 29`** (2 nodes): `useSatelliteData.ts`, `useSatelliteData()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 28`** (1 nodes): `vite.config.js`
+- **Thin community `Community 30`** (2 nodes): `useSatelliteScene.ts`, `useSatelliteScene()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 29`** (1 nodes): `vite.config.ts`
+- **Thin community `Community 31`** (2 nodes): `useViewerSetup.ts`, `useViewerSetup()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 30`** (1 nodes): `main.tsx`
+- **Thin community `Community 32`** (1 nodes): `vite.config.d.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 31`** (1 nodes): `vite-env.d.ts`
+- **Thin community `Community 33`** (1 nodes): `vite.config.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 32`** (1 nodes): `tar1090.generated.ts`
+- **Thin community `Community 34`** (1 nodes): `vite.config.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 33`** (1 nodes): `FlightDeckHud.tsx`
+- **Thin community `Community 35`** (1 nodes): `main.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 34`** (1 nodes): `SatelliteDetailsPanel.tsx`
+- **Thin community `Community 36`** (1 nodes): `vite-env.d.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 35`** (1 nodes): `Viewer.tsx`
+- **Thin community `Community 37`** (1 nodes): `tar1090.generated.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 36`** (1 nodes): `viewerConfig.ts`
+- **Thin community `Community 38`** (1 nodes): `FlightDeckHud.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 37`** (1 nodes): `viewerTypes.ts`
+- **Thin community `Community 39`** (1 nodes): `SatelliteDetailsPanel.tsx`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 40`** (1 nodes): `Viewer.tsx`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 41`** (1 nodes): `viewerConfig.ts`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 42`** (1 nodes): `viewerTypes.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `FlightSceneLayerManager` connect `Community 0` to `Community 3`?**
-  _High betweenness centrality (0.096) - this node is a cross-community bridge._
-- **Why does `clamp()` connect `Community 3` to `Community 0`, `Community 2`?**
-  _High betweenness centrality (0.072) - this node is a cross-community bridge._
-- **Are the 2 inferred relationships involving `getFlightAltitudeColorCss()` (e.g. with `.applyFlightVisual()` and `getTrailSegmentColor()`) actually correct?**
-  _`getFlightAltitudeColorCss()` has 2 INFERRED edges - model-reasoned connections that need verification._
+- **Why does `FlightSceneLayerManager` connect `Community 0` to `Community 6`?**
+  _High betweenness centrality (0.071) - this node is a cross-community bridge._
+- **Why does `clamp()` connect `Community 6` to `Community 0`, `Community 2`?**
+  _High betweenness centrality (0.053) - this node is a cross-community bridge._
 - **Should `Community 0` be split into smaller, more focused modules?**
   _Cohesion score 0.09 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
@@ -293,4 +322,6 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `Community 2` be split into smaller, more focused modules?**
   _Cohesion score 0.12 - nodes in this community are weakly interconnected._
 - **Should `Community 3` be split into smaller, more focused modules?**
-  _Cohesion score 0.14 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.09 - nodes in this community are weakly interconnected._
+- **Should `Community 4` be split into smaller, more focused modules?**
+  _Cohesion score 0.13 - nodes in this community are weakly interconnected._

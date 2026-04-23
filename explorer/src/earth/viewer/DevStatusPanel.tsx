@@ -1,4 +1,5 @@
 import type { FlightFeedState } from '../flights/flights';
+import type { InfrastructureFeedState } from '../infrastructure/infrastructure';
 import type { SatelliteFeedState } from '../satellites/satellites';
 
 interface DevStatusPanelProps {
@@ -8,8 +9,11 @@ interface DevStatusPanelProps {
   buildingsEnabled: boolean;
   flightsEnabled: boolean;
   satellitesEnabled: boolean;
+  subseaCablesEnabled: boolean;
+  maritimeTrafficEnabled: boolean;
   flightFeed: FlightFeedState;
   satelliteFeed: SatelliteFeedState;
+  infrastructureFeed: InfrastructureFeedState;
   orbitEnabled: boolean;
 }
 
@@ -20,8 +24,11 @@ export default function DevStatusPanel({
   buildingsEnabled,
   flightsEnabled,
   satellitesEnabled,
+  subseaCablesEnabled,
+  maritimeTrafficEnabled,
   flightFeed,
   satelliteFeed,
+  infrastructureFeed,
   orbitEnabled,
 }: DevStatusPanelProps) {
   return (
@@ -73,6 +80,18 @@ export default function DevStatusPanel({
         <div className="dev-status-row flex justify-between items-center w-full py-1.5 aether-data-row">
           <span className="dev-status-row__label">Satellite feed</span>
           <span className="dev-status-row__value">{satelliteFeed.sourceLabel}</span>
+        </div>
+        <div className="dev-status-row flex justify-between items-center w-full py-1.5 aether-data-row">
+          <span className="dev-status-row__label">Subsea cables</span>
+          <span className="dev-status-row__value">
+            {subseaCablesEnabled ? `${infrastructureFeed.cableCount} active` : 'Off'}
+          </span>
+        </div>
+        <div className="dev-status-row flex justify-between items-center w-full py-1.5 aether-data-row">
+          <span className="dev-status-row__label">Maritime traffic</span>
+          <span className="dev-status-row__value">
+            {maritimeTrafficEnabled ? `${infrastructureFeed.shipCount} watched` : 'Off'}
+          </span>
         </div>
         <div className="dev-status-row flex justify-between items-center w-full py-1.5 aether-data-row">
           <span className="dev-status-row__label">Orbit</span>

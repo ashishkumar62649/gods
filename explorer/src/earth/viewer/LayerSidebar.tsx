@@ -8,6 +8,7 @@ import {
   type SatelliteFeedState,
   type SatelliteMissionFilters,
 } from '../satellites/satellites';
+import type { InfrastructureFeedState } from '../infrastructure/infrastructure';
 import { AVIATION_GRID_OPTIONS } from './viewerConfig';
 import type { SidebarSection } from './viewerTypes';
 
@@ -23,6 +24,8 @@ interface LayerSidebarProps {
   satellitesEnabled: boolean;
   starlinkFocusEnabled: boolean;
   networkViewEnabled: boolean;
+  subseaCablesEnabled: boolean;
+  maritimeTrafficEnabled: boolean;
   satelliteMissionFilters: SatelliteMissionFilters;
   aviationGrid: AviationGridState;
   isGridMenuOpen: boolean;
@@ -32,6 +35,7 @@ interface LayerSidebarProps {
   aviationGridSummary: string;
   flightFeed: FlightFeedState;
   satelliteFeed: SatelliteFeedState;
+  infrastructureFeed: InfrastructureFeedState;
   onSectionChange: (section: SidebarSection) => void;
   onToggleImageryPicker: () => void;
   onToggleBuildings: () => void;
@@ -40,6 +44,8 @@ interface LayerSidebarProps {
   onToggleSatellites: () => void;
   onToggleStarlinkFocus: () => void;
   onToggleNetworkView: () => void;
+  onToggleSubseaCables: () => void;
+  onToggleMaritimeTraffic: () => void;
   onToggleSatelliteMissionCategory: (category: keyof SatelliteMissionFilters) => void;
   onToggleGridMenu: () => void;
   onToggleAviationGridCategory: (layer: keyof AviationGridState) => void;
@@ -74,6 +80,8 @@ export default function LayerSidebar({
   satellitesEnabled,
   starlinkFocusEnabled,
   networkViewEnabled,
+  subseaCablesEnabled,
+  maritimeTrafficEnabled,
   satelliteMissionFilters,
   aviationGrid,
   isGridMenuOpen,
@@ -83,6 +91,7 @@ export default function LayerSidebar({
   aviationGridSummary,
   flightFeed,
   satelliteFeed,
+  infrastructureFeed,
   onSectionChange,
   onToggleImageryPicker,
   onToggleBuildings,
@@ -91,6 +100,8 @@ export default function LayerSidebar({
   onToggleSatellites,
   onToggleStarlinkFocus,
   onToggleNetworkView,
+  onToggleSubseaCables,
+  onToggleMaritimeTraffic,
   onToggleSatelliteMissionCategory,
   onToggleGridMenu,
   onToggleAviationGridCategory,
@@ -467,6 +478,102 @@ export default function LayerSidebar({
             {renderSoonCard('Thermal')}
             {renderSoonCard('CRT')}
             {renderSoonCard('Cinematic')}
+          </>
+        );
+      case 'infrastructure':
+        return (
+          <>
+            <button
+              type="button"
+              className={
+                subseaCablesEnabled
+                  ? 'layer-card layer-card--toggle layer-card--intel layer-card--active flex justify-between items-center w-full py-1.5 aether-data-row'
+                  : 'layer-card layer-card--toggle layer-card--intel flex justify-between items-center w-full py-1.5 aether-data-row'
+              }
+              onClick={onToggleSubseaCables}
+            >
+              <span className="layer-card__body">
+                <span className="layer-card__label">Subsea Cables</span>
+                <span className="layer-card__meta">
+                  {subseaCablesEnabled
+                    ? infrastructureFeed.message
+                    : 'Show global internet cable corridors.'}
+                </span>
+              </span>
+              <span
+                className={subseaCablesEnabled ? 'layer-switch layer-switch--on' : 'layer-switch'}
+                aria-hidden="true"
+              >
+                <span className="layer-switch__thumb" />
+                <span className="layer-switch__text">
+                  {subseaCablesEnabled ? 'On' : 'Off'}
+                </span>
+              </span>
+            </button>
+
+            <button
+              type="button"
+              className={
+                maritimeTrafficEnabled
+                  ? 'layer-card layer-card--toggle layer-card--intel layer-card--active flex justify-between items-center w-full py-1.5 aether-data-row'
+                  : 'layer-card layer-card--toggle layer-card--intel flex justify-between items-center w-full py-1.5 aether-data-row'
+              }
+              onClick={onToggleMaritimeTraffic}
+            >
+              <span className="layer-card__body">
+                <span className="layer-card__label">Maritime Traffic</span>
+                <span className="layer-card__meta">
+                  Watch research, military, tug, and special vessels near cables.
+                </span>
+              </span>
+              <span
+                className={maritimeTrafficEnabled ? 'layer-switch layer-switch--on' : 'layer-switch'}
+                aria-hidden="true"
+              >
+                <span className="layer-switch__thumb" />
+                <span className="layer-switch__text">
+                  {maritimeTrafficEnabled ? 'On' : 'Off'}
+                </span>
+              </span>
+            </button>
+
+            <div className="layer-card layer-card--status flex justify-between items-center w-full py-1.5 aether-data-row">
+              <div className="layer-card__body">
+                <p className="layer-card__label">Infrastructure Feed</p>
+                <p className="layer-card__meta">
+                  {infrastructureFeed.fetchedAt
+                    ? `${infrastructureFeed.cableCount.toLocaleString()} cables, ${infrastructureFeed.shipCount.toLocaleString()} vessels, ${infrastructureFeed.nodeCount.toLocaleString()} nodes.`
+                    : 'Waiting for infrastructure snapshot.'}
+                </p>
+              </div>
+              <span
+                className={
+                  infrastructureFeed.status === 'live'
+                    ? 'layer-badge layer-badge--live'
+                    : 'layer-badge'
+                }
+              >
+                {infrastructureFeed.status === 'live'
+                  ? 'Live'
+                  : infrastructureFeed.status === 'loading'
+                    ? 'Loading'
+                    : infrastructureFeed.status === 'error'
+                      ? 'Error'
+                      : 'Idle'}
+              </span>
+            </div>
+
+            {infrastructureFeed.riskShipCount > 0 && (
+              <div className="layer-card layer-card--status flex justify-between items-center w-full py-1.5 aether-data-row border-red-500/40">
+                <div className="layer-card__body">
+                  <p className="layer-card__label">Risk Proximity Alert</p>
+                  <p className="layer-card__meta">
+                    {infrastructureFeed.riskShipCount} slow vessel(s) near cable paths.
+                  </p>
+                </div>
+                <span className="layer-badge">Alert</span>
+              </div>
+            )}
           </>
         );
       case 'system':
