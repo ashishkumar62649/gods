@@ -3,6 +3,7 @@ import {
   BoundingSphere,
   Cartesian3,
   Cesium3DTileset,
+  HeadingPitchRange,
   IonGeocoderService,
   ImageryLayer,
   Math as CesiumMath,
@@ -14,6 +15,7 @@ import { CesiumComponentRef, Viewer as ResiumViewer } from 'resium';
 import SearchBox from '../search/SearchBox';
 import FlightDeckHud from '../flights/ui/FlightDeckHud';
 import FlightDetailsPanel from '../flights/ui/FlightDetailsPanel';
+import SatelliteDetailsPanel from '../satellites/ui/SatelliteDetailsPanel';
 import {
   AviationGridState,
   FlightAssetView,
@@ -25,6 +27,8 @@ import {
   AirportRecord,
   FlightRecord,
 } from '../flights/flights';
+import { SatelliteSceneLayerManager } from '../satellites/SatelliteSceneLayerManager';
+import { type SatelliteRecord } from '../satellites/satellites';
 import {
   buildHome,
   flyObliqueToDestination,
@@ -40,6 +44,8 @@ import LayerSidebar from './LayerSidebar';
 import { useBuildingsTileset } from './useBuildingsTileset';
 import { useFlightData } from './useFlightData';
 import { useFlightScene } from './useFlightScene';
+import { useSatelliteData } from './useSatelliteData';
+import { useSatelliteScene } from './useSatelliteScene';
 import {
   type CockpitPointerState,
   useInteractionGuards,
@@ -71,12 +77,17 @@ export default function Viewer() {
   const flightLayerManagerRef = useRef<FlightSceneLayerManager | null>(null);
   const flightRecordsRef = useRef<Map<string, FlightRecord>>(new Map());
   const flightsEnabledRef = useRef(false);
+  const satelliteLayerManagerRef = useRef<SatelliteSceneLayerManager | null>(null);
+  const satelliteRecordsRef = useRef<Map<string, SatelliteRecord>>(new Map());
+  const satellitesEnabledRef = useRef(false);
+  const starlinkFocusEnabledRef = useRef(false);
   const aviationGridRef = useRef<AviationGridState>(INITIAL_AVIATION_GRID);
   const groundStationsRef = useRef<GroundStationsState>({
     hfdl: false,
     comms: false,
   });
   const selectedFlightIdRef = useRef<string | null>(null);
+  const selectedSatelliteIdRef = useRef<string | null>(null);
   const assetViewRef = useRef<FlightAssetView>('symbology');
   const sensorLinkRef = useRef<FlightSensorLinkState>('release');
   const cockpitPointerRef = useRef<CockpitPointerState>({
@@ -116,9 +127,13 @@ export default function Viewer() {
   });
   const [sigintInfrastructureOpen, setSigintInfrastructureOpen] = useState(true);
   const [selectedFlightId, setSelectedFlightId] = useState<string | null>(null);
+  const [satellitesEnabled, setSatellitesEnabled] = useState(false);
+  const [starlinkFocusEnabled, setStarlinkFocusEnabled] = useState(false);
+  const [selectedSatelliteId, setSelectedSatelliteId] = useState<string | null>(null);
   const [assetView, setAssetView] = useState<FlightAssetView>('symbology');
   const [sensorLink, setSensorLink] = useState<FlightSensorLinkState>('release');
   const [selectedFlight, setSelectedFlight] = useState<FlightRecord | null>(null);
+  const [selectedSatellite, setSelectedSatellite] = useState<SatelliteRecord | null>(null);
   const [showSelectedFlightTrail, setShowSelectedFlightTrail] = useState(false);
   const [showSelectedFlightRoute, setShowSelectedFlightRoute] = useState(false);
 
@@ -207,11 +222,30 @@ export default function Viewer() {
     imageryOptions[0] ??
     null;
 
+  const updateSelectedSatellite = useCallback((satelliteId: string | null) => {
+    selectedSatelliteIdRef.current = satelliteId;
+    setSelectedSatelliteId(satelliteId);
+    setSelectedSatellite(
+      satelliteId ? satelliteRecordsRef.current.get(satelliteId) ?? null : null,
+    );
+    satelliteLayerManagerRef.current?.setSelectedSatelliteId(satelliteId);
+
+    if (satelliteId) {
+      selectedFlightIdRef.current = null;
+      setSelectedFlightId(null);
+      setSelectedFlight(null);
+    }
+  }, []);
+
   const updateSelectedFlight = useCallback((flightId: string | null) => {
+    if (flightId) {
+      updateSelectedSatellite(null);
+    }
+
     selectedFlightIdRef.current = flightId;
     setSelectedFlightId(flightId);
     setSelectedFlight(flightId ? flightRecordsRef.current.get(flightId) ?? null : null);
-  }, []);
+  }, [updateSelectedSatellite]);
 
   const releaseSensorLink = useCallback(() => {
     sensorLinkRef.current = 'release';
@@ -263,6 +297,42 @@ export default function Viewer() {
     [],
   );
 
+  const focusSatellite = useCallback((satellite: SatelliteRecord) => {
+    const viewer = viewerRef.current?.cesiumElement;
+    if (!viewer || viewer.isDestroyed()) return;
+
+    const target =
+      satelliteLayerManagerRef.current?.getSatellitePosition(satellite.id_norad) ??
+      Cartesian3.fromDegrees(
+        satellite.longitude,
+        satellite.latitude,
+        satellite.altitude_km * 1000,
+      );
+    const altitudeM = Math.max(0, satellite.altitude_km * 1000);
+    const range = Math.min(
+      20_000_000,
+      Math.max(350_000, altitudeM * 0.22),
+    );
+    const boundingRadius = Math.min(
+      3_500_000,
+      Math.max(75_000, altitudeM * 0.025),
+    );
+
+    viewer.camera.lookAtTransform(Matrix4.IDENTITY);
+    viewer.camera.flyToBoundingSphere(
+      new BoundingSphere(target, boundingRadius),
+      {
+        duration: altitudeM > 5_000_000 ? 2.4 : 1.6,
+        offset: new HeadingPitchRange(
+          CesiumMath.toRadians(18),
+          CesiumMath.toRadians(-28),
+          range,
+        ),
+        easingFunction: FLIGHT_EASING,
+      },
+    );
+  }, []);
+
   const syncFlightLayers = useCallback((flights: FlightRecord[]) => {
     flightRecordsRef.current.clear();
 
@@ -281,6 +351,27 @@ export default function Viewer() {
     flightLayerManagerRef.current?.syncFlights(flights);
   }, [updateSelectedFlight]);
 
+  const syncSatelliteLayers = useCallback((satellites: SatelliteRecord[]) => {
+    satelliteRecordsRef.current.clear();
+
+    for (const satellite of satellites) {
+      satelliteRecordsRef.current.set(satellite.id_norad, satellite);
+    }
+
+    if (
+      selectedSatelliteIdRef.current &&
+      !satelliteRecordsRef.current.has(selectedSatelliteIdRef.current)
+    ) {
+      updateSelectedSatellite(null);
+    } else if (selectedSatelliteIdRef.current) {
+      setSelectedSatellite(
+        satelliteRecordsRef.current.get(selectedSatelliteIdRef.current) ?? null,
+      );
+    }
+
+    satelliteLayerManagerRef.current?.syncSatellites(satellites);
+  }, [updateSelectedSatellite]);
+
   const {
     airportLayerMessage,
     flightFeed,
@@ -298,6 +389,12 @@ export default function Viewer() {
     airportsLoadedRef,
     airportsLoadingRef,
     airportRecordsCacheRef,
+  });
+
+  const { satelliteFeed } = useSatelliteData({
+    satellitesEnabled,
+    syncSatelliteLayers,
+    satelliteLayerManagerRef,
   });
 
   useFlightScene({
@@ -324,6 +421,19 @@ export default function Viewer() {
     updateSelectedFlight,
   });
 
+  useSatelliteScene({
+    viewerRef,
+    satelliteLayerManagerRef,
+    satelliteRecordsRef,
+    satellitesEnabledRef,
+    starlinkFocusEnabledRef,
+    selectedSatelliteIdRef,
+    satellitesEnabled,
+    starlinkFocusEnabled,
+    selectedSatelliteId,
+    updateSelectedSatellite,
+  });
+
   const toggleFlights = useCallback(() => {
     const nextEnabled = !flightsEnabledRef.current;
     flightsEnabledRef.current = nextEnabled;
@@ -335,6 +445,24 @@ export default function Viewer() {
       updateSelectedFlight(null);
     }
   }, [releaseSensorLink, updateSelectedFlight]);
+
+  const toggleSatellites = useCallback(() => {
+    const nextEnabled = !satellitesEnabledRef.current;
+    satellitesEnabledRef.current = nextEnabled;
+    setSatellitesEnabled(nextEnabled);
+    satelliteLayerManagerRef.current?.setSatellitesVisible(nextEnabled);
+
+    if (!nextEnabled) {
+      updateSelectedSatellite(null);
+    }
+  }, [updateSelectedSatellite]);
+
+  const toggleStarlinkFocus = useCallback(() => {
+    const nextEnabled = !starlinkFocusEnabledRef.current;
+    starlinkFocusEnabledRef.current = nextEnabled;
+    setStarlinkFocusEnabled(nextEnabled);
+    satelliteLayerManagerRef.current?.setStarlinkFocusEnabled(nextEnabled);
+  }, []);
 
   const toggleAviationGridCategory = useCallback((layer: keyof AviationGridState) => {
     setAviationGrid((current) => ({
@@ -713,11 +841,28 @@ export default function Viewer() {
   }, [flightsEnabled]);
 
   useEffect(() => {
+    satellitesEnabledRef.current = satellitesEnabled;
+  }, [satellitesEnabled]);
+
+  useEffect(() => {
+    starlinkFocusEnabledRef.current = starlinkFocusEnabled;
+  }, [starlinkFocusEnabled]);
+
+  useEffect(() => {
     selectedFlightIdRef.current = selectedFlightId;
     setSelectedFlight(
       selectedFlightId ? flightRecordsRef.current.get(selectedFlightId) ?? null : null,
     );
   }, [selectedFlightId]);
+
+  useEffect(() => {
+    selectedSatelliteIdRef.current = selectedSatelliteId;
+    setSelectedSatellite(
+      selectedSatelliteId
+        ? satelliteRecordsRef.current.get(selectedSatelliteId) ?? null
+        : null,
+    );
+  }, [selectedSatelliteId]);
 
   useEffect(() => {
     showSelectedFlightTrailRef.current = showSelectedFlightTrail;
@@ -734,6 +879,12 @@ export default function Viewer() {
   useEffect(() => {
     sensorLinkRef.current = sensorLink;
   }, [sensorLink]);
+
+  useEffect(() => {
+    if (selectedSatelliteId && sensorLink !== 'release') {
+      releaseSensorLink();
+    }
+  }, [releaseSensorLink, selectedSatelliteId, sensorLink]);
 
   useEffect(() => {
     aviationGridRef.current = aviationGrid;
@@ -757,6 +908,7 @@ export default function Viewer() {
 
   const activeLayerCount =
     Number(flightsEnabled) +
+    Number(satellitesEnabled) +
     Number(Object.values(aviationGrid).some(Boolean)) +
     Number(groundStations.hfdl) +
     Number(groundStations.comms) +
@@ -766,7 +918,7 @@ export default function Viewer() {
   const activeAviationGridCount = Object.values(aviationGrid).filter(Boolean).length;
   const aviationGridSummary =
     activeAviationGridCount > 0
-      ? `${activeAviationGridCount} of 6 categories active.`
+      ? `${activeAviationGridCount} of 5 categories active.`
       : 'All aviation categories are currently filtered out.';
 
   const currentSection =
@@ -805,6 +957,8 @@ export default function Viewer() {
           autoBuildingsEnabled={autoBuildingsEnabled}
           orbitEnabled={orbitEnabled}
           flightsEnabled={flightsEnabled}
+          satellitesEnabled={satellitesEnabled}
+          starlinkFocusEnabled={starlinkFocusEnabled}
           aviationGrid={aviationGrid}
           isGridMenuOpen={isGridMenuOpen}
           groundStations={groundStations}
@@ -812,11 +966,14 @@ export default function Viewer() {
           airportLayerMessage={airportLayerMessage}
           aviationGridSummary={aviationGridSummary}
           flightFeed={flightFeed}
+          satelliteFeed={satelliteFeed}
           onSectionChange={setActiveSection}
           onToggleImageryPicker={() => setImageryPickerOpen((open) => !open)}
           onToggleBuildings={toggleBuildings}
           onToggleOrbit={toggleOrbit}
           onToggleFlights={toggleFlights}
+          onToggleSatellites={toggleSatellites}
+          onToggleStarlinkFocus={toggleStarlinkFocus}
           onToggleGridMenu={() => setIsGridMenuOpen((open) => !open)}
           onToggleAviationGridCategory={toggleAviationGridCategory}
           onToggleSigintInfrastructure={() => setSigintInfrastructureOpen((open) => !open)}
@@ -851,6 +1008,12 @@ export default function Viewer() {
           onToggleRoute={toggleSelectedFlightRoute}
           onToggleTrail={() => setShowSelectedFlightTrail((enabled) => !enabled)}
           onClose={() => updateSelectedFlight(null)}
+        />
+        <SatelliteDetailsPanel
+          feed={satelliteFeed}
+          satellite={selectedSatellite}
+          onFocus={focusSatellite}
+          onClose={() => updateSelectedSatellite(null)}
         />
 
         <div className="hud-quick-actions">
@@ -898,7 +1061,9 @@ export default function Viewer() {
           selectedImageryName={selectedImageryOption?.name ?? 'Unavailable'}
           buildingsEnabled={buildingsEnabled || autoBuildingsEnabled}
           flightsEnabled={flightsEnabled}
+          satellitesEnabled={satellitesEnabled}
           flightFeed={flightFeed}
+          satelliteFeed={satelliteFeed}
           orbitEnabled={orbitEnabled}
         />
       </div>

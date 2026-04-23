@@ -20,6 +20,9 @@ import { getAllFlights, removeStaleFlights } from './store/flightCache.mjs';
 import { fetchPrimaryRadar, fetchCustomRadar, getSweeepStats } from './services/fetchers.mjs';
 import { startIntelLoop, mergeIntel, getIntelStats, rawIntelStore } from './services/intelFetcher.mjs';
 import { airportIndex, getAirportStats } from './services/airportIndex.mjs';
+import { getAllSatellites, getSatelliteStats } from './store/satelliteCache.mjs';
+import { startSatelliteTleRefreshLoop } from './services/satelliteFetcher.mjs';
+import { startOrbitPropagationLoop } from './services/orbitPropagator.mjs';
 
 // ─── CORS + JSON helpers ──────────────────────────────────────
 function setCorsHeaders(res) {
@@ -119,6 +122,19 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  if (req.method === 'GET' && url.pathname === '/api/satellites') {
+    const satellites = getAllSatellites();
+    sendJson(res, 200, {
+      satellites,
+      meta: {
+        count: satellites.length,
+        timestamp: Date.now(),
+        ...getSatelliteStats(),
+      },
+    });
+    return;
+  }
+
   if (req.method === 'GET' && url.pathname === '/api/health') {
     const { source, lastCount } = getSweeepStats();
     const intel = getIntelStats();
@@ -131,6 +147,7 @@ const server = http.createServer((req, res) => {
       activeSource: source,
       lastCount,
       airports:      getAirportStats(),
+      satellites:    getSatelliteStats(),
       intel,
     });
     return;
@@ -157,6 +174,8 @@ server.listen(PORT, async () => {
 
   // ── Layer 2: Intelligence feed ────────────────────────────
   startIntelLoop();
+  startSatelliteTleRefreshLoop();
+  startOrbitPropagationLoop();
 
   console.log('[Boot] Both layers active. Ready.');
 });

@@ -28,7 +28,6 @@ import {
 } from 'cesium';
 import {
   AirportRecord,
-  CLOSED_AIRPORT_ICON_IMAGE,
   COMMS_TOWER_ICON_IMAGE,
   DESTINATION_AIRPORT_ICON_IMAGE,
   HFDL_TOWER_ICON_IMAGE,
@@ -89,7 +88,6 @@ export interface AviationGridState {
   local: boolean;
   heli: boolean;
   seaplane: boolean;
-  closed: boolean;
 }
 
 export type FlightAssetView = 'symbology' | 'airframe';
@@ -149,7 +147,6 @@ export class FlightSceneLayerManager {
   private readonly localBillboards: BillboardCollection;
   private readonly heliBillboards: BillboardCollection;
   private readonly seaplaneBillboards: BillboardCollection;
-  private readonly closedBillboards: BillboardCollection;
   private readonly hfdlBillboards: BillboardCollection;
   private readonly vdlBillboards: BillboardCollection;
   private readonly acarsBillboards: BillboardCollection;
@@ -180,7 +177,6 @@ export class FlightSceneLayerManager {
     local: false,
     heli: false,
     seaplane: false,
-    closed: false,
   };
   private groundStationsState: GroundStationsState = {
     hfdl: false,
@@ -207,7 +203,6 @@ export class FlightSceneLayerManager {
     this.localBillboards = this.root.add(new BillboardCollection()) as BillboardCollection;
     this.heliBillboards = this.root.add(new BillboardCollection()) as BillboardCollection;
     this.seaplaneBillboards = this.root.add(new BillboardCollection()) as BillboardCollection;
-    this.closedBillboards = this.root.add(new BillboardCollection()) as BillboardCollection;
     this.hfdlBillboards = this.root.add(new BillboardCollection()) as BillboardCollection;
     this.vdlBillboards = this.root.add(new BillboardCollection()) as BillboardCollection;
     this.acarsBillboards = this.root.add(new BillboardCollection()) as BillboardCollection;
@@ -269,7 +264,6 @@ export class FlightSceneLayerManager {
     this.localBillboards.show = this.aviationGridState.local;
     this.heliBillboards.show = this.aviationGridState.heli;
     this.seaplaneBillboards.show = this.aviationGridState.seaplane;
-    this.closedBillboards.show = this.aviationGridState.closed;
     this.hfdlBillboards.show = false;
     this.vdlBillboards.show = false;
     this.acarsBillboards.show = false;
@@ -529,7 +523,6 @@ export class FlightSceneLayerManager {
     this.localBillboards.removeAll();
     this.heliBillboards.removeAll();
     this.seaplaneBillboards.removeAll();
-    this.closedBillboards.removeAll();
     this.hfdlBillboards.removeAll();
     this.vdlBillboards.removeAll();
     this.acarsBillboards.removeAll();
@@ -629,7 +622,6 @@ export class FlightSceneLayerManager {
     this.localBillboards.show = this.aviationGridState.local;
     this.heliBillboards.show = this.aviationGridState.heli;
     this.seaplaneBillboards.show = this.aviationGridState.seaplane;
-    this.closedBillboards.show = this.aviationGridState.closed;
   }
 
   private applyGroundStationVisibility() {
@@ -652,8 +644,6 @@ export class FlightSceneLayerManager {
         return this.heliBillboards;
       case 'seaplane':
         return this.seaplaneBillboards;
-      case 'closed':
-        return this.closedBillboards;
       default:
         return this.majorBillboards;
     }
@@ -1434,15 +1424,6 @@ function getAirportAppearance(airport: AirportRecord): AirportAppearance | null 
         color: Color.WHITE.withAlpha(1),
         scaleByDistance: new NearFarScalar(18_000, 1.35, 4_500_000, 0.7),
         distanceDisplayCondition: new DistanceDisplayCondition(0.0, 4_500_000.0),
-      };
-    case 'closed':
-      return {
-        collectionKey: 'closed',
-        image: CLOSED_AIRPORT_ICON_IMAGE,
-        size: 38,
-        color: Color.WHITE.withAlpha(1),
-        scaleByDistance: new NearFarScalar(16_000, 1.4, 3_000_000, 0.78),
-        distanceDisplayCondition: new DistanceDisplayCondition(0.0, 3_000_000.0),
       };
     default:
       return null;

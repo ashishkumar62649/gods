@@ -3,6 +3,8 @@
 // server/config/constants.mjs
 // ============================================================
 
+import './env.mjs';
+
 export const PORT = process.env.PORT || 8788;
 
 /** Main radar sweep cadence (ms). */
@@ -13,6 +15,19 @@ export const STALE_FLIGHT_TIMEOUT_MS = 30_000;
 
 /** Per-request fetch timeout (ms). */
 export const FETCH_TIMEOUT_MS = 20_000;
+
+/** Satellite TLE refresh cadence (ms). Space-Track data is cached locally. */
+export const SATELLITE_TLE_REFRESH_INTERVAL_MS = 6 * 60 * 60 * 1000;
+
+/** Satellite position propagation cadence (ms). */
+export const SATELLITE_PROPAGATION_INTERVAL_MS = 1_000;
+
+/** Space-Track credentials. Required to fetch live GP/TLE catalog data. */
+export const SPACETRACK_EMAIL = process.env.SPACETRACK_EMAIL || null;
+export const SPACETRACK_PASSWORD = process.env.SPACETRACK_PASSWORD || null;
+export const SPACETRACK_LOGIN_URL = 'https://www.space-track.org/ajaxauth/login';
+export const SPACETRACK_GP_ACTIVE_URL =
+  'https://www.space-track.org/basicspacedata/query/class/gp/DECAY_DATE/null-val/orderby/NORAD_CAT_ID/format/json';
 
 // ─── Primary Feed ─────────────────────────────────────────────
 // Static GZIP snapshot from airplanes.live CDN.

@@ -1,4 +1,5 @@
 import type { FlightFeedState } from '../flights/flights';
+import type { SatelliteFeedState } from '../satellites/satellites';
 
 interface DevStatusPanelProps {
   open: boolean;
@@ -6,7 +7,9 @@ interface DevStatusPanelProps {
   selectedImageryName: string;
   buildingsEnabled: boolean;
   flightsEnabled: boolean;
+  satellitesEnabled: boolean;
   flightFeed: FlightFeedState;
+  satelliteFeed: SatelliteFeedState;
   orbitEnabled: boolean;
 }
 
@@ -16,7 +19,9 @@ export default function DevStatusPanel({
   selectedImageryName,
   buildingsEnabled,
   flightsEnabled,
+  satellitesEnabled,
   flightFeed,
+  satelliteFeed,
   orbitEnabled,
 }: DevStatusPanelProps) {
   return (
@@ -58,6 +63,16 @@ export default function DevStatusPanel({
         <div className="dev-status-row flex justify-between items-center w-full py-1.5 aether-data-row">
           <span className="dev-status-row__label">Flight feed</span>
           <span className="dev-status-row__value">{flightFeed.sourceLabel}</span>
+        </div>
+        <div className="dev-status-row flex justify-between items-center w-full py-1.5 aether-data-row">
+          <span className="dev-status-row__label">Satellites</span>
+          <span className="dev-status-row__value">
+            {satellitesEnabled ? `${satelliteFeed.satelliteCount} active` : 'Off'}
+          </span>
+        </div>
+        <div className="dev-status-row flex justify-between items-center w-full py-1.5 aether-data-row">
+          <span className="dev-status-row__label">Satellite feed</span>
+          <span className="dev-status-row__value">{satelliteFeed.sourceLabel}</span>
         </div>
         <div className="dev-status-row flex justify-between items-center w-full py-1.5 aether-data-row">
           <span className="dev-status-row__label">Orbit</span>

@@ -7,6 +7,10 @@
     "skipLibCheck": true,
 
     "moduleResolution": "bundler",
+    "baseUrl": ".",
+    "paths": {
+      "satellite.js/dist/*": ["./node_modules/satellite.js/dist/*"]
+    },
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,

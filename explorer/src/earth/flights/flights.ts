@@ -198,25 +198,6 @@ const SEAPLANE_ICON_SVG = `
   </svg>
 `;
 
-const CLOSED_AIRPORT_ICON_SVG = `
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 84 84">
-    <defs>
-      <filter id="warningGlow" x="-20%" y="-20%" width="140%" height="140%">
-        <feGaussianBlur stdDeviation="2.5" result="blur" />
-        <feComposite in="SourceGraphic" in2="blur" operator="over" />
-      </filter>
-    </defs>
-    <g filter="url(#warningGlow)">
-      <circle cx="42" cy="42" r="31" fill="#2f0d0d" stroke="#ff6b57" stroke-width="5" />
-      <circle cx="42" cy="42" r="22" fill="#ffb347" opacity="0.95" />
-      <path d="M42 24 L57 54 H27 Z" fill="#7c1d12" />
-      <rect x="39.25" y="33" width="5.5" height="12.5" rx="2.75" fill="#fff7ed" />
-      <circle cx="42" cy="49.5" r="3" fill="#fff7ed" />
-      <path d="M26 58 L58 26" stroke="#ffebe6" stroke-width="5" stroke-linecap="round" />
-    </g>
-  </svg>
-`;
-
 export const SELECTED_FLIGHT_MODEL_GLTF = {
   asset: { version: '2.0' },
   extensionsUsed: ['KHR_materials_unlit'],
@@ -315,10 +296,6 @@ export const HELIPAD_ICON_IMAGE = `data:image/svg+xml;utf8,${encodeURIComponent(
 
 export const SEAPLANE_ICON_IMAGE = `data:image/svg+xml;utf8,${encodeURIComponent(
   SEAPLANE_ICON_SVG,
-)}`;
-
-export const CLOSED_AIRPORT_ICON_IMAGE = `data:image/svg+xml;utf8,${encodeURIComponent(
-  CLOSED_AIRPORT_ICON_SVG,
 )}`;
 
 export const COMMS_TOWER_ICON_IMAGE = commsTowerIconPng;

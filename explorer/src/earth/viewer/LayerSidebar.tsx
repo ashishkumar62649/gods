@@ -3,6 +3,7 @@ import type {
   GroundStationsState,
 } from '../flights/flightLayers';
 import type { FlightFeedState } from '../flights/flights';
+import type { SatelliteFeedState } from '../satellites/satellites';
 import { AVIATION_GRID_OPTIONS } from './viewerConfig';
 import type { SidebarSection } from './viewerTypes';
 
@@ -15,6 +16,8 @@ interface LayerSidebarProps {
   autoBuildingsEnabled: boolean;
   orbitEnabled: boolean;
   flightsEnabled: boolean;
+  satellitesEnabled: boolean;
+  starlinkFocusEnabled: boolean;
   aviationGrid: AviationGridState;
   isGridMenuOpen: boolean;
   groundStations: GroundStationsState;
@@ -22,11 +25,14 @@ interface LayerSidebarProps {
   airportLayerMessage: string;
   aviationGridSummary: string;
   flightFeed: FlightFeedState;
+  satelliteFeed: SatelliteFeedState;
   onSectionChange: (section: SidebarSection) => void;
   onToggleImageryPicker: () => void;
   onToggleBuildings: () => void;
   onToggleOrbit: () => void;
   onToggleFlights: () => void;
+  onToggleSatellites: () => void;
+  onToggleStarlinkFocus: () => void;
   onToggleGridMenu: () => void;
   onToggleAviationGridCategory: (layer: keyof AviationGridState) => void;
   onToggleSigintInfrastructure: () => void;
@@ -57,6 +63,8 @@ export default function LayerSidebar({
   autoBuildingsEnabled,
   orbitEnabled,
   flightsEnabled,
+  satellitesEnabled,
+  starlinkFocusEnabled,
   aviationGrid,
   isGridMenuOpen,
   groundStations,
@@ -64,11 +72,14 @@ export default function LayerSidebar({
   airportLayerMessage,
   aviationGridSummary,
   flightFeed,
+  satelliteFeed,
   onSectionChange,
   onToggleImageryPicker,
   onToggleBuildings,
   onToggleOrbit,
   onToggleFlights,
+  onToggleSatellites,
+  onToggleStarlinkFocus,
   onToggleGridMenu,
   onToggleAviationGridCategory,
   onToggleSigintInfrastructure,
@@ -296,7 +307,83 @@ export default function LayerSidebar({
                         : 'Idle'}
               </span>
             </div>
-            {renderSoonCard('Satellites')}
+            <button
+              type="button"
+              className={
+                satellitesEnabled
+                  ? 'layer-card layer-card--toggle layer-card--intel layer-card--active flex justify-between items-center w-full py-1.5 aether-data-row'
+                  : 'layer-card layer-card--toggle layer-card--intel flex justify-between items-center w-full py-1.5 aether-data-row'
+              }
+              onClick={onToggleSatellites}
+            >
+              <span className="layer-card__body">
+                <span className="layer-card__label">Satellites</span>
+                <span className="layer-card__meta">
+                  {satellitesEnabled
+                    ? satelliteFeed.message
+                    : 'Show active orbital objects with SGP4 positions.'}
+                </span>
+              </span>
+              <span
+                className={satellitesEnabled ? 'layer-switch layer-switch--on' : 'layer-switch'}
+                aria-hidden="true"
+              >
+                <span className="layer-switch__thumb" />
+                <span className="layer-switch__text">
+                  {satellitesEnabled ? 'On' : 'Off'}
+                </span>
+              </span>
+            </button>
+            <button
+              type="button"
+              className={
+                starlinkFocusEnabled
+                  ? 'layer-card layer-card--toggle layer-card--intel layer-card--active flex justify-between items-center w-full py-1.5 aether-data-row'
+                  : 'layer-card layer-card--toggle layer-card--intel flex justify-between items-center w-full py-1.5 aether-data-row'
+              }
+              onClick={onToggleStarlinkFocus}
+            >
+              <span className="layer-card__body">
+                <span className="layer-card__label">Starlink Focus</span>
+                <span className="layer-card__meta">
+                  Dim non-Starlink satellites to reveal the constellation mesh.
+                </span>
+              </span>
+              <span
+                className={starlinkFocusEnabled ? 'layer-switch layer-switch--on' : 'layer-switch'}
+                aria-hidden="true"
+              >
+                <span className="layer-switch__thumb" />
+                <span className="layer-switch__text">
+                  {starlinkFocusEnabled ? 'On' : 'Off'}
+                </span>
+              </span>
+            </button>
+            <div className="layer-card layer-card--status flex justify-between items-center w-full py-1.5 aether-data-row">
+              <div className="layer-card__body">
+                <p className="layer-card__label">Satellite Feed</p>
+                <p className="layer-card__meta">
+                  {satelliteFeed.fetchedAt
+                    ? `${satelliteFeed.satelliteCount.toLocaleString()} shown from ${satelliteFeed.totalAvailable.toLocaleString()} TLEs.`
+                    : 'Waiting for the first satellite snapshot.'}
+                </p>
+              </div>
+              <span
+                className={
+                  satelliteFeed.status === 'live'
+                    ? 'layer-badge layer-badge--live'
+                    : 'layer-badge'
+                }
+              >
+                {satelliteFeed.status === 'live'
+                  ? 'Live'
+                  : satelliteFeed.status === 'loading'
+                    ? 'Loading'
+                    : satelliteFeed.status === 'error'
+                      ? 'Error'
+                      : 'Idle'}
+              </span>
+            </div>
             {renderSoonCard('Ships')}
             {renderSoonCard('Events')}
             {renderSoonCard('Airspace')}

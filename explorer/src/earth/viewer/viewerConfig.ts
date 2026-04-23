@@ -18,7 +18,6 @@ export const INITIAL_AVIATION_GRID: AviationGridState = {
   local: false,
   heli: false,
   seaplane: false,
-  closed: false,
 };
 
 export const AVIATION_GRID_OPTIONS: Array<{
@@ -30,7 +29,6 @@ export const AVIATION_GRID_OPTIONS: Array<{
   { key: 'local', label: 'Local Airstrips' },
   { key: 'heli', label: 'Helicopter Pads' },
   { key: 'seaplane', label: 'Seaplane Bases' },
-  { key: 'closed', label: 'Closed Facilities' },
 ];
 
 export const HOME_VIEW = {
