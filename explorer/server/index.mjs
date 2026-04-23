@@ -2,8 +2,12 @@
 // God Eyes — Data Fusion Engine
 // server/index.mjs
 //
-// Single-source architecture: airplanes.live CDN .gz snapshot.
-// Optional Expansion Port via CUSTOM_API_URL/.env.
+// Two-layer architecture:
+//   Layer 1 — Position Feed   : airplanes.live CDN (every 5s)
+//   Layer 2 — Intel Feed      : adsb.lol /mil /pia /ladd /sqk (every 10s)
+//
+// At serve time, /api/flights merges both layers per-flight
+// so the frontend receives a fully enriched GodsEyeFlight object.
 //
 // Run:
 //   node server/index.mjs
@@ -14,6 +18,7 @@ import http from 'node:http';
 import { PORT, RADAR_SWEEP_INTERVAL_MS } from './config/constants.mjs';
 import { getAllFlights, removeStaleFlights } from './store/flightCache.mjs';
 import { fetchPrimaryRadar, fetchCustomRadar, getSweeepStats } from './services/fetchers.mjs';
+import { startIntelLoop, mergeIntel, getIntelStats, rawIntelStore } from './services/intelFetcher.mjs';
 
 // ─── CORS + JSON helpers ──────────────────────────────────────
 function setCorsHeaders(res) {
@@ -44,9 +49,12 @@ async function runSweep() {
 
   const { lastCount } = getSweeepStats();
   const total = getAllFlights().length;
+  const intelSize = rawIntelStore.size;
+
   console.log(
-    `[Sweep #${sweepCount}] Store: ${total.toLocaleString()} active` +
-    ` | Ingested: ${lastCount.toLocaleString()}`,
+    `[Sweep #${sweepCount}] Store: ${total.toLocaleString()} flights` +
+    ` | Ingested: ${lastCount.toLocaleString()}` +
+    ` | Intel: ${intelSize.toLocaleString()} records`,
   );
 }
 
@@ -63,9 +71,18 @@ const server = http.createServer((req, res) => {
   const url = new URL(req.url, `http://localhost:${PORT}`);
 
   // ── GET /api/flights ──────────────────────────────────────
+  // Returns position-feed flights enriched with intel attributes.
   if (req.method === 'GET' && url.pathname === '/api/flights') {
-    const flights = getAllFlights();
+    const rawFlights = getAllFlights();
+
+    // Merge intel attributes into each flight at query time.
+    // Only flights that appear in rawIntelStore are mutated;
+    // others are passed through as-is (zero overhead).
+    const flights = rawFlights.map(mergeIntel);
+
     const { source, lastCount } = getSweeepStats();
+    const intel = getIntelStats();
+
     sendJson(res, 200, {
       flights,
       meta: {
@@ -75,6 +92,13 @@ const server = http.createServer((req, res) => {
         lastOpenSkyCount:    0,
         lastDarkFleetCount:  lastCount,
         lastDarkFleetSource: source,
+        // Intel layer stats
+        intelRecords:        intel.recordCount,
+        intelMil:            intel.mil,
+        intelPia:            intel.pia,
+        intelLadd:           intel.ladd,
+        intelEmerg:          intel.emerg,
+        intelSweepAt:        intel.lastSweepAt,
       },
     });
     return;
@@ -83,14 +107,16 @@ const server = http.createServer((req, res) => {
   // ── GET /api/health ───────────────────────────────────────
   if (req.method === 'GET' && url.pathname === '/api/health') {
     const { source, lastCount } = getSweeepStats();
+    const intel = getIntelStats();
     sendJson(res, 200, {
-      status:      'OK',
-      uptime:      process.uptime(),
-      storeSize:   getAllFlights().length,
+      status:       'OK',
+      uptime:       process.uptime(),
+      storeSize:    getAllFlights().length,
       sweepCount,
       lastSweepAt,
       activeSource: source,
       lastCount,
+      intel,
     });
     return;
   }
@@ -101,21 +127,23 @@ const server = http.createServer((req, res) => {
 // ─── Bootstrap ───────────────────────────────────────────────
 server.listen(PORT, async () => {
   console.log('');
-  console.log('🛰️  GOD\'S EYE — Global Radar Online');
+  console.log('🛰️  GOD\'S EYE — Multi-Layer Radar Online');
   console.log(`   Port    : ${PORT}`);
-  console.log(`   Primary : airplanes.live CDN (GZIP snapshot)`);
-  console.log(`   Sweep   : every ${RADAR_SWEEP_INTERVAL_MS / 1000}s`);
+  console.log(`   Layer 1 : airplanes.live CDN  (every ${RADAR_SWEEP_INTERVAL_MS / 1000}s)`);
+  console.log(`   Layer 2 : adsb.lol intel feed (every 10s)`);
   console.log('');
 
-  // Warm the store before first client hit
-  console.log('[Boot] Running initial sweep…');
+  // ── Layer 1: Position feed ────────────────────────────────
+  console.log('[Boot] Running initial position sweep…');
   await runSweep();
 
-  // Decoupled radar + cleanup intervals
-  setInterval(() => runSweep().catch(console.error),          RADAR_SWEEP_INTERVAL_MS);
+  setInterval(() => runSweep().catch(console.error), RADAR_SWEEP_INTERVAL_MS);
   setInterval(() => removeStaleFlights(), 5_000);
 
-  console.log('[Boot] Radar active. Ready.');
+  // ── Layer 2: Intelligence feed ────────────────────────────
+  startIntelLoop();
+
+  console.log('[Boot] Both layers active. Ready.');
 });
 
 server.on('error', (err) => {
