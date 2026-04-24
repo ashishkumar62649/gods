@@ -23,7 +23,11 @@ import { airportIndex, getAirportStats } from './services/airportIndex.mjs';
 import { getAllSatellites, getSatelliteStats } from './store/satelliteCache.mjs';
 import { startSatelliteTleRefreshLoop } from './services/satelliteFetcher.mjs';
 import { startOrbitPropagationLoop } from './services/orbitPropagator.mjs';
-import { getGfwTradeSnapshot } from './services/gfwService.mjs';
+import { getGfwTradeSnapshot, primeGfwTradeSnapshot } from './services/gfwService.mjs';
+import {
+  getClimateEngineStats,
+  startClimateRefreshLoop,
+} from './services/ClimateEngine.mjs';
 import {
   getAllCables,
   getAllInfrastructureNodes,
@@ -32,6 +36,7 @@ import {
 } from './store/infrastructureStore.mjs';
 import { startInfrastructureRefreshLoop } from './services/infrastructureFetcher.mjs';
 import { startShipStream } from './services/shipFetcher.mjs';
+import { handleClimateStateRoute } from './routes/climate.mjs';
 
 // ─── CORS + JSON helpers ──────────────────────────────────────
 function setCorsHeaders(res) {
@@ -181,6 +186,11 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  if (req.method === 'GET' && url.pathname === '/api/climate/state') {
+    await handleClimateStateRoute(req, res, sendJson);
+    return;
+  }
+
   if (req.method === 'GET' && url.pathname === '/api/health') {
     const { source, lastCount } = getSweeepStats();
     const intel = getIntelStats();
@@ -195,6 +205,7 @@ const server = http.createServer(async (req, res) => {
       airports:      getAirportStats(),
       satellites:    getSatelliteStats(),
       infrastructure: getInfrastructureStats(),
+      climate:       getClimateEngineStats(),
       intel,
     });
     return;
@@ -225,6 +236,10 @@ server.listen(PORT, async () => {
   startOrbitPropagationLoop();
   startInfrastructureRefreshLoop();
   startShipStream();
+  startClimateRefreshLoop();
+  void primeGfwTradeSnapshot().catch((error) => {
+    console.error('[GFW] Maritime snapshot warmup failed:', error);
+  });
 
   console.log('[Boot] Both layers active. Ready.');
 });

@@ -5,7 +5,6 @@ import {
   GFW_MARITIME_REFRESH_INTERVAL_MS,
 } from '../config/constants.mjs';
 
-const SEARCH_LIMIT = 50;
 const REPORT_LOOKBACK_HOURS = 24;
 const GFW_PRESENCE_DATASET = 'public-global-presence:latest';
 const REPORT_TEMPORAL_RESOLUTION = 'HOURLY';
@@ -36,11 +35,16 @@ let snapshotCache = {
     fetchedAt: null,
     source: 'Global Fishing Watch',
     error: null,
+    loading: false,
   },
 };
 let inflightPromise = null;
 
 export async function getGfwTradeSnapshot({ force = false } = {}) {
+  if (!GFW_API_KEY) {
+    return refreshGfwTradeSnapshot();
+  }
+
   const cacheAgeMs = snapshotCache.meta.fetchedAt
     ? Date.now() - Date.parse(snapshotCache.meta.fetchedAt)
     : Number.POSITIVE_INFINITY;
@@ -50,12 +54,30 @@ export async function getGfwTradeSnapshot({ force = false } = {}) {
   }
 
   if (inflightPromise) {
-    return inflightPromise;
+    return force ? inflightPromise : buildPendingSnapshot();
   }
 
-  inflightPromise = refreshGfwTradeSnapshot().finally(() => {
-    inflightPromise = null;
-  });
+  inflightPromise = refreshGfwTradeSnapshot()
+    .finally(() => {
+      inflightPromise = null;
+    });
+
+  if (!force) {
+    return buildPendingSnapshot();
+  }
+
+  return inflightPromise;
+}
+
+export function primeGfwTradeSnapshot() {
+  if (!GFW_API_KEY || inflightPromise) {
+    return inflightPromise ?? Promise.resolve(snapshotCache);
+  }
+
+  inflightPromise = refreshGfwTradeSnapshot()
+    .finally(() => {
+      inflightPromise = null;
+    });
 
   return inflightPromise;
 }
@@ -69,6 +91,7 @@ async function refreshGfwTradeSnapshot() {
         fetchedAt: null,
         source: 'Global Fishing Watch',
         error: 'GFW_API_KEY missing; maritime trade layer disabled.',
+        loading: false,
       },
     };
     return snapshotCache;
@@ -84,6 +107,7 @@ async function refreshGfwTradeSnapshot() {
       fetchedAt: new Date().toISOString(),
       source: 'Global Fishing Watch / 4Wings AIS Vessel Presence',
       error: null,
+      loading: false,
     },
   };
 
@@ -293,7 +317,6 @@ function normalizeTradePresenceRows(rows) {
 
   return [...latestByVessel.values()]
     .sort((a, b) => b.sortTime - a.sortTime)
-    .slice(0, SEARCH_LIMIT)
     .map((entry) => entry.vessel);
 }
 
@@ -389,4 +412,14 @@ class GfwHttpError extends Error {
     this.name = 'GfwHttpError';
     this.status = status;
   }
+}
+
+function buildPendingSnapshot() {
+  return {
+    vessels: snapshotCache.vessels,
+    meta: {
+      ...snapshotCache.meta,
+      loading: true,
+    },
+  };
 }

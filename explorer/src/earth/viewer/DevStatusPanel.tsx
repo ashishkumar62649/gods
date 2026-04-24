@@ -2,6 +2,7 @@ import type { FlightFeedState } from '../flights/flights';
 import type { InfrastructureFeedState } from '../infrastructure/infrastructure';
 import type { MaritimeFeedState } from '../maritime/maritime';
 import type { SatelliteFeedState } from '../satellites/satellites';
+import type { ClimateFeedState } from '../weather/weather';
 
 interface DevStatusPanelProps {
   open: boolean;
@@ -12,10 +13,12 @@ interface DevStatusPanelProps {
   satellitesEnabled: boolean;
   subseaCablesEnabled: boolean;
   maritimeTrafficEnabled: boolean;
+  activeWeatherLayerCount: number;
   flightFeed: FlightFeedState;
   satelliteFeed: SatelliteFeedState;
   infrastructureFeed: InfrastructureFeedState;
   maritimeFeed: MaritimeFeedState;
+  climateFeed: ClimateFeedState;
   orbitEnabled: boolean;
 }
 
@@ -28,10 +31,12 @@ export default function DevStatusPanel({
   satellitesEnabled,
   subseaCablesEnabled,
   maritimeTrafficEnabled,
+  activeWeatherLayerCount,
   flightFeed,
   satelliteFeed,
   infrastructureFeed,
   maritimeFeed,
+  climateFeed,
   orbitEnabled,
 }: DevStatusPanelProps) {
   return (
@@ -99,6 +104,16 @@ export default function DevStatusPanel({
         <div className="dev-status-row flex justify-between items-center w-full py-1.5 aether-data-row">
           <span className="dev-status-row__label">Maritime feed</span>
           <span className="dev-status-row__value">{maritimeFeed.sourceLabel}</span>
+        </div>
+        <div className="dev-status-row flex justify-between items-center w-full py-1.5 aether-data-row">
+          <span className="dev-status-row__label">Climate layers</span>
+          <span className="dev-status-row__value">
+            {activeWeatherLayerCount > 0 ? `${activeWeatherLayerCount} active` : 'Off'}
+          </span>
+        </div>
+        <div className="dev-status-row flex justify-between items-center w-full py-1.5 aether-data-row">
+          <span className="dev-status-row__label">Climate source</span>
+          <span className="dev-status-row__value">{climateFeed.sourceLabel}</span>
         </div>
         <div className="dev-status-row flex justify-between items-center w-full py-1.5 aether-data-row">
           <span className="dev-status-row__label">Orbit</span>

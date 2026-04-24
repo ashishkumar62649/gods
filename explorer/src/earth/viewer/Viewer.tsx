@@ -16,6 +16,9 @@ import FlightDeckHud from '../flights/ui/FlightDeckHud';
 import FlightDetailsPanel from '../flights/ui/FlightDetailsPanel';
 import SatelliteDetailsPanel from '../satellites/ui/SatelliteDetailsPanel';
 import { MaritimeLayerManager } from '../maritime/MaritimeLayerManager';
+import { MetroLayerManager } from '../metro/MetroLayerManager';
+import { RailwayLayerManager } from '../rail/RailwayLayerManager';
+import { WeatherLayerManager } from '../weather/WeatherLayerManager';
 import {
   AviationGridState,
   FlightAssetView,
@@ -41,6 +44,13 @@ import {
   type SatelliteRecord,
 } from '../satellites/satellites';
 import {
+  INITIAL_WEATHER_TOGGLES,
+  isWeatherLayerEnabled,
+  type ClimateStateSnapshot,
+  type WeatherLayerId,
+  type WeatherToggleState,
+} from '../weather/weather';
+import {
   buildHome,
   flyObliqueToDestination,
   flyObliqueToPoint,
@@ -58,10 +68,14 @@ import { useFlightData } from './useFlightData';
 import { useFlightScene } from './useFlightScene';
 import { useCableScene } from './useCableScene';
 import { useInfrastructureData } from './useInfrastructureData';
+import { useClimateData } from './useClimateData';
 import { useMaritimeData } from './useMaritimeData';
 import { useMaritimeScene } from './useMaritimeScene';
+import { useMetroScene } from './useMetroScene';
+import { useRailwayScene } from './useRailwayScene';
 import { useSatelliteData } from './useSatelliteData';
 import { useSatelliteScene } from './useSatelliteScene';
+import { useWeatherScene } from './useWeatherScene';
 import {
   type CockpitPointerState,
   useInteractionGuards,
@@ -96,12 +110,18 @@ export default function Viewer() {
   const satelliteLayerManagerRef = useRef<SatelliteSceneLayerManager | null>(null);
   const cableLayerManagerRef = useRef<CableSceneLayerManager | null>(null);
   const maritimeLayerManagerRef = useRef<MaritimeLayerManager | null>(null);
+  const metroLayerManagerRef = useRef<MetroLayerManager | null>(null);
+  const railwayLayerManagerRef = useRef<RailwayLayerManager | null>(null);
+  const weatherLayerManagerRef = useRef<WeatherLayerManager | null>(null);
   const satelliteRecordsRef = useRef<Map<string, SatelliteRecord>>(new Map());
   const cableRecordsRef = useRef<Map<string, GodsEyeInfrastructure>>(new Map());
   const maritimeRecordsRef = useRef<Map<string, MaritimeVesselRecord>>(new Map());
   const satellitesEnabledRef = useRef(false);
   const subseaCablesEnabledRef = useRef(false);
   const maritimeTrafficEnabledRef = useRef(false);
+  const metroEnabledRef = useRef(false);
+  const railwayEnabledRef = useRef(false);
+  const weatherToggleStateRef = useRef<WeatherToggleState>(INITIAL_WEATHER_TOGGLES);
   const starlinkFocusEnabledRef = useRef(false);
   const networkViewEnabledRef = useRef(false);
   const satelliteMissionFiltersRef = useRef<SatelliteMissionFilters>(
@@ -139,7 +159,7 @@ export default function Viewer() {
     const options = buildImageryOptions();
     const preferredOption =
       options.find(
-        (option) => option.name === 'Bing Maps Aerial with Labels',
+        (option) => option.name === 'MapTiler Satellite',
       ) ?? options[0];
 
     return preferredOption?.id ?? '';
@@ -156,6 +176,10 @@ export default function Viewer() {
   const [satellitesEnabled, setSatellitesEnabled] = useState(false);
   const [subseaCablesEnabled, setSubseaCablesEnabled] = useState(false);
   const [maritimeTrafficEnabled, setMaritimeTrafficEnabled] = useState(false);
+  const [metroEnabled, setMetroEnabled] = useState(false);
+  const [railwayEnabled, setRailwayEnabled] = useState(false);
+  const [weatherToggles, setWeatherToggles] =
+    useState<WeatherToggleState>(INITIAL_WEATHER_TOGGLES);
   const [starlinkFocusEnabled, setStarlinkFocusEnabled] = useState(false);
   const [networkViewEnabled, setNetworkViewEnabled] = useState(false);
   const [satelliteMissionFilters, setSatelliteMissionFilters] =
@@ -167,6 +191,7 @@ export default function Viewer() {
   const [selectedSatellite, setSelectedSatellite] = useState<SatelliteRecord | null>(null);
   const [showSelectedFlightTrail, setShowSelectedFlightTrail] = useState(false);
   const [showSelectedFlightRoute, setShowSelectedFlightRoute] = useState(false);
+  const [climateState, setClimateState] = useState<ClimateStateSnapshot | null>(null);
 
   // User toggle state for the buildings layer. Effective visibility is
   // `buildingsEnabled && altitudeOK` Ã¢â‚¬â€ the altitude gate lives in the
@@ -447,6 +472,11 @@ export default function Viewer() {
     maritimeLayerManagerRef,
   });
 
+  const { climateFeed } = useClimateData({
+    climateEnabled: isWeatherLayerEnabled(weatherToggles),
+    onClimateState: setClimateState,
+  });
+
   const { infrastructureFeed } = useInfrastructureData({
     infrastructureEnabled: subseaCablesEnabled || maritimeTrafficEnabled,
     syncInfrastructureLayers,
@@ -502,6 +532,28 @@ export default function Viewer() {
     maritimeEnabled: maritimeTrafficEnabled,
   });
 
+  useMetroScene({
+    viewerRef,
+    metroLayerManagerRef,
+    metroEnabledRef,
+    metroEnabled,
+  });
+
+  useRailwayScene({
+    viewerRef,
+    railwayLayerManagerRef,
+    railwayEnabledRef,
+    railwayEnabled,
+  });
+
+  useWeatherScene({
+    viewerRef,
+    weatherLayerManagerRef,
+    weatherToggleStateRef,
+    weatherToggles,
+    climateState,
+  });
+
   const handleCablePicked = useCallback(({ lon, lat }: { lon: number; lat: number }) => {
     const viewer = viewerRef.current?.cesiumElement;
     if (!viewer || viewer.isDestroyed()) return;
@@ -553,6 +605,30 @@ export default function Viewer() {
     maritimeTrafficEnabledRef.current = nextEnabled;
     setMaritimeTrafficEnabled(nextEnabled);
     cableLayerManagerRef.current?.setShipsVisible(nextEnabled);
+  }, []);
+
+  const toggleMetro = useCallback(() => {
+    const nextEnabled = !metroEnabledRef.current;
+    metroEnabledRef.current = nextEnabled;
+    setMetroEnabled(nextEnabled);
+    metroLayerManagerRef.current?.setVisible(nextEnabled);
+  }, []);
+
+  const toggleRailway = useCallback(() => {
+    const nextEnabled = !railwayEnabledRef.current;
+    railwayEnabledRef.current = nextEnabled;
+    setRailwayEnabled(nextEnabled);
+    railwayLayerManagerRef.current?.setVisible(nextEnabled);
+  }, []);
+
+  const toggleWeatherLayer = useCallback((layerId: WeatherLayerId) => {
+    const nextToggles = {
+      ...weatherToggleStateRef.current,
+      [layerId]: !weatherToggleStateRef.current[layerId],
+    };
+    weatherToggleStateRef.current = nextToggles;
+    setWeatherToggles(nextToggles);
+    weatherLayerManagerRef.current?.updateWeatherLayers(nextToggles);
   }, []);
 
   const toggleStarlinkFocus = useCallback(() => {
@@ -981,6 +1057,10 @@ export default function Viewer() {
   }, [maritimeTrafficEnabled]);
 
   useEffect(() => {
+    weatherToggleStateRef.current = weatherToggles;
+  }, [weatherToggles]);
+
+  useEffect(() => {
     starlinkFocusEnabledRef.current = starlinkFocusEnabled;
   }, [starlinkFocusEnabled]);
 
@@ -1055,11 +1135,15 @@ export default function Viewer() {
     Number(satellitesEnabled) +
     Number(subseaCablesEnabled) +
     Number(maritimeTrafficEnabled) +
+    Number(metroEnabled) +
+    Number(railwayEnabled) +
+    Object.values(weatherToggles).filter(Boolean).length +
     Number(Object.values(aviationGrid).some(Boolean)) +
     Number(groundStations.hfdl) +
     Number(groundStations.comms) +
     Number(Boolean(buildingsEnabled || autoBuildingsEnabled)) +
     Number(orbitEnabled);
+  const activeWeatherLayerCount = Object.values(weatherToggles).filter(Boolean).length;
 
   const activeAviationGridCount = Object.values(aviationGrid).filter(Boolean).length;
   const aviationGridSummary =
@@ -1077,6 +1161,7 @@ export default function Viewer() {
         full
         ref={viewerRef}
         terrain={WORLD_TERRAIN}
+        baseLayer={false}
         homeButton={false}
         geocoder={false}
         baseLayerPicker={false}
@@ -1108,6 +1193,9 @@ export default function Viewer() {
           networkViewEnabled={networkViewEnabled}
           subseaCablesEnabled={subseaCablesEnabled}
           maritimeTrafficEnabled={maritimeTrafficEnabled}
+          metroEnabled={metroEnabled}
+          railwayEnabled={railwayEnabled}
+          weatherToggles={weatherToggles}
           satelliteMissionFilters={satelliteMissionFilters}
           aviationGrid={aviationGrid}
           isGridMenuOpen={isGridMenuOpen}
@@ -1119,6 +1207,7 @@ export default function Viewer() {
           satelliteFeed={satelliteFeed}
           infrastructureFeed={infrastructureFeed}
           maritimeFeed={maritimeFeed}
+          climateFeed={climateFeed}
           onSectionChange={setActiveSection}
           onToggleImageryPicker={() => setImageryPickerOpen((open) => !open)}
           onToggleBuildings={toggleBuildings}
@@ -1129,6 +1218,9 @@ export default function Viewer() {
           onToggleNetworkView={toggleNetworkView}
           onToggleSubseaCables={toggleSubseaCables}
           onToggleMaritimeTraffic={toggleMaritimeTraffic}
+          onToggleMetro={toggleMetro}
+          onToggleRailway={toggleRailway}
+          onToggleWeatherLayer={toggleWeatherLayer}
           onToggleSatelliteMissionCategory={toggleSatelliteMissionCategory}
           onToggleGridMenu={() => setIsGridMenuOpen((open) => !open)}
           onToggleAviationGridCategory={toggleAviationGridCategory}
@@ -1230,10 +1322,12 @@ export default function Viewer() {
           satellitesEnabled={satellitesEnabled}
           subseaCablesEnabled={subseaCablesEnabled}
           maritimeTrafficEnabled={maritimeTrafficEnabled}
+          activeWeatherLayerCount={activeWeatherLayerCount}
           flightFeed={flightFeed}
           satelliteFeed={satelliteFeed}
           infrastructureFeed={infrastructureFeed}
           maritimeFeed={maritimeFeed}
+          climateFeed={climateFeed}
           orbitEnabled={orbitEnabled}
         />
       </div>

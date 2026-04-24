@@ -14,6 +14,7 @@ export interface MaritimeFeedMeta {
   fetchedAt: string | null;
   source: string;
   error: string | null;
+  loading?: boolean;
 }
 
 export interface MaritimeSnapshot {

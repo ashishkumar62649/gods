@@ -18,3 +18,4 @@ Thumbs.db
 # Local harness / misc
 .claude/
 venv/
+export.geojson

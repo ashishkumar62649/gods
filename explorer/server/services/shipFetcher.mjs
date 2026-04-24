@@ -14,6 +14,7 @@ const vesselTypeByMmsi = new Map();
 let socket = null;
 let reconnectTimer = null;
 let staleTimer = null;
+const textDecoder = new TextDecoder('utf-8');
 
 export function startShipStream() {
   if (staleTimer) return;
@@ -55,17 +56,15 @@ function connectShipStream() {
   });
 
   socket.addEventListener('message', async (event) => {
-    let rawData;
+    let rawText = null;
     try {
-      // event.data can be a Blob (binary frame) or a plain string.
-      // Blob.text() converts it to a UTF-8 string before JSON.parse.
-      rawData = event.data instanceof Blob
-        ? await event.data.text()
-        : event.data;
+      rawText = await decodeAisPayload(event?.data ?? event);
+      if (!rawText) return;
 
-      handleAisMessage(JSON.parse(rawData));
+      handleAisMessage(JSON.parse(rawText));
     } catch (error) {
-      console.error(`[Ships] AIS message parse failed: ${error.message}`, rawData?.slice?.(0, 120));
+      const preview = rawText ? rawText.slice(0, 50) : '<unavailable>';
+      console.error(`[Ships] AIS message parse failed: ${error.message} | preview: ${preview}`);
     }
   });
 
@@ -176,4 +175,36 @@ function safeStr(value) {
   if (value == null) return null;
   const text = String(value).trim();
   return text || null;
+}
+
+async function decodeAisPayload(data) {
+  if (typeof data === 'string') {
+    return data;
+  }
+
+  if (isBlobPayload(data)) {
+    return data.text();
+  }
+
+  if (typeof Buffer !== 'undefined' && Buffer.isBuffer(data)) {
+    return data.toString('utf8');
+  }
+
+  if (data instanceof ArrayBuffer) {
+    return textDecoder.decode(new Uint8Array(data));
+  }
+
+  if (ArrayBuffer.isView(data)) {
+    return textDecoder.decode(data);
+  }
+
+  if (data == null) {
+    return '';
+  }
+
+  return String(data);
+}
+
+function isBlobPayload(value) {
+  return typeof Blob !== 'undefined' && value instanceof Blob;
 }

@@ -5,18 +5,42 @@ import {
   IonWorldImageryStyle,
   OpenStreetMapImageryProvider,
   TileMapServiceImageryProvider,
+  UrlTemplateImageryProvider,
   createWorldImageryAsync,
 } from 'cesium';
 import type { ImageryOption } from './viewerTypes';
 
+const MAPTILER_API_KEY = import.meta.env.VITE_MAPTILER_API_KEY;
+
 function toImageryId(name: string) {
   return name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+}
+
+function createMapTilerSatelliteProvider() {
+  if (!MAPTILER_API_KEY) {
+    throw new Error(
+      '[Explorer] VITE_MAPTILER_API_KEY is required to load MapTiler Satellite imagery.',
+    );
+  }
+
+  return new UrlTemplateImageryProvider({
+    url: `https://api.maptiler.com/tiles/satellite-v2/{z}/{x}/{y}.jpg?key=${MAPTILER_API_KEY}`,
+    minimumLevel: 0,
+    maximumLevel: 20,
+    enablePickFeatures: false,
+  });
 }
 
 export function buildImageryOptions(): ImageryOption[] {
   const iconBase = '/cesium/Widgets/Images/ImageryProviders';
 
   const options: Omit<ImageryOption, 'id'>[] = [
+    {
+      name: 'MapTiler Satellite',
+      tooltip: 'High-resolution MapTiler satellite imagery.',
+      iconUrl: `${iconBase}/bingAerial.png`,
+      create: () => createMapTilerSatelliteProvider(),
+    },
     {
       name: 'Bing Maps Aerial',
       tooltip: 'Bing Maps aerial imagery, provided by Cesium ion.',

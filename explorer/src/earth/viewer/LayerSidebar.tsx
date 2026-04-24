@@ -10,6 +10,8 @@ import {
 } from '../satellites/satellites';
 import type { InfrastructureFeedState } from '../infrastructure/infrastructure';
 import type { MaritimeFeedState } from '../maritime/maritime';
+import type { ClimateFeedState, WeatherLayerId, WeatherToggleState } from '../weather/weather';
+import { WEATHER_LAYER_LABELS } from '../weather/weather';
 import { AVIATION_GRID_OPTIONS } from './viewerConfig';
 import type { SidebarSection } from './viewerTypes';
 
@@ -27,6 +29,9 @@ interface LayerSidebarProps {
   networkViewEnabled: boolean;
   subseaCablesEnabled: boolean;
   maritimeTrafficEnabled: boolean;
+  metroEnabled: boolean;
+  railwayEnabled: boolean;
+  weatherToggles: WeatherToggleState;
   satelliteMissionFilters: SatelliteMissionFilters;
   aviationGrid: AviationGridState;
   isGridMenuOpen: boolean;
@@ -38,6 +43,7 @@ interface LayerSidebarProps {
   satelliteFeed: SatelliteFeedState;
   infrastructureFeed: InfrastructureFeedState;
   maritimeFeed: MaritimeFeedState;
+  climateFeed: ClimateFeedState;
   onSectionChange: (section: SidebarSection) => void;
   onToggleImageryPicker: () => void;
   onToggleBuildings: () => void;
@@ -48,6 +54,9 @@ interface LayerSidebarProps {
   onToggleNetworkView: () => void;
   onToggleSubseaCables: () => void;
   onToggleMaritimeTraffic: () => void;
+  onToggleMetro: () => void;
+  onToggleRailway: () => void;
+  onToggleWeatherLayer: (layer: WeatherLayerId) => void;
   onToggleSatelliteMissionCategory: (category: keyof SatelliteMissionFilters) => void;
   onToggleGridMenu: () => void;
   onToggleAviationGridCategory: (layer: keyof AviationGridState) => void;
@@ -84,6 +93,9 @@ export default function LayerSidebar({
   networkViewEnabled,
   subseaCablesEnabled,
   maritimeTrafficEnabled,
+  metroEnabled,
+  railwayEnabled,
+  weatherToggles,
   satelliteMissionFilters,
   aviationGrid,
   isGridMenuOpen,
@@ -95,6 +107,7 @@ export default function LayerSidebar({
   satelliteFeed,
   infrastructureFeed,
   maritimeFeed,
+  climateFeed,
   onSectionChange,
   onToggleImageryPicker,
   onToggleBuildings,
@@ -105,6 +118,9 @@ export default function LayerSidebar({
   onToggleNetworkView,
   onToggleSubseaCables,
   onToggleMaritimeTraffic,
+  onToggleMetro,
+  onToggleRailway,
+  onToggleWeatherLayer,
   onToggleSatelliteMissionCategory,
   onToggleGridMenu,
   onToggleAviationGridCategory,
@@ -112,6 +128,40 @@ export default function LayerSidebar({
   onToggleGroundStationLayer,
   sectionTabs,
 }: LayerSidebarProps) {
+  const renderWeatherToggle = (
+    layerId: WeatherLayerId,
+    description: string,
+  ) => {
+    const enabled = weatherToggles[layerId];
+    return (
+      <button
+        type="button"
+        className={
+          enabled
+            ? 'layer-card layer-card--toggle layer-card--intel layer-card--active flex justify-between items-center w-full py-1.5 aether-data-row'
+            : 'layer-card layer-card--toggle layer-card--intel flex justify-between items-center w-full py-1.5 aether-data-row'
+        }
+        onClick={() => onToggleWeatherLayer(layerId)}
+      >
+        <span className="layer-card__body">
+          <span className="layer-card__label">{WEATHER_LAYER_LABELS[layerId]}</span>
+          <span className="layer-card__meta">
+            {enabled
+              ? `${WEATHER_LAYER_LABELS[layerId]} telemetry is active.`
+              : description}
+          </span>
+        </span>
+        <span
+          className={enabled ? 'layer-switch layer-switch--on' : 'layer-switch'}
+          aria-hidden="true"
+        >
+          <span className="layer-switch__thumb" />
+          <span className="layer-switch__text">{enabled ? 'On' : 'Off'}</span>
+        </span>
+      </button>
+    );
+  };
+
   const renderSectionBody = () => {
     switch (activeSection) {
       case 'base':
@@ -470,6 +520,41 @@ export default function LayerSidebar({
           <>
             <div className="layer-card layer-card--status flex justify-between items-center w-full py-1.5 aether-data-row">
               <div className="layer-card__body">
+                <p className="layer-card__label">Global Climate</p>
+                <p className="layer-card__meta">{climateFeed.message}</p>
+              </div>
+              <span
+                className={
+                  climateFeed.activeSource === 'OWM'
+                    ? 'layer-badge layer-badge--live'
+                    : 'layer-badge'
+                }
+              >
+                Source: {climateFeed.sourceLabel}
+              </span>
+            </div>
+            {renderWeatherToggle(
+              'precipitation',
+              'Overlay live rain and snow radar on the globe.',
+            )}
+            {renderWeatherToggle(
+              'temperature',
+              'Show the global heat map layer.',
+            )}
+            {renderWeatherToggle(
+              'clouds',
+              'Reveal worldwide cloud cover density.',
+            )}
+            {renderWeatherToggle(
+              'wind',
+              'Display the global wind speed field.',
+            )}
+            {renderWeatherToggle(
+              'pressure',
+              'Display atmospheric pressure telemetry.',
+            )}
+            <div className="layer-card layer-card--status flex justify-between items-center w-full py-1.5 aether-data-row">
+              <div className="layer-card__body">
                 <p className="layer-card__label">Standard View</p>
                 <p className="layer-card__meta">
                   The current stable globe look remains active.
@@ -479,7 +564,6 @@ export default function LayerSidebar({
             </div>
             {renderSoonCard('Night Vision')}
             {renderSoonCard('Thermal')}
-            {renderSoonCard('CRT')}
             {renderSoonCard('Cinematic')}
           </>
         );
@@ -510,6 +594,62 @@ export default function LayerSidebar({
                 <span className="layer-switch__thumb" />
                 <span className="layer-switch__text">
                   {subseaCablesEnabled ? 'On' : 'Off'}
+                </span>
+              </span>
+            </button>
+
+            <button
+              type="button"
+              className={
+                metroEnabled
+                  ? 'layer-card layer-card--toggle layer-card--intel layer-card--active flex justify-between items-center w-full py-1.5 aether-data-row'
+                  : 'layer-card layer-card--toggle layer-card--intel flex justify-between items-center w-full py-1.5 aether-data-row'
+              }
+              onClick={onToggleMetro}
+            >
+              <span className="layer-card__body">
+                <span className="layer-card__label">Metro Rail</span>
+                <span className="layer-card__meta">
+                  {metroEnabled
+                    ? 'Glowing global subway and rail corridors are visible.'
+                    : 'Render neon global metro and subway routes.'}
+                </span>
+              </span>
+              <span
+                className={metroEnabled ? 'layer-switch layer-switch--on' : 'layer-switch'}
+                aria-hidden="true"
+              >
+                <span className="layer-switch__thumb" />
+                <span className="layer-switch__text">
+                  {metroEnabled ? 'On' : 'Off'}
+                </span>
+              </span>
+            </button>
+
+            <button
+              type="button"
+              className={
+                railwayEnabled
+                  ? 'layer-card layer-card--toggle layer-card--intel layer-card--active flex justify-between items-center w-full py-1.5 aether-data-row'
+                  : 'layer-card layer-card--toggle layer-card--intel flex justify-between items-center w-full py-1.5 aether-data-row'
+              }
+              onClick={onToggleRailway}
+            >
+              <span className="layer-card__body">
+                <span className="layer-card__label">Railway</span>
+                <span className="layer-card__meta">
+                  {railwayEnabled
+                    ? 'Amber national rail corridors are streaming in.'
+                    : 'Render country-scale heavy railway corridors.'}
+                </span>
+              </span>
+              <span
+                className={railwayEnabled ? 'layer-switch layer-switch--on' : 'layer-switch'}
+                aria-hidden="true"
+              >
+                <span className="layer-switch__thumb" />
+                <span className="layer-switch__text">
+                  {railwayEnabled ? 'On' : 'Off'}
                 </span>
               </span>
             </button>
@@ -574,7 +714,7 @@ export default function LayerSidebar({
                 <p className="layer-card__meta">
                   {maritimeFeed.fetchedAt
                     ? `${maritimeFeed.vesselCount.toLocaleString()} vessels from Global Fishing Watch.`
-                    : 'Waiting for maritime snapshot.'}
+                    : maritimeFeed.message}
                 </p>
               </div>
               <span

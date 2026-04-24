@@ -7,6 +7,9 @@ import {
   type MaritimeVesselRecord,
 } from '../maritime/maritime';
 
+const MARITIME_LOADING_RETRY_INTERVAL_MS = 15_000;
+const MARITIME_ERROR_RETRY_INTERVAL_MS = 60_000;
+
 const INITIAL_MARITIME_FEED: MaritimeFeedState = {
   status: 'idle',
   sourceLabel: 'Offline',
@@ -41,6 +44,14 @@ export function useMaritimeData({
     let activeController: AbortController | null = null;
     let refreshTimer = 0;
 
+    const scheduleNextLoad = (delayMs: number) => {
+      if (cancelled) return;
+      window.clearTimeout(refreshTimer);
+      refreshTimer = window.setTimeout(() => {
+        void loadMaritime();
+      }, delayMs);
+    };
+
     const loadMaritime = async () => {
       if (cancelled) return;
 
@@ -64,15 +75,27 @@ export function useMaritimeData({
 
         const vessels = Array.isArray(snapshot.vessels) ? snapshot.vessels : [];
         syncMaritimeLayer(vessels);
+        const snapshotLoading = Boolean(snapshot.meta.loading);
         setMaritimeFeed({
-          status: snapshot.meta.error ? 'error' : 'live',
+          status: snapshot.meta.error ? 'error' : snapshotLoading ? 'loading' : 'live',
           sourceLabel: snapshot.meta.source || 'Global Fishing Watch',
           message: snapshot.meta.error
             ? snapshot.meta.error
-            : `${vessels.length.toLocaleString()} cargo and tanker vessels rendered.`,
+            : snapshotLoading
+              ? vessels.length > 0
+                ? `Refreshing ${vessels.length.toLocaleString()} cached trade vessels...`
+                : 'Building initial Global Fishing Watch maritime snapshot...'
+              : `${vessels.length.toLocaleString()} cargo and tanker vessels rendered.`,
           fetchedAt: snapshot.meta.fetchedAt,
           vesselCount: vessels.length,
         });
+        scheduleNextLoad(
+          snapshot.meta.error
+            ? MARITIME_ERROR_RETRY_INTERVAL_MS
+            : snapshotLoading
+              ? MARITIME_LOADING_RETRY_INTERVAL_MS
+              : MARITIME_POLL_INTERVAL_MS,
+        );
       } catch (error) {
         if (cancelled || activeController.signal.aborted) return;
 
@@ -88,16 +111,16 @@ export function useMaritimeData({
           fetchedAt: null,
           vesselCount: 0,
         });
+        scheduleNextLoad(MARITIME_ERROR_RETRY_INTERVAL_MS);
       }
     };
 
     void loadMaritime();
-    refreshTimer = window.setInterval(loadMaritime, MARITIME_POLL_INTERVAL_MS);
 
     return () => {
       cancelled = true;
       activeController?.abort();
-      window.clearInterval(refreshTimer);
+      window.clearTimeout(refreshTimer);
     };
   }, [maritimeEnabled, maritimeLayerManagerRef, syncMaritimeLayer]);
 

@@ -38,6 +38,10 @@ export const GFW_API_KEY =
 export const GFW_API_BASE_URL = 'https://gateway.api.globalfishingwatch.org/v3';
 export const GFW_VESSEL_DATASET = 'public-global-vessel-identity:latest';
 export const GFW_MARITIME_REFRESH_INTERVAL_MS = 15 * 60 * 1000;
+export const OWM_API_KEY =
+  process.env.VITE_OWM_API_KEY ||
+  process.env.OWM_API_KEY ||
+  null;
 
 /** Space-Track credentials. Required to fetch live GP/TLE catalog data. */
 export const SPACETRACK_EMAIL = process.env.SPACETRACK_EMAIL || null;
