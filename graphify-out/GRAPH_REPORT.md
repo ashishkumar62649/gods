@@ -1,12 +1,12 @@
-# Graph Report - E:\ashis\god eyes  (2026-04-23)
+# Graph Report - E:\ashis\god eyes  (2026-04-24)
 
 ## Corpus Check
-- 75 files · ~589,513 words
+- 105 files · ~635,922 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 3239 nodes · 10211 edges · 47 communities detected
-- Extraction: 91% EXTRACTED · 9% INFERRED · 0% AMBIGUOUS · INFERRED: 919 edges (avg confidence: 0.8)
+- 3473 nodes · 10707 edges · 67 communities detected
+- Extraction: 90% EXTRACTED · 10% INFERRED · 0% AMBIGUOUS · INFERRED: 1029 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
@@ -57,6 +57,26 @@
 - [[_COMMUNITY_Community 44|Community 44]]
 - [[_COMMUNITY_Community 45|Community 45]]
 - [[_COMMUNITY_Community 46|Community 46]]
+- [[_COMMUNITY_Community 47|Community 47]]
+- [[_COMMUNITY_Community 48|Community 48]]
+- [[_COMMUNITY_Community 49|Community 49]]
+- [[_COMMUNITY_Community 50|Community 50]]
+- [[_COMMUNITY_Community 51|Community 51]]
+- [[_COMMUNITY_Community 52|Community 52]]
+- [[_COMMUNITY_Community 53|Community 53]]
+- [[_COMMUNITY_Community 54|Community 54]]
+- [[_COMMUNITY_Community 55|Community 55]]
+- [[_COMMUNITY_Community 56|Community 56]]
+- [[_COMMUNITY_Community 57|Community 57]]
+- [[_COMMUNITY_Community 58|Community 58]]
+- [[_COMMUNITY_Community 59|Community 59]]
+- [[_COMMUNITY_Community 60|Community 60]]
+- [[_COMMUNITY_Community 61|Community 61]]
+- [[_COMMUNITY_Community 62|Community 62]]
+- [[_COMMUNITY_Community 63|Community 63]]
+- [[_COMMUNITY_Community 64|Community 64]]
+- [[_COMMUNITY_Community 65|Community 65]]
+- [[_COMMUNITY_Community 66|Community 66]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `im()` - 81 edges
@@ -71,118 +91,118 @@
 10. `initMap()` - 52 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `hslToRgb()` --calls--> `hue2rgb()`  [INFERRED]
-  E:\ashis\god eyes\scratch-tar1090\html\planeObject.js → E:\ashis\god eyes\scratch-tar1090\html\libs\jquery-ui-1.13.2.min.js
-- `position()` --calls--> `is()`  [INFERRED]
-  E:\ashis\god eyes\scratch-tar1090\html\libs\jquery-ui-1.13.2.min.js → E:\ashis\god eyes\scratch-tar1090\html\libs\ol-custom-10.7.0.js
-- `ol_map_init()` --calls--> `setVisible()`  [INFERRED]
-  E:\ashis\god eyes\tmp-adsblol-script.js → E:\ashis\god eyes\scratch-tar1090\html\libs\ol-custom-10.7.0.js
 - `ol_map_init()` --calls--> `getExtent()`  [INFERRED]
   E:\ashis\god eyes\tmp-adsblol-script.js → E:\ashis\god eyes\scratch-tar1090\html\libs\ol-custom-10.7.0.js
-- `initMapEarly()` --calls--> `createBaseLayers()`  [INFERRED]
-  E:\ashis\god eyes\tmp-adsblol-script.js → E:\ashis\god eyes\scratch-tar1090\html\layers.js
+- `initMap()` --calls--> `render()`  [INFERRED]
+  E:\ashis\god eyes\tmp-adsblol-script.js → E:\ashis\god eyes\scratch-tar1090\html\libs\ol-custom-10.7.0.js
+- `onDisplayUnitsChanged()` --calls--> `render()`  [INFERRED]
+  E:\ashis\god eyes\tmp-adsblol-script.js → E:\ashis\god eyes\scratch-tar1090\html\libs\ol-custom-10.7.0.js
+- `checkPointermove()` --calls--> `un()`  [INFERRED]
+  E:\ashis\god eyes\tmp-adsblol-script.js → E:\ashis\god eyes\scratch-tar1090\html\libs\ol-custom-10.7.0.js
+- `_printTrace()` --calls--> `zuluTime()`  [INFERRED]
+  E:\ashis\god eyes\tmp-adsblol-script.js → E:\ashis\god eyes\scratch-tar1090\html\early.js
 
 ## Communities
 
 ### Community 0 - "Community 0"
 Cohesion: 0.01
-Nodes (439): chunksDefer(), get_history(), get_history_item(), getCookie(), init_zstddec(), jsonGetWorker(), lDateString(), loadHeatChunk() (+431 more)
+Nodes (448): add_kml_overlay(), chunksDefer(), get_history(), get_history_item(), getCookie(), init_zstddec(), jsonGetWorker(), lDateString() (+440 more)
 
 ### Community 1 - "Community 1"
 Cohesion: 0.01
-Nodes (230): Ab(), abortDrawing_(), ac(), addFeature_(), addOrRemoveTracedCoordinates_(), addToDrawing_(), addTracedCoordinates_(), af() (+222 more)
+Nodes (74): addMouseToPointerListener(), addTouchToPointerListener(), ai, B(), Bc(), cc(), ci(), cp (+66 more)
 
 ### Community 2 - "Community 2"
 Cohesion: 0.01
-Nodes (75): addMouseToPointerListener(), addTouchToPointerListener(), createBaseLayers(), ay(), Bc(), bs(), by(), _c() (+67 more)
+Nodes (190): position(), Ab(), ac(), an(), areSnapDataEqual_(), Av(), bb(), bg() (+182 more)
 
 ### Community 3 - "Community 3"
 Cohesion: 0.01
-Nodes (88): db_ajax(), db_ajax_request_complete(), dbLoad(), request_from_db(), add_kml_overlay(), je(), bindRemoveEvent(), processClassString() (+80 more)
+Nodes (150): main(), process_link(), db_ajax(), db_ajax_request_complete(), dbLoad(), request_from_db(), r(), T() (+142 more)
 
 ### Community 4 - "Community 4"
 Cohesion: 0.01
-Nodes (51): _a(), Aa(), ai, as(), Bf, Bo(), bp, br() (+43 more)
+Nodes (45): Aa(), as(), ba(), Bf, Bo(), bp, br(), da() (+37 more)
 
 ### Community 5 - "Community 5"
 Cohesion: 0.02
-Nodes (45): spinnerModifier(), _super(), _superApply(), B(), cc(), cd(), cp, Dp() (+37 more)
+Nodes (85): CableSceneLayerManager, extractCablePickId(), getPulse(), headingToRotation(), buildHome(), flyObliqueToDestination(), flyObliqueToPoint(), getCameraCartographic() (+77 more)
 
 ### Community 6 - "Community 6"
 Cohesion: 0.02
-Nodes (38): $(), A(), l(), cg(), dg(), Dw(), ed(), eg (+30 more)
+Nodes (29): $(), A(), l(), M(), af(), bd(), cg(), dg() (+21 more)
 
 ### Community 7 - "Community 7"
-Cohesion: 0.02
-Nodes (104): main(), process_link(), flyObliqueToDestination(), flyObliqueToPoint(), getCameraCartographic(), getCockpitCameraPose(), getFlightCameraOffset(), getFlightCameraTarget() (+96 more)
+Cohesion: 0.03
+Nodes (91): simulateMouseEvent(), abortDrawing_(), addFeature_(), addOrRemoveTracedCoordinates_(), addToDrawing_(), addTracedCoordinates_(), appendCoordinates(), atFinish_() (+83 more)
 
 ### Community 8 - "Community 8"
 Cohesion: 0.02
-Nodes (22): simulateMouseEvent(), bh, getFeatures_(), getId(), handleDrop(), hi(), iv, ki (+14 more)
+Nodes (146): buildAirportCodes(), emptyAirportIndex(), isRouteCandidateAirport(), loadAirportIndex(), normalizeAirportCode(), normalizeAirportRow(), serializeAirport(), toFiniteNumber() (+138 more)
 
 ### Community 9 - "Community 9"
-Cohesion: 0.03
-Nodes (24): al(), bl, cl(), Cr(), dh(), Dm(), Do(), fh (+16 more)
+Cohesion: 0.02
+Nodes (45): itemCacheTest(), addIntelligenceNode(), distanceToSegmentMeters(), findNearestCable(), removeStaleShips(), setShipConnectionState(), toRadians(), upsertShip() (+37 more)
 
 ### Community 10 - "Community 10"
-Cohesion: 0.03
-Nodes (96): buildAirportCodes(), emptyAirportIndex(), isRouteCandidateAirport(), loadAirportIndex(), normalizeAirportCode(), normalizeAirportRow(), serializeAirport(), toFiniteNumber() (+88 more)
+Cohesion: 0.04
+Nodes (28): al(), bl, cl(), Cr(), cs(), dh(), Dm(), Do() (+20 more)
 
 ### Community 11 - "Community 11"
 Cohesion: 0.03
-Nodes (13): ca(), cm(), fi(), gg(), gm(), lm(), Nm(), om() (+5 more)
+Nodes (11): ca(), cm(), fi(), gm(), jm(), lm(), Nm(), pp (+3 more)
 
 ### Community 12 - "Community 12"
-Cohesion: 0.05
-Nodes (45): FlightDetailsPanel(), buildFlightApiCartesian(), buildFutureArcPositions(), buildOpenSkyTrailData(), clamp01(), cloneColorWithOpacity(), FlightSceneLayerManager, getAirportAppearance() (+37 more)
+Cohesion: 0.04
+Nodes (17): bv(), df, getId(), hf(), hg(), lf(), lg(), lw() (+9 more)
 
 ### Community 13 - "Community 13"
-Cohesion: 0.08
-Nodes (6): ic(), js(), nc(), Oc(), rc(), ws()
+Cohesion: 0.06
+Nodes (7): _a(), Hm(), qm(), wm(), Xm(), Ym(), decode()
 
 ### Community 14 - "Community 14"
-Cohesion: 0.22
-Nodes (1): fr
+Cohesion: 0.06
+Nodes (6): fr, getFeatures_(), handleDrop(), iv, Oi, xi()
 
 ### Community 15 - "Community 15"
-Cohesion: 0.5
-Nodes (2): CameraRig(), useIdleRotation()
+Cohesion: 0.08
+Nodes (3): fs(), sc(), Zw()
 
 ### Community 16 - "Community 16"
-Cohesion: 0.67
-Nodes (1): App()
+Cohesion: 0.17
+Nodes (3): cd(), jc(), xd()
 
 ### Community 17 - "Community 17"
-Cohesion: 1.0
+Cohesion: 0.29
 Nodes (0): 
 
 ### Community 18 - "Community 18"
-Cohesion: 1.0
-Nodes (0): 
+Cohesion: 0.33
+Nodes (1): Kf
 
 ### Community 19 - "Community 19"
-Cohesion: 1.0
-Nodes (0): 
+Cohesion: 0.67
+Nodes (2): renderWeatherToggle(), 'Reveal worldwide cloud cover density.'()
 
 ### Community 20 - "Community 20"
-Cohesion: 1.0
+Cohesion: 0.5
 Nodes (0): 
 
 ### Community 21 - "Community 21"
-Cohesion: 1.0
-Nodes (0): 
+Cohesion: 0.5
+Nodes (2): CameraRig(), useIdleRotation()
 
 ### Community 22 - "Community 22"
-Cohesion: 1.0
-Nodes (0): 
+Cohesion: 0.67
+Nodes (1): App()
 
 ### Community 23 - "Community 23"
-Cohesion: 1.0
-Nodes (0): 
+Cohesion: 0.67
+Nodes (1): MetroLayerManager
 
 ### Community 24 - "Community 24"
-Cohesion: 1.0
-Nodes (0): 
+Cohesion: 0.67
+Nodes (1): RailwayLayerManager
 
 ### Community 25 - "Community 25"
 Cohesion: 1.0
@@ -272,77 +292,181 @@ Nodes (0):
 Cohesion: 1.0
 Nodes (0): 
 
+### Community 47 - "Community 47"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 48 - "Community 48"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 49 - "Community 49"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 50 - "Community 50"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 51 - "Community 51"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 52 - "Community 52"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 53 - "Community 53"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 54 - "Community 54"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 55 - "Community 55"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 56 - "Community 56"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 57 - "Community 57"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 58 - "Community 58"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 59 - "Community 59"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 60 - "Community 60"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 61 - "Community 61"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 62 - "Community 62"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 63 - "Community 63"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 64 - "Community 64"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 65 - "Community 65"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 66 - "Community 66"
+Cohesion: 1.0
+Nodes (0): 
+
 ## Knowledge Gaps
-- **Thin community `Community 17`** (2 nodes): `DevStatusPanel()`, `DevStatusPanel.tsx`
+- **Thin community `Community 25`** (2 nodes): `infrastructure.ts`, `fetchInfrastructureSnapshot()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 18`** (2 nodes): `ImageryFlyout.tsx`, `ImageryFlyout()`
+- **Thin community `Community 26`** (2 nodes): `maritime.ts`, `fetchMaritimeSnapshot()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 19`** (2 nodes): `LayerSidebar.tsx`, `renderSoonCard()`
+- **Thin community `Community 27`** (2 nodes): `DevStatusPanel()`, `DevStatusPanel.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 20`** (2 nodes): `useBuildingsTileset.ts`, `useBuildingsTileset()`
+- **Thin community `Community 28`** (2 nodes): `ImageryFlyout.tsx`, `ImageryFlyout()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 21`** (2 nodes): `useFlightData.ts`, `useFlightData()`
+- **Thin community `Community 29`** (2 nodes): `useBuildingsTileset.ts`, `useBuildingsTileset()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 22`** (2 nodes): `useFlightScene.ts`, `useFlightScene()`
+- **Thin community `Community 30`** (2 nodes): `useCableScene.ts`, `useCableScene()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 23`** (2 nodes): `useInteractionGuards.ts`, `useInteractionGuards()`
+- **Thin community `Community 31`** (2 nodes): `useClimateData.ts`, `useClimateData()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 24`** (2 nodes): `useOrbitControls.ts`, `useOrbitControls()`
+- **Thin community `Community 32`** (2 nodes): `useFlightData.ts`, `useFlightData()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 25`** (2 nodes): `useViewerSetup.ts`, `useViewerSetup()`
+- **Thin community `Community 33`** (2 nodes): `useFlightScene.ts`, `useFlightScene()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 26`** (2 nodes): `Lights()`, `Lights.jsx`
+- **Thin community `Community 34`** (2 nodes): `useInfrastructureData.ts`, `useInfrastructureData()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 27`** (2 nodes): `Scene.jsx`, `Scene()`
+- **Thin community `Community 35`** (2 nodes): `useInteractionGuards.ts`, `useInteractionGuards()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 28`** (1 nodes): `vite.config.d.ts`
+- **Thin community `Community 36`** (2 nodes): `useMaritimeData.ts`, `useMaritimeData()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 29`** (1 nodes): `vite.config.js`
+- **Thin community `Community 37`** (2 nodes): `useMaritimeScene.ts`, `useMaritimeScene()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 30`** (1 nodes): `vite.config.ts`
+- **Thin community `Community 38`** (2 nodes): `useMetroScene.ts`, `useMetroScene()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 31`** (1 nodes): `main.tsx`
+- **Thin community `Community 39`** (2 nodes): `useOrbitControls.ts`, `useOrbitControls()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 32`** (1 nodes): `vite-env.d.ts`
+- **Thin community `Community 40`** (2 nodes): `useRailwayScene.ts`, `useRailwayScene()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 33`** (1 nodes): `tar1090.generated.ts`
+- **Thin community `Community 41`** (2 nodes): `useSatelliteData.ts`, `useSatelliteData()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 34`** (1 nodes): `FlightDeckHud.tsx`
+- **Thin community `Community 42`** (2 nodes): `useSatelliteScene.ts`, `useSatelliteScene()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 35`** (1 nodes): `Viewer.tsx`
+- **Thin community `Community 43`** (2 nodes): `useViewerSetup.ts`, `useViewerSetup()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 36`** (1 nodes): `viewerConfig.ts`
+- **Thin community `Community 44`** (2 nodes): `useWeatherScene.ts`, `useWeatherScene()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 37`** (1 nodes): `viewerTypes.ts`
+- **Thin community `Community 45`** (2 nodes): `Lights()`, `Lights.jsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 38`** (1 nodes): `run_detect_updates.py`
+- **Thin community `Community 46`** (2 nodes): `Scene.jsx`, `Scene()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 39`** (1 nodes): `vite.config.js`
+- **Thin community `Community 47`** (1 nodes): `vite.config.d.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 40`** (1 nodes): `main.jsx`
+- **Thin community `Community 48`** (1 nodes): `vite.config.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 41`** (1 nodes): `constants.js`
+- **Thin community `Community 49`** (1 nodes): `vite.config.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 42`** (1 nodes): `toCSV.py`
+- **Thin community `Community 50`** (1 nodes): `main.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 43`** (1 nodes): `config.js`
+- **Thin community `Community 51`** (1 nodes): `vite-env.d.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 44`** (1 nodes): `defaults.js`
+- **Thin community `Community 52`** (1 nodes): `tar1090.generated.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 45`** (1 nodes): `jsonWorker.js`
+- **Thin community `Community 53`** (1 nodes): `FlightDeckHud.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 46`** (1 nodes): `registrations.js`
+- **Thin community `Community 54`** (1 nodes): `SatelliteDetailsPanel.tsx`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 55`** (1 nodes): `Viewer.tsx`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 56`** (1 nodes): `viewerConfig.ts`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 57`** (1 nodes): `viewerTypes.ts`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 58`** (1 nodes): `run_detect_updates.py`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 59`** (1 nodes): `vite.config.js`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 60`** (1 nodes): `main.jsx`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 61`** (1 nodes): `constants.js`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 62`** (1 nodes): `toCSV.py`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 63`** (1 nodes): `config.js`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 64`** (1 nodes): `defaults.js`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 65`** (1 nodes): `jsonWorker.js`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 66`** (1 nodes): `registrations.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `wm()` connect `Community 3` to `Community 1`, `Community 5`, `Community 6`?**
-  _High betweenness centrality (0.032) - this node is a cross-community bridge._
-- **Why does `im()` connect `Community 6` to `Community 0`, `Community 1`, `Community 2`, `Community 3`, `Community 4`, `Community 5`, `Community 7`, `Community 8`, `Community 11`?**
+- **Why does `im()` connect `Community 6` to `Community 0`, `Community 1`, `Community 2`, `Community 3`, `Community 4`, `Community 7`, `Community 9`, `Community 11`, `Community 12`, `Community 13`?**
+  _High betweenness centrality (0.052) - this node is a cross-community bridge._
+- **Why does `Kd` connect `Community 6` to `Community 1`, `Community 2`?**
   _High betweenness centrality (0.027) - this node is a cross-community bridge._
-- **Why does `s` connect `Community 3` to `Community 1`, `Community 2`, `Community 4`, `Community 5`, `Community 6`, `Community 7`, `Community 12`?**
-  _High betweenness centrality (0.025) - this node is a cross-community bridge._
+- **Why does `fi()` connect `Community 11` to `Community 1`, `Community 2`, `Community 4`, `Community 12`?**
+  _High betweenness centrality (0.022) - this node is a cross-community bridge._
 - **Are the 2 inferred relationships involving `im()` (e.g. with `l()` and `A()`) actually correct?**
   _`im()` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 2 inferred relationships involving `getExtent()` (e.g. with `ol_map_init()` and `ol_map_init()`) actually correct?**
