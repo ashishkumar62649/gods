@@ -92,7 +92,11 @@ export default function SearchBox({ onSearch }: SearchBoxProps) {
   }
 
   return (
-    <div className="search-box absolute top-4 left-4 z-50 w-[clamp(16rem,18vw,20rem)] aether-panel rounded-xl" ref={rootRef}>
+    <div
+      className="search-box absolute top-4 left-4 z-50 w-[clamp(16rem,18vw,20rem)] aether-panel rounded-xl"
+      ref={rootRef}
+      style={{ pointerEvents: 'auto' }}
+    >
       <form
         className="search-box__surface"
         onSubmit={handleSubmit}

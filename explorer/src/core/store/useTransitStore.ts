@@ -17,8 +17,8 @@ export type TransitStore = TransitState & TransitActions;
 
 export const useTransitStore = create<TransitStore>()((set) => ({
   visibleNetworks: {
-    railway: true,
-    metro: true,
+    railway: false,
+    metro: false,
   },
   activeZoomBand: 'SPACE',
 

@@ -21,6 +21,11 @@ export const ENVIRONMENT = {
 
 export const API_ROUTES = {
   LOCAL_CLIMATE_STATE: '/api/climate/state',
+  LOCAL_AIRPORTS: '/api/airports',
+  LOCAL_FLIGHTS: '/api/flights',
+  LOCAL_INFRASTRUCTURE: '/api/infrastructure',
+  LOCAL_MARITIME: '/api/maritime',
+  LOCAL_SATELLITES: '/api/satellites',
   LOCAL_TELEMETRY: '/api/telemetry',
 } as const;
 

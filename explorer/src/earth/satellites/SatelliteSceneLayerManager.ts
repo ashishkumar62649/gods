@@ -91,6 +91,7 @@ export class SatelliteSceneLayerManager {
     ...INITIAL_SATELLITE_MISSION_FILTERS,
   };
   private cameraOpacity = 1;
+  private lastHeavyTickMs = 0;
   private sunDirectionFixed = Cartesian3.normalize(
     new Cartesian3(1, 0, 0),
     new Cartesian3(),
@@ -204,11 +205,23 @@ export class SatelliteSceneLayerManager {
   }
 
   tickIntelligence() {
-    this.updateCameraFading();
-    this.updateSunDirection();
+    // Early exit when the layer is hidden — no reason to burn frames.
+    if (!this.satellitesVisible) return;
+
+    // Cheap per-frame work (selection + pulse).
     this.updateSignalPulse();
-    this.updateDecayPulse();
     this.refreshSelectionOverlays();
+
+    // Throttle the expensive passes so we don't burn frame budget on
+    // planetary-position math and color re-uploads across thousands of
+    // satellites every 16 ms.
+    const now = performance.now();
+    if (now - this.lastHeavyTickMs > 200) {
+      this.lastHeavyTickMs = now;
+      this.updateCameraFading();
+      this.updateSunDirection();
+      this.updateDecayPulse();
+    }
   }
 
   setSelectedSatelliteId(satelliteId: string | null) {

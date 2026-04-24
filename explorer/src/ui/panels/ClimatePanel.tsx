@@ -20,7 +20,7 @@ export default function ClimatePanel() {
           return;
         }
 
-        setSyncState(result.dataSource, result.lastSync);
+        setSyncState(result.dataSource, result.lastSync ?? Math.floor(Date.now() / 1000));
       } catch (error) {
         console.error('[Climate Panel] Climate sync failed:', error);
       }

@@ -7,6 +7,8 @@ export interface MaritimeVesselRecord {
   lon: number;
   timestamp: string;
   type: MaritimeVesselType;
+  speedKn?: number;
+  headingDeg?: number;
 }
 
 export interface MaritimeFeedMeta {

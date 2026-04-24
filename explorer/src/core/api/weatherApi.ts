@@ -1,5 +1,6 @@
 import { INTERVALS } from '../config/constants';
 import { API_ROUTES, EXTERNAL_FEEDS } from '../config/endpoints';
+import type { ClimateState } from '../store/useClimateStore';
 
 interface RainViewerFrame {
   time?: number;
@@ -13,7 +14,17 @@ interface RainViewerResponse {
   };
 }
 
-export async function fetchClimateState() {
+interface ClimateStateSnapshot {
+  timestamp: string;
+  activeSource: 'OWM' | 'FALLBACK';
+  precipitationUrl: string;
+  temperatureUrl: string;
+  cloudsUrl: string;
+  windUrl: string;
+  pressureUrl: string;
+}
+
+export async function fetchClimateState(): Promise<ClimateState> {
   const controller = new AbortController();
   const timeoutId = window.setTimeout(
     () => controller.abort(),
@@ -29,7 +40,24 @@ export async function fetchClimateState() {
       throw new Error(`Climate SSOT returned ${response.status}`);
     }
 
-    return await response.json();
+    const snapshot = (await response.json()) as ClimateStateSnapshot;
+    const parsedTimestamp = Date.parse(snapshot.timestamp);
+
+    return {
+      activeLayers: {
+        precipitation: false,
+        temperature: false,
+        clouds: false,
+        fog: false,
+        lighting: false,
+      },
+      dataSource: snapshot.activeSource,
+      lastSync: Number.isFinite(parsedTimestamp)
+        ? Math.floor(parsedTimestamp / 1000)
+        : Math.floor(Date.now() / 1000),
+      isLoading: false,
+      error: null,
+    };
   } catch {
     const fallbackResponse = await fetch(EXTERNAL_FEEDS.RAINVIEWER_TIME);
     if (!fallbackResponse.ok) {
@@ -59,7 +87,7 @@ export async function fetchClimateState() {
         lighting: true,
       },
       dataSource: 'FALLBACK',
-      lastSync: parsedTimestamp,
+      lastSync: parsedTimestamp ?? Math.floor(Date.now() / 1000),
       isLoading: false,
       error: null,
     };

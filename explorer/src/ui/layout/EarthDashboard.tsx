@@ -1,9 +1,9 @@
 import { useEffect, useRef } from 'react';
 import { initializeViewer } from '../../engine/ViewerRuntime';
-import ClimatePanel from '../panels/ClimatePanel';
+import GlobalLayerPanel from '../panels/GlobalLayerPanel';
+import SearchPanel from '../panels/SearchPanel';
+import SatelliteHud from '../panels/SatelliteHud';
 import TelemetryHud from '../panels/TelemetryHud';
-import TelemetryPanel from '../panels/TelemetryPanel';
-import TransitPanel from '../panels/TransitPanel';
 
 export default function EarthDashboard() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -49,9 +49,9 @@ export default function EarthDashboard() {
           pointerEvents: 'none',
         }}
       >
-        <ClimatePanel />
-        <TransitPanel />
-        <TelemetryPanel />
+        <SearchPanel />
+        <GlobalLayerPanel />
+        <SatelliteHud />
         <TelemetryHud />
       </div>
     </main>

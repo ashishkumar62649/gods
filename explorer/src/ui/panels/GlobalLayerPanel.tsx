@@ -1,0 +1,409 @@
+import { useEffect, useMemo, useState } from 'react';
+import { fetchInfrastructureSnapshot } from '../../core/api/infrastructureApi';
+import { fetchSatelliteTelemetry } from '../../core/api/orbitalApi';
+import {
+  fetchAirports,
+  fetchFlightTelemetry,
+  fetchMaritimeTelemetry,
+} from '../../core/api/telemetryApi';
+import { INTERVALS } from '../../core/config/constants';
+import { useMapStore } from '../../core/store/useMapStore';
+import { useInfrastructureStore } from '../../core/store/useInfrastructureStore';
+import { useSatelliteStore } from '../../core/store/useSatelliteStore';
+import { useClimateStore } from '../../core/store/useClimateStore';
+import { useTelemetryStore } from '../../core/store/useTelemetryStore';
+import { useTransitStore } from '../../core/store/useTransitStore';
+
+type SidebarSection = 'base' | 'intel' | 'infra' | 'visual' | 'system';
+type MissionFilter = 'SIGINT' | 'NAV' | 'COMMS' | 'WEATHER';
+type ImageryPanelOption = {
+  id: string;
+  name: string;
+  tooltip: string;
+  iconUrl: string;
+};
+
+const ICON_BASE = '/cesium/Widgets/Images/ImageryProviders';
+const IMAGERY_PANEL_OPTIONS: ImageryPanelOption[] = [
+  { id: 'maptiler-satellite', name: 'MapTiler Satellite', tooltip: 'High-resolution satellite imagery.', iconUrl: `${ICON_BASE}/bingAerial.png` },
+  { id: 'bing-maps-aerial', name: 'Bing Maps Aerial', tooltip: 'Cesium ion aerial imagery.', iconUrl: `${ICON_BASE}/bingAerial.png` },
+  { id: 'bing-maps-aerial-with-labels', name: 'Bing Aerial Labels', tooltip: 'Aerial imagery with labels.', iconUrl: `${ICON_BASE}/bingAerialLabels.png` },
+  { id: 'bing-maps-roads', name: 'Bing Roads', tooltip: 'Road map base layer.', iconUrl: `${ICON_BASE}/bingRoads.png` },
+  { id: 'arcgis-world-imagery', name: 'ArcGIS Imagery', tooltip: 'ArcGIS satellite imagery.', iconUrl: `${ICON_BASE}/ArcGisMapServiceWorldImagery.png` },
+  { id: 'arcgis-world-hillshade', name: 'ArcGIS Hillshade', tooltip: 'Elevation hillshade.', iconUrl: `${ICON_BASE}/ArcGisMapServiceWorldHillshade.png` },
+  { id: 'esri-world-ocean', name: 'Esri Ocean', tooltip: 'Ocean-focused base map.', iconUrl: `${ICON_BASE}/ArcGisMapServiceWorldOcean.png` },
+  { id: 'openstreetmap', name: 'OpenStreetMap', tooltip: 'Collaborative world map.', iconUrl: `${ICON_BASE}/openStreetMap.png` },
+  { id: 'stadia-watercolor', name: 'Stadia Watercolor', tooltip: 'Watercolor map style.', iconUrl: `${ICON_BASE}/stamenWatercolor.png` },
+  { id: 'stadia-toner', name: 'Stadia Toner', tooltip: 'High-contrast black and white map.', iconUrl: `${ICON_BASE}/stamenToner.png` },
+  { id: 'stadia-alidade-smooth', name: 'Alidade Smooth', tooltip: 'Muted overlay-friendly map.', iconUrl: `${ICON_BASE}/stadiaAlidadeSmooth.png` },
+  { id: 'stadia-alidade-smooth-dark', name: 'Alidade Dark', tooltip: 'Dark muted map style.', iconUrl: `${ICON_BASE}/stadiaAlidadeSmoothDark.png` },
+  { id: 'sentinel-2', name: 'Sentinel-2', tooltip: 'Sentinel-2 cloudless imagery.', iconUrl: `${ICON_BASE}/sentinel-2.png` },
+  { id: 'blue-marble', name: 'Blue Marble', tooltip: 'NASA Blue Marble imagery.', iconUrl: `${ICON_BASE}/blueMarble.png` },
+  { id: 'earth-at-night', name: 'Earth at Night', tooltip: 'NASA Earth at Night imagery.', iconUrl: `${ICON_BASE}/earthAtNight.png` },
+  { id: 'natural-earth-ii', name: 'Natural Earth II', tooltip: 'Natural Earth II texture.', iconUrl: `${ICON_BASE}/naturalEarthII.png` },
+];
+
+const SECTION_TABS: Array<{ id: SidebarSection; label: string; title: string }> = [
+  { id: 'base', label: 'Base', title: 'Base Layers' },
+  { id: 'intel', label: 'Intel', title: 'Intel Layers' },
+  { id: 'infra', label: 'Infra', title: 'Infrastructure' },
+  { id: 'visual', label: 'Visual', title: 'Climate & Visual' },
+  { id: 'system', label: 'System', title: 'System Controls' },
+];
+
+export default function GlobalLayerPanel() {
+  const [activeSection, setActiveSection] = useState<SidebarSection>('base');
+  const imageryOptions = useMemo(() => IMAGERY_PANEL_OPTIONS, []);
+
+  const selectedImageryId = useMapStore((state) => state.selectedImageryId);
+  const buildingsEnabled = useMapStore((state) => state.buildingsEnabled);
+  const autoBuildingsEnabled = useMapStore((state) => state.autoBuildingsEnabled);
+  const orbitEnabled = useMapStore((state) => state.orbitEnabled);
+  const setImagery = useMapStore((state) => state.setImagery);
+  const toggleBuildings = useMapStore((state) => state.toggleBuildings);
+  const toggleOrbit = useMapStore((state) => state.toggleOrbit);
+  const requestFlyHome = useMapStore((state) => state.requestFlyHome);
+
+  const activeClimateLayers = useClimateStore((state) => state.activeLayers);
+  const toggleClimateLayer = useClimateStore((state) => state.toggleLayer);
+
+  const visibleTransitNetworks = useTransitStore((state) => state.visibleNetworks);
+  const toggleTransitNetwork = useTransitStore((state) => state.toggleNetwork);
+
+  const feedStatus = useTelemetryStore((state) => state.feedStatus);
+  const flightsVisible = useTelemetryStore((state) => state.flightsVisible);
+  const maritimeVisible = useTelemetryStore((state) => state.maritimeVisible);
+  const aviationGrid = useTelemetryStore((state) => state.aviationGrid);
+  const groundStations = useTelemetryStore((state) => state.groundStations);
+  const flightCount = useTelemetryStore((state) => state.flightCount);
+  const shipCount = useTelemetryStore((state) => state.shipCount);
+  const setFeedStatus = useTelemetryStore((state) => state.setFeedStatus);
+  const upsertFlights = useTelemetryStore((state) => state.upsertFlights);
+  const upsertMaritime = useTelemetryStore((state) => state.upsertMaritime);
+  const setAirports = useTelemetryStore((state) => state.setAirports);
+  const toggleFlightsVisible = useTelemetryStore((state) => state.toggleFlightsVisible);
+  const toggleMaritimeVisible = useTelemetryStore((state) => state.toggleMaritimeVisible);
+  const toggleAviationGrid = useTelemetryStore((state) => state.toggleAviationGrid);
+  const toggleGroundStationLayer = useTelemetryStore((state) => state.toggleGroundStationLayer);
+
+  const satellitesVisible = useSatelliteStore((state) => state.satellitesVisible);
+  const starlinkFocusEnabled = useSatelliteStore((state) => state.starlinkFocusEnabled);
+  const networkViewEnabled = useSatelliteStore((state) => state.networkViewEnabled);
+  const missionFilters = useSatelliteStore((state) => state.missionFilters);
+  const satelliteFeedStatus = useSatelliteStore((state) => state.feedStatus);
+  const satelliteMessage = useSatelliteStore((state) => state.message);
+  const satelliteCount = useSatelliteStore((state) => state.satelliteCount);
+  const upsertSatellites = useSatelliteStore((state) => state.upsertSatellites);
+  const toggleSatellitesVisible = useSatelliteStore((state) => state.toggleSatellitesVisible);
+  const toggleStarlinkFocus = useSatelliteStore((state) => state.toggleStarlinkFocus);
+  const toggleNetworkView = useSatelliteStore((state) => state.toggleNetworkView);
+  const toggleMissionFilter = useSatelliteStore((state) => state.toggleMissionFilter);
+  const setSatelliteFeedStatus = useSatelliteStore((state) => state.setSatelliteFeedStatus);
+
+  const cablesVisible = useInfrastructureStore((state) => state.cablesVisible);
+  const infrastructureFeedStatus = useInfrastructureStore((state) => state.feedStatus);
+  const infrastructureMessage = useInfrastructureStore((state) => state.message);
+  const cableCount = useInfrastructureStore((state) => state.cableCount);
+  const setInfrastructureSnapshot = useInfrastructureStore((state) => state.setInfrastructureSnapshot);
+  const toggleCablesVisible = useInfrastructureStore((state) => state.toggleCablesVisible);
+  const setInfrastructureFeedStatus = useInfrastructureStore(
+    (state) => state.setInfrastructureFeedStatus,
+  );
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const syncTelemetry = async () => {
+      setFeedStatus('reconnecting');
+      const [flights, ships, airports] = await Promise.all([
+        fetchFlightTelemetry(),
+        fetchMaritimeTelemetry(),
+        fetchAirports(),
+      ]);
+
+      if (cancelled) return;
+      upsertFlights(flights);
+      upsertMaritime(ships);
+      setAirports(airports);
+      setFeedStatus('connected');
+    };
+
+    void syncTelemetry();
+    const intervalId = window.setInterval(
+      syncTelemetry,
+      INTERVALS.TELEMETRY_SYNC_MS,
+    );
+
+    return () => {
+      cancelled = true;
+      window.clearInterval(intervalId);
+    };
+  }, [setAirports, setFeedStatus, upsertFlights, upsertMaritime]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const syncSatellites = async () => {
+      setSatelliteFeedStatus('loading', 'Refreshing satellite feed.');
+      const satellites = await fetchSatelliteTelemetry();
+      if (cancelled) return;
+      upsertSatellites(satellites);
+      setSatelliteFeedStatus(
+        satellites.length > 0 ? 'live' : 'error',
+        satellites.length > 0
+          ? `${satellites.length.toLocaleString()} satellites loaded.`
+          : 'Satellite feed returned no objects.',
+      );
+    };
+
+    void syncSatellites();
+    const intervalId = window.setInterval(syncSatellites, 20_000);
+    return () => {
+      cancelled = true;
+      window.clearInterval(intervalId);
+    };
+  }, [setSatelliteFeedStatus, upsertSatellites]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const syncInfrastructure = async () => {
+      setInfrastructureFeedStatus('loading', 'Refreshing infrastructure feed.');
+      const snapshot = await fetchInfrastructureSnapshot();
+      if (cancelled) return;
+      setInfrastructureSnapshot(snapshot.cables, snapshot.ships, snapshot.nodes);
+      setInfrastructureFeedStatus(
+        snapshot.cables.length > 0 ? 'live' : 'error',
+        snapshot.cables.length > 0
+          ? `${snapshot.cables.length.toLocaleString()} cable systems loaded.`
+          : 'Infrastructure feed returned no cable systems.',
+      );
+    };
+
+    void syncInfrastructure();
+    const intervalId = window.setInterval(syncInfrastructure, 30_000);
+    return () => {
+      cancelled = true;
+      window.clearInterval(intervalId);
+    };
+  }, [setInfrastructureFeedStatus, setInfrastructureSnapshot]);
+
+  const currentSection = SECTION_TABS.find((tab) => tab.id === activeSection)!;
+
+  const renderSection = () => {
+    switch (activeSection) {
+      case 'base':
+        return (
+          <>
+            <ImageryGrid
+              imageryOptions={imageryOptions}
+              selectedImageryId={selectedImageryId}
+              onSelect={(option) => setImagery(option.id)}
+            />
+            <ToggleRow
+              label={autoBuildingsEnabled ? '3D Buildings (Auto)' : '3D Buildings'}
+              checked={buildingsEnabled || autoBuildingsEnabled}
+              onToggle={toggleBuildings}
+            />
+            <ToggleRow label="Camera Orbit" checked={orbitEnabled} onToggle={toggleOrbit} />
+          </>
+        );
+      case 'intel':
+        return (
+          <>
+            <ToggleRow label="Flights" checked={flightsVisible} onToggle={toggleFlightsVisible} />
+            <ToggleRow label="Maritime Traffic" checked={maritimeVisible} onToggle={toggleMaritimeVisible} />
+            <ToggleRow label="Satellites" checked={satellitesVisible} onToggle={toggleSatellitesVisible} />
+            <ToggleRow label="Starlink Focus" checked={starlinkFocusEnabled} onToggle={toggleStarlinkFocus} />
+            <ToggleRow label="Network View" checked={networkViewEnabled} onToggle={toggleNetworkView} />
+            {(['SIGINT', 'NAV', 'COMMS', 'WEATHER'] as MissionFilter[]).map((filter) => (
+              <ToggleRow
+                key={filter}
+                label={`${filter} Missions`}
+                checked={missionFilters[filter]}
+                onToggle={() => toggleMissionFilter(filter)}
+              />
+            ))}
+          </>
+        );
+      case 'infra':
+        return (
+          <>
+            <ToggleRow label="Subsea Cables" checked={cablesVisible} onToggle={toggleCablesVisible} />
+            <ToggleRow label="Major Airports" checked={aviationGrid.major} onToggle={() => toggleAviationGrid('major')} />
+            <ToggleRow label="Regional Airports" checked={aviationGrid.regional} onToggle={() => toggleAviationGrid('regional')} />
+            <ToggleRow label="Local Airstrips" checked={aviationGrid.local} onToggle={() => toggleAviationGrid('local')} />
+            <ToggleRow label="Helipads" checked={aviationGrid.heli} onToggle={() => toggleAviationGrid('heli')} />
+            <ToggleRow label="Seaplane Bases" checked={aviationGrid.seaplane} onToggle={() => toggleAviationGrid('seaplane')} />
+            <ToggleRow label="HFDL Stations" checked={groundStations.hfdl} onToggle={() => toggleGroundStationLayer('hfdl')} />
+            <ToggleRow label="VDL + ACARS" checked={groundStations.comms} onToggle={() => toggleGroundStationLayer('comms')} />
+            <ToggleRow label="Metro Rail" checked={visibleTransitNetworks.metro} onToggle={() => toggleTransitNetwork('metro')} />
+            <ToggleRow label="Railway" checked={visibleTransitNetworks.railway} onToggle={() => toggleTransitNetwork('railway')} />
+          </>
+        );
+      case 'visual':
+        return (
+          <>
+            <ToggleRow label="Precipitation" checked={activeClimateLayers.precipitation} onToggle={() => toggleClimateLayer('precipitation')} />
+            <ToggleRow label="Temperature" checked={activeClimateLayers.temperature} onToggle={() => toggleClimateLayer('temperature')} />
+            <ToggleRow label="Clouds" checked={activeClimateLayers.clouds} onToggle={() => toggleClimateLayer('clouds')} />
+            <ToggleRow label="Fog" checked={activeClimateLayers.fog} onToggle={() => toggleClimateLayer('fog')} />
+            <ToggleRow label="Lighting" checked={activeClimateLayers.lighting} onToggle={() => toggleClimateLayer('lighting')} />
+          </>
+        );
+      case 'system':
+        return (
+          <>
+            <button
+              type="button"
+              className="layer-card layer-card--toggle layer-card--active flex justify-between items-center w-full py-1.5 aether-data-row"
+              onClick={requestFlyHome}
+            >
+              <span className="layer-card__body">
+                <span className="layer-card__label">Fly to Home</span>
+                <span className="layer-card__meta">Reset camera view</span>
+              </span>
+              <span className="layer-switch layer-switch--on" aria-hidden="true">
+                <span className="layer-switch__text">Go</span>
+              </span>
+            </button>
+            <LiveFeedCard
+              feeds={[
+                { label: 'Flights', status: feedStatus, count: flightCount },
+                { label: 'Maritime', status: feedStatus, count: shipCount },
+                { label: 'Satellites', status: satelliteFeedStatus, count: satelliteCount, message: satelliteMessage },
+                { label: 'Infrastructure', status: infrastructureFeedStatus, count: cableCount, message: infrastructureMessage },
+              ]}
+            />
+          </>
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <aside
+      className="layer-sidebar absolute top-24 left-4 z-40 w-[clamp(16rem,18vw,20rem)] h-[clamp(30rem,60vh,45rem)] aether-panel rounded-2xl flex flex-col overflow-hidden"
+      style={{ pointerEvents: 'auto' }}
+      aria-label="Global layer controls"
+    >
+      <div className="layer-sidebar__panel flex flex-col h-full overflow-hidden">
+        <div className="layer-tabs" role="tablist" aria-label="Layer groups">
+          {SECTION_TABS.map((section) => (
+            <button
+              key={section.id}
+              type="button"
+              role="tab"
+              aria-selected={activeSection === section.id}
+              className={
+                activeSection === section.id
+                  ? `layer-tab layer-tab--${section.id} layer-tab--active`
+                  : `layer-tab layer-tab--${section.id}`
+              }
+              onClick={() => setActiveSection(section.id)}
+            >
+              {section.label}
+            </button>
+          ))}
+        </div>
+        <section className={`layer-section layer-section--${activeSection} flex flex-col flex-1 overflow-hidden`}>
+          <div className="layer-section__header">
+            <p className="layer-section__eyebrow aether-kicker">God's Eye</p>
+            <h2 className="layer-section__title aether-glow-text">{currentSection.title}</h2>
+          </div>
+          <div className="layer-section__body flex-1 overflow-y-auto custom-scrollbar p-3">
+            {renderSection()}
+          </div>
+        </section>
+      </div>
+    </aside>
+  );
+}
+
+interface LiveFeedItem {
+  label: string;
+  status: string;
+  count: number;
+  message?: string;
+}
+
+function LiveFeedCard({ feeds }: { feeds: LiveFeedItem[] }) {
+  return (
+    <div className="layer-card layer-card--status flex flex-col w-full py-2 aether-data-row" style={{ gap: '0.5rem' }}>
+      <span className="layer-card__label">Live Feed</span>
+      {feeds.map((feed) => (
+        <div key={feed.label} className="flex justify-between items-center" style={{ fontSize: '0.72rem' }}>
+          <span className="layer-card__meta" style={{ opacity: 0.85 }}>{feed.label}</span>
+          <span
+            style={{
+              color: feed.status === 'live' || feed.status === 'connected' ? '#5eead4' : '#fbbf24',
+              fontVariantNumeric: 'tabular-nums',
+            }}
+          >
+            {feed.count.toLocaleString()} · {feed.status}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+interface ImageryGridProps {
+  imageryOptions: ImageryPanelOption[];
+  selectedImageryId: string;
+  onSelect: (option: ImageryPanelOption) => void;
+}
+
+function ImageryGrid({ imageryOptions, selectedImageryId, onSelect }: ImageryGridProps) {
+  return (
+    <div className="imagery-flyout__grid" style={{ marginBottom: '0.75rem' }}>
+      {imageryOptions.map((option) => (
+        <button
+          key={option.id}
+          type="button"
+          className={
+            option.id === selectedImageryId
+              ? 'imagery-option imagery-option--active'
+              : 'imagery-option'
+          }
+          onClick={() => onSelect(option)}
+          title={option.tooltip}
+        >
+          <img className="imagery-option__thumb" src={option.iconUrl} alt="" />
+          <span className="imagery-option__name">{option.name}</span>
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function ToggleRow({
+  label,
+  checked,
+  onToggle,
+}: {
+  label: string;
+  checked: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      className={
+        checked
+          ? 'layer-card layer-card--toggle layer-card--active flex justify-between items-center w-full py-1.5 aether-data-row'
+          : 'layer-card layer-card--toggle flex justify-between items-center w-full py-1.5 aether-data-row'
+      }
+      onClick={onToggle}
+    >
+      <span className="layer-card__body">
+        <span className="layer-card__label">{label}</span>
+      </span>
+      <span className={checked ? 'layer-switch layer-switch--on' : 'layer-switch'} aria-hidden="true">
+        <span className="layer-switch__thumb" />
+        <span className="layer-switch__text">{checked ? 'On' : 'Off'}</span>
+      </span>
+    </button>
+  );
+}

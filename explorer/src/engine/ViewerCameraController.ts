@@ -1,4 +1,4 @@
-import type { Event, Viewer as CesiumViewer } from 'cesium';
+import type { Event, ScreenSpaceCameraController, Viewer as CesiumViewer } from 'cesium';
 import { ALTITUDE_THRESHOLDS, ZOOM_THRESHOLDS } from '../core/config/constants';
 import {
   type TransitState,
@@ -31,6 +31,9 @@ export class ViewerCameraController {
     }
 
     const height = this.viewer.camera.positionCartographic.height;
+
+    this.updateZoomForAltitude(height);
+
     const band = getZoomBandForAltitude(height);
     const currentBand = useTransitStore.getState().activeZoomBand;
 
@@ -38,6 +41,27 @@ export class ViewerCameraController {
       useTransitStore.getState().setZoomBand(band);
     }
   };
+
+  private updateZoomForAltitude(height: number): void {
+    if (!this.viewer) return;
+    const controller = this.viewer.scene.screenSpaceCameraController;
+    let zoomFactor: number;
+    let movementRatio: number;
+
+    if (height < 15_000) {
+      zoomFactor = 1.2;
+      movementRatio = 0.008;
+    } else if (height < 500_000) {
+      zoomFactor = 1.5;
+      movementRatio = 0.02;
+    } else {
+      zoomFactor = 2.5;
+      movementRatio = 0.06;
+    }
+
+    (controller as ScreenSpaceCameraController & { _zoomFactor: number })._zoomFactor = zoomFactor;
+    controller.maximumMovementRatio = movementRatio;
+  }
 }
 
 function getZoomBandForAltitude(heightMeters: number): TransitZoomBand {
