@@ -1,5 +1,5 @@
-import Viewer from './earth/viewer/Viewer';
+import EarthDashboard from './ui/layout/EarthDashboard';
 
 export default function App() {
-  return <Viewer />;
+  return <EarthDashboard />;
 }

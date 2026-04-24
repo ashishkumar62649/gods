@@ -6,7 +6,6 @@ import {
   degreesLong,
   eciToGeodetic,
 } from 'satellite.js/dist/transforms.js';
-import { HFDL_STATIONS } from '../flights/flightLayers';
 import type { SatelliteRecord } from './satellites';
 
 export interface GroundStationRecord {
@@ -26,12 +25,14 @@ const EARTH_RADIUS_KM = 6371;
 const PASS_SCAN_SECONDS = 2 * 60 * 60;
 const PASS_SCAN_STEP_SECONDS = 60;
 
-export const SATELLITE_GROUND_STATIONS: GroundStationRecord[] =
-  HFDL_STATIONS.map((station) => ({
-    id: station.id,
-    lat: station.lat,
-    lon: station.lon,
-  }));
+export const SATELLITE_GROUND_STATIONS: GroundStationRecord[] = [
+  { id: 'hfdl-santa-cruz', lat: 36.9741, lon: -122.0308 },
+  { id: 'hfdl-shannon', lat: 52.7137, lon: -8.8686 },
+  { id: 'hfdl-hong-kong', lat: 22.3193, lon: 114.1694 },
+  { id: 'hfdl-auckland', lat: -36.8509, lon: 174.7645 },
+  { id: 'hfdl-johannesburg', lat: -26.2041, lon: 28.0473 },
+  { id: 'hfdl-reykjavik', lat: 64.1466, lon: -21.9426 },
+];
 
 export function getSelectedSatelliteSignalStatus(
   satellite: SatelliteRecord,
