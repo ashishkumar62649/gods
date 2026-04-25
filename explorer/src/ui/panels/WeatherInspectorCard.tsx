@@ -2,7 +2,10 @@ import type { ReactNode } from 'react';
 import {
   useWeatherInspectStore,
   type PinnedPoint,
+  type TacticalLevel,
 } from '../../core/store/useWeatherInspectStore';
+
+export type WeatherCardVariant = 'pinned' | 'cursor';
 
 const WMO_DESCRIPTIONS: Record<number, string> = {
   0: 'Clear',
@@ -70,20 +73,31 @@ function shortTime(iso: string | undefined): string {
 
 interface CardProps {
   point: PinnedPoint;
+  variant?: WeatherCardVariant;
+  tacticalLevel?: TacticalLevel;
 }
 
-export default function WeatherInspectorCard({ point }: CardProps) {
+export default function WeatherInspectorCard({
+  point,
+  variant = 'pinned',
+  tacticalLevel = 'surface',
+}: CardProps) {
   const isExpanded = useWeatherInspectStore((s) => Boolean(s.expandedIds[point.id]));
   const toggleExpanded = useWeatherInspectStore((s) => s.toggleExpanded);
   const unpinPoint = useWeatherInspectStore((s) => s.unpinPoint);
+
+  const isCursor = variant === 'cursor';
+  const isCompact = isCursor && tacticalLevel === 'transition';
+  const isLandingZone = isCursor && tacticalLevel === 'surface';
 
   const { current, daily, airQuality } = point.data;
   const aqi = airQuality?.us_aqi ?? null;
   const ringColor = aqiColor(aqi);
   const label = aqiLabel(aqi);
+  const aqiHazardous = aqi !== null && aqi > 200;
 
   const RING_R = 34;
-  const RING_CIRCUMFERENCE = 2 * Math.PI * RING_R; // ≈ 213.628
+  const RING_CIRCUMFERENCE = 2 * Math.PI * RING_R;
   const aqiPercent = aqi !== null ? Math.min(aqi, 300) / 300 : 0;
   const ringFill = aqiPercent * RING_CIRCUMFERENCE;
 
@@ -91,22 +105,43 @@ export default function WeatherInspectorCard({ point }: CardProps) {
     <div
       style={{
         background: 'rgba(8, 15, 30, 0.92)',
-        border: '1px solid rgba(34, 211, 238, 0.35)',
+        border: isCursor
+          ? '1px solid rgba(34, 211, 238, 0.55)'
+          : '1px solid rgba(34, 211, 238, 0.35)',
         borderRadius: '0.875rem',
         padding: '0.75rem 0.875rem',
         marginBottom: '0.5rem',
         color: '#e2e8f0',
         backdropFilter: 'blur(10px)',
-        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.45)',
+        boxShadow: isCursor
+          ? '0 0 0 1px rgba(34, 211, 238, 0.18) inset, 0 4px 20px rgba(0, 0, 0, 0.45)'
+          : '0 4px 20px rgba(0, 0, 0, 0.45)',
         fontSize: '0.75rem',
+        position: 'relative',
+        overflow: 'hidden',
       }}
     >
+      {isCursor && (
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            pointerEvents: 'none',
+            background:
+              'repeating-linear-gradient(0deg, rgba(34,211,238,0.05) 0 1px, transparent 1px 3px)',
+            mixBlendMode: 'screen',
+            opacity: 0.6,
+          }}
+        />
+      )}
       <div
         style={{
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'flex-start',
           marginBottom: '0.5rem',
+          position: 'relative',
         }}
       >
         <div>
@@ -131,27 +166,56 @@ export default function WeatherInspectorCard({ point }: CardProps) {
             {point.lat.toFixed(2)}°, {point.lon.toFixed(2)}°
           </div>
         </div>
-        <button
-          type="button"
-          onClick={() => unpinPoint(point.id)}
-          style={{
-            background: 'rgba(15, 23, 42, 0.7)',
-            border: '1px solid rgba(148, 163, 184, 0.3)',
-            color: '#cbd5e1',
-            cursor: 'pointer',
-            fontSize: '0.65rem',
-            padding: '0.15rem 0.5rem',
-            borderRadius: '0.4rem',
-            lineHeight: 1,
-          }}
-          aria-label="Close card"
-        >
-          ×
-        </button>
+        {isCursor ? (
+          <span
+            style={{
+              background: 'rgba(34, 211, 238, 0.15)',
+              border: '1px solid rgba(34, 211, 238, 0.55)',
+              color: '#67e8f9',
+              fontSize: '0.6rem',
+              padding: '0.15rem 0.5rem',
+              borderRadius: '0.4rem',
+              letterSpacing: '0.18em',
+              textTransform: 'uppercase',
+              animation: 'weather-live-pulse 1.6s ease-in-out infinite',
+            }}
+          >
+            ● Live
+          </span>
+        ) : (
+          <button
+            type="button"
+            onClick={() => unpinPoint(point.id)}
+            style={{
+              background: 'rgba(15, 23, 42, 0.7)',
+              border: '1px solid rgba(148, 163, 184, 0.3)',
+              color: '#cbd5e1',
+              cursor: 'pointer',
+              fontSize: '0.65rem',
+              padding: '0.15rem 0.5rem',
+              borderRadius: '0.4rem',
+              lineHeight: 1,
+            }}
+            aria-label="Close card"
+          >
+            ×
+          </button>
+        )}
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.875rem' }}>
-        <div style={{ position: 'relative', width: '5.5rem', height: '5.5rem', flexShrink: 0 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.875rem', position: 'relative' }}>
+        <div
+          style={{
+            position: 'relative',
+            width: '5.5rem',
+            height: '5.5rem',
+            flexShrink: 0,
+            filter: aqiHazardous
+              ? `drop-shadow(0 0 6px ${ringColor}) drop-shadow(0 0 14px ${ringColor})`
+              : undefined,
+            animation: aqiHazardous ? 'weather-aqi-throb 1.4s ease-in-out infinite' : undefined,
+          }}
+        >
           <svg
             width="88"
             height="88"
@@ -209,12 +273,22 @@ export default function WeatherInspectorCard({ point }: CardProps) {
                 ? `${current.wind_gusts_10m.toFixed(1)} m/s`
                 : '—'
             }
+            highlight={isLandingZone}
           />
-          <DataRow label="AQI" value={label} valueColor={ringColor} />
-          <DataRow label="Cloud" value={`${current.cloud_cover}%`} />
+          <DataRow label="AQI" value={label} valueColor={ringColor} highlight={isLandingZone} />
+          <DataRow
+            label="Visibility"
+            value={
+              current.visibility != null
+                ? `${(current.visibility / 1000).toFixed(1)} km`
+                : '—'
+            }
+            highlight={isLandingZone}
+          />
         </div>
       </div>
 
+      {!isCompact && (
       <div
         style={{
           display: 'flex',
@@ -264,7 +338,9 @@ export default function WeatherInspectorCard({ point }: CardProps) {
           </div>
         ))}
       </div>
+      )}
 
+      {!isCompact && (
       <button
         type="button"
         onClick={() => toggleExpanded(point.id)}
@@ -284,8 +360,9 @@ export default function WeatherInspectorCard({ point }: CardProps) {
       >
         {isExpanded ? '▲ Less' : '▼ More Detail'}
       </button>
+      )}
 
-      {isExpanded && (
+      {!isCompact && isExpanded && (
         <div
           style={{
             marginTop: '0.5rem',
@@ -371,15 +448,35 @@ function DataRow({
   label,
   value,
   valueColor,
+  highlight,
 }: {
   label: string;
   value: string;
   valueColor?: string;
+  highlight?: boolean;
 }) {
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem' }}>
-      <span style={{ opacity: 0.6 }}>{label}</span>
-      <span style={{ fontFamily: 'monospace', color: valueColor }}>{value}</span>
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        fontSize: highlight ? '0.78rem' : '0.7rem',
+        padding: highlight ? '0.15rem 0.4rem' : 0,
+        borderRadius: '0.3rem',
+        background: highlight ? 'rgba(34, 211, 238, 0.08)' : undefined,
+        border: highlight ? '1px solid rgba(34, 211, 238, 0.18)' : undefined,
+      }}
+    >
+      <span style={{ opacity: highlight ? 0.85 : 0.6 }}>{label}</span>
+      <span
+        style={{
+          fontFamily: 'monospace',
+          color: valueColor,
+          fontWeight: highlight ? 600 : 400,
+        }}
+      >
+        {value}
+      </span>
     </div>
   );
 }

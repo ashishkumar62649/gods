@@ -7,6 +7,7 @@ import {
   fetchMaritimeTelemetry,
 } from '../../core/api/telemetryApi';
 import { fetchClimateSnapshot } from '../../core/api/weatherApi';
+import WeatherLayerAccordion from './WeatherLayerAccordion';
 import { INTERVALS } from '../../core/config/constants';
 import { useMapStore } from '../../core/store/useMapStore';
 import { useInfrastructureStore } from '../../core/store/useInfrastructureStore';
@@ -314,38 +315,7 @@ export default function GlobalLayerPanel() {
           </>
         );
       case 'weather':
-        return (
-          <>
-            {WEATHER_CATEGORIES.map((cat) => {
-              const isOpen = openWeatherCategory === cat.id;
-              return (
-                <button
-                  key={cat.id}
-                  type="button"
-                  className={
-                    isOpen
-                      ? 'layer-card layer-card--toggle layer-card--active flex justify-between items-center w-full py-1.5 aether-data-row'
-                      : 'layer-card layer-card--toggle flex justify-between items-center w-full py-1.5 aether-data-row'
-                  }
-                  onClick={() => setOpenWeatherCategory(isOpen ? null : cat.id)}
-                >
-                  <span className="layer-card__body">
-                    <span className="layer-card__label">{cat.label}</span>
-                  </span>
-                  <span
-                    className={
-                      cat.live
-                        ? 'layer-badge layer-badge--live'
-                        : 'layer-badge'
-                    }
-                  >
-                    {cat.live ? 'Live' : 'Soon'}
-                  </span>
-                </button>
-              );
-            })}
-          </>
-        );
+        return <WeatherLayerAccordion />;
       case 'system':
         return (
           <>

@@ -9,11 +9,16 @@ export interface PinnedPoint {
   pinnedAt: number;
 }
 
+export type TacticalLevel = 'orbital' | 'transition' | 'surface';
+
 export interface WeatherInspectState {
   pinnedPoints: PinnedPoint[];
   expandedIds: Record<string, true>;
   isFetching: boolean;
   lastError: string | null;
+  cursorPoint: PinnedPoint | null;
+  cameraAltitudeMeters: number | null;
+  tacticalLevel: TacticalLevel;
 }
 
 export interface WeatherInspectActions {
@@ -22,7 +27,19 @@ export interface WeatherInspectActions {
   toggleExpanded(id: string): void;
   setFetching(value: boolean): void;
   setError(message: string | null): void;
+  setCursorPoint(point: PinnedPoint | null): void;
+  setCameraAltitude(meters: number): void;
   clearAll(): void;
+}
+
+export const TRANSITION_ALTITUDE_M = 100_000;
+export const SURFACE_ALTITUDE_M = 50_000;
+
+function levelFromAltitude(meters: number | null): TacticalLevel {
+  if (meters === null) return 'orbital';
+  if (meters > TRANSITION_ALTITUDE_M) return 'orbital';
+  if (meters > SURFACE_ALTITUDE_M) return 'transition';
+  return 'surface';
 }
 
 export type WeatherInspectStore = WeatherInspectState & WeatherInspectActions;
@@ -34,6 +51,9 @@ export const useWeatherInspectStore = create<WeatherInspectStore>()((set) => ({
   expandedIds: {},
   isFetching: false,
   lastError: null,
+  cursorPoint: null,
+  cameraAltitudeMeters: null,
+  tacticalLevel: 'orbital',
 
   pinPoint: (point) =>
     set((state) => ({
@@ -62,5 +82,13 @@ export const useWeatherInspectStore = create<WeatherInspectStore>()((set) => ({
 
   setError: (message) => set({ lastError: message }),
 
-  clearAll: () => set({ pinnedPoints: [], expandedIds: {} }),
+  setCursorPoint: (point) => set({ cursorPoint: point }),
+
+  setCameraAltitude: (meters) =>
+    set({
+      cameraAltitudeMeters: meters,
+      tacticalLevel: levelFromAltitude(meters),
+    }),
+
+  clearAll: () => set({ pinnedPoints: [], expandedIds: {}, cursorPoint: null }),
 }));
