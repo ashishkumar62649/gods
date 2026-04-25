@@ -1,9 +1,3 @@
-{
-  "timestamp": "2026-04-25T03:52:02.567Z",
-  "activeSource": "OWM",
-  "precipitationUrl": "https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=abdc85b60910f18a8f533f4029828b36",
-  "temperatureUrl": "https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=abdc85b60910f18a8f533f4029828b36",
-  "cloudsUrl": "https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=abdc85b60910f18a8f533f4029828b36",
-  "windUrl": "https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=abdc85b60910f18a8f533f4029828b36",
-  "pressureUrl": "https://tile.openweathermap.org/map/pressure_new/{z}/{x}/{y}.png?appid=abdc85b60910f18a8f533f4029828b36"
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:ff153884afcd3094e585a75e1bf5b29de5d988d0cac533aa9b2f02f95401af97
+size 688
