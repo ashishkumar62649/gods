@@ -10,6 +10,7 @@ import type {
   FlightData,
   ShipData,
   TelemetryState,
+  FlightRouteSnapshot,
 } from '../core/store/useTelemetryStore';
 import { useTelemetryStore } from '../core/store/useTelemetryStore';
 import {
@@ -49,6 +50,8 @@ export class TelemetryRenderer implements IRenderer {
   private lastAssetView: TelemetryState['assetView'] | null = null;
   private lastSensorLink: TelemetryState['sensorLink'] | null = null;
   private lastShowTrail: boolean | null = null;
+  private lastShowRoute: boolean | null = null;
+  private lastFlightRoute: FlightRouteSnapshot | null = null;
   private lastAviationGrid: TelemetryState['aviationGrid'] | null = null;
   private lastGroundStations: TelemetryState['groundStations'] | null = null;
 
@@ -71,7 +74,21 @@ export class TelemetryRenderer implements IRenderer {
         }
 
         const shipId = this.maritimeManager?.pickVessel(click.position) ?? null;
-        useTelemetryStore.getState().setSelectedEntity(shipId, shipId ? 'ship' : null);
+        if (shipId) {
+          useTelemetryStore.getState().setSelectedEntity(shipId, 'ship');
+          return;
+        }
+
+        const picked = viewer.scene.pick(click.position);
+        if (picked && typeof picked === 'object') {
+          const id = (picked as any).id ?? (picked as any).primitive?.id;
+          if (id && id.kind === 'ship' && id.vesselId) {
+            useTelemetryStore.getState().setSelectedEntity(id.vesselId, 'ship');
+            return;
+          }
+        }
+
+        useTelemetryStore.getState().setSelectedEntity(null, null);
       },
       ScreenSpaceEventType.LEFT_CLICK,
     );
@@ -80,7 +97,7 @@ export class TelemetryRenderer implements IRenderer {
     // don't burn frame budget.
     this.tickListener = () => {
       const state = useTelemetryStore.getState();
-      if (state.flightsVisible) this.flightManager?.tickPositions();
+      if (state.flightsVisible) this.flightManager?.tickPositions(state.flightFilters);
       if (state.maritimeVisible) this.maritimeManager?.tickVessels();
     };
     viewer.scene.preRender.addEventListener(this.tickListener);
@@ -128,6 +145,8 @@ export class TelemetryRenderer implements IRenderer {
     this.lastAssetView = null;
     this.lastSensorLink = null;
     this.lastShowTrail = null;
+    this.lastShowRoute = null;
+    this.lastFlightRoute = null;
     this.lastAviationGrid = null;
     this.lastGroundStations = null;
   }
@@ -171,6 +190,21 @@ export class TelemetryRenderer implements IRenderer {
     if (state.showSelectedFlightTrail !== this.lastShowTrail) {
       this.lastShowTrail = state.showSelectedFlightTrail;
       this.flightManager.setShowSelectedTrail(state.showSelectedFlightTrail);
+      dirty = true;
+    }
+
+    if (
+      state.showSelectedFlightRoute !== this.lastShowRoute ||
+      state.selectedFlightRoute !== this.lastFlightRoute ||
+      selectedFlightId !== this.lastSelectedFlightId
+    ) {
+      this.lastShowRoute = state.showSelectedFlightRoute;
+      this.lastFlightRoute = state.selectedFlightRoute;
+      // We only pass the route snapshot to flightManager if showSelectedFlightRoute is true
+      this.flightManager.setTrackedRoute(
+        state.showSelectedFlightRoute ? state.selectedFlightRoute : null,
+        selectedFlightId,
+      );
       dirty = true;
     }
 
@@ -254,6 +288,10 @@ function toFlightRecord(flight: FlightData): FlightRecord {
     description: flight.description,
     owner_operator: flight.ownerOperator,
     country_origin: flight.countryOrigin,
+    vehicle_type: flight.vehicleType,
+    vehicle_subtype: flight.vehicleSubtype,
+    operation_type: flight.operationType,
+    operation_subtype: flight.operationSubtype,
     latitude: flight.lat,
     longitude: flight.lon,
     altitude_baro_m: flight.alt,

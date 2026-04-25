@@ -6,6 +6,7 @@ import {
   fetchFlightTelemetry,
   fetchMaritimeTelemetry,
 } from '../../core/api/telemetryApi';
+import { fetchClimateSnapshot } from '../../core/api/weatherApi';
 import { INTERVALS } from '../../core/config/constants';
 import { useMapStore } from '../../core/store/useMapStore';
 import { useInfrastructureStore } from '../../core/store/useInfrastructureStore';
@@ -14,8 +15,9 @@ import { useClimateStore } from '../../core/store/useClimateStore';
 import { useTelemetryStore } from '../../core/store/useTelemetryStore';
 import { useTransitStore } from '../../core/store/useTransitStore';
 
-type SidebarSection = 'base' | 'intel' | 'infra' | 'visual' | 'system';
+type SidebarSection = 'base' | 'intel' | 'infra' | 'weather' | 'system';
 type MissionFilter = 'SIGINT' | 'NAV' | 'COMMS' | 'WEATHER';
+type WeatherCategory = 'owm' | 'rainviewer' | 'eonet' | 'usgs' | 'agro';
 type ImageryPanelOption = {
   id: string;
   name: string;
@@ -47,12 +49,59 @@ const SECTION_TABS: Array<{ id: SidebarSection; label: string; title: string }> 
   { id: 'base', label: 'Base', title: 'Base Layers' },
   { id: 'intel', label: 'Intel', title: 'Intel Layers' },
   { id: 'infra', label: 'Infra', title: 'Infrastructure' },
-  { id: 'visual', label: 'Visual', title: 'Climate & Visual' },
+  { id: 'weather', label: 'Weather', title: 'Weather & Earth' },
   { id: 'system', label: 'System', title: 'System Controls' },
+];
+
+interface WeatherCategoryMeta {
+  id: WeatherCategory;
+  label: string;
+  summary: string;
+  source: string;
+  live: boolean;
+}
+
+const WEATHER_CATEGORIES: WeatherCategoryMeta[] = [
+  {
+    id: 'owm',
+    label: 'Atmospheric Overlays',
+    summary: 'Precipitation, temperature, clouds, wind, pressure tiles.',
+    source: 'OpenWeatherMap',
+    live: true,
+  },
+  {
+    id: 'rainviewer',
+    label: 'Live Radar',
+    summary: 'Real-time precipitation radar mosaic + 2-hour nowcast.',
+    source: 'RainViewer',
+    live: false,
+  },
+  {
+    id: 'eonet',
+    label: 'Natural Events',
+    summary: 'Wildfires, volcanoes, severe storms, floods, landslides.',
+    source: 'NASA EONET',
+    live: false,
+  },
+  {
+    id: 'usgs',
+    label: 'Earth & Hazards',
+    summary: 'Earthquakes, flood gauges, Landsat imagery.',
+    source: 'USGS',
+    live: false,
+  },
+  {
+    id: 'agro',
+    label: 'Field Intelligence',
+    summary: 'NDVI, soil moisture, crop health (on-demand · 10/month).',
+    source: 'AgroMonitoring',
+    live: false,
+  },
 ];
 
 export default function GlobalLayerPanel() {
   const [activeSection, setActiveSection] = useState<SidebarSection>('base');
+  const [openWeatherCategory, setOpenWeatherCategory] = useState<WeatherCategory | null>(null);
   const imageryOptions = useMemo(() => IMAGERY_PANEL_OPTIONS, []);
 
   const selectedImageryId = useMapStore((state) => state.selectedImageryId);
@@ -66,6 +115,7 @@ export default function GlobalLayerPanel() {
 
   const activeClimateLayers = useClimateStore((state) => state.activeLayers);
   const toggleClimateLayer = useClimateStore((state) => state.toggleLayer);
+  const setClimateSnapshot = useClimateStore((state) => state.setClimateSnapshot);
 
   const visibleTransitNetworks = useTransitStore((state) => state.visibleNetworks);
   const toggleTransitNetwork = useTransitStore((state) => state.toggleNetwork);
@@ -167,6 +217,27 @@ export default function GlobalLayerPanel() {
   useEffect(() => {
     let cancelled = false;
 
+    const syncClimate = async () => {
+      try {
+        const snapshot = await fetchClimateSnapshot();
+        if (cancelled) return;
+        setClimateSnapshot(snapshot);
+      } catch {
+        // swallow — renderer falls back to NONE; next poll will retry
+      }
+    };
+
+    void syncClimate();
+    const intervalId = window.setInterval(syncClimate, 60_000);
+    return () => {
+      cancelled = true;
+      window.clearInterval(intervalId);
+    };
+  }, [setClimateSnapshot]);
+
+  useEffect(() => {
+    let cancelled = false;
+
     const syncInfrastructure = async () => {
       setInfrastructureFeedStatus('loading', 'Refreshing infrastructure feed.');
       const snapshot = await fetchInfrastructureSnapshot();
@@ -212,6 +283,7 @@ export default function GlobalLayerPanel() {
         return (
           <>
             <ToggleRow label="Flights" checked={flightsVisible} onToggle={toggleFlightsVisible} />
+            {flightsVisible && <FlightFiltersUI />}
             <ToggleRow label="Maritime Traffic" checked={maritimeVisible} onToggle={toggleMaritimeVisible} />
             <ToggleRow label="Satellites" checked={satellitesVisible} onToggle={toggleSatellitesVisible} />
             <ToggleRow label="Starlink Focus" checked={starlinkFocusEnabled} onToggle={toggleStarlinkFocus} />
@@ -241,14 +313,37 @@ export default function GlobalLayerPanel() {
             <ToggleRow label="Railway" checked={visibleTransitNetworks.railway} onToggle={() => toggleTransitNetwork('railway')} />
           </>
         );
-      case 'visual':
+      case 'weather':
         return (
           <>
-            <ToggleRow label="Precipitation" checked={activeClimateLayers.precipitation} onToggle={() => toggleClimateLayer('precipitation')} />
-            <ToggleRow label="Temperature" checked={activeClimateLayers.temperature} onToggle={() => toggleClimateLayer('temperature')} />
-            <ToggleRow label="Clouds" checked={activeClimateLayers.clouds} onToggle={() => toggleClimateLayer('clouds')} />
-            <ToggleRow label="Fog" checked={activeClimateLayers.fog} onToggle={() => toggleClimateLayer('fog')} />
-            <ToggleRow label="Lighting" checked={activeClimateLayers.lighting} onToggle={() => toggleClimateLayer('lighting')} />
+            {WEATHER_CATEGORIES.map((cat) => {
+              const isOpen = openWeatherCategory === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  type="button"
+                  className={
+                    isOpen
+                      ? 'layer-card layer-card--toggle layer-card--active flex justify-between items-center w-full py-1.5 aether-data-row'
+                      : 'layer-card layer-card--toggle flex justify-between items-center w-full py-1.5 aether-data-row'
+                  }
+                  onClick={() => setOpenWeatherCategory(isOpen ? null : cat.id)}
+                >
+                  <span className="layer-card__body">
+                    <span className="layer-card__label">{cat.label}</span>
+                  </span>
+                  <span
+                    className={
+                      cat.live
+                        ? 'layer-badge layer-badge--live'
+                        : 'layer-badge'
+                    }
+                  >
+                    {cat.live ? 'Live' : 'Soon'}
+                  </span>
+                </button>
+              );
+            })}
           </>
         );
       case 'system':
@@ -282,7 +377,10 @@ export default function GlobalLayerPanel() {
     }
   };
 
+  const showWeatherFlyout = activeSection === 'weather' && openWeatherCategory !== null;
+
   return (
+    <>
     <aside
       className="layer-sidebar absolute top-24 left-4 z-40 w-[clamp(16rem,18vw,20rem)] h-[clamp(30rem,60vh,45rem)] aether-panel rounded-2xl flex flex-col overflow-hidden"
       style={{ pointerEvents: 'auto' }}
@@ -301,7 +399,10 @@ export default function GlobalLayerPanel() {
                   ? `layer-tab layer-tab--${section.id} layer-tab--active`
                   : `layer-tab layer-tab--${section.id}`
               }
-              onClick={() => setActiveSection(section.id)}
+              onClick={() => {
+                setActiveSection(section.id);
+                if (section.id !== 'weather') setOpenWeatherCategory(null);
+              }}
             >
               {section.label}
             </button>
@@ -318,6 +419,15 @@ export default function GlobalLayerPanel() {
         </section>
       </div>
     </aside>
+    {showWeatherFlyout && openWeatherCategory && (
+      <WeatherFlyout
+        category={openWeatherCategory}
+        activeLayers={activeClimateLayers}
+        toggleLayer={toggleClimateLayer}
+        onClose={() => setOpenWeatherCategory(null)}
+      />
+    )}
+    </>
   );
 }
 
@@ -378,6 +488,86 @@ function ImageryGrid({ imageryOptions, selectedImageryId, onSelect }: ImageryGri
   );
 }
 
+function FlightFiltersUI() {
+  const flightFilters = useTelemetryStore((state) => state.flightFilters);
+  const toggleFlightFilter = useTelemetryStore((state) => state.toggleFlightFilter);
+
+  const VEHICLE_TAXONOMY = {
+    'Airplane': ['Fixed-Wing', 'Jet', 'Propeller'],
+    'Helicopter': ['Rotorcraft'],
+    'Drone': ['UAV'],
+    'Other': ['Balloon', 'Glider', 'Airship']
+  };
+
+  const OPERATION_TAXONOMY = {
+    'Military': ['Air Force', 'Navy', 'Army', 'Coast Guard', 'General Military'],
+    'Cargo': ['FedEx', 'UPS', 'Amazon Air', 'DHL', 'Freight Carrier'],
+    'Passenger': ['Delta', 'United', 'American', 'Southwest', 'Ryanair', 'Commercial Airline'],
+    'Private': ['Fractional Ownership', 'Corporate Trust', 'Corporate / LLC', 'General Aviation']
+  };
+
+  return (
+    <div style={{ paddingLeft: '0.75rem', marginBottom: '0.5rem', display: 'flex', flexDirection: 'column' }}>
+      <h4 style={{ margin: '0.25rem 0', color: 'rgba(103,232,249,0.7)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Vehicle Types</h4>
+      <FilterTree category="vehicle" taxonomy={VEHICLE_TAXONOMY} filters={flightFilters.vehicle} toggle={toggleFlightFilter} />
+      
+      <h4 style={{ margin: '0.5rem 0 0.25rem 0', color: 'rgba(103,232,249,0.7)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Operations</h4>
+      <FilterTree category="operation" taxonomy={OPERATION_TAXONOMY} filters={flightFilters.operation} toggle={toggleFlightFilter} />
+    </div>
+  );
+}
+
+function FilterTree({ category, taxonomy, filters, toggle }: any) {
+  const [expanded, setExpanded] = useState<string | null>(null);
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', borderLeft: '1px solid rgba(103,232,249,0.2)', paddingLeft: '0.5rem', marginLeft: '0.25rem' }}>
+      {Object.entries(taxonomy).map(([topLevel, subLevels]) => {
+        const isTopLevelActive = filters[topLevel]?.['*'] ?? true;
+        
+        return (
+          <div key={topLevel} style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '0.15rem 0' }}>
+              <button 
+                type="button"
+                style={{ fontSize: '0.8rem', color: '#cffafe', opacity: 0.85, background: 'none', border: 'none', cursor: 'pointer', padding: 0, textAlign: 'left', flex: 1 }}
+                onClick={() => setExpanded(expanded === topLevel ? null : topLevel)}
+              >
+                <span style={{ display: 'inline-block', width: '14px', fontSize: '0.6rem' }}>{expanded === topLevel ? '▼' : '▶'}</span> {topLevel}
+              </button>
+              <input 
+                type="checkbox" 
+                checked={isTopLevelActive} 
+                onChange={(e) => toggle(category, topLevel, null, e.target.checked)} 
+                style={{ cursor: 'pointer', accentColor: '#06b6d4' }}
+              />
+            </div>
+            
+            {expanded === topLevel && (
+              <div style={{ display: 'flex', flexDirection: 'column', paddingLeft: '1rem', marginTop: '2px', gap: '2px' }}>
+                {(subLevels as string[]).map((subLevel) => {
+                  const isSubLevelActive = filters[topLevel]?.[subLevel] ?? isTopLevelActive;
+                  return (
+                    <div key={subLevel} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '0.1rem 0' }}>
+                      <span style={{ fontSize: '0.7rem', color: '#cffafe', opacity: 0.65 }}>{subLevel}</span>
+                      <input 
+                        type="checkbox" 
+                        checked={isSubLevelActive} 
+                        onChange={(e) => toggle(category, topLevel, subLevel, e.target.checked)} 
+                        style={{ cursor: 'pointer', accentColor: '#0891b2', transform: 'scale(0.85)' }}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 function ToggleRow({
   label,
   checked,
@@ -405,5 +595,142 @@ function ToggleRow({
         <span className="layer-switch__text">{checked ? 'On' : 'Off'}</span>
       </span>
     </button>
+  );
+}
+
+function DisabledRow({ label, meta }: { label: string; meta?: string }) {
+  return (
+    <div
+      className="layer-card layer-card--toggle flex justify-between items-center w-full py-1.5 aether-data-row"
+      style={{ opacity: 0.45, cursor: 'not-allowed' }}
+      aria-disabled="true"
+    >
+      <span className="layer-card__body">
+        <span className="layer-card__label">{label}</span>
+        {meta ? <span className="layer-card__meta">{meta}</span> : null}
+      </span>
+      <span className="layer-badge">Soon</span>
+    </div>
+  );
+}
+
+interface WeatherFlyoutProps {
+  category: WeatherCategory;
+  activeLayers: {
+    precipitation: boolean;
+    temperature: boolean;
+    clouds: boolean;
+    wind: boolean;
+    pressure: boolean;
+    fog: boolean;
+    lighting: boolean;
+  };
+  toggleLayer: (
+    layer: 'precipitation' | 'temperature' | 'clouds' | 'wind' | 'pressure' | 'fog' | 'lighting',
+  ) => void;
+  onClose: () => void;
+}
+
+function WeatherFlyout({ category, activeLayers, toggleLayer, onClose }: WeatherFlyoutProps) {
+  const meta = WEATHER_CATEGORIES.find((c) => c.id === category);
+  if (!meta) return null;
+
+  return (
+    <aside
+      className="layer-sidebar absolute top-24 z-40 w-[clamp(16rem,20vw,22rem)] h-[clamp(30rem,60vh,45rem)] aether-panel rounded-2xl flex flex-col overflow-hidden"
+      style={{
+        left: 'calc(1rem + clamp(16rem, 18vw, 20rem) + 0.75rem)',
+        pointerEvents: 'auto',
+      }}
+      aria-label={`${meta.label} controls`}
+    >
+      <div className="layer-sidebar__panel flex flex-col h-full overflow-hidden">
+        <div className="layer-section__header flex justify-between items-start" style={{ paddingRight: '0.75rem' }}>
+          <div>
+            <p className="layer-section__eyebrow aether-kicker">{meta.source}</p>
+            <h2 className="layer-section__title aether-glow-text">{meta.label}</h2>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="layer-badge"
+            style={{ cursor: 'pointer' }}
+            aria-label="Close category panel"
+          >
+            Close
+          </button>
+        </div>
+        <div className="layer-section__body flex-1 overflow-y-auto custom-scrollbar p-3">
+          {category === 'owm' && (
+            <>
+              <ToggleRow
+                label="Precipitation"
+                checked={activeLayers.precipitation}
+                onToggle={() => toggleLayer('precipitation')}
+              />
+              <ToggleRow
+                label="Temperature"
+                checked={activeLayers.temperature}
+                onToggle={() => toggleLayer('temperature')}
+              />
+              <ToggleRow
+                label="Clouds"
+                checked={activeLayers.clouds}
+                onToggle={() => toggleLayer('clouds')}
+              />
+              <ToggleRow
+                label="Wind"
+                checked={activeLayers.wind}
+                onToggle={() => toggleLayer('wind')}
+              />
+              <ToggleRow
+                label="Pressure"
+                checked={activeLayers.pressure}
+                onToggle={() => toggleLayer('pressure')}
+              />
+            </>
+          )}
+          {category === 'rainviewer' && (
+            <>
+              <DisabledRow label="Radar (Real-time)" />
+              <DisabledRow label="Radar History" />
+              <DisabledRow label="Nowcast" />
+              <DisabledRow label="IR Satellite Clouds" />
+            </>
+          )}
+          {category === 'eonet' && (
+            <>
+              <DisabledRow label="Wildfires" />
+              <DisabledRow label="Volcanoes" />
+              <DisabledRow label="Severe Storms" />
+              <DisabledRow label="Floods" />
+              <DisabledRow label="Dust & Haze" />
+              <DisabledRow label="Drought" />
+              <DisabledRow label="Landslides" />
+              <DisabledRow label="Icebergs" />
+              <DisabledRow label="Sea & Lake Ice" />
+            </>
+          )}
+          {category === 'usgs' && (
+            <>
+              <DisabledRow label="Earthquakes" />
+              <DisabledRow label="Flood Gauges" />
+              <DisabledRow label="Landsat Imagery" />
+              <DisabledRow label="Volcano Alerts" />
+            </>
+          )}
+          {category === 'agro' && (
+            <>
+              <DisabledRow label="NDVI" />
+              <DisabledRow label="EVI" />
+              <DisabledRow label="Soil Moisture" />
+              <DisabledRow label="Soil Temperature" />
+              <DisabledRow label="True-Color Satellite" />
+              <DisabledRow label="False-Color Satellite" />
+            </>
+          )}
+        </div>
+      </div>
+    </aside>
   );
 }

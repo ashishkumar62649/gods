@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { fetchClimateState } from '../../core/api/weatherApi';
+import { fetchClimateSnapshot } from '../../core/api/weatherApi';
 import { INTERVALS } from '../../core/config/constants';
 import { useClimateStore } from '../../core/store/useClimateStore';
 
@@ -8,19 +8,19 @@ export default function ClimatePanel() {
   const dataSource = useClimateStore((state) => state.dataSource);
   const isLoading = useClimateStore((state) => state.isLoading);
   const toggleLayer = useClimateStore((state) => state.toggleLayer);
-  const setSyncState = useClimateStore((state) => state.setSyncState);
+  const setClimateSnapshot = useClimateStore((state) => state.setClimateSnapshot);
 
   useEffect(() => {
     let cancelled = false;
 
     const syncData = async () => {
       try {
-        const result = await fetchClimateState();
+        const snapshot = await fetchClimateSnapshot();
         if (cancelled) {
           return;
         }
 
-        setSyncState(result.dataSource, result.lastSync ?? Math.floor(Date.now() / 1000));
+        setClimateSnapshot(snapshot);
       } catch (error) {
         console.error('[Climate Panel] Climate sync failed:', error);
       }
@@ -33,7 +33,7 @@ export default function ClimatePanel() {
       cancelled = true;
       window.clearInterval(intervalId);
     };
-  }, [setSyncState]);
+  }, [setClimateSnapshot]);
 
   return (
     <aside

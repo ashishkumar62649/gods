@@ -4,6 +4,7 @@ import GlobalLayerPanel from '../panels/GlobalLayerPanel';
 import SearchPanel from '../panels/SearchPanel';
 import SatelliteHud from '../panels/SatelliteHud';
 import TelemetryHud from '../panels/TelemetryHud';
+import WeatherInspectorOverlay from '../panels/WeatherInspectorOverlay';
 
 export default function EarthDashboard() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -53,6 +54,7 @@ export default function EarthDashboard() {
         <GlobalLayerPanel />
         <SatelliteHud />
         <TelemetryHud />
+        <WeatherInspectorOverlay />
       </div>
     </main>
   );

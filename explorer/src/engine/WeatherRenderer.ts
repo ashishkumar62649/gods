@@ -4,18 +4,31 @@ import {
   type Viewer as CesiumViewer,
 } from 'cesium';
 import type { IRenderer } from './IRenderer';
-import { EXTERNAL_FEEDS } from '../core/config/endpoints';
 import { OPACITY } from '../core/config/theme';
 import {
   type ClimateState,
   useClimateStore,
 } from '../core/store/useClimateStore';
 
+type TileLayerId = 'precipitation' | 'temperature' | 'clouds' | 'wind' | 'pressure';
+
+const TILE_LAYER_IDS: TileLayerId[] = [
+  'precipitation',
+  'temperature',
+  'clouds',
+  'wind',
+  'pressure',
+];
+
+interface ActiveLayer {
+  layer: ImageryLayer;
+  url: string;
+}
+
 export class WeatherRenderer implements IRenderer {
   private viewer: CesiumViewer | null = null;
   private unsubscribe: (() => void) | null = null;
-  private precipitationLayer: ImageryLayer | null = null;
-  private precipitationTimestamp: number | null = null;
+  private tileLayers: Partial<Record<TileLayerId, ActiveLayer>> = {};
 
   attach(viewer: CesiumViewer): void {
     this.viewer = viewer;
@@ -28,7 +41,9 @@ export class WeatherRenderer implements IRenderer {
   detach(): void {
     this.unsubscribe?.();
     this.unsubscribe = null;
-    this.removePrecipitationLayer();
+    for (const id of TILE_LAYER_IDS) {
+      this.removeTileLayer(id);
+    }
     this.viewer = null;
   }
 
@@ -38,42 +53,38 @@ export class WeatherRenderer implements IRenderer {
     }
 
     this.viewer.scene.fog.enabled = state.activeLayers.fog;
-
-    if (this.viewer.scene.skyAtmosphere) {
-      this.viewer.scene.skyAtmosphere.show = state.activeLayers.clouds;
-    }
-
     this.viewer.scene.globe.enableLighting = state.activeLayers.lighting;
 
-    if (state.dataSource === 'FALLBACK' && state.activeLayers.precipitation) {
-      this.ensurePrecipitationLayer(state.lastSync);
-    } else {
-      this.removePrecipitationLayer();
+    for (const id of TILE_LAYER_IDS) {
+      const enabled = state.activeLayers[id];
+      const url = state.tileUrls[id];
+
+      if (enabled && url) {
+        this.ensureTileLayer(id, url);
+      } else {
+        this.removeTileLayer(id);
+      }
     }
 
     this.viewer.scene.requestRender();
   }
 
-  private ensurePrecipitationLayer(timestamp: number | null): void {
+  private ensureTileLayer(id: TileLayerId, url: string): void {
     if (!this.viewer || this.viewer.isDestroyed()) {
       return;
     }
 
-    const resolvedTimestamp = timestamp ?? Math.floor(Date.now() / 1000);
-    if (
-      this.precipitationLayer &&
-      this.precipitationTimestamp === resolvedTimestamp
-    ) {
+    const existing = this.tileLayers[id];
+    if (existing && existing.url === url) {
       return;
     }
 
-    this.removePrecipitationLayer();
+    if (existing) {
+      this.removeTileLayer(id);
+    }
 
     const provider = new UrlTemplateImageryProvider({
-      url: EXTERNAL_FEEDS.RAINVIEWER_TILE_TEMPLATE.replace(
-        '{timestamp}',
-        String(resolvedTimestamp),
-      ),
+      url,
       enablePickFeatures: false,
       minimumLevel: 0,
       maximumLevel: 20,
@@ -82,19 +93,18 @@ export class WeatherRenderer implements IRenderer {
     layer.alpha = OPACITY.WEATHER_RASTER_BASE;
     layer.show = true;
 
-    this.precipitationLayer = layer;
-    this.precipitationTimestamp = resolvedTimestamp;
+    this.tileLayers[id] = { layer, url };
   }
 
-  private removePrecipitationLayer(): void {
-    if (!this.viewer || !this.precipitationLayer || this.viewer.isDestroyed()) {
-      this.precipitationLayer = null;
-      this.precipitationTimestamp = null;
+  private removeTileLayer(id: TileLayerId): void {
+    const existing = this.tileLayers[id];
+    if (!existing) {
       return;
     }
 
-    this.viewer.imageryLayers.remove(this.precipitationLayer, true);
-    this.precipitationLayer = null;
-    this.precipitationTimestamp = null;
+    if (this.viewer && !this.viewer.isDestroyed()) {
+      this.viewer.imageryLayers.remove(existing.layer, true);
+    }
+    delete this.tileLayers[id];
   }
 }

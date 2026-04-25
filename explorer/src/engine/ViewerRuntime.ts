@@ -12,6 +12,7 @@ import { TelemetryRenderer } from './TelemetryRenderer';
 import { TransitRenderer } from './TransitRenderer';
 import { ViewerCameraController } from './ViewerCameraController';
 import { WeatherRenderer } from './WeatherRenderer';
+import { WeatherInspectorRenderer } from './WeatherInspectorRenderer';
 
 export function initializeViewer(container: HTMLElement | string) {
   const viewerOptions: CesiumViewer.ConstructorOptions = {
@@ -39,6 +40,7 @@ export function initializeViewer(container: HTMLElement | string) {
   const telemetryRenderer = new TelemetryRenderer();
   const satelliteRenderer = new SatelliteRenderer();
   const infrastructureRenderer = new InfrastructureRenderer();
+  const weatherInspectorRenderer = new WeatherInspectorRenderer();
   const cameraController = new ViewerCameraController();
 
   mapRenderer.attach(viewer);
@@ -47,12 +49,14 @@ export function initializeViewer(container: HTMLElement | string) {
   telemetryRenderer.attach(viewer);
   satelliteRenderer.attach(viewer);
   infrastructureRenderer.attach(viewer);
+  weatherInspectorRenderer.attach(viewer);
   cameraController.attach(viewer);
 
   return {
     viewer,
     destroy: () => {
       cameraController.detach();
+      weatherInspectorRenderer.detach();
       infrastructureRenderer.detach();
       satelliteRenderer.detach();
       telemetryRenderer.detach();
@@ -66,10 +70,11 @@ export function initializeViewer(container: HTMLElement | string) {
 
 function tuneScene(viewer: CesiumViewer): void {
   const controller = viewer.scene.screenSpaceCameraController;
-  controller.inertiaZoom = 0.95;
+  controller.zoomFactor = 3.0;
+  controller.inertiaZoom = 0.9;
   controller.inertiaSpin = 0.9;
   controller.inertiaTranslate = 0.9;
-  controller.minimumZoomDistance = 1;
+  controller.minimumZoomDistance = 50;
   controller.maximumZoomDistance = 40_000_000;
   controller.enableCollisionDetection = true;
   controller.enableTilt = true;

@@ -98,6 +98,16 @@ export class CableSceneLayerManager {
     return id;
   }
 
+  pickShip(windowPosition: Cartesian2) {
+    const picked = this.viewer.scene.pick(windowPosition);
+    if (!picked || typeof picked !== 'object') return null;
+    const id = (picked as any).id ?? (picked as any).primitive?.id;
+    if (id && id.kind === 'ship') {
+      return id.vesselId as string;
+    }
+    return null;
+  }
+
   private syncCables(cables: GodsEyeInfrastructure[]) {
     this.cablePolylines.removeAll();
     this.cablePolylineRefs = [];

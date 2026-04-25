@@ -37,6 +37,7 @@ import {
 import { startInfrastructureRefreshLoop } from './services/infrastructureFetcher.mjs';
 import { startShipStream } from './services/shipFetcher.mjs';
 import { handleClimateStateRoute } from './routes/climate.mjs';
+import { fetchRouteForCallsign, fetchTraceForIcao24 } from './services/opensky.mjs';
 
 // ─── CORS + JSON helpers ──────────────────────────────────────
 function setCorsHeaders(res) {
@@ -188,6 +189,53 @@ const server = http.createServer(async (req, res) => {
 
   if (req.method === 'GET' && url.pathname === '/api/climate/state') {
     await handleClimateStateRoute(req, res, sendJson);
+    return;
+  }
+
+  // ── GET /api/trace/:icao24 ────────────────────────────────
+  if (req.method === 'GET' && url.pathname.startsWith('/api/trace/')) {
+    const icao24 = url.pathname.split('/').pop()?.trim().toLowerCase();
+    if (!icao24) {
+      sendJson(res, 400, { error: 'Missing or invalid icao24 parameter' });
+      return;
+    }
+
+    try {
+      const trace = await fetchTraceForIcao24(icao24);
+      sendJson(res, 200, trace);
+    } catch (error) {
+      console.error(`[OpenSky] Trace failed for ${icao24}:`, error);
+      sendJson(res, 502, {
+        icao24,
+        found: false,
+        path: [],
+        error: error instanceof Error ? error.message : 'OpenSky trace failed.',
+      });
+    }
+    return;
+  }
+
+  // ── GET /api/route/:callsign ──────────────────────────────
+  if (req.method === 'GET' && url.pathname.startsWith('/api/route/')) {
+    const callsign = url.pathname.split('/').pop()?.trim().toUpperCase();
+    if (!callsign) {
+      sendJson(res, 400, { error: 'Missing or invalid callsign parameter' });
+      return;
+    }
+
+    try {
+      const route = await fetchRouteForCallsign(callsign);
+      sendJson(res, 200, route);
+    } catch (error) {
+      console.error(`[OpenSky] Route lookup failed for ${callsign}:`, error);
+      sendJson(res, 502, {
+        callsign,
+        found: false,
+        origin: null,
+        destination: null,
+        error: error instanceof Error ? error.message : 'OpenSky route failed.',
+      });
+    }
     return;
   }
 

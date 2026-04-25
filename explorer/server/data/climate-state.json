@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-04-24T21:39:55.503Z",
-  "activeSource": "FALLBACK",
-  "precipitationUrl": "https://tilecache.rainviewer.com/v2/radar/b62cc16e0f47/256/{z}/{x}/{y}/2/1_1.png",
-  "temperatureUrl": "cesium-native://temperature",
-  "cloudsUrl": "cesium-native://clouds",
-  "windUrl": "cesium-native://wind",
-  "pressureUrl": "cesium-native://pressure"
+  "timestamp": "2026-04-25T03:52:02.567Z",
+  "activeSource": "OWM",
+  "precipitationUrl": "https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=abdc85b60910f18a8f533f4029828b36",
+  "temperatureUrl": "https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=abdc85b60910f18a8f533f4029828b36",
+  "cloudsUrl": "https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=abdc85b60910f18a8f533f4029828b36",
+  "windUrl": "https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=abdc85b60910f18a8f533f4029828b36",
+  "pressureUrl": "https://tile.openweathermap.org/map/pressure_new/{z}/{x}/{y}.png?appid=abdc85b60910f18a8f533f4029828b36"
 }

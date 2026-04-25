@@ -723,7 +723,7 @@ export class FlightSceneLayerManager {
     return null;
   }
 
-  tickPositions(): void {
+  tickPositions(filters?: any): void {
     if (this.flightEntries.size === 0) return;
 
     const nowMs = Date.now();
@@ -764,6 +764,25 @@ export class FlightSceneLayerManager {
 
       if (!this.flightsVisible) {
         continue;
+      }
+
+      if (filters && entry.flight) {
+        const vFilter = filters.vehicle[entry.flight.vehicle_type];
+        const vActive = vFilter ? (vFilter[entry.flight.vehicle_subtype] ?? vFilter['*'] ?? true) : true;
+        
+        const oFilter = filters.operation[entry.flight.operation_type];
+        const oActive = oFilter ? (oFilter[entry.flight.operation_subtype] ?? oFilter['*'] ?? true) : true;
+        
+        if (!vActive || !oActive) {
+          if (entry.currentOpacity > 0) {
+            entry.currentOpacity = 0;
+            this.applyEntryOpacity(entry);
+          }
+          continue;
+        } else if (entry.currentOpacity === 0 && staleForMs <= FLIGHT_STALE_TIMEOUT_MS) {
+          entry.currentOpacity = 1;
+          this.applyEntryOpacity(entry);
+        }
       }
 
       const insideView = viewRectangle
@@ -1317,10 +1336,54 @@ function buildOpenSkyTrailData(path: Array<{
   const flatArray: number[] = [];
   const altitudesMeters: number[] = [];
 
-  for (const point of path) {
-    const altitudeMeters = Math.max(0, point.baroAltitudeMeters);
-    flatArray.push(point.longitude, point.latitude, altitudeMeters);
-    altitudesMeters.push(altitudeMeters);
+  if (path.length === 0) {
+    return { positions: [], altitudesMeters: [] };
+  }
+
+  // Add the first point
+  const firstPoint = path[0];
+  let lastLat = firstPoint.latitude;
+  let lastLon = firstPoint.longitude;
+  let lastAlt = Math.max(0, firstPoint.baroAltitudeMeters);
+
+  flatArray.push(lastLon, lastLat, lastAlt);
+  altitudesMeters.push(lastAlt);
+
+  // Interpolate intermediate points for any segment longer than 20km
+  // to prevent straight cartesian lines from clipping through the curved Earth.
+  for (let i = 1; i < path.length; i++) {
+    const point = path[i];
+    const currLat = point.latitude;
+    const currLon = point.longitude;
+    const currAlt = Math.max(0, point.baroAltitudeMeters);
+
+    const startCarto = Cartographic.fromDegrees(lastLon, lastLat);
+    const endCarto = Cartographic.fromDegrees(currLon, currLat);
+    const geodesic = new EllipsoidGeodesic(startCarto, endCarto);
+    const dist = geodesic.surfaceDistance;
+
+    if (dist > 20_000) {
+      const segments = Math.ceil(dist / 20_000);
+      for (let j = 1; j < segments; j++) {
+        const t = j / segments;
+        const interpolated = geodesic.interpolateUsingFraction(t);
+        const interpAlt = lastAlt + (currAlt - lastAlt) * t;
+
+        flatArray.push(
+          CesiumMath.toDegrees(interpolated.longitude),
+          CesiumMath.toDegrees(interpolated.latitude),
+          interpAlt,
+        );
+        altitudesMeters.push(interpAlt);
+      }
+    }
+
+    flatArray.push(currLon, currLat, currAlt);
+    altitudesMeters.push(currAlt);
+
+    lastLat = currLat;
+    lastLon = currLon;
+    lastAlt = currAlt;
   }
 
   return {

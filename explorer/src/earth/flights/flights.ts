@@ -19,6 +19,12 @@ export interface FlightRecord {
   owner_operator: string | null;
   country_origin: string | null;
 
+  // ── Taxonomy ──────────────────────────────────────────────
+  vehicle_type: string;
+  vehicle_subtype: string;
+  operation_type: string;
+  operation_subtype: string;
+
   // ── Telemetry ─────────────────────────────────────────────
   latitude: number;
   longitude: number;
@@ -361,14 +367,26 @@ export async function fetchFlightTrace(icao24: string, signal?: AbortSignal) {
   );
 
   if (response.status === 404) {
-    return (await response.json()) as FlightTraceSnapshot;
+    const raw = await response.json();
+    return raw as FlightTraceSnapshot;
   }
 
   if (!response.ok) {
     throw new Error(await readErrorMessage(response, 'Trace lookup'));
   }
 
-  return (await response.json()) as FlightTraceSnapshot;
+  const raw = await response.json();
+  if (raw.path && Array.isArray(raw.path)) {
+    raw.path = raw.path.map((p: any) => ({
+      time: p[0],
+      latitude: p[1],
+      longitude: p[2],
+      baroAltitudeMeters: p[3] ?? 0,
+      trueTrack: p[4],
+      onGround: Boolean(p[5]),
+    }));
+  }
+  return raw as FlightTraceSnapshot;
 }
 
 export async function fetchAirports(signal?: AbortSignal) {

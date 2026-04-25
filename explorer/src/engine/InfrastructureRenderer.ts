@@ -38,6 +38,10 @@ export class InfrastructureRenderer implements IRenderer {
     this.lastNodes = null;
   }
 
+  pickShip(windowPosition: import('cesium').Cartesian2): string | null {
+    return this.manager?.pickShip(windowPosition) ?? null;
+  }
+
   private renderInfrastructure(state: InfrastructureState): void {
     if (!this.manager) return;
 

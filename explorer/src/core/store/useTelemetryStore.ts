@@ -42,6 +42,10 @@ export interface FlightData {
   isLadd: boolean;
   dataSource: string;
   timestamp: number;
+  vehicleType: string;
+  vehicleSubtype: string;
+  operationType: string;
+  operationSubtype: string;
 }
 
 export interface AirportData {
@@ -57,6 +61,35 @@ export interface AirportData {
   longitude: number;
 }
 
+export interface FlightRouteSnapshot {
+  callsign: string | null;
+  found: boolean;
+  fetchedAt?: string;
+  source?: 'opensky' | 'estimated';
+  origin: AirportData | null;
+  destination: AirportData | null;
+  error?: string;
+}
+
+export interface FlightTracePoint {
+  time: number;
+  latitude: number;
+  longitude: number;
+  baroAltitudeMeters: number;
+  trueTrack: number | null;
+  onGround: boolean;
+}
+
+export interface FlightTraceSnapshot {
+  icao24: string;
+  found: boolean;
+  startTime?: number | null;
+  endTime?: number | null;
+  callsign?: string | null;
+  path: FlightTracePoint[];
+  error?: string;
+}
+
 export interface ShipData {
   id: string;
   lat: number;
@@ -68,6 +101,10 @@ export interface ShipData {
   timestamp: string;
   mmsi: string | null;
 }
+export interface FlightFilters {
+  vehicle: Record<string, Record<string, boolean>>; // { "Helicopter": { "Rotorcraft": true } }
+  operation: Record<string, Record<string, boolean>>;
+}
 
 export interface TelemetryState {
   flights: Record<string, FlightData>;
@@ -75,6 +112,7 @@ export interface TelemetryState {
   airports: AirportData[];
   flightsVisible: boolean;
   maritimeVisible: boolean;
+  flightFilters: FlightFilters;
   aviationGrid: AviationGridState;
   groundStations: GroundStationsState;
   selectedEntityId: string | null;
@@ -83,6 +121,8 @@ export interface TelemetryState {
   sensorLink: FlightSensorLinkState;
   showSelectedFlightTrail: boolean;
   showSelectedFlightRoute: boolean;
+  selectedFlightRoute: FlightRouteSnapshot | null;
+  selectedFlightTrace: FlightTraceSnapshot | null;
   feedStatus: 'connected' | 'disconnected' | 'reconnecting';
   flightCount: number;
   shipCount: number;
@@ -103,6 +143,9 @@ export interface TelemetryActions {
   setSensorLink(link: FlightSensorLinkState): void;
   toggleSelectedFlightTrail(): void;
   toggleSelectedFlightRoute(): void;
+  setSelectedFlightRoute(route: FlightRouteSnapshot | null): void;
+  setSelectedFlightTrace(trace: FlightTraceSnapshot | null): void;
+  toggleFlightFilter(category: 'vehicle' | 'operation', topLevel: string, subLevel: string | null, value: boolean): void;
 }
 
 export type TelemetryStore = TelemetryState & TelemetryActions;
@@ -113,6 +156,7 @@ export const useTelemetryStore = create<TelemetryStore>()((set) => ({
   airports: [],
   flightsVisible: false,
   maritimeVisible: false,
+  flightFilters: { vehicle: {}, operation: {} },
   aviationGrid: {
     major: false,
     regional: false,
@@ -130,6 +174,8 @@ export const useTelemetryStore = create<TelemetryStore>()((set) => ({
   sensorLink: 'release',
   showSelectedFlightTrail: false,
   showSelectedFlightRoute: false,
+  selectedFlightRoute: null,
+  selectedFlightTrace: null,
   feedStatus: 'disconnected',
   flightCount: 0,
   shipCount: 0,
@@ -201,12 +247,39 @@ export const useTelemetryStore = create<TelemetryStore>()((set) => ({
       sensorLink: id ? state.sensorLink : 'release',
     })),
 
-  setFeedStatus: (status) =>
-    set({
-      feedStatus: status,
-    }),
+  setFeedStatus: (status) => set({ feedStatus: status }),
+
+  toggleFlightFilter: (category, topLevel, subLevel, value) => set((state) => {
+    const nextFilters = {
+      vehicle: { ...state.flightFilters.vehicle },
+      operation: { ...state.flightFilters.operation }
+    };
+    
+    // Ensure top level exists
+    if (!nextFilters[category][topLevel]) {
+      nextFilters[category][topLevel] = {};
+    }
+    
+    // Deep clone the top level object to maintain immutability
+    nextFilters[category][topLevel] = { ...nextFilters[category][topLevel] };
+
+    if (subLevel === null) {
+      // We are toggling the entire top level. To do this, we use a special key '*' to represent the group toggle state.
+      // And we explicitly apply it to all current known subtypes in the state (if any).
+      nextFilters[category][topLevel]['*'] = value;
+      for (const sub of Object.keys(nextFilters[category][topLevel])) {
+        nextFilters[category][topLevel][sub] = value;
+      }
+    } else {
+      nextFilters[category][topLevel][subLevel] = value;
+      // Re-evaluate group toggle state '*' if necessary, though optional.
+    }
+
+    return { flightFilters: nextFilters };
+  }),
 
   toggleFlightsVisible: () =>
+
     set((state) => ({
       flightsVisible: !state.flightsVisible,
     })),
@@ -251,4 +324,14 @@ export const useTelemetryStore = create<TelemetryStore>()((set) => ({
     set((state) => ({
       showSelectedFlightRoute: !state.showSelectedFlightRoute,
     })),
+
+  setSelectedFlightRoute: (route) =>
+    set({
+      selectedFlightRoute: route,
+    }),
+
+  setSelectedFlightTrace: (trace) =>
+    set({
+      selectedFlightTrace: trace,
+    }),
 }));

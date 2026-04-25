@@ -23,6 +23,7 @@ import {
   DBFLAG_PIA,
   DBFLAG_LADD,
 } from '../config/constants.mjs';
+import { aircraftIndex } from './aircraftIndex.mjs';
 
 // ─── Unit conversion helpers ─────────────────────────────────
 const FT_TO_M   = 0.3048;
@@ -52,6 +53,124 @@ function squawkToEmergency(squawk) {
   if (squawk === '7600') return 'NORDO';
   if (squawk === '7500') return 'UNLAWFUL';
   return null;
+}
+
+// ─── Classification Engine ─────────────────────────────────────
+function deriveFlightTaxonomy(record) {
+  const typeCode = String(record.aircraft_type || '').toUpperCase();
+  const desc = String(record.description || '').toUpperCase();
+  const owner = String(record.owner_operator || '').toUpperCase();
+  const isMil = Boolean(record.is_military);
+
+  let vehicle_type = 'Airplane';
+  let vehicle_subtype = 'General';
+  let operation_type = 'Private';
+  let operation_subtype = 'General Aviation';
+
+  // 1. Vehicle Classification
+  if (
+    typeCode.startsWith('H') || 
+    typeCode === 'R44' || 
+    typeCode === 'R66' || 
+    typeCode === 'AS50' ||
+    desc.includes('ROTORCRAFT') || 
+    desc.includes('HELICOPTER')
+  ) {
+    vehicle_type = 'Helicopter';
+    vehicle_subtype = 'Rotorcraft';
+  } else if (
+    typeCode === 'Q4' || 
+    typeCode === 'M9' || 
+    desc.includes('UAV') || 
+    desc.includes('UNMANNED') || 
+    desc.includes('DRONE')
+  ) {
+    vehicle_type = 'Drone';
+    vehicle_subtype = 'UAV';
+  } else if (typeCode === 'BALL') {
+    vehicle_type = 'Other';
+    vehicle_subtype = 'Balloon';
+  } else if (typeCode === 'GLID') {
+    vehicle_type = 'Other';
+    vehicle_subtype = 'Glider';
+  } else if (typeCode === 'SHIP') {
+    vehicle_type = 'Other';
+    vehicle_subtype = 'Airship';
+  } else {
+    if (desc.includes('JET') || typeCode.startsWith('B7') || typeCode.startsWith('A3') || typeCode.startsWith('E1') || typeCode.startsWith('CRJ')) {
+      vehicle_subtype = 'Jet';
+    } else if (desc.includes('TURBOPROP') || desc.includes('PROP') || typeCode.startsWith('C') || typeCode.startsWith('P')) {
+      vehicle_subtype = 'Propeller';
+    } else {
+      vehicle_subtype = 'Fixed-Wing';
+    }
+  }
+
+  const callsign = String(record.callsign || '').toUpperCase();
+  const c3 = callsign.slice(0, 3);
+
+  // 2. Operational Classification
+  if (isMil || owner.includes('AIR FORCE') || owner.includes('NAVY') || owner.includes('ARMY') || owner.includes('RAF') || owner.includes('MILITARY') || owner.includes('COAST GUARD') || c3 === 'RCH' || c3 === 'RRR' || c3 === 'CFC' || c3 === 'ASY') {
+    operation_type = 'Military';
+    if (owner.includes('AIR FORCE') || owner.includes('USAF') || c3 === 'RCH') operation_subtype = 'Air Force';
+    else if (owner.includes('NAVY') || owner.includes('USN')) operation_subtype = 'Navy';
+    else if (owner.includes('ARMY')) operation_subtype = 'Army';
+    else if (owner.includes('COAST GUARD') || owner.includes('USCG')) operation_subtype = 'Coast Guard';
+    else operation_subtype = 'General Military';
+  } else if (
+    owner.includes('FEDEX') || 
+    owner.includes('UPS') || 
+    owner.includes('AMAZON') || 
+    owner.includes('DHL') || 
+    owner.includes('ATLAS AIR') ||
+    owner.includes('KALITTA') ||
+    typeCode.endsWith('F') || 
+    desc.includes('FREIGHTER') ||
+    c3 === 'FDX' || c3 === 'UPS' || c3 === 'ATI' || c3 === 'PAC' || c3 === 'GTI' || c3 === 'ABX'
+  ) {
+    operation_type = 'Cargo';
+    if (owner.includes('FEDEX') || c3 === 'FDX') operation_subtype = 'FedEx';
+    else if (owner.includes('UPS') || c3 === 'UPS') operation_subtype = 'UPS';
+    else if (owner.includes('AMAZON') || c3 === 'ATI') operation_subtype = 'Amazon Air';
+    else if (owner.includes('DHL') || c3 === 'ABX') operation_subtype = 'DHL';
+    else operation_subtype = 'Freight Carrier';
+  } else if (
+    owner.includes('AIRLINES') || 
+    owner.includes('AIRWAYS') || 
+    owner.includes('DELTA') || 
+    owner.includes('UNITED') || 
+    owner.includes('AMERICAN') || 
+    owner.includes('SOUTHWEST') ||
+    owner.includes('RYANAIR') ||
+    owner.includes('EASYJET') ||
+    owner.includes('EMIRATES') ||
+    owner.includes('QATAR') ||
+    owner.includes('ALASKA') ||
+    owner.includes('FRONTIER') ||
+    owner.includes('SPIRIT') ||
+    c3 === 'DAL' || c3 === 'UAL' || c3 === 'AAL' || c3 === 'SWA' || c3 === 'RYR' || c3 === 'EZY' || c3 === 'BAW' || c3 === 'AFR' || c3 === 'DLH' || c3 === 'UAE' || c3 === 'QFA' || c3 === 'ASA' || c3 === 'JBU' || c3 === 'NKS' || c3 === 'FFT' || c3 === 'ACA'
+  ) {
+    operation_type = 'Passenger';
+    if (owner.includes('DELTA') || c3 === 'DAL') operation_subtype = 'Delta';
+    else if (owner.includes('UNITED') || c3 === 'UAL') operation_subtype = 'United';
+    else if (owner.includes('AMERICAN') || c3 === 'AAL') operation_subtype = 'American';
+    else if (owner.includes('SOUTHWEST') || c3 === 'SWA') operation_subtype = 'Southwest';
+    else if (owner.includes('RYANAIR') || c3 === 'RYR') operation_subtype = 'Ryanair';
+    else operation_subtype = 'Commercial Airline';
+  } else {
+    operation_type = 'Private';
+    if (owner.includes('NETJETS') || owner.includes('FLEXJET')) {
+      operation_subtype = 'Fractional Ownership';
+    } else if (owner.includes('BANK') || owner.includes('TRUST')) {
+      operation_subtype = 'Corporate Trust';
+    } else if (owner.includes('LLC') || owner.includes('INC') || owner.includes('CORP')) {
+      operation_subtype = 'Corporate / LLC';
+    } else {
+      operation_subtype = 'General Aviation';
+    }
+  }
+
+  return { vehicle_type, vehicle_subtype, operation_type, operation_subtype };
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -89,14 +208,16 @@ export function normalizeOpenSky(sv) {
   // Skip records with no position — they can't be rendered on the globe.
   if (lat == null || lon == null) return null;
 
-  return {
+  const dbRecord = aircraftIndex.aircraftByIcao?.get(icao);
+
+  const record = {
     // ── Identity ──────────────────────────────────────────
     id_icao:        icao,
     callsign:       callsign,
-    registration:   null,          // OpenSky free-tier does not include reg
-    aircraft_type:  null,          // not in state vector
-    description:    null,
-    owner_operator: null,
+    registration:   dbRecord?.registration || null,          // OpenSky free-tier does not include reg
+    aircraft_type:  dbRecord?.typecode || null,          // not in state vector
+    description:    dbRecord?.description || null,
+    owner_operator: dbRecord?.owner || null,
     country_origin: safeStr(sv[2]),
 
     // ── Telemetry ─────────────────────────────────────────
@@ -127,6 +248,9 @@ export function normalizeOpenSky(sv) {
     data_source: 'OPENSKY',
     timestamp:   safeNum(sv[4]) ?? Math.floor(Date.now() / 1000),
   };
+
+  const taxonomy = deriveFlightTaxonomy(record);
+  return { ...record, ...taxonomy };
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -151,6 +275,7 @@ export function normalizeReadsb(ac, sourceUrl) {
   if (!ac || !ac.hex) return null;
 
   const icao = String(ac.hex).toLowerCase().replace('~', ''); // some feeds prefix ghost ICAOs with ~
+  const dbRecord = aircraftIndex.aircraftByIcao?.get(icao);
 
   const lat = safeNum(ac.lat);
   const lon = safeNum(ac.lon);
@@ -201,14 +326,14 @@ export function normalizeReadsb(ac, sourceUrl) {
     safeNum(ac.seen_pos != null ? Date.now() / 1000 - ac.seen_pos : null) ??
     Math.floor(Date.now() / 1000);
 
-  return {
+  const record = {
     // ── Identity ──────────────────────────────────────────
     id_icao:        icao,
-    callsign:       safeStr(ac.flight),
-    registration:   safeStr(ac.r),
-    aircraft_type:  safeStr(ac.t),
-    description:    safeStr(ac.desc),
-    owner_operator: safeStr(ac.ownOp),
+    callsign:       safeStr(ac.flight) || null,
+    registration:   safeStr(ac.r) || dbRecord?.registration || null,
+    aircraft_type:  safeStr(ac.t) || dbRecord?.typecode || null,
+    description:    safeStr(ac.desc) || dbRecord?.description || null,
+    owner_operator: safeStr(ac.ownOp) || dbRecord?.owner || null,
     country_origin: null,  // not in readsb per-aircraft object
 
     // ── Telemetry ─────────────────────────────────────────
@@ -238,6 +363,9 @@ export function normalizeReadsb(ac, sourceUrl) {
     data_source: source,
     timestamp:   ts,
   };
+
+  const taxonomy = deriveFlightTaxonomy(record);
+  return { ...record, ...taxonomy };
 }
 // ─────────────────────────────────────────────────────────────
 // normalizeCustomApi  (Expansion Port stub)

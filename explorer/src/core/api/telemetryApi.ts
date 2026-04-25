@@ -1,5 +1,11 @@
 import { API_ROUTES } from '../config/endpoints';
-import type { AirportData, FlightData, ShipData } from '../store/useTelemetryStore';
+import type {
+  AirportData,
+  FlightData,
+  FlightRouteSnapshot,
+  FlightTraceSnapshot,
+  ShipData,
+} from '../store/useTelemetryStore';
 
 const TELEMETRY_TIMEOUT_MS = 5_000;
 
@@ -67,6 +73,54 @@ export async function fetchAirports(): Promise<AirportData[]> {
   }
 }
 
+export async function fetchFlightRoute(
+  callsign: string,
+  signal?: AbortSignal,
+): Promise<FlightRouteSnapshot> {
+  const url = `${API_ROUTES.LOCAL_FLIGHT_ROUTE}/${encodeURIComponent(callsign.trim())}`;
+  const response = await fetch(url, { signal });
+
+  if (response.status === 404) {
+    return (await response.json()) as FlightRouteSnapshot;
+  }
+
+  if (!response.ok) {
+    throw new Error(`Route lookup returned ${response.status}`);
+  }
+
+  return (await response.json()) as FlightRouteSnapshot;
+}
+
+export async function fetchFlightTrace(
+  icao24: string,
+  signal?: AbortSignal,
+): Promise<FlightTraceSnapshot> {
+  const url = `${API_ROUTES.LOCAL_FLIGHT_TRACE}/${encodeURIComponent(icao24.trim().toLowerCase())}`;
+  const response = await fetch(url, { signal });
+
+  if (response.status === 404) {
+    const raw = await response.json();
+    return raw as FlightTraceSnapshot;
+  }
+
+  if (!response.ok) {
+    throw new Error(`Trace lookup returned ${response.status}`);
+  }
+
+  const raw = await response.json();
+  if (raw.path && Array.isArray(raw.path)) {
+    raw.path = raw.path.map((p: any) => ({
+      time: p[0],
+      latitude: p[1],
+      longitude: p[2],
+      baroAltitudeMeters: p[3] ?? 0,
+      trueTrack: p[4],
+      onGround: Boolean(p[5]),
+    }));
+  }
+  return raw as FlightTraceSnapshot;
+}
+
 function normalizeFlight(flight: Record<string, unknown>): FlightData {
   const id = readString(flight, 'id_icao') || readString(flight, 'id');
   const altitude = readNumber(flight, 'altitude_baro_m', 'alt');
@@ -86,6 +140,10 @@ function normalizeFlight(flight: Record<string, unknown>): FlightData {
     description: readNullableString(flight, 'description'),
     ownerOperator: readNullableString(flight, 'owner_operator', 'ownerOperator'),
     countryOrigin: readNullableString(flight, 'country_origin', 'countryOrigin'),
+    vehicleType: readString(flight, 'vehicle_type', 'vehicleType') || 'Airplane',
+    vehicleSubtype: readString(flight, 'vehicle_subtype', 'vehicleSubtype') || 'General',
+    operationType: readString(flight, 'operation_type', 'operationType') || 'Private',
+    operationSubtype: readString(flight, 'operation_subtype', 'operationSubtype') || 'General Aviation',
     altitudeGeomM: readNullableNumber(flight, 'altitude_geom_m', 'altitudeGeomM'),
     velocityMps: readNumber(flight, 'velocity_mps', 'velocityMps'),
     headingMagDeg: readNullableNumber(flight, 'heading_mag_deg', 'headingMagDeg'),
