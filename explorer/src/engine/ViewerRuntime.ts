@@ -1,5 +1,6 @@
 import {
   Cartesian3,
+  Terrain,
   Viewer as CesiumViewer,
 } from 'cesium';
 import { buildHome } from '../earth/viewer/cameraUtils';
@@ -23,6 +24,9 @@ export function initializeViewer(container: HTMLElement | string) {
     navigationHelpButton: false,
     sceneModePicker: false,
     baseLayer: false,
+    // Cesium World Terrain — required for 3D mountain/valley relief and
+    // for OSM Buildings to clamp correctly to the terrain surface.
+    terrain: Terrain.fromWorldTerrain(),
   };
   const viewer = new CesiumViewer(container, viewerOptions);
 
@@ -69,6 +73,10 @@ function tuneScene(viewer: CesiumViewer): void {
   controller.maximumZoomDistance = 40_000_000;
   controller.enableCollisionDetection = true;
   controller.enableTilt = true;
+
+  // Depth-test primitives (buildings, labels, entities) against terrain so
+  // they are occluded by hills/mountains instead of floating in the air.
+  viewer.scene.globe.depthTestAgainstTerrain = true;
 
   viewer.scene.globe.preloadSiblings = true;
   viewer.scene.globe.tileCacheSize = 1000;

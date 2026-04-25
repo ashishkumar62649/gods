@@ -1,7 +1,7 @@
 {
-  "timestamp": "2026-04-24T21:19:53.941Z",
+  "timestamp": "2026-04-24T21:39:55.503Z",
   "activeSource": "FALLBACK",
-  "precipitationUrl": "https://tilecache.rainviewer.com/v2/radar/76ffa5d235a2/256/{z}/{x}/{y}/2/1_1.png",
+  "precipitationUrl": "https://tilecache.rainviewer.com/v2/radar/b62cc16e0f47/256/{z}/{x}/{y}/2/1_1.png",
   "temperatureUrl": "cesium-native://temperature",
   "cloudsUrl": "cesium-native://clouds",
   "windUrl": "cesium-native://wind",

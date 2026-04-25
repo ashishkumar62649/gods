@@ -9,6 +9,8 @@ import {
   Math as CesiumMath,
   Matrix4,
   Rectangle,
+  ScreenSpaceEventHandler,
+  ScreenSpaceEventType,
   type Cesium3DTileset,
   type ImageryProvider,
   type Viewer as CesiumViewer,
@@ -33,6 +35,7 @@ export class MapRenderer implements IRenderer {
   private cameraListener: (() => void) | null = null;
   private lastBuildingsShow: boolean | null = null;
   private pendingAutoOrbitRev = 0;
+  private interactionHandler: ScreenSpaceEventHandler | null = null;
 
   attach(viewer: CesiumViewer): void {
     this.viewer = viewer;
@@ -45,6 +48,24 @@ export class MapRenderer implements IRenderer {
     this.cameraListener = () => this.updateBuildingsVisibility();
     viewer.camera.changed.addEventListener(this.cameraListener);
 
+    this.interactionHandler = new ScreenSpaceEventHandler(viewer.scene.canvas);
+    const stopOrbitOnInteraction = () => {
+      const state = useMapStore.getState();
+      if (state.orbitEnabled || state.autoBuildingsEnabled) {
+        // Increment pending auto-orbit rev so if an auto-orbit was just
+        // queued (e.g. from search), it doesn't fire and hijack the camera.
+        this.pendingAutoOrbitRev += 1;
+        state.setOrbitEnabled(false);
+        state.setAutoBuildings(false);
+      }
+    };
+    
+    this.interactionHandler.setInputAction(stopOrbitOnInteraction, ScreenSpaceEventType.LEFT_DOWN);
+    this.interactionHandler.setInputAction(stopOrbitOnInteraction, ScreenSpaceEventType.RIGHT_DOWN);
+    this.interactionHandler.setInputAction(stopOrbitOnInteraction, ScreenSpaceEventType.MIDDLE_DOWN);
+    this.interactionHandler.setInputAction(stopOrbitOnInteraction, ScreenSpaceEventType.WHEEL);
+    this.interactionHandler.setInputAction(stopOrbitOnInteraction, ScreenSpaceEventType.PINCH_START);
+
     void this.renderMap(useMapStore.getState());
   }
 
@@ -56,6 +77,11 @@ export class MapRenderer implements IRenderer {
       this.viewer.camera.changed.removeEventListener(this.cameraListener);
     }
     this.cameraListener = null;
+
+    if (this.interactionHandler) {
+      this.interactionHandler.destroy();
+      this.interactionHandler = null;
+    }
 
     this.disableOrbit();
     this.pendingAutoOrbitRev += 1;
