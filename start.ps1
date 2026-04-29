@@ -1,0 +1,76 @@
+Write-Host "--- GOD'S EYE AI COMMAND CENTER ---" -ForegroundColor Cyan
+Write-Host "1. Opus 4.6 (Agent Router)"
+Write-Host "2. Gemini 3.1 Pro (Google)"
+Write-Host "3. Nemotron 3 (NVIDIA)"
+Write-Host "4. Local Gemma 4 (RTX 3060)"
+Write-Host "5. Qwen 3 Coder (OpenRouter)"
+Write-Host "6. Gemma 4 31B (OpenRouter)"
+Write-Host "7. GPT-OSS 120B (OpenRouter)"
+Write-Host "8. Llama 4 Scout (OpenRouter)"
+Write-Host "9. Kimi K2 (NVIDIA)"
+$choice = Read-Host "Select a brain (1-9)"
+
+# RESET VARIABLES
+$env:ANTHROPIC_BASE_URL = ""
+$env:ANTHROPIC_AUTH_TOKEN = ""
+$env:ANTHROPIC_API_KEY = ""
+
+switch ($choice) {
+    "1" { 
+        $env:ANTHROPIC_BASE_URL = "https://agentrouter.org/"
+        $env:ANTHROPIC_AUTH_TOKEN = "sk-6Va58I2jvqxvQM6bQuGmS1sFjDcMYX6E3wKkFisnEIzPY1Sy" 
+        $env:ANTHROPIC_API_KEY = ""
+        $env:ANTHROPIC_MODEL = "claude-opus-4.6"
+    }
+    "2" { 
+        $env:ANTHROPIC_BASE_URL = "https://generativelanguage.googleapis.com/v1beta"
+        $env:ANTHROPIC_AUTH_TOKEN = "AIzaSyAgkkK2KNmPWOf5ToRUwRKguw6SNsn552E"
+        $env:ANTHROPIC_API_KEY = ""
+        $env:ANTHROPIC_DEFAULT_HAIKU_MODEL = "gemini-3-flash-preview"
+        $env:ANTHROPIC_DEFAULT_OPUS_MODEL = "gemini-3-flash-preview"
+        $env:ANTHROPIC_DEFAULT_SONNET_MODEL = "gemini-3-flash-preview"
+    }
+    "3" { 
+        $env:ANTHROPIC_BASE_URL = "https://integrate.api.nvidia.com/v1"
+        $env:ANTHROPIC_AUTH_TOKEN = "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"
+        $env:ANTHROPIC_API_KEY = ""
+        $env:ANTHROPIC_MODEL = "deepseek-ai/deepseek-v4-pro"
+    }
+    "4" { 
+        $env:ANTHROPIC_BASE_URL = "http://localhost:11434/v1"
+        $env:ANTHROPIC_AUTH_TOKEN = "ollama"
+        $env:ANTHROPIC_API_KEY = ""
+        $env:ANTHROPIC_MODEL = "gemma4:e2b"
+    }
+    # For OpenRouter models (5, 6, 7, 8)
+    "5" { 
+        $env:ANTHROPIC_BASE_URL = "https://openrouter.ai/api/v1/keys"
+        $env:ANTHROPIC_AUTH_TOKEN = "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"
+        $env:ANTHROPIC_API_KEY = ""
+        $env:ANTHROPIC_MODEL = "qwen/qwen3-coder:free"
+    }
+    "6"{
+        $env:ANTHROPIC_BASE_URL = "https://openrouter.ai/api/v1/keys"
+        $env:ANTHROPIC_AUTH_TOKEN= "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"
+        $env:ANTHROPIC_API_KEY = ""
+        $env:ANTHROPIC_DEFAULT_HAIKU_MODEL= "minimax/minimax-m2.5:free"
+        $env:ANTHROPIC_DEFAULT_OPUS_MODEL= "minimax/minimax-m2.5:free"
+        $env:ANTHROPIC_DEFAULT_SONNET_MODEL= "minimax/minimax-m2.5:free"
+    }
+    "7"{
+        $env:ANTHROPIC_BASE_URL = "https://openrouter.ai/api/v1/keys"
+        $env:ANTHROPIC_AUTH_TOKEN = "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"
+        $env:ANTHROPIC_API_KEY = ""
+        $env:ANTHROPIC_MODEL =  "openai/gpt-oss-120b:free"
+   }
+
+    "8"{
+        $env:ANTHROPIC_BASE_URL = "https://openrouter.ai/api/v1/keys"
+        $env:ANTHROPIC_AUTH_TOKEN = "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"
+        $env:ANTHROPIC_API_KEY = ""
+        $env:ANTHROPIC_MODEL =  "meta-llama/llama-4-scout:free"
+   }
+}
+
+# START CLAUDE
+claude

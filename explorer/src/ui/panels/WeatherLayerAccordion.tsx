@@ -1,7 +1,6 @@
 import {
   WEATHER_LAYER_CATALOG,
   useWeatherLayerStore,
-  type WeatherLayerCategory,
   type WeatherLayerCategoryConfig,
   type WeatherLayerVariant,
 } from '../../core/store/useWeatherLayerStore';

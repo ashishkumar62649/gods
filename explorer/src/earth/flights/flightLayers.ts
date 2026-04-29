@@ -48,6 +48,7 @@ import {
 import {
   getFlightAltitudeColorCss,
   getFlightIconDimensions,
+  getEmergencyFlightIconImage,
   getFlightIconImage,
   getFlightIconKey,
 } from './flightVisuals';
@@ -129,6 +130,8 @@ interface RouteState {
 const FLIGHT_LERP_FACTOR = 0.05;
 const FLIGHT_STALE_TIMEOUT_MS = 60_000;
 const FLIGHT_FADE_DURATION_MS = 2_000;
+const TRAIL_MIN_VISUAL_ALTITUDE_M = 180;
+const TRAIL_MAX_SEGMENT_DISTANCE_M = 5_000;
 const FLIGHT_DECK_ENTRY_PITCH = CesiumMath.toRadians(-5);
 const FLIGHT_DECK_PITCH_MIN = CesiumMath.toRadians(-85);
 const FLIGHT_DECK_PITCH_MAX = CesiumMath.toRadians(55);
@@ -137,6 +140,8 @@ const FOCUS_MAX_DISTANCE = 200;
 const scratchFocusInverse = new Matrix4();
 const scratchFocusOffset = new Cartesian3();
 const DEFAULT_FOCUS_OFFSET = new Cartesian3(0, -170, 65);
+const NORMAL_FLIGHT_EYE_OFFSET = Cartesian3.ZERO;
+const EMERGENCY_FLIGHT_EYE_OFFSET = new Cartesian3(0, 0, -10_000);
 const FLIGHT_CAMERA_EASING = EasingFunction.SINUSOIDAL_IN_OUT;
 
 export class FlightSceneLayerManager {
@@ -515,6 +520,7 @@ export class FlightSceneLayerManager {
             alignedAxis: Cartesian3.ZERO,
             verticalOrigin: VerticalOrigin.CENTER,
             horizontalOrigin: HorizontalOrigin.CENTER,
+            eyeOffset: NORMAL_FLIGHT_EYE_OFFSET,
             scaleByDistance: new NearFarScalar(5_000, 1.1, 20_000_000, 0.48),
           }),
           flight,
@@ -905,16 +911,19 @@ export class FlightSceneLayerManager {
 
   private applyFlightVisual(entry: FlightRenderEntry, flight: FlightRecord) {
     const isSelected = this.selectedFlightId === flight.id_icao;
+    const isEmergency = flight.is_active_emergency || flight.emergency_status === 'SIGNAL_LOST';
     const hasSelection = Boolean(this.selectedFlightId);
-    const dimmed = hasSelection && !isSelected;
+    const dimmed = hasSelection && !isSelected && !isEmergency;
     const iconKey = getFlightIconKey(flight);
 
     // Oceanic coasting: drop opacity to 40% for estimated/interpolated positions
     const estimatedAlpha = flight.is_estimated ? 0.4 : 1.0;
 
-    const baseColor = Color.fromCssColorString(
-      getFlightAltitudeColorCss(flight, isSelected),
-    );
+    const baseColor = isEmergency
+      ? flight.emergency_status === 'SIGNAL_LOST'
+        ? Color.fromCssColorString('#ffd43b')
+        : Color.fromCssColorString('#ff2d2d')
+      : Color.fromCssColorString(getFlightAltitudeColorCss(flight, isSelected));
     const markerColor = dimmed
       ? new Color(baseColor.red, baseColor.green, baseColor.blue, 0.24 * estimatedAlpha)
       : isSelected
@@ -929,21 +938,27 @@ export class FlightSceneLayerManager {
       isSelected &&
       this.assetViewState === 'airframe';
 
-    entry.dot.show = this.flightsVisible && this.renderMode === 'dot' && !isSelected;
-    entry.dot.pixelSize = isSelected ? 13 : 7.5;
-    entry.dot.outlineWidth = isSelected ? 2 : 1;
+    entry.dot.show = this.flightsVisible && this.renderMode === 'dot' && !isSelected && !isEmergency;
+    entry.dot.pixelSize = isEmergency ? 14 : isSelected ? 13 : 7.5;
+    entry.dot.outlineWidth = isEmergency ? 3 : isSelected ? 2 : 1;
 
     entry.dotBaseColor = markerColor;
     entry.dotOutlineBaseColor = outlineColor;
-    entry.iconBaseColor = markerColor;
+    entry.iconBaseColor = isEmergency ? Color.WHITE : markerColor;
 
     entry.icon.show =
       this.flightsVisible &&
       !showSelectedAirframe &&
-      (this.renderMode === 'icon' || isSelected);
-    entry.icon.image = getFlightIconImage(iconKey);
-    entry.icon.width = iconSize.width;
-    entry.icon.height = iconSize.height;
+      (isEmergency || this.renderMode === 'icon' || isSelected);
+    entry.icon.image = isEmergency
+      ? getEmergencyFlightIconImage(
+          flight,
+          flight.emergency_status === 'SIGNAL_LOST' ? 'yellow' : 'red',
+        )
+      : getFlightIconImage(iconKey);
+    entry.icon.width = isEmergency ? Math.round(iconSize.width * 1.28) : iconSize.width;
+    entry.icon.height = isEmergency ? Math.round(iconSize.height * 1.28) : iconSize.height;
+    entry.icon.eyeOffset = isEmergency ? EMERGENCY_FLIGHT_EYE_OFFSET : NORMAL_FLIGHT_EYE_OFFSET;
 
     if (showSelectedAirframe) {
       entry.icon.show = false;
@@ -1340,30 +1355,35 @@ function buildOpenSkyTrailData(path: Array<{
     return { positions: [], altitudesMeters: [] };
   }
 
+  const sanitizedPath = sanitizeTrailPath(path);
+  if (sanitizedPath.length === 0) {
+    return { positions: [], altitudesMeters: [] };
+  }
+
   // Add the first point
-  const firstPoint = path[0];
+  const firstPoint = sanitizedPath[0];
   let lastLat = firstPoint.latitude;
   let lastLon = firstPoint.longitude;
-  let lastAlt = Math.max(0, firstPoint.baroAltitudeMeters);
+  let lastAlt = firstPoint.baroAltitudeMeters;
 
   flatArray.push(lastLon, lastLat, lastAlt);
   altitudesMeters.push(lastAlt);
 
-  // Interpolate intermediate points for any segment longer than 20km
-  // to prevent straight cartesian lines from clipping through the curved Earth.
-  for (let i = 1; i < path.length; i++) {
-    const point = path[i];
+  // Interpolate intermediate points aggressively so each Cartesian segment
+  // hugs the ellipsoid instead of cutting a visible chord through Earth.
+  for (let i = 1; i < sanitizedPath.length; i++) {
+    const point = sanitizedPath[i];
     const currLat = point.latitude;
     const currLon = point.longitude;
-    const currAlt = Math.max(0, point.baroAltitudeMeters);
+    const currAlt = point.baroAltitudeMeters;
 
     const startCarto = Cartographic.fromDegrees(lastLon, lastLat);
     const endCarto = Cartographic.fromDegrees(currLon, currLat);
     const geodesic = new EllipsoidGeodesic(startCarto, endCarto);
     const dist = geodesic.surfaceDistance;
 
-    if (dist > 20_000) {
-      const segments = Math.ceil(dist / 20_000);
+    if (dist > TRAIL_MAX_SEGMENT_DISTANCE_M) {
+      const segments = Math.ceil(dist / TRAIL_MAX_SEGMENT_DISTANCE_M);
       for (let j = 1; j < segments; j++) {
         const t = j / segments;
         const interpolated = geodesic.interpolateUsingFraction(t);
@@ -1390,6 +1410,54 @@ function buildOpenSkyTrailData(path: Array<{
     positions: Cartesian3.fromDegreesArrayHeights(flatArray),
     altitudesMeters,
   };
+}
+
+function sanitizeTrailPath(path: Array<{
+  latitude: number;
+  longitude: number;
+  baroAltitudeMeters: number;
+}>) {
+  const sanitized: Array<{
+    latitude: number;
+    longitude: number;
+    baroAltitudeMeters: number;
+  }> = [];
+
+  let lastValidAltitude = findFirstValidTrailAltitude(path);
+
+  for (const point of path) {
+    if (
+      !Number.isFinite(point.latitude) ||
+      !Number.isFinite(point.longitude)
+    ) {
+      continue;
+    }
+
+    const rawAltitude = Number(point.baroAltitudeMeters);
+    if (Number.isFinite(rawAltitude) && rawAltitude > 0) {
+      lastValidAltitude = Math.max(rawAltitude, TRAIL_MIN_VISUAL_ALTITUDE_M);
+    }
+
+    sanitized.push({
+      latitude: point.latitude,
+      longitude: point.longitude,
+      baroAltitudeMeters: lastValidAltitude,
+    });
+  }
+
+  return sanitized;
+}
+
+function findFirstValidTrailAltitude(path: Array<{ baroAltitudeMeters: number }>) {
+  const firstValidAltitude = path.find((point) => (
+    Number.isFinite(point.baroAltitudeMeters) &&
+    point.baroAltitudeMeters > 0
+  ))?.baroAltitudeMeters;
+
+  return Math.max(
+    TRAIL_MIN_VISUAL_ALTITUDE_M,
+    Number.isFinite(firstValidAltitude) ? firstValidAltitude! : TRAIL_MIN_VISUAL_ALTITUDE_M,
+  );
 }
 
 function buildFlightApiCartesian(flight: FlightRecord) {

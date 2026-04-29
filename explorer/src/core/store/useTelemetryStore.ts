@@ -3,6 +3,7 @@ import { create } from 'zustand';
 export type FlightAssetView = 'symbology' | 'airframe';
 export type FlightSensorLinkState = 'release' | 'focus' | 'cockpit';
 export type SelectedTelemetryKind = 'flight' | 'ship' | null;
+export type EmergencyStatus = 'NONE' | 'ACTIVE' | 'SIGNAL_LOST';
 
 export interface AviationGridState {
   major: boolean;
@@ -37,6 +38,8 @@ export interface FlightData {
   onGround: boolean;
   isEstimated: boolean;
   squawk: string | null;
+  isActiveEmergency: boolean;
+  emergencyStatus: EmergencyStatus;
   isInteresting: boolean;
   isPia: boolean;
   isLadd: boolean;
@@ -46,6 +49,13 @@ export interface FlightData {
   vehicleSubtype: string;
   operationType: string;
   operationSubtype: string;
+}
+
+export interface EmergencyFlightData extends FlightData {
+  verifiedAt: string;
+  lastSeenAt: string;
+  expiresAt: string;
+  regionLabel: string;
 }
 
 export interface AirportData {
@@ -108,6 +118,7 @@ export interface FlightFilters {
 
 export interface TelemetryState {
   flights: Record<string, FlightData>;
+  activeEmergencies: Record<string, EmergencyFlightData>;
   maritime: Record<string, ShipData>;
   airports: AirportData[];
   flightsVisible: boolean;
@@ -130,11 +141,13 @@ export interface TelemetryState {
 
 export interface TelemetryActions {
   upsertFlights(flights: FlightData[]): void;
+  setActiveEmergencies(emergencies: EmergencyFlightData[]): void;
   upsertMaritime(ships: ShipData[]): void;
   setAirports(airports: AirportData[]): void;
   removeStaleTelemetry(ids: string[], type: 'flight' | 'ship'): void;
   setSelectedEntity(id: string | null, kind?: SelectedTelemetryKind): void;
   setFeedStatus(status: TelemetryState['feedStatus']): void;
+  setFlightsVisible(visible: boolean): void;
   toggleFlightsVisible(): void;
   toggleMaritimeVisible(): void;
   toggleAviationGrid(layer: keyof AviationGridState): void;
@@ -152,6 +165,7 @@ export type TelemetryStore = TelemetryState & TelemetryActions;
 
 export const useTelemetryStore = create<TelemetryStore>()((set) => ({
   flights: {},
+  activeEmergencies: {},
   maritime: {},
   airports: [],
   flightsVisible: false,
@@ -192,6 +206,21 @@ export const useTelemetryStore = create<TelemetryStore>()((set) => ({
         flights: nextFlights,
         flightCount: Object.keys(nextFlights).length,
       };
+    }),
+
+  setActiveEmergencies: (emergencies) =>
+    set((state) => {
+      const nextEmergencies: Record<string, EmergencyFlightData> = {};
+
+      for (const emergency of emergencies) {
+        const existing = state.activeEmergencies[emergency.id];
+        nextEmergencies[emergency.id] = {
+          ...emergency,
+          regionLabel: existing?.regionLabel || emergency.regionLabel,
+        };
+      }
+
+      return { activeEmergencies: nextEmergencies };
     }),
 
   upsertMaritime: (ships) =>
@@ -248,6 +277,8 @@ export const useTelemetryStore = create<TelemetryStore>()((set) => ({
     })),
 
   setFeedStatus: (status) => set({ feedStatus: status }),
+
+  setFlightsVisible: (visible) => set({ flightsVisible: visible }),
 
   toggleFlightFilter: (category, topLevel, subLevel, value) => set((state) => {
     const nextFilters = {

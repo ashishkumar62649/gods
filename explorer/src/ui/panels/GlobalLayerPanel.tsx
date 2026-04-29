@@ -3,6 +3,7 @@ import { fetchInfrastructureSnapshot } from '../../core/api/infrastructureApi';
 import { fetchSatelliteTelemetry } from '../../core/api/orbitalApi';
 import {
   fetchAirports,
+  fetchEmergencyTelemetry,
   fetchFlightTelemetry,
   fetchMaritimeTelemetry,
 } from '../../core/api/telemetryApi';
@@ -130,6 +131,7 @@ export default function GlobalLayerPanel() {
   const shipCount = useTelemetryStore((state) => state.shipCount);
   const setFeedStatus = useTelemetryStore((state) => state.setFeedStatus);
   const upsertFlights = useTelemetryStore((state) => state.upsertFlights);
+  const setActiveEmergencies = useTelemetryStore((state) => state.setActiveEmergencies);
   const upsertMaritime = useTelemetryStore((state) => state.upsertMaritime);
   const setAirports = useTelemetryStore((state) => state.setAirports);
   const toggleFlightsVisible = useTelemetryStore((state) => state.toggleFlightsVisible);
@@ -166,14 +168,16 @@ export default function GlobalLayerPanel() {
 
     const syncTelemetry = async () => {
       setFeedStatus('reconnecting');
-      const [flights, ships, airports] = await Promise.all([
+      const [flights, emergencies, ships, airports] = await Promise.all([
         fetchFlightTelemetry(),
+        fetchEmergencyTelemetry(),
         fetchMaritimeTelemetry(),
         fetchAirports(),
       ]);
 
       if (cancelled) return;
       upsertFlights(flights);
+      setActiveEmergencies(emergencies);
       upsertMaritime(ships);
       setAirports(airports);
       setFeedStatus('connected');
@@ -189,7 +193,7 @@ export default function GlobalLayerPanel() {
       cancelled = true;
       window.clearInterval(intervalId);
     };
-  }, [setAirports, setFeedStatus, upsertFlights, upsertMaritime]);
+  }, [setActiveEmergencies, setAirports, setFeedStatus, upsertFlights, upsertMaritime]);
 
   useEffect(() => {
     let cancelled = false;

@@ -7,6 +7,7 @@ import {
 import type { IRenderer } from './IRenderer';
 import type {
   AirportData,
+  EmergencyFlightData,
   FlightData,
   ShipData,
   TelemetryState,
@@ -42,6 +43,7 @@ export class TelemetryRenderer implements IRenderer {
   // Zustand store produces a new reference for the mutated map, so this
   // is a perfect == check.
   private lastFlights: TelemetryState['flights'] | null = null;
+  private lastActiveEmergencies: TelemetryState['activeEmergencies'] | null = null;
   private lastMaritime: TelemetryState['maritime'] | null = null;
   private lastAirports: TelemetryState['airports'] | null = null;
   private lastFlightsVisible: boolean | null = null;
@@ -137,6 +139,7 @@ export class TelemetryRenderer implements IRenderer {
     this.viewer = null;
     this.lastRenderMode = null;
     this.lastFlights = null;
+    this.lastActiveEmergencies = null;
     this.lastMaritime = null;
     this.lastAirports = null;
     this.lastFlightsVisible = null;
@@ -235,10 +238,15 @@ export class TelemetryRenderer implements IRenderer {
 
     // The expensive hot path: only re-map and re-sync flights when the
     // reference changed (i.e. a telemetry poll produced an upsert).
-    if (state.flightsVisible && state.flights !== this.lastFlights) {
+    if (
+      state.flightsVisible &&
+      (state.flights !== this.lastFlights ||
+        state.activeEmergencies !== this.lastActiveEmergencies)
+    ) {
       this.lastFlights = state.flights;
+      this.lastActiveEmergencies = state.activeEmergencies;
       this.flightManager.syncFlights(
-        Object.values(state.flights).map(toFlightRecord),
+        mergeRenderableFlights(state.flights, state.activeEmergencies).map(toFlightRecord),
       );
       dirty = true;
     }
@@ -303,6 +311,8 @@ function toFlightRecord(flight: FlightData): FlightRecord {
     on_ground: flight.onGround,
     is_estimated: flight.isEstimated,
     squawk: flight.squawk,
+    is_active_emergency: flight.isActiveEmergency,
+    emergency_status: flight.emergencyStatus,
     is_military: flight.isMilitary,
     is_interesting: flight.isInteresting,
     is_pia: flight.isPia,
@@ -310,6 +320,32 @@ function toFlightRecord(flight: FlightData): FlightRecord {
     data_source: flight.dataSource,
     timestamp: flight.timestamp,
   };
+}
+
+function mergeRenderableFlights(
+  flights: TelemetryState['flights'],
+  emergencies: TelemetryState['activeEmergencies'],
+): Array<FlightData | EmergencyFlightData> {
+  const merged = new Map<string, FlightData | EmergencyFlightData>();
+
+  for (const flight of Object.values(flights)) {
+    merged.set(flight.id, flight);
+  }
+
+  for (const emergency of Object.values(emergencies)) {
+    if (emergency.emergencyStatus === 'SIGNAL_LOST' || !merged.has(emergency.id)) {
+      merged.set(emergency.id, {
+        ...emergency,
+        velocityMps: emergency.emergencyStatus === 'SIGNAL_LOST' ? 0 : emergency.velocityMps,
+        verticalRateMps: emergency.emergencyStatus === 'SIGNAL_LOST' ? 0 : emergency.verticalRateMps,
+        timestamp: emergency.emergencyStatus === 'SIGNAL_LOST'
+          ? Date.now() / 1000
+          : emergency.timestamp,
+      });
+    }
+  }
+
+  return Array.from(merged.values());
 }
 
 function toAirportRecord(airport: AirportData): AirportRecord {

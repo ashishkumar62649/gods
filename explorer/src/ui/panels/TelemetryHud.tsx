@@ -8,7 +8,7 @@ export default function TelemetryHud() {
   const selectedEntityKind = useTelemetryStore((state) => state.selectedEntityKind);
   const flight = useTelemetryStore((state) =>
     selectedEntityId && selectedEntityKind === 'flight'
-      ? state.flights[selectedEntityId]
+      ? state.flights[selectedEntityId] ?? state.activeEmergencies[selectedEntityId]
       : undefined,
   );
   const ship = useTelemetryStore((state) =>

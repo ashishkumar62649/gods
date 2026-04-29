@@ -10,12 +10,20 @@ export interface SearchCommand {
   issuedAt: number;
 }
 
+export interface CoordinateFlyToCommand {
+  latitude: number;
+  longitude: number;
+  height: number;
+  issuedAt: number;
+}
+
 export interface MapState {
   selectedImageryId: string;
   buildingsEnabled: boolean;
   autoBuildingsEnabled: boolean;
   orbitEnabled: boolean;
   lastSearch: SearchCommand | null;
+  lastCoordinateFlyTo: CoordinateFlyToCommand | null;
   lastHomeRequestAt: number | null;
 }
 
@@ -26,6 +34,7 @@ export interface MapActions {
   setOrbitEnabled(enabled: boolean): void;
   toggleOrbit(): void;
   requestSearch(query: string): void;
+  requestFlyToCoordinates(latitude: number, longitude: number, height?: number): void;
   requestFlyHome(): void;
 }
 
@@ -56,6 +65,7 @@ export const useMapStore = create<MapStore>()((set) => ({
   autoBuildingsEnabled: false,
   orbitEnabled: false,
   lastSearch: null,
+  lastCoordinateFlyTo: null,
   lastHomeRequestAt: null,
 
   setImagery: (id) =>
@@ -64,10 +74,15 @@ export const useMapStore = create<MapStore>()((set) => ({
     }),
 
   toggleBuildings: () =>
-    set((state) => ({
-      buildingsEnabled: !state.buildingsEnabled,
-      autoBuildingsEnabled: false,
-    })),
+    set((state) => {
+      const buildingsAreActive =
+        state.buildingsEnabled || state.autoBuildingsEnabled;
+
+      return {
+        buildingsEnabled: !buildingsAreActive,
+        autoBuildingsEnabled: false,
+      };
+    }),
 
   setAutoBuildings: (enabled) =>
     set({
@@ -88,6 +103,18 @@ export const useMapStore = create<MapStore>()((set) => ({
     set({
       lastSearch: {
         query,
+        issuedAt: Date.now(),
+      },
+    }),
+
+  requestFlyToCoordinates: (latitude, longitude, height = 35_000) =>
+    set({
+      autoBuildingsEnabled: false,
+      orbitEnabled: false,
+      lastCoordinateFlyTo: {
+        latitude,
+        longitude,
+        height,
         issuedAt: Date.now(),
       },
     }),

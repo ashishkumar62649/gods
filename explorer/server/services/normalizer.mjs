@@ -23,7 +23,7 @@ import {
   DBFLAG_PIA,
   DBFLAG_LADD,
 } from '../config/constants.mjs';
-import { aircraftIndex } from './aircraftIndex.mjs';
+import { getAircraftIdentity } from './aircraftIndex.mjs';
 
 // ─── Unit conversion helpers ─────────────────────────────────
 const FT_TO_M   = 0.3048;
@@ -47,12 +47,9 @@ const OPENSKY_EMERGENCY = {
 };
 
 // ─── Emergency squawk detection (readsb) ─────────────────────
-function squawkToEmergency(squawk) {
-  if (!squawk) return null;
-  if (squawk === '7700') return 'GENERAL';
-  if (squawk === '7600') return 'NORDO';
-  if (squawk === '7500') return 'UNLAWFUL';
-  return null;
+function normalizeSquawk(squawk) {
+  const value = safeStr(squawk);
+  return value && /^[0-7]{4}$/.test(value) ? value : null;
 }
 
 // ─── Classification Engine ─────────────────────────────────────
@@ -208,16 +205,16 @@ export function normalizeOpenSky(sv) {
   // Skip records with no position — they can't be rendered on the globe.
   if (lat == null || lon == null) return null;
 
-  const dbRecord = aircraftIndex.aircraftByIcao?.get(icao);
+  const dbRecord = getAircraftIdentity(icao);
 
   const record = {
     // ── Identity ──────────────────────────────────────────
     id_icao:        icao,
     callsign:       callsign,
-    registration:   dbRecord?.registration || null,          // OpenSky free-tier does not include reg
-    aircraft_type:  dbRecord?.typecode || null,          // not in state vector
-    description:    dbRecord?.description || null,
-    owner_operator: dbRecord?.owner || null,
+    registration:   dbRecord?.reg || null,          // OpenSky free-tier does not include reg
+    aircraft_type:  dbRecord?.type || null,         // not in state vector
+    description:    dbRecord?.type || null,
+    owner_operator: dbRecord?.op || null,
     country_origin: safeStr(sv[2]),
 
     // ── Telemetry ─────────────────────────────────────────
@@ -232,17 +229,18 @@ export function normalizeOpenSky(sv) {
     on_ground:        Boolean(sv[8]),
 
     // ── Avionics ──────────────────────────────────────────
-    squawk:            safeStr(sv[14]),
+    squawk:            normalizeSquawk(sv[14]),
     nav_target_alt_m:  null,  // not in OpenSky state vector
     nav_target_heading: null,
-    emergency_status:  OPENSKY_EMERGENCY[safeNum(sv[15])] ?? null,
+    emergency_status:  'NONE',
 
     // ── Intelligence ──────────────────────────────────────
     // OpenSky free-tier has no dbFlags — we fall back to squawk analysis
-    is_military:    false,
+    is_military:    Boolean(dbRecord?.isMilitary),
     is_interesting: false,
     is_pia:         false,
     is_ladd:        false,
+    is_active_emergency: false,
 
     // ── System ────────────────────────────────────────────
     data_source: 'OPENSKY',
@@ -275,7 +273,7 @@ export function normalizeReadsb(ac, sourceUrl) {
   if (!ac || !ac.hex) return null;
 
   const icao = String(ac.hex).toLowerCase().replace('~', ''); // some feeds prefix ghost ICAOs with ~
-  const dbRecord = aircraftIndex.aircraftByIcao?.get(icao);
+  const dbRecord = getAircraftIdentity(icao);
 
   const lat = safeNum(ac.lat);
   const lon = safeNum(ac.lon);
@@ -301,16 +299,13 @@ export function normalizeReadsb(ac, sourceUrl) {
 
   // ── dbFlags bitmask ───────────────────────────────────────
   const flags = safeNum(ac.dbFlags) ?? 0;
-  const is_military    = (flags & DBFLAG_MILITARY)    !== 0;
+  const is_military    = (flags & DBFLAG_MILITARY)    !== 0 || Boolean(dbRecord?.isMilitary);
   const is_interesting = (flags & DBFLAG_INTERESTING) !== 0;
   const is_pia         = Boolean(ac.pia)  || (flags & DBFLAG_PIA)  !== 0;
   const is_ladd        = Boolean(ac.ladd) || (flags & DBFLAG_LADD) !== 0;
 
   // ── emergency: prefer explicit field, fall back to squawk ──
-  const emerg =
-    safeStr(ac.emergency) && ac.emergency !== 'none'
-      ? String(ac.emergency).toUpperCase()
-      : squawkToEmergency(safeStr(ac.squawk));
+  const squawk = normalizeSquawk(ac.squawk);
 
   // ── Source label from URL ─────────────────────────────────
   let source = 'READSB';
@@ -330,10 +325,10 @@ export function normalizeReadsb(ac, sourceUrl) {
     // ── Identity ──────────────────────────────────────────
     id_icao:        icao,
     callsign:       safeStr(ac.flight) || null,
-    registration:   safeStr(ac.r) || dbRecord?.registration || null,
-    aircraft_type:  safeStr(ac.t) || dbRecord?.typecode || null,
-    description:    safeStr(ac.desc) || dbRecord?.description || null,
-    owner_operator: safeStr(ac.ownOp) || dbRecord?.owner || null,
+    registration:   safeStr(ac.r) || dbRecord?.reg || null,
+    aircraft_type:  safeStr(ac.t) || dbRecord?.type || null,
+    description:    safeStr(ac.desc) || dbRecord?.type || null,
+    owner_operator: safeStr(ac.ownOp) || dbRecord?.op || null,
     country_origin: null,  // not in readsb per-aircraft object
 
     // ── Telemetry ─────────────────────────────────────────
@@ -348,16 +343,17 @@ export function normalizeReadsb(ac, sourceUrl) {
     on_ground:         ac.alt_baro === 'ground' || Boolean(ac.on_ground),
 
     // ── Avionics ──────────────────────────────────────────
-    squawk:             safeStr(ac.squawk),
+    squawk,
     nav_target_alt_m:   ftToM(ac.nav_altitude_fms ?? ac.nav_altitude_mcp),
     nav_target_heading: safeNum(ac.nav_heading),
-    emergency_status:   emerg,
+    emergency_status:   'NONE',
 
     // ── Intelligence ──────────────────────────────────────
     is_military,
     is_interesting,
     is_pia,
     is_ladd,
+    is_active_emergency: false,
 
     // ── System ────────────────────────────────────────────
     data_source: source,

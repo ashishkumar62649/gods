@@ -39,6 +39,8 @@ export interface FlightRecord {
 
   // ── Avionics & Intel ──────────────────────────────────────
   squawk: string | null;
+  is_active_emergency: boolean;
+  emergency_status: 'NONE' | 'ACTIVE' | 'SIGNAL_LOST';
   is_military: boolean;
   is_interesting: boolean;
   is_pia: boolean;

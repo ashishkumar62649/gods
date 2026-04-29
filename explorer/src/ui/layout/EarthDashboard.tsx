@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { initializeViewer } from '../../engine/ViewerRuntime';
 import GlobalLayerPanel from '../panels/GlobalLayerPanel';
+import EmergencyTicker from '../panels/EmergencyTicker';
 import SearchPanel from '../panels/SearchPanel';
 import SatelliteHud from '../panels/SatelliteHud';
 import TelemetryHud from '../panels/TelemetryHud';
@@ -52,6 +53,7 @@ export default function EarthDashboard() {
       >
         <SearchPanel />
         <GlobalLayerPanel />
+        <EmergencyTicker />
         <SatelliteHud />
         <TelemetryHud />
         <WeatherInspectorOverlay />

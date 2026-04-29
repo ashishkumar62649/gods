@@ -23,6 +23,7 @@ export const API_ROUTES = {
   LOCAL_CLIMATE_STATE: '/api/climate/state',
   LOCAL_AIRPORTS: '/api/airports',
   LOCAL_FLIGHTS: '/api/flights',
+  LOCAL_FLIGHT_EMERGENCIES: '/api/flights/emergencies',
   LOCAL_FLIGHT_ROUTE: '/api/route',
   LOCAL_FLIGHT_TRACE: '/api/trace',
   LOCAL_INFRASTRUCTURE: '/api/infrastructure',

@@ -29,11 +29,13 @@ export class MapRenderer implements IRenderer {
   private currentBaseLayers: ImageryLayer[] = [];
   private lastImageryId: string | null = null;
   private lastSearchIssuedAt = 0;
+  private lastCoordinateFlyToIssuedAt = 0;
   private lastHomeRequestAt = 0;
   private orbitRafHandle: number | null = null;
   private orbitSessionId = 0;
   private cameraListener: (() => void) | null = null;
   private lastBuildingsShow: boolean | null = null;
+  private buildingsLoadPromise: Promise<Cesium3DTileset | null> | null = null;
   private pendingAutoOrbitRev = 0;
   private interactionHandler: ScreenSpaceEventHandler | null = null;
 
@@ -106,6 +108,18 @@ export class MapRenderer implements IRenderer {
     }
 
     if (
+      state.lastCoordinateFlyTo &&
+      state.lastCoordinateFlyTo.issuedAt !== this.lastCoordinateFlyToIssuedAt
+    ) {
+      this.lastCoordinateFlyToIssuedAt = state.lastCoordinateFlyTo.issuedAt;
+      this.flyToCoordinates(
+        state.lastCoordinateFlyTo.latitude,
+        state.lastCoordinateFlyTo.longitude,
+        state.lastCoordinateFlyTo.height,
+      );
+    }
+
+    if (
       state.lastHomeRequestAt &&
       state.lastHomeRequestAt !== this.lastHomeRequestAt
     ) {
@@ -161,33 +175,64 @@ export class MapRenderer implements IRenderer {
 
     if (!this.buildingsTileset) {
       if (!enabled) return; // Lazy-load only on demand.
-      try {
-        this.buildingsTileset = await createOsmBuildingsAsync({ showOutline: false });
-        if (!this.viewer || this.viewer.isDestroyed()) {
-          this.buildingsTileset.destroy();
-          this.buildingsTileset = null;
-          return;
-        }
-        this.buildingsTileset.preloadWhenHidden = true;
-        this.buildingsTileset.preloadFlightDestinations = true;
-        this.buildingsTileset.maximumScreenSpaceError = 8;
-        this.buildingsTileset.preferLeaves = true;
-        this.buildingsTileset.foveatedScreenSpaceError = false;
-        this.viewer.scene.primitives.add(this.buildingsTileset);
-      } catch (error) {
-        console.error('[MapRenderer] Failed to load OSM buildings:', error);
-        return;
-      }
+      const tileset = await this.ensureBuildingsTileset();
+      if (!tileset || !this.viewer || this.viewer.isDestroyed()) return;
     }
 
-    const nextShow =
-      enabled &&
-      this.viewer.camera.positionCartographic.height < BUILDINGS_ALTITUDE_THRESHOLD;
+    this.updateBuildingsVisibility();
+  }
 
-    if (this.lastBuildingsShow === nextShow) return;
-    this.lastBuildingsShow = nextShow;
-    this.buildingsTileset.show = nextShow;
-    this.viewer.scene.requestRender();
+  private async ensureBuildingsTileset(): Promise<Cesium3DTileset | null> {
+    if (this.buildingsTileset) {
+      return this.buildingsTileset;
+    }
+
+    if (this.buildingsLoadPromise) {
+      return this.buildingsLoadPromise;
+    }
+
+    const viewerAtLoadStart = this.viewer;
+    if (!viewerAtLoadStart || viewerAtLoadStart.isDestroyed()) {
+      return null;
+    }
+
+    this.buildingsLoadPromise = createOsmBuildingsAsync({ showOutline: false })
+      .then((tileset) => {
+        const latestState = useMapStore.getState();
+        const shouldKeepTileset =
+          latestState.buildingsEnabled || latestState.autoBuildingsEnabled;
+
+        if (
+          !this.viewer ||
+          this.viewer !== viewerAtLoadStart ||
+          viewerAtLoadStart.isDestroyed() ||
+          !shouldKeepTileset
+        ) {
+          tileset.destroy();
+          return null;
+        }
+
+        tileset.show = false;
+        tileset.preloadWhenHidden = true;
+        tileset.preloadFlightDestinations = true;
+        tileset.maximumScreenSpaceError = 8;
+        tileset.preferLeaves = true;
+        tileset.foveatedScreenSpaceError = false;
+        viewerAtLoadStart.scene.primitives.add(tileset);
+
+        this.buildingsTileset = tileset;
+        this.lastBuildingsShow = null;
+        return tileset;
+      })
+      .catch((error) => {
+        console.error('[MapRenderer] Failed to load OSM buildings:', error);
+        return null;
+      })
+      .finally(() => {
+        this.buildingsLoadPromise = null;
+      });
+
+    return this.buildingsLoadPromise;
   }
 
   private updateBuildingsVisibility(): void {
@@ -424,6 +469,25 @@ export class MapRenderer implements IRenderer {
         roll: 0,
       },
       duration: 1.6,
+      easingFunction: EasingFunction.SINUSOIDAL_IN_OUT,
+    });
+  }
+
+  private flyToCoordinates(latitude: number, longitude: number, height: number): void {
+    if (!this.viewer || this.viewer.isDestroyed()) return;
+
+    this.pendingAutoOrbitRev += 1;
+    this.disableOrbit();
+    useMapStore.getState().setAutoBuildings(false);
+    useMapStore.getState().setOrbitEnabled(false);
+    this.viewer.camera.flyTo({
+      destination: Cartesian3.fromDegrees(longitude, latitude, height),
+      orientation: {
+        heading: CesiumMath.toRadians(0),
+        pitch: CesiumMath.toRadians(-55),
+        roll: 0,
+      },
+      duration: 1.4,
       easingFunction: EasingFunction.SINUSOIDAL_IN_OUT,
     });
   }

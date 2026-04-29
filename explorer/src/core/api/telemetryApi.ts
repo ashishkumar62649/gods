@@ -1,6 +1,8 @@
 import { API_ROUTES } from '../config/endpoints';
 import type {
   AirportData,
+  EmergencyFlightData,
+  EmergencyStatus,
   FlightData,
   FlightRouteSnapshot,
   FlightTraceSnapshot,
@@ -19,6 +21,22 @@ export async function fetchFlightTelemetry(): Promise<FlightData[]> {
     ));
   } catch (error) {
     console.error('[Telemetry API] Flight telemetry fetch failed:', error);
+    return [];
+  }
+}
+
+export async function fetchEmergencyTelemetry(): Promise<EmergencyFlightData[]> {
+  try {
+    const payload = await fetchTelemetryPayload(API_ROUTES.LOCAL_FLIGHT_EMERGENCIES);
+    const rawEmergencies = readArrayPayload(payload, 'emergencies');
+
+    return rawEmergencies
+      .map(normalizeEmergencyFlight)
+      .filter((flight) => (
+        flight.id && Number.isFinite(flight.lat) && Number.isFinite(flight.lon)
+      ));
+  } catch (error) {
+    console.error('[Telemetry API] Emergency telemetry fetch failed:', error);
     return [];
   }
 }
@@ -151,11 +169,24 @@ function normalizeFlight(flight: Record<string, unknown>): FlightData {
     onGround: readBoolean(flight, 'on_ground', 'onGround'),
     isEstimated: readBoolean(flight, 'is_estimated', 'isEstimated'),
     squawk: readNullableString(flight, 'squawk'),
+    isActiveEmergency: readBoolean(flight, 'is_active_emergency', 'isActiveEmergency'),
+    emergencyStatus: readEmergencyStatus(flight),
     isInteresting: readBoolean(flight, 'is_interesting', 'isInteresting'),
     isPia: readBoolean(flight, 'is_pia', 'isPia'),
     isLadd: readBoolean(flight, 'is_ladd', 'isLadd'),
     dataSource: readString(flight, 'data_source', 'dataSource') || 'unknown',
     timestamp,
+  };
+}
+
+function normalizeEmergencyFlight(flight: Record<string, unknown>): EmergencyFlightData {
+  const normalized = normalizeFlight(flight);
+  return {
+    ...normalized,
+    verifiedAt: readString(flight, 'verifiedAt', 'verified_at') || new Date().toISOString(),
+    lastSeenAt: readString(flight, 'lastSeenAt', 'last_seen_at') || new Date().toISOString(),
+    expiresAt: readString(flight, 'expiresAt', 'expires_at') || new Date().toISOString(),
+    regionLabel: resolveEmergencyRegionLabel(flight),
   };
 }
 
@@ -216,6 +247,24 @@ function readNullableNumber(record: Record<string, unknown>, ...keys: string[]) 
 
 function readBoolean(record: Record<string, unknown>, ...keys: string[]) {
   return keys.some((key) => record[key] === true);
+}
+
+function readEmergencyStatus(record: Record<string, unknown>): EmergencyStatus {
+  const value = readString(record, 'emergency_status', 'emergencyStatus').toUpperCase();
+  return value === 'ACTIVE' || value === 'SIGNAL_LOST' ? value : 'NONE';
+}
+
+function resolveEmergencyRegionLabel(record: Record<string, unknown>) {
+  const country = readNullableString(record, 'country_origin', 'countryOrigin');
+  if (country) return country;
+
+  const latitude = readNumber(record, 'latitude', 'lat');
+  const longitude = readNumber(record, 'longitude', 'lon');
+  if (Number.isFinite(latitude) && Number.isFinite(longitude)) {
+    return `${latitude.toFixed(2)}, ${longitude.toFixed(2)}`;
+  }
+
+  return 'unknown region';
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

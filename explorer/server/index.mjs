@@ -18,6 +18,7 @@ import http from 'node:http';
 import { PORT, RADAR_SWEEP_INTERVAL_MS } from './config/constants.mjs';
 import { getAllFlights, removeStaleFlights } from './store/flightCache.mjs';
 import { fetchPrimaryRadar, fetchCustomRadar, getSweeepStats } from './services/fetchers.mjs';
+import { getAircraftStats, initAircraftIndex } from './services/aircraftIndex.mjs';
 import { startIntelLoop, mergeIntel, getIntelStats, rawIntelStore } from './services/intelFetcher.mjs';
 import { airportIndex, getAirportStats } from './services/airportIndex.mjs';
 import { getAllSatellites, getSatelliteStats } from './store/satelliteCache.mjs';
@@ -38,6 +39,12 @@ import { startInfrastructureRefreshLoop } from './services/infrastructureFetcher
 import { startShipStream } from './services/shipFetcher.mjs';
 import { handleClimateStateRoute } from './routes/climate.mjs';
 import { fetchRouteForCallsign, fetchTraceForIcao24 } from './services/opensky.mjs';
+import {
+  beginEmergencySweep,
+  endEmergencySweep,
+  getEmergencySnapshots,
+  getEmergencyStats,
+} from './services/emergencyTripwire.mjs';
 
 // ─── CORS + JSON helpers ──────────────────────────────────────
 function setCorsHeaders(res) {
@@ -60,8 +67,13 @@ let sweepCount  = 0;
 let lastSweepAt = null;
 
 async function runSweep() {
-  await fetchPrimaryRadar();
-  await fetchCustomRadar();   // no-op if CUSTOM_API_URL not set
+  beginEmergencySweep();
+  try {
+    await fetchPrimaryRadar();
+    await fetchCustomRadar();   // no-op if CUSTOM_API_URL not set
+  } finally {
+    endEmergencySweep();
+  }
 
   sweepCount++;
   lastSweepAt = new Date().toISOString();
@@ -118,12 +130,26 @@ const server = http.createServer(async (req, res) => {
         intelLadd:           intel.ladd,
         intelEmerg:          intel.emerg,
         intelSweepAt:        intel.lastSweepAt,
+        emergencyCount:      getEmergencyStats().cached,
       },
     });
     return;
   }
 
   // ── GET /api/health ───────────────────────────────────────
+  if (req.method === 'GET' && url.pathname === '/api/flights/emergencies') {
+    const emergencies = getEmergencySnapshots();
+    sendJson(res, 200, {
+      emergencies,
+      meta: {
+        count: emergencies.length,
+        timestamp: Date.now(),
+        ...getEmergencyStats(),
+      },
+    });
+    return;
+  }
+
   if (req.method === 'GET' && url.pathname === '/api/airports') {
     if (!airportIndex.available) {
       sendJson(res, 503, {
@@ -250,10 +276,12 @@ const server = http.createServer(async (req, res) => {
       lastSweepAt,
       activeSource: source,
       lastCount,
+      aircraft:      getAircraftStats(),
       airports:      getAirportStats(),
       satellites:    getSatelliteStats(),
       infrastructure: getInfrastructureStats(),
       climate:       getClimateEngineStats(),
+      emergencies:   getEmergencyStats(),
       intel,
     });
     return;
@@ -270,6 +298,10 @@ server.listen(PORT, async () => {
   console.log(`   Layer 1 : airplanes.live CDN  (every ${RADAR_SWEEP_INTERVAL_MS / 1000}s)`);
   console.log(`   Layer 2 : adsb.lol intel feed (every 10s)`);
   console.log('');
+
+  // Aircraft identities are loaded once into RAM before live polling starts.
+  // Normalizers then use synchronous Map lookups during every radar sweep.
+  await initAircraftIndex();
 
   // ── Layer 1: Position feed ────────────────────────────────
   console.log('[Boot] Running initial position sweep…');

@@ -110,6 +110,7 @@ const ICON_LABELS: Partial<Record<FlightIconKey, string>> = {
 };
 
 const IMAGE_CACHE = new Map<FlightIconKey, string>();
+const EMERGENCY_IMAGE_CACHE = new Map<string, string>();
 
 export type FlightIconKey = Tar1090ShapeKey;
 
@@ -122,6 +123,25 @@ export function getFlightIconImage(iconKey: FlightIconKey) {
   const shape = SHAPES[iconKey];
   const uri = svgShapeToURI(shape, '#ffffff', TAR1090_OUTLINE_ADSB_COLOR, SVG_STROKE_WIDTH);
   IMAGE_CACHE.set(iconKey, uri);
+  return uri;
+}
+
+export function getEmergencyFlightIconImage(
+  flight: FlightRecord,
+  tone: 'red' | 'yellow',
+) {
+  const preset = resolveFlightIconPreset(flight);
+  const cacheKey = `${preset.shape}:${tone}`;
+  const cached = EMERGENCY_IMAGE_CACHE.get(cacheKey);
+  if (cached) {
+    return cached;
+  }
+
+  const shape = SHAPES[preset.shape];
+  const fill = tone === 'red' ? '#ff2d2d' : '#ffd43b';
+  const outline = tone === 'red' ? '#fff1a8' : '#7f1d1d';
+  const uri = svgShapeToURI(shape, fill, outline, SVG_STROKE_WIDTH + 1);
+  EMERGENCY_IMAGE_CACHE.set(cacheKey, uri);
   return uri;
 }
 
