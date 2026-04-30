@@ -1,0 +1,332 @@
+| Parameter / data item             | Best source/database to search first                                             |
+| --------------------------------- | -------------------------------------------------------------------------------- |
+| temperature                       | Open-Meteo, NOAA GFS, ERA5, NWS                                                  |
+| feels-like temperature            | Open-Meteo, calculate from temperature/humidity/wind                             |
+| heat index                        | Open-Meteo or calculate from temperature + humidity                              |
+| wind chill                        | Open-Meteo or calculate from temperature + wind                                  |
+| wet-bulb temperature              | Calculate from temperature + humidity + pressure; ERA5/Open-Meteo inputs         |
+| dew point                         | Open-Meteo, NOAA GFS, ERA5                                                       |
+| relative humidity                 | Open-Meteo, NOAA GFS, ERA5                                                       |
+| specific humidity                 | NOAA GFS, ERA5                                                                   |
+| atmospheric pressure              | Open-Meteo, NOAA GFS, ERA5                                                       |
+| sea-level pressure                | Open-Meteo, NOAA GFS, ERA5                                                       |
+| surface pressure                  | Open-Meteo, NOAA GFS, ERA5                                                       |
+| pressure tendency                 | Calculate from pressure time series; NWS observations, ERA5                      |
+| wind speed                        | Open-Meteo, NOAA GFS, ERA5                                                       |
+| wind direction                    | Open-Meteo, NOAA GFS, ERA5                                                       |
+| wind gusts                        | Open-Meteo, NOAA GFS, ERA5                                                       |
+| wind shear                        | NOAA GFS upper-air fields, ERA5 pressure levels                                  |
+| jet stream wind                   | NOAA GFS upper-air wind, ERA5 pressure levels                                    |
+| cloud cover                       | Open-Meteo, NOAA GFS, NASA GIBS, GOES                                            |
+| cloud type                        | NOAA satellite products, NASA GIBS, GOES                                         |
+| cloud base height                 | NOAA GFS, aviation weather products, NWS                                         |
+| cloud top height                  | GOES, NASA GIBS, NOAA satellite products                                         |
+| cloud top temperature             | GOES infrared, NASA GIBS infrared layers                                         |
+| visibility                        | Open-Meteo, NWS observations, NOAA GFS                                           |
+| fog                               | Open-Meteo weather code, NOAA GFS visibility/humidity, NWS                       |
+| mist                              | Open-Meteo weather code, NWS observations                                        |
+| haze                              | NWS observations, CAMS aerosols, OpenAQ                                          |
+| rainfall                          | Open-Meteo, NOAA GFS, ERA5, NWS                                                  |
+| rain rate                         | Radar/RainViewer, NOAA MRMS/NEXRAD, GFS precipitation rate                       |
+| rain accumulation                 | Open-Meteo, NOAA GFS, ERA5, NWS                                                  |
+| precipitation probability         | Open-Meteo, NWS, GFS ensemble products                                           |
+| precipitation type                | Open-Meteo, NOAA GFS, NWS                                                        |
+| convective precipitation          | NOAA GFS, ERA5                                                                   |
+| stratiform precipitation          | NOAA GFS, ERA5                                                                   |
+| freezing rain                     | NOAA GFS, NWS alerts, Open-Meteo if available                                    |
+| sleet                             | NOAA GFS, NWS, Open-Meteo weather code                                           |
+| hail                              | NOAA severe weather products, NWS alerts, radar-derived products                 |
+| snowfall                          | Open-Meteo, NOAA GFS, ERA5                                                       |
+| snow rate                         | NOAA GFS, NWS, radar precipitation classification                                |
+| snow accumulation                 | Open-Meteo, NOAA GFS, ERA5                                                       |
+| snow depth                        | Open-Meteo, NOAA GFS, ERA5, Copernicus Land                                      |
+| snow water equivalent             | NOAA GFS, ERA5-Land, Copernicus Land                                             |
+| blizzard conditions               | Derived from snow + wind + visibility; NWS alerts                                |
+| ice accumulation                  | NOAA GFS, NWS alerts                                                             |
+| thunderstorm probability          | NOAA GFS convective products, NWS alerts                                         |
+| lightning strikes                 | Vaisala/Blitzortung-style networks, NASA LIS historical, national met agencies   |
+| lightning density                 | Lightning network data, NASA LIS historical                                      |
+| CAPE                              | NOAA GFS, ERA5                                                                   |
+| CIN                               | NOAA GFS, ERA5                                                                   |
+| lifted index                      | NOAA GFS, ERA5                                                                   |
+| storm helicity                    | NOAA GFS, ERA5                                                                   |
+| storm cell location               | Radar products, NOAA MRMS/NEXRAD, national radar services                        |
+| storm cell track                  | Radar-derived storm tracking, NOAA MRMS/NEXRAD                                   |
+| storm cell intensity              | Radar reflectivity, echo tops, lightning density                                 |
+| supercell risk                    | Derived from CAPE + shear + helicity + radar                                     |
+| tornado risk                      | NOAA SPC products, NWS alerts, derived severe-weather model fields               |
+| severe thunderstorm warnings      | NWS API, GDACS for broad disaster context                                        |
+| hail probability                  | NOAA SPC/NWS, radar products, model severe parameters                            |
+| hail size estimate                | Radar-derived products, NWS storm reports                                        |
+| microburst risk                   | Derived from CAPE + downdraft CAPE + radar + wind shear                          |
+| downburst risk                    | Derived from DCAPE + storm radar + wind fields                                   |
+| cyclone location                  | NOAA NHC, JTWC, GDACS, national cyclone centers                                  |
+| cyclone track                     | NOAA NHC, JTWC, GDACS                                                            |
+| cyclone forecast cone             | NOAA NHC, JTWC, national cyclone agencies                                        |
+| cyclone intensity                 | NOAA NHC, JTWC, GDACS                                                            |
+| cyclone wind radius               | NOAA NHC, JTWC                                                                   |
+| cyclone pressure                  | NOAA NHC, JTWC, GFS                                                              |
+| cyclone category                  | NOAA NHC, JTWC, GDACS                                                            |
+| hurricane track                   | NOAA NHC                                                                         |
+| typhoon track                     | JTWC, JMA, GDACS                                                                 |
+| tropical depression               | NOAA NHC, JTWC, JMA                                                              |
+| tropical storm                    | NOAA NHC, JTWC, JMA                                                              |
+| storm surge                       | NOAA/NHC, NOAA NOS, GFS coastal models                                           |
+| storm tide                        | NOAA tide gauges, NOAA NOS, NHC products                                         |
+| coastal flooding                  | NOAA/NWS alerts, NOAA NWPS/NWM, Copernicus EMS                                   |
+| radar reflectivity                | NOAA NEXRAD/MRMS, RainViewer, national radar services                            |
+| radar precipitation intensity     | NOAA MRMS/NEXRAD, RainViewer                                                     |
+| radar velocity                    | NOAA NEXRAD Level II                                                             |
+| radar echo tops                   | NOAA MRMS/NEXRAD                                                                 |
+| radar storm tracks                | NOAA MRMS/NEXRAD-derived products                                                |
+| radar rain/snow classification    | NOAA MRMS/NEXRAD, RainViewer where available                                     |
+| satellite visible imagery         | NASA GIBS, NOAA GOES, Himawari, Meteosat                                         |
+| satellite infrared imagery        | NASA GIBS, NOAA GOES, Himawari, Meteosat                                         |
+| satellite water vapor imagery     | NOAA GOES, NASA GIBS, Himawari, Meteosat                                         |
+| satellite true color imagery      | NASA GIBS/Worldview, GOES true-color products                                    |
+| satellite cloud mask              | NASA MODIS, NOAA GOES products                                                   |
+| satellite cloud motion winds      | NOAA GOES atmospheric motion vectors                                             |
+| satellite rainfall estimate       | NASA GPM/IMERG, NOAA satellite precipitation products                            |
+| satellite sea surface temperature | NASA MODIS, NOAA satellite SST products, Copernicus Marine                       |
+| satellite fire detection          | NASA FIRMS, MODIS/VIIRS                                                          |
+| satellite smoke detection         | NASA GIBS, CAMS aerosols, GOES imagery                                           |
+| satellite dust detection          | NASA GIBS, CAMS aerosols, GOES imagery                                           |
+| satellite ash detection           | NOAA volcanic ash products, NASA GIBS, CAMS                                      |
+| weather alerts                    | NWS API, national weather agencies, GDACS                                        |
+| weather watches                   | NWS API, national weather agencies                                               |
+| weather warnings                  | NWS API, national weather agencies, GDACS                                        |
+| emergency alerts                  | GDACS, FEMA/OpenFEMA, national emergency agencies                                |
+| meteorological advisories         | NWS, national weather agencies                                                   |
+| aviation weather advisories       | NOAA Aviation Weather Center, METAR/TAF feeds, NWS                               |
+| marine weather warnings           | NOAA/NWS marine, national marine weather agencies                                |
+| fire weather warnings             | NWS fire weather alerts, national weather agencies                               |
+| flood warnings                    | NOAA/NWS, NOAA NWPS, Copernicus GloFAS, GDACS                                    |
+| heat warnings                     | NWS API, national weather agencies                                               |
+| cold warnings                     | NWS API, national weather agencies                                               |
+| earthquake location               | USGS Earthquake API, GDACS                                                       |
+| earthquake magnitude              | USGS Earthquake API, GDACS                                                       |
+| earthquake depth                  | USGS Earthquake API                                                              |
+| earthquake time                   | USGS Earthquake API                                                              |
+| earthquake intensity              | USGS ShakeMap products, USGS event details                                       |
+| earthquake shaking map            | USGS ShakeMap                                                                    |
+| earthquake aftershocks            | USGS Earthquake API/event catalog                                                |
+| earthquake fault line             | USGS fault databases, GEM Global Active Faults                                   |
+| earthquake focal mechanism        | USGS event details, GCMT catalog                                                 |
+| earthquake tsunami potential      | USGS event details, NOAA Tsunami Warning Center, GDACS                           |
+| tsunami warning                   | NOAA Tsunami Warning Center, GDACS                                               |
+| tsunami watch                     | NOAA Tsunami Warning Center, GDACS                                               |
+| tsunami advisory                  | NOAA Tsunami Warning Center, GDACS                                               |
+| tsunami wave height               | NOAA DART/NDBC, tsunami warning centers                                          |
+| tsunami arrival time              | NOAA Tsunami Warning Center, GDACS                                               |
+| volcano location                  | Smithsonian GVP, NOAA volcano location database                                  |
+| volcano status                    | Smithsonian GVP, USGS Volcano Hazards Program                                    |
+| volcano alert level               | USGS Volcano, national volcano observatories                                     |
+| volcanic eruption event           | Smithsonian GVP, USGS Volcano, GDACS                                             |
+| volcanic ash cloud                | NOAA volcanic ash advisories, VAACs, NASA GIBS                                   |
+| volcanic ash height               | VAACs, USGS Volcano notices                                                      |
+| volcanic ash forecast             | VAACs, NOAA/NWS aviation products                                                |
+| volcanic gas emissions            | USGS Volcano, CAMS SO2, NASA satellite SO2 products                              |
+| volcanic SO2 plume                | CAMS, NASA Aura/OMI/TROPOMI products                                             |
+| lava flow                         | USGS Volcano, local volcano observatories, satellite imagery                     |
+| lahar risk                        | USGS Volcano, local geological agencies                                          |
+| landslide location                | NASA landslide catalog, USGS landslide program, GDACS when available             |
+| landslide susceptibility          | NASA landslide susceptibility, USGS, World Bank/HDX hazard layers                |
+| landslide warning                 | National geological/weather agencies                                             |
+| mudslide risk                     | Derived from rainfall + slope + soil + land cover                                |
+| rockfall risk                     | Geological agencies, terrain slope + earthquake/rain triggers                    |
+| ground deformation                | Copernicus Land ground motion, InSAR products, USGS Volcano                      |
+| subsidence                        | Copernicus Land ground motion, InSAR products                                    |
+| active fire location              | NASA FIRMS                                                                       |
+| fire radiative power              | NASA FIRMS                                                                       |
+| fire brightness temperature       | NASA FIRMS                                                                       |
+| fire confidence                   | NASA FIRMS                                                                       |
+| fire perimeter                    | National fire agencies, NASA/USFS for U.S., Copernicus EMS mapping               |
+| burned area                       | NASA MODIS burned area, Copernicus Land, ESA Fire CCI                            |
+| fire spread direction             | Derived from active fires + wind + fuel/vegetation                               |
+| fire spread speed                 | Derived from fire detections over time + wind/fuel                               |
+| fire weather index                | Copernicus CEMS Fire, national fire weather systems                              |
+| fuel moisture                     | Copernicus Land, NOAA/NASA land products, national fire agencies                 |
+| vegetation dryness                | NASA MODIS NDVI/EVI, Copernicus Land, drought products                           |
+| drought index                     | Copernicus Drought Observatory, NOAA drought products, SPEI datasets             |
+| soil moisture                     | Copernicus Land, ERA5-Land, SMAP/NASA                                            |
+| rainfall deficit                  | ERA5, CHIRPS, NOAA/NCEI, Open-Meteo historical                                   |
+| evapotranspiration                | MODIS, ERA5-Land, Copernicus Land                                                |
+| vegetation health index           | NOAA STAR VHI, MODIS NDVI-derived                                                |
+| NDVI                              | NASA MODIS, Copernicus Sentinel-2                                                |
+| EVI                               | NASA MODIS                                                                       |
+| crop stress                       | FAO, Copernicus Land, MODIS NDVI/EVI, GEOGLAM                                    |
+| heatwave                          | Derived from temperature + climate normals; ERA5/NCEI                            |
+| cold wave                         | Derived from temperature + climate normals; ERA5/NCEI                            |
+| drought                           | Copernicus Drought Observatory, NOAA drought, SPEI                               |
+| flash drought                     | Soil moisture + evapotranspiration + rainfall anomaly                            |
+| dust storm                        | CAMS aerosols, NASA GIBS, GOES imagery                                           |
+| sandstorm                         | CAMS aerosols, NASA GIBS, GOES imagery                                           |
+| smoke plume                       | NASA GIBS, CAMS aerosols, FIRMS + wind                                           |
+| smoke concentration               | CAMS, national air-quality models                                                |
+| aerosol optical depth             | CAMS, NASA MODIS/AERONET                                                         |
+| air quality index                 | OpenAQ, national AQ APIs, calculated from pollutants                             |
+| PM2.5                             | OpenAQ, CAMS                                                                     |
+| PM10                              | OpenAQ, CAMS                                                                     |
+| ozone                             | OpenAQ, CAMS                                                                     |
+| nitrogen dioxide                  | OpenAQ, CAMS, TROPOMI satellite                                                  |
+| sulfur dioxide                    | OpenAQ, CAMS, TROPOMI/OMI satellite                                              |
+| carbon monoxide                   | OpenAQ, CAMS, TROPOMI/MOPITT                                                     |
+| carbon dioxide                    | CAMS greenhouse gas products, NOAA GML, OCO-2/OCO-3                              |
+| methane                           | CAMS greenhouse gas products, TROPOMI, GHGSat public products where available    |
+| pollen                            | Open-Meteo pollen where available, national health/weather agencies              |
+| allergen level                    | Pollen datasets, national health/weather agencies                                |
+| UV index                          | Open-Meteo, CAMS, national weather agencies                                      |
+| solar radiation                   | Open-Meteo, ERA5, NASA POWER                                                     |
+| surface radiation                 | ERA5, NASA POWER, CAMS radiation products                                        |
+| river level                       | USGS Water, NOAA NWPS, national hydrology agencies                               |
+| river discharge                   | USGS Water, NOAA NWM/NWPS, GloFAS                                                |
+| river flow                        | USGS Water, NOAA NWM, GloFAS                                                     |
+| river flood stage                 | NOAA NWPS, USGS Water, national hydrology agencies                               |
+| river forecast                    | NOAA NWPS/NWM, GloFAS                                                            |
+| stream gauge level                | USGS Water, national hydrology agencies                                          |
+| watershed boundary                | USGS hydrologic units, HydroSHEDS                                                |
+| basin rainfall                    | GFS, ERA5, IMERG, CHIRPS                                                         |
+| surface runoff                    | ERA5-Land, NOAA NWM, GloFAS                                                      |
+| groundwater level                 | USGS Water, national groundwater agencies                                        |
+| reservoir level                   | National water agencies, USGS where available                                    |
+| dam level                         | National dam/water agencies                                                      |
+| dam release                       | National/local dam operators, water agencies                                     |
+| lake level                        | USGS Water, national hydrology agencies, satellite altimetry                     |
+| flood extent                      | Copernicus EMS Global Flood Monitoring, satellite SAR/optical products           |
+| flood depth                       | Copernicus EMS, hydrodynamic models, local flood agencies                        |
+| flood probability                 | GloFAS, NOAA NWPS, derived from forecast + terrain                               |
+| flash flood risk                  | NOAA/NWS, GloFAS, derived rainfall + terrain + soil                              |
+| urban flood risk                  | Derived from rainfall + DEM + drainage + land cover                              |
+| coastal flood risk                | NOAA coastal models, tide gauges, storm surge products                           |
+| sea level anomaly                 | NOAA altimetry, Copernicus Marine                                                |
+| tide level                        | NOAA CO-OPS, national tide gauges                                                |
+| high tide                         | NOAA CO-OPS, national tide agencies                                              |
+| low tide                          | NOAA CO-OPS, national tide agencies                                              |
+| wave height                       | NOAA NDBC, NOAA WaveWatch III, Copernicus Marine                                 |
+| wave direction                    | NOAA WaveWatch III, Copernicus Marine                                            |
+| wave period                       | NOAA WaveWatch III, Copernicus Marine                                            |
+| swell height                      | NOAA WaveWatch III, Copernicus Marine                                            |
+| swell direction                   | NOAA WaveWatch III, Copernicus Marine                                            |
+| ocean current speed               | Copernicus Marine, NOAA ocean models                                             |
+| ocean current direction           | Copernicus Marine, NOAA ocean models                                             |
+| sea surface temperature           | NOAA OISST, NASA MODIS, Copernicus Marine                                        |
+| sea ice concentration             | NSIDC, Copernicus Marine, NOAA                                                   |
+| sea ice extent                    | NSIDC, Copernicus Marine                                                         |
+| sea ice thickness                 | CryoSat/ESA, Copernicus Marine, NSIDC                                            |
+| iceberg location                  | U.S. National Ice Center, Copernicus Marine                                      |
+| glacier change                    | NASA Earthdata, WGMS, Copernicus Land                                            |
+| avalanche risk                    | National avalanche centers, mountain weather services                            |
+| avalanche warning                 | National avalanche centers                                                       |
+| permafrost thaw                   | NASA Earthdata, ESA/Copernicus climate datasets                                  |
+| land surface temperature          | NASA MODIS, ERA5-Land, Copernicus Land                                           |
+| surface albedo                    | NASA MODIS, ERA5, Copernicus Land                                                |
+| land cover                        | Copernicus Land, ESA WorldCover, MODIS land cover                                |
+| land use                          | Copernicus Land, OpenStreetMap, national land agencies                           |
+| forest cover                      | Hansen Global Forest Change, Copernicus Land                                     |
+| deforestation                     | Global Forest Watch, Hansen Global Forest Change                                 |
+| desertification risk              | UNCCD datasets, Copernicus Land, drought/land-cover products                     |
+| soil temperature                  | ERA5-Land, Open-Meteo, national soil networks                                    |
+| soil type                         | SoilGrids/ISRIC, national soil databases                                         |
+| soil erosion risk                 | ISRIC SoilGrids + slope/rainfall/land cover models                               |
+| terrain elevation                 | NASA SRTM, Copernicus DEM, USGS 3DEP                                             |
+| slope                             | Derived from DEM                                                                 |
+| aspect                            | Derived from DEM                                                                 |
+| drainage network                  | HydroSHEDS, OSM waterways, USGS NHD                                              |
+| floodplain                        | Global Flood Database, FEMA for U.S., JRC flood hazard maps                      |
+| coastline change                  | NOAA shoreline data, Copernicus coastal products, satellite imagery              |
+| storm damage reports              | NWS storm reports, FEMA/OpenFEMA, GDACS                                          |
+| disaster declarations             | FEMA/OpenFEMA, national disaster agencies                                        |
+| evacuation zones                  | Local/state emergency agencies, FEMA where available                             |
+| evacuation routes                 | OpenStreetMap, local emergency agencies                                          |
+| shelter locations                 | FEMA/OpenFEMA, local emergency agencies, HDX                                     |
+| hospital locations                | OpenStreetMap, HDX health facilities, WHO/HDX                                    |
+| school locations                  | OpenStreetMap, HDX, national education datasets                                  |
+| critical infrastructure           | OpenStreetMap, OpenInfraMap, national infrastructure datasets                    |
+| power plant locations             | OpenStreetMap, OpenInfraMap, Global Energy Monitor                               |
+| substation locations              | OpenStreetMap, OpenInfraMap                                                      |
+| power line locations              | OpenStreetMap, OpenInfraMap                                                      |
+| pipeline locations                | OpenStreetMap, national pipeline datasets                                        |
+| road closures                     | Local/state DOT APIs, Open511 where available, traffic agencies                  |
+| bridge closures                   | Local/state DOT APIs, Open511, transportation agencies                           |
+| airport status                    | FAA/NAS Status for U.S., airport APIs, NOTAM sources                             |
+| port status                       | Port authority feeds, AIS/MarineCadastre, UN/World Bank port datasets            |
+| rail disruption                   | Transit GTFS-realtime, rail agency feeds                                         |
+| communication tower locations     | OpenCelliD, FCC ASR for U.S., OpenStreetMap                                      |
+| population density                | WorldPop, GHSL, LandScan where licensed                                          |
+| population exposure               | WorldPop + hazard polygons                                                       |
+| vulnerable population             | WorldPop age/sex where available, census/HDX datasets                            |
+| nighttime lights                  | NASA Black Marble/VIIRS night lights                                             |
+| building footprints               | OpenStreetMap, Microsoft Global ML Building Footprints, Google Open Buildings    |
+| building height                   | OpenStreetMap where tagged, national 3D building datasets, LiDAR where available |
+| economic exposure                 | World Bank, GDP grids, GAR risk datasets                                         |
+| agricultural exposure             | FAOSTAT, Copernicus Land, MODIS crop/vegetation products                         |
+| crop area                         | Copernicus Land, FAO, national agriculture datasets                              |
+| livestock density                 | FAO Gridded Livestock of the World                                               |
+| historical disaster events        | EM-DAT, GDACS archive, NOAA NCEI storm events                                    |
+| historical storm tracks           | NOAA IBTrACS, NHC best track                                                     |
+| historical rainfall               | ERA5, NOAA NCEI, CHIRPS                                                          |
+| historical temperature            | ERA5, NOAA NCEI                                                                  |
+| historical flood extent           | Dartmouth Flood Observatory, Copernicus EMS archive                              |
+| historical fire scars             | MODIS burned area, ESA Fire CCI                                                  |
+| historical earthquake catalog     | USGS Earthquake Catalog, ISC-GEM                                                 |
+| historical volcano eruptions      | Smithsonian GVP                                                                  |
+| climate normals                   | NOAA NCEI, WMO, ERA5-derived normals                                             |
+| temperature anomaly               | ERA5/CDS, NOAA NCEI, calculate from normals                                      |
+| rainfall anomaly                  | ERA5, CHIRPS, NOAA NCEI                                                          |
+| drought anomaly                   | Copernicus Drought Observatory, SPEI, soil moisture anomaly                      |
+| sea surface temperature anomaly   | NOAA OISST, Copernicus Marine                                                    |
+| vegetation anomaly                | MODIS NDVI/EVI anomaly, Copernicus Land                                          |
+| risk score                        | Calculate internally from hazard × exposure × vulnerability × confidence         |
+| hazard severity                   | Calculate internally from hazard-specific thresholds                             |
+| exposure score                    | Calculate internally from population/infrastructure/assets intersecting hazard   |
+| vulnerability score               | Calculate internally from demographics, poverty, infrastructure, terrain         |
+| confidence score                  | Calculate internally from source reliability + freshness + agreement             |
+| data freshness                    | Store internally from source timestamp and fetch timestamp                       |
+| source reliability                | Store internally in your source registry                                         |
+
+
+| Key                         | Source / organization                                                   | Best for                                                                                                                                                                                                                         |
+| --------------------------- | ----------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Open-Meteo**              | Open-Meteo Weather APIs                                                 | Current, hourly, daily forecast variables such as temperature, humidity, precipitation, wind, pressure, cloud cover, weather codes. Open-Meteo is open-source and free for non-commercial use with no API key. ([Open Meteo][1]) |
+| **NOAA/NWS**                | U.S. National Weather Service API                                       | Forecasts, observations, alerts, warnings, advisories, U.S. weather products. ([weather.gov][2])                                                                                                                                 |
+| **NOAA NCEI**               | NOAA Climate Data Online / NCEI                                         | Historical weather, climate normals, radar archive, temperature, precipitation, wind, degree days. ([NCEI][3])                                                                                                                   |
+| **NOAA GFS / NODD**         | NOAA model data through open-data/cloud channels                        | Global forecast model fields: wind, temperature, pressure, precipitation, snow, humidity, storms. NOAA’s NODD program provides public access to NOAA open data on cloud platforms. ([NOAA][4])                                   |
+| **NASA GIBS / Worldview**   | NASA Earthdata Global Imagery Browse Services                           | Satellite imagery, cloud/smoke/dust/fire visual layers, full-resolution global imagery through WMTS/WMS-style services. ([NASA Earthdata][5])                                                                                    |
+| **NOAA GOES**               | NOAA GOES satellite open data                                           | Near-real-time geostationary satellite imagery and weather/environment monitoring over the Americas. ([Registry of Open Data][6])                                                                                                |
+| **NASA FIRMS**              | NASA Fire Information for Resource Management System                    | Near-real-time active fire data from MODIS/VIIRS, fire brightness, confidence, FRP, thermal anomalies. ([NASA-FIRMS][7])                                                                                                         |
+| **USGS Earthquake**         | USGS Earthquake APIs / GeoJSON feeds                                    | Earthquake location, magnitude, depth, time, aftershocks, event details. ([USGS Earthquake Hazards Program][8])                                                                                                                  |
+| **USGS Water**              | USGS Water Data APIs                                                    | Streamflow, gage height, groundwater, lake/well measurements, real-time and historical water data. ([Water Data APIs][9])                                                                                                        |
+| **NOAA NWPS/NWM**           | NOAA National Water Prediction Service / National Water Model           | River forecasts, flood outlooks, streamflow modeling, water level guidance. ([National Water Prediction Service][10])                                                                                                            |
+| **NOAA DART/NDBC**          | NOAA tsunami buoys / National Data Buoy Center                          | Tsunami detection, water-column height, ocean buoy observations. ([NOAA Center for Tsunami Research][11])                                                                                                                        |
+| **Copernicus CDS / ERA5**   | Copernicus Climate Data Store / ERA5                                    | Historical and reanalysis weather/climate from 1940 onward; great for anomalies and long-term baselines. ([Climate Data Store][12])                                                                                              |
+| **Copernicus CAMS**         | Copernicus Atmosphere Monitoring Service                                | Air quality, aerosols, dust, smoke, ozone, UV, greenhouse gases, atmospheric composition. ([Copernicus Atmosphere][13])                                                                                                          |
+| **OpenAQ**                  | OpenAQ API                                                              | Ground air-quality observations: PM2.5, PM10, SO2, NO2, CO, O3, black carbon, humidity, temperature. ([OpenAQ][14])                                                                                                              |
+| **Copernicus Land / CLMS**  | Copernicus Land Monitoring Service                                      | Land cover, land use, vegetation state, water cycle, soil moisture, snow, surface energy variables. ([Copernicus Land Monitoring Service][15])                                                                                   |
+| **NASA MODIS / Earthdata**  | NASA MODIS products                                                     | NDVI, EVI, land surface temperature, albedo, evapotranspiration, snow cover, sea ice, fire, burned area. ([MODIS][16])                                                                                                           |
+| **Smithsonian GVP**         | Smithsonian Global Volcanism Program                                    | Volcano database, eruptions, reports, volcano history. ([Smithsonian Global Volcanism][17])                                                                                                                                      |
+| **USGS Volcano**            | USGS Volcano Hazards Program                                            | Volcano updates, notifications, U.S. volcano activity and hazard messages. ([USGS][18])                                                                                                                                          |
+| **GDACS**                   | Global Disaster Alert and Coordination System                           | Multi-hazard alerts: earthquakes, tsunamis, floods, volcanoes, tropical cyclones. ([GDACS][19])                                                                                                                                  |
+| **Copernicus EMS / GloFAS** | Copernicus Emergency Management Service / Global Flood Awareness System | Global flood monitoring, flood forecasts, emergency flood products. ([Copernicus Flood Service][20])                                                                                                                             |
+| **WorldPop**                | WorldPop                                                                | Gridded population estimates and exposure calculations. ([worldpop.org][21])                                                                                                                                                     |
+
+[1]: https://open-meteo.com/en/docs?utm_source=chatgpt.com "Weather Forecast API"
+[2]: https://www.weather.gov/documentation/services-web-api?utm_source=chatgpt.com "API Web Service"
+[3]: https://www.ncei.noaa.gov/cdo-web/?utm_source=chatgpt.com "Climate Data Online (CDO)"
+[4]: https://www.noaa.gov/information-technology/open-data-dissemination?utm_source=chatgpt.com "NOAA Open Data Dissemination (NODD)"
+[5]: https://www.earthdata.nasa.gov/engage/open-data-services-software/earthdata-developer-portal/gibs-api?utm_source=chatgpt.com "Global Imagery Browse Services APIs"
+[6]: https://registry.opendata.aws/noaa-goes/?utm_source=chatgpt.com "NOAA Geostationary Operational Environmental Satellites ..."
+[7]: https://firms.modaps.eosdis.nasa.gov/api/?utm_source=chatgpt.com "API"
+[8]: https://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php?utm_source=chatgpt.com "GeoJSON Summary Format"
+[9]: https://api.waterdata.usgs.gov/?utm_source=chatgpt.com "USGS Water Data APIs"
+[10]: https://water.noaa.gov/?utm_source=chatgpt.com "National Water Prediction Service - NOAA"
+[11]: https://nctr.pmel.noaa.gov/Dart/?utm_source=chatgpt.com "DART (Deep-ocean Assessment and Reporting of Tsunamis)"
+[12]: https://cds.climate.copernicus.eu/datasets/reanalysis-era5-single-levels?utm_source=chatgpt.com "ERA5 hourly data on single levels from 1940 to present"
+[13]: https://atmosphere.copernicus.eu/air-quality?utm_source=chatgpt.com "Air quality | Copernicus"
+[14]: https://openaq.org/?utm_source=chatgpt.com "OpenAQ Homepage"
+[15]: https://land.copernicus.eu/?utm_source=chatgpt.com "Copernicus Land Monitoring Service"
+[16]: https://modis.gsfc.nasa.gov/data/dataprod/mod13.php?utm_source=chatgpt.com "MODIS Vegetation Index Products (NDVI and EVI)"
+[17]: https://volcano.si.edu/?utm_source=chatgpt.com "Smithsonian Institution - Global Volcanism Program ..."
+[18]: https://www.usgs.gov/programs/VHP?utm_source=chatgpt.com "Volcano Hazards Program | U.S. Geological Survey"
+[19]: https://gdacs.org/?utm_source=chatgpt.com "GDACS - Global Disaster Awareness and Coordination System"
+[20]: https://global-flood.emergency.copernicus.eu/?utm_source=chatgpt.com "Global Flood Awareness System: Home | Copernicus EMS"
+[21]: https://www.worldpop.org/methods/populations/?utm_source=chatgpt.com "Gridded population estimate datasets and tools."
