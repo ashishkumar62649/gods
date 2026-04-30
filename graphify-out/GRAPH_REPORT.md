@@ -1,11 +1,11 @@
 # Graph Report - E:\ashis\god eyes  (2026-04-30)
 
 ## Corpus Check
-- 114 files · ~484,541 words
+- 114 files · ~208,555 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 924 nodes · 1894 edges · 79 communities detected
+- 926 nodes · 1898 edges · 79 communities detected
 - Extraction: 92% EXTRACTED · 8% INFERRED · 0% AMBIGUOUS · INFERRED: 152 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
@@ -122,7 +122,7 @@ Nodes (185): active(), adjust_baro_alt(), adjust_geom_alt(), adjustInfoBlock(), 
 
 ### Community 1 - "Community 1"
 Cohesion: 0.05
-Nodes (29): flyObliqueToDestination(), flyObliqueToPoint(), getCameraCartographic(), getCockpitCameraPose(), getFlightCameraTarget(), handleEmergencyClick(), FlightDetailsPanel(), buildFlightApiCartesian() (+21 more)
+Nodes (32): flyObliqueToDestination(), flyObliqueToPoint(), getCameraCartographic(), getCockpitCameraPose(), getFlightCameraTarget(), handleEmergencyClick(), FlightDetailsPanel(), buildFlightApiCartesian() (+24 more)
 
 ### Community 2 - "Community 2"
 Cohesion: 0.05
@@ -145,20 +145,20 @@ Cohesion: 0.09
 Nodes (25): extractSegments(), fetchSubseaCables(), fetchWithTimeout(), normalizeCableFeature(), safeStr(), stableCableId(), addIntelligenceNode(), distanceToSegmentMeters() (+17 more)
 
 ### Community 7 - "Community 7"
-Cohesion: 0.11
+Cohesion: 0.12
 Nodes (29): altitudeColor(), clamp(), formatNumber(), getEmergencyFlightIconImage(), getFlightAltitudeColorCss(), getFlightFamilyLabel(), getFlightIconDimensions(), getFlightIconImage() (+21 more)
 
 ### Community 8 - "Community 8"
-Cohesion: 0.11
-Nodes (5): ViewerCameraController, fetchPointWeather(), WeatherInspectorRenderer, isNativeWeatherUrl(), WeatherLayerManager
-
-### Community 9 - "Community 9"
 Cohesion: 0.14
 Nodes (23): buildAirportCodes(), emptyAirportIndex(), isRouteCandidateAirport(), loadAirportIndex(), normalizeAirportCode(), normalizeAirportRow(), serializeAirport(), toFiniteNumber() (+15 more)
 
-### Community 10 - "Community 10"
+### Community 9 - "Community 9"
 Cohesion: 0.13
 Nodes (20): buildIntelligenceMeta(), buildOrbitMeta(), classifyConstellation(), classifyMission(), getSatrecCache(), normalizeSatellite(), propagateNow(), startOrbitPropagationLoop() (+12 more)
+
+### Community 10 - "Community 10"
+Cohesion: 0.11
+Nodes (5): ViewerCameraController, fetchPointWeather(), WeatherInspectorRenderer, isNativeWeatherUrl(), WeatherLayerManager
 
 ### Community 11 - "Community 11"
 Cohesion: 0.19
@@ -542,10 +542,10 @@ Nodes (0):
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `Filter()` connect `Community 4` to `Community 0`, `Community 2`, `Community 5`, `Community 6`, `Community 7`, `Community 8`, `Community 9`, `Community 10`, `Community 12`, `Community 13`, `Community 16`?**
-  _High betweenness centrality (0.448) - this node is a cross-community bridge._
+  _High betweenness centrality (0.447) - this node is a cross-community bridge._
 - **Why does `resolveFlightIconPreset()` connect `Community 7` to `Community 4`?**
-  _High betweenness centrality (0.067) - this node is a cross-community bridge._
-- **Why does `reaper()` connect `Community 0` to `Community 8`, `Community 3`?**
+  _High betweenness centrality (0.068) - this node is a cross-community bridge._
+- **Why does `reaper()` connect `Community 0` to `Community 10`, `Community 3`?**
   _High betweenness centrality (0.050) - this node is a cross-community bridge._
 - **Are the 27 inferred relationships involving `Filter()` (e.g. with `fetchOpenSkySnapshot()` and `fetchRouteForCallsign()`) actually correct?**
   _`Filter()` has 27 INFERRED edges - model-reasoned connections that need verification._

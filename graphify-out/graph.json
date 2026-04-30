@@ -2754,7 +2754,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\airportIndex.mjs",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_server_services_airportindex_mjs",
-      "community": 9,
+      "community": 8,
       "norm_label": "airportindex.mjs"
     },
     {
@@ -2763,7 +2763,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\airportIndex.mjs",
       "source_location": "L14",
       "id": "airportindex_getairportstats",
-      "community": 9,
+      "community": 8,
       "norm_label": "getairportstats()"
     },
     {
@@ -2772,7 +2772,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\airportIndex.mjs",
       "source_location": "L24",
       "id": "airportindex_loadairportindex",
-      "community": 9,
+      "community": 8,
       "norm_label": "loadairportindex()"
     },
     {
@@ -2781,7 +2781,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\airportIndex.mjs",
       "source_location": "L76",
       "id": "airportindex_emptyairportindex",
-      "community": 9,
+      "community": 8,
       "norm_label": "emptyairportindex()"
     },
     {
@@ -2790,7 +2790,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\airportIndex.mjs",
       "source_location": "L87",
       "id": "airportindex_normalizeairportrow",
-      "community": 9,
+      "community": 8,
       "norm_label": "normalizeairportrow()"
     },
     {
@@ -2799,7 +2799,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\airportIndex.mjs",
       "source_location": "L112",
       "id": "airportindex_buildairportcodes",
-      "community": 9,
+      "community": 8,
       "norm_label": "buildairportcodes()"
     },
     {
@@ -2808,7 +2808,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\airportIndex.mjs",
       "source_location": "L121",
       "id": "airportindex_serializeairport",
-      "community": 9,
+      "community": 8,
       "norm_label": "serializeairport()"
     },
     {
@@ -2817,7 +2817,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\airportIndex.mjs",
       "source_location": "L136",
       "id": "airportindex_isroutecandidateairport",
-      "community": 9,
+      "community": 8,
       "norm_label": "isroutecandidateairport()"
     },
     {
@@ -2826,7 +2826,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\airportIndex.mjs",
       "source_location": "L144",
       "id": "airportindex_resolveairportcsvpath",
-      "community": 9,
+      "community": 8,
       "norm_label": "resolveairportcsvpath()"
     },
     {
@@ -2835,7 +2835,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\airportIndex.mjs",
       "source_location": "L155",
       "id": "airportindex_normalizeairportcode",
-      "community": 9,
+      "community": 8,
       "norm_label": "normalizeairportcode()"
     },
     {
@@ -2844,7 +2844,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\airportIndex.mjs",
       "source_location": "L160",
       "id": "airportindex_tofinitenumber",
-      "community": 9,
+      "community": 8,
       "norm_label": "tofinitenumber()"
     },
     {
@@ -3600,7 +3600,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\opensky.mjs",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_server_services_opensky_mjs",
-      "community": 9,
+      "community": 8,
       "norm_label": "opensky.mjs"
     },
     {
@@ -3609,7 +3609,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\opensky.mjs",
       "source_location": "L12",
       "id": "opensky_normalizecallsign",
-      "community": 9,
+      "community": 8,
       "norm_label": "normalizecallsign()"
     },
     {
@@ -3618,7 +3618,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\opensky.mjs",
       "source_location": "L19",
       "id": "opensky_normalizetextfield",
-      "community": 9,
+      "community": 8,
       "norm_label": "normalizetextfield()"
     },
     {
@@ -3627,7 +3627,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\opensky.mjs",
       "source_location": "L24",
       "id": "opensky_tofinitenumber",
-      "community": 9,
+      "community": 8,
       "norm_label": "tofinitenumber()"
     },
     {
@@ -3636,7 +3636,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\opensky.mjs",
       "source_location": "L28",
       "id": "opensky_normalizeheading",
-      "community": 9,
+      "community": 8,
       "norm_label": "normalizeheading()"
     },
     {
@@ -3645,7 +3645,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\opensky.mjs",
       "source_location": "L33",
       "id": "opensky_estimatesurfacedistancemeters",
-      "community": 9,
+      "community": 8,
       "norm_label": "estimatesurfacedistancemeters()"
     },
     {
@@ -3654,7 +3654,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\opensky.mjs",
       "source_location": "L46",
       "id": "opensky_bearingdegrees",
-      "community": 9,
+      "community": 8,
       "norm_label": "bearingdegrees()"
     },
     {
@@ -3663,7 +3663,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\opensky.mjs",
       "source_location": "L59",
       "id": "opensky_headingdifferencedegrees",
-      "community": 9,
+      "community": 8,
       "norm_label": "headingdifferencedegrees()"
     },
     {
@@ -3672,7 +3672,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\opensky.mjs",
       "source_location": "L64",
       "id": "opensky_serializeairport",
-      "community": 9,
+      "community": 8,
       "norm_label": "serializeairport()"
     },
     {
@@ -3681,7 +3681,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\opensky.mjs",
       "source_location": "L79",
       "id": "opensky_extractroutecodes",
-      "community": 9,
+      "community": 8,
       "norm_label": "extractroutecodes()"
     },
     {
@@ -3690,7 +3690,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\opensky.mjs",
       "source_location": "L92",
       "id": "opensky_estimateroutefromliveflight",
-      "community": 9,
+      "community": 8,
       "norm_label": "estimateroutefromliveflight()"
     },
     {
@@ -3699,7 +3699,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\opensky.mjs",
       "source_location": "L146",
       "id": "opensky_airporttypeprioritybonus",
-      "community": 9,
+      "community": 8,
       "norm_label": "airporttypeprioritybonus()"
     },
     {
@@ -3708,7 +3708,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\opensky.mjs",
       "source_location": "L153",
       "id": "opensky_normalizeopenskytrackpoint",
-      "community": 9,
+      "community": 8,
       "norm_label": "normalizeopenskytrackpoint()"
     },
     {
@@ -3717,7 +3717,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\opensky.mjs",
       "source_location": "L176",
       "id": "opensky_getopenskyheaders",
-      "community": 9,
+      "community": 8,
       "norm_label": "getopenskyheaders()"
     },
     {
@@ -3726,7 +3726,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\opensky.mjs",
       "source_location": "L210",
       "id": "opensky_fetchrouteforcallsign",
-      "community": 9,
+      "community": 8,
       "norm_label": "fetchrouteforcallsign()"
     },
     {
@@ -3735,7 +3735,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\opensky.mjs",
       "source_location": "L281",
       "id": "opensky_fetchtraceforicao24",
-      "community": 9,
+      "community": 8,
       "norm_label": "fetchtraceforicao24()"
     },
     {
@@ -3744,7 +3744,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\orbitPropagator.mjs",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_server_services_orbitpropagator_mjs",
-      "community": 10,
+      "community": 9,
       "norm_label": "orbitpropagator.mjs"
     },
     {
@@ -3753,7 +3753,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\orbitPropagator.mjs",
       "source_location": "L15",
       "id": "orbitpropagator_startorbitpropagationloop",
-      "community": 10,
+      "community": 9,
       "norm_label": "startorbitpropagationloop()"
     },
     {
@@ -3762,7 +3762,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\orbitPropagator.mjs",
       "source_location": "L23",
       "id": "orbitpropagator_stoporbitpropagationloop",
-      "community": 10,
+      "community": 9,
       "norm_label": "stoporbitpropagationloop()"
     },
     {
@@ -3771,7 +3771,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\orbitPropagator.mjs",
       "source_location": "L31",
       "id": "orbitpropagator_propagatenow",
-      "community": 10,
+      "community": 9,
       "norm_label": "propagatenow()"
     },
     {
@@ -3780,7 +3780,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\orbitPropagator.mjs",
       "source_location": "L75",
       "id": "orbitpropagator_getsatreccache",
-      "community": 10,
+      "community": 9,
       "norm_label": "getsatreccache()"
     },
     {
@@ -3789,7 +3789,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\orbitPropagator.mjs",
       "source_location": "L106",
       "id": "orbitpropagator_normalizesatellite",
-      "community": 10,
+      "community": 9,
       "norm_label": "normalizesatellite()"
     },
     {
@@ -3798,7 +3798,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\orbitPropagator.mjs",
       "source_location": "L156",
       "id": "orbitpropagator_buildorbitmeta",
-      "community": 10,
+      "community": 9,
       "norm_label": "buildorbitmeta()"
     },
     {
@@ -3807,7 +3807,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\orbitPropagator.mjs",
       "source_location": "L179",
       "id": "orbitpropagator_buildintelligencemeta",
-      "community": 10,
+      "community": 9,
       "norm_label": "buildintelligencemeta()"
     },
     {
@@ -3816,7 +3816,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\orbitPropagator.mjs",
       "source_location": "L196",
       "id": "orbitpropagator_classifymission",
-      "community": 10,
+      "community": 9,
       "norm_label": "classifymission()"
     },
     {
@@ -3825,7 +3825,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\orbitPropagator.mjs",
       "source_location": "L223",
       "id": "orbitpropagator_classifyconstellation",
-      "community": 10,
+      "community": 9,
       "norm_label": "classifyconstellation()"
     },
     {
@@ -3834,7 +3834,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\satelliteFetcher.mjs",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_server_services_satellitefetcher_mjs",
-      "community": 10,
+      "community": 9,
       "norm_label": "satellitefetcher.mjs"
     },
     {
@@ -3843,7 +3843,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\satelliteFetcher.mjs",
       "source_location": "L20",
       "id": "satellitefetcher_fetchwithtimeout",
-      "community": 10,
+      "community": 9,
       "norm_label": "fetchwithtimeout()"
     },
     {
@@ -3852,7 +3852,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\satelliteFetcher.mjs",
       "source_location": "L27",
       "id": "satellitefetcher_fetchactivesatellitetles",
-      "community": 10,
+      "community": 9,
       "norm_label": "fetchactivesatellitetles()"
     },
     {
@@ -3861,7 +3861,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\satelliteFetcher.mjs",
       "source_location": "L68",
       "id": "satellitefetcher_startsatellitetlerefreshloop",
-      "community": 10,
+      "community": 9,
       "norm_label": "startsatellitetlerefreshloop()"
     },
     {
@@ -3870,7 +3870,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\satelliteFetcher.mjs",
       "source_location": "L90",
       "id": "satellitefetcher_ensurespacetracksession",
-      "community": 10,
+      "community": 9,
       "norm_label": "ensurespacetracksession()"
     },
     {
@@ -3879,7 +3879,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\satelliteFetcher.mjs",
       "source_location": "L138",
       "id": "satellitefetcher_normalizespacetrackgprecord",
-      "community": 10,
+      "community": 9,
       "norm_label": "normalizespacetrackgprecord()"
     },
     {
@@ -3888,7 +3888,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\satelliteFetcher.mjs",
       "source_location": "L159",
       "id": "satellitefetcher_safestr",
-      "community": 10,
+      "community": 9,
       "norm_label": "safestr()"
     },
     {
@@ -3897,7 +3897,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\satelliteFetcher.mjs",
       "source_location": "L165",
       "id": "satellitefetcher_parsesetcookieheader",
-      "community": 10,
+      "community": 9,
       "norm_label": "parsesetcookieheader()"
     },
     {
@@ -4185,7 +4185,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\satelliteCache.mjs",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_server_store_satellitecache_mjs",
-      "community": 10,
+      "community": 9,
       "norm_label": "satellitecache.mjs"
     },
     {
@@ -4194,7 +4194,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\satelliteCache.mjs",
       "source_location": "L19",
       "id": "satellitecache_replacetles",
-      "community": 10,
+      "community": 9,
       "norm_label": "replacetles()"
     },
     {
@@ -4203,7 +4203,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\satelliteCache.mjs",
       "source_location": "L35",
       "id": "satellitecache_settlefetcherror",
-      "community": 10,
+      "community": 9,
       "norm_label": "settlefetcherror()"
     },
     {
@@ -4212,7 +4212,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\satelliteCache.mjs",
       "source_location": "L42",
       "id": "satellitecache_getalltles",
-      "community": 10,
+      "community": 9,
       "norm_label": "getalltles()"
     },
     {
@@ -4221,7 +4221,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\satelliteCache.mjs",
       "source_location": "L46",
       "id": "satellitecache_upsertsatellite",
-      "community": 10,
+      "community": 9,
       "norm_label": "upsertsatellite()"
     },
     {
@@ -4230,7 +4230,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\satelliteCache.mjs",
       "source_location": "L51",
       "id": "satellitecache_replacesatellites",
-      "community": 10,
+      "community": 9,
       "norm_label": "replacesatellites()"
     },
     {
@@ -4239,7 +4239,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\satelliteCache.mjs",
       "source_location": "L67",
       "id": "satellitecache_setsatelliteloopactive",
-      "community": 10,
+      "community": 9,
       "norm_label": "setsatelliteloopactive()"
     },
     {
@@ -4248,7 +4248,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\satelliteCache.mjs",
       "source_location": "L74",
       "id": "satellitecache_getallsatellites",
-      "community": 10,
+      "community": 9,
       "norm_label": "getallsatellites()"
     },
     {
@@ -4257,7 +4257,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\satelliteCache.mjs",
       "source_location": "L78",
       "id": "satellitecache_getsatellitestats",
-      "community": 10,
+      "community": 9,
       "norm_label": "getsatellitestats()"
     },
     {
@@ -4617,7 +4617,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\core\\api\\weatherApi.ts",
       "source_location": "L52",
       "id": "weatherapi_fetchpointweather",
-      "community": 8,
+      "community": 10,
       "norm_label": "fetchpointweather()"
     },
     {
@@ -4786,7 +4786,7 @@
       "label": "FlightSceneLayerManager",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L145",
+      "source_location": "L147",
       "id": "flightlayers_flightscenelayermanager",
       "community": 1,
       "norm_label": "flightscenelayermanager"
@@ -4795,7 +4795,7 @@
       "label": ".constructor()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L202",
+      "source_location": "L204",
       "id": "flightlayers_flightscenelayermanager_constructor",
       "community": 1,
       "norm_label": ".constructor()"
@@ -4804,7 +4804,7 @@
       "label": ".destroy()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L281",
+      "source_location": "L283",
       "id": "flightlayers_flightscenelayermanager_destroy",
       "community": 1,
       "norm_label": ".destroy()"
@@ -4813,7 +4813,7 @@
       "label": ".setFlightsVisible()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L290",
+      "source_location": "L292",
       "id": "flightlayers_flightscenelayermanager_setflightsvisible",
       "community": 1,
       "norm_label": ".setflightsvisible()"
@@ -4822,7 +4822,7 @@
       "label": ".setFlightRenderMode()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L300",
+      "source_location": "L302",
       "id": "flightlayers_flightscenelayermanager_setflightrendermode",
       "community": 1,
       "norm_label": ".setflightrendermode()"
@@ -4831,7 +4831,7 @@
       "label": ".setAssetViewState()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L306",
+      "source_location": "L308",
       "id": "flightlayers_flightscenelayermanager_setassetviewstate",
       "community": 1,
       "norm_label": ".setassetviewstate()"
@@ -4840,7 +4840,7 @@
       "label": ".setSensorLinkState()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L312",
+      "source_location": "L314",
       "id": "flightlayers_flightscenelayermanager_setsensorlinkstate",
       "community": 1,
       "norm_label": ".setsensorlinkstate()"
@@ -4849,7 +4849,7 @@
       "label": ".kickCinematicApproach()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L335",
+      "source_location": "L337",
       "id": "flightlayers_flightscenelayermanager_kickcinematicapproach",
       "community": 1,
       "norm_label": ".kickcinematicapproach()"
@@ -4858,7 +4858,7 @@
       "label": ".resetFlightDeckLook()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L385",
+      "source_location": "L387",
       "id": "flightlayers_flightscenelayermanager_resetflightdecklook",
       "community": 1,
       "norm_label": ".resetflightdecklook()"
@@ -4867,7 +4867,7 @@
       "label": ".adjustFlightDeckLook()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L390",
+      "source_location": "L392",
       "id": "flightlayers_flightscenelayermanager_adjustflightdecklook",
       "community": 7,
       "norm_label": ".adjustflightdecklook()"
@@ -4876,7 +4876,7 @@
       "label": ".setSelectedFlightId()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L399",
+      "source_location": "L401",
       "id": "flightlayers_flightscenelayermanager_setselectedflightid",
       "community": 1,
       "norm_label": ".setselectedflightid()"
@@ -4885,7 +4885,7 @@
       "label": ".setShowSelectedTrail()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L414",
+      "source_location": "L416",
       "id": "flightlayers_flightscenelayermanager_setshowselectedtrail",
       "community": 1,
       "norm_label": ".setshowselectedtrail()"
@@ -4894,7 +4894,7 @@
       "label": ".updateSelectedTrail()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L422",
+      "source_location": "L424",
       "id": "flightlayers_flightscenelayermanager_updateselectedtrail",
       "community": 1,
       "norm_label": ".updateselectedtrail()"
@@ -4903,7 +4903,7 @@
       "label": ".syncFlights()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L493",
+      "source_location": "L495",
       "id": "flightlayers_flightscenelayermanager_syncflights",
       "community": 1,
       "norm_label": ".syncflights()"
@@ -4912,7 +4912,7 @@
       "label": ".setGlobalAirports()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L588",
+      "source_location": "L590",
       "id": "flightlayers_flightscenelayermanager_setglobalairports",
       "community": 1,
       "norm_label": ".setglobalairports()"
@@ -4921,7 +4921,7 @@
       "label": ".setAviationGridState()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L666",
+      "source_location": "L668",
       "id": "flightlayers_flightscenelayermanager_setaviationgridstate",
       "community": 1,
       "norm_label": ".setaviationgridstate()"
@@ -4930,7 +4930,7 @@
       "label": ".setGroundStationsState()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L672",
+      "source_location": "L674",
       "id": "flightlayers_flightscenelayermanager_setgroundstationsstate",
       "community": 1,
       "norm_label": ".setgroundstationsstate()"
@@ -4939,7 +4939,7 @@
       "label": ".setTrackedRoute()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L678",
+      "source_location": "L680",
       "id": "flightlayers_flightscenelayermanager_settrackedroute",
       "community": 1,
       "norm_label": ".settrackedroute()"
@@ -4948,7 +4948,7 @@
       "label": ".applyAviationGridVisibility()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L687",
+      "source_location": "L689",
       "id": "flightlayers_flightscenelayermanager_applyaviationgridvisibility",
       "community": 1,
       "norm_label": ".applyaviationgridvisibility()"
@@ -4957,7 +4957,7 @@
       "label": ".applyGroundStationVisibility()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L695",
+      "source_location": "L697",
       "id": "flightlayers_flightscenelayermanager_applygroundstationvisibility",
       "community": 1,
       "norm_label": ".applygroundstationvisibility()"
@@ -4966,7 +4966,7 @@
       "label": ".getAirportCollection()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L701",
+      "source_location": "L703",
       "id": "flightlayers_flightscenelayermanager_getairportcollection",
       "community": 1,
       "norm_label": ".getairportcollection()"
@@ -4975,7 +4975,7 @@
       "label": ".pickFlight()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L720",
+      "source_location": "L722",
       "id": "flightlayers_flightscenelayermanager_pickflight",
       "community": 1,
       "norm_label": ".pickflight()"
@@ -4984,7 +4984,7 @@
       "label": ".tickPositions()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L730",
+      "source_location": "L732",
       "id": "flightlayers_flightscenelayermanager_tickpositions",
       "community": 1,
       "norm_label": ".tickpositions()"
@@ -4993,7 +4993,7 @@
       "label": ".extractPickId()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L870",
+      "source_location": "L872",
       "id": "flightlayers_flightscenelayermanager_extractpickid",
       "community": 1,
       "norm_label": ".extractpickid()"
@@ -5002,7 +5002,7 @@
       "label": ".updateTargetApiPosition()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L889",
+      "source_location": "L891",
       "id": "flightlayers_flightscenelayermanager_updatetargetapiposition",
       "community": 1,
       "norm_label": ".updatetargetapiposition()"
@@ -5011,7 +5011,7 @@
       "label": ".applyRenderedPosition()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L905",
+      "source_location": "L907",
       "id": "flightlayers_flightscenelayermanager_applyrenderedposition",
       "community": 1,
       "norm_label": ".applyrenderedposition()"
@@ -5020,16 +5020,16 @@
       "label": ".applyFlightVisual()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L910",
+      "source_location": "L912",
       "id": "flightlayers_flightscenelayermanager_applyflightvisual",
-      "community": 7,
+      "community": 1,
       "norm_label": ".applyflightvisual()"
     },
     {
       "label": ".applyEntryOpacity()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L974",
+      "source_location": "L976",
       "id": "flightlayers_flightscenelayermanager_applyentryopacity",
       "community": 1,
       "norm_label": ".applyentryopacity()"
@@ -5038,16 +5038,16 @@
       "label": ".ensureAirframeModel()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L986",
+      "source_location": "L988",
       "id": "flightlayers_flightscenelayermanager_ensureairframemodel",
-      "community": 7,
+      "community": 1,
       "norm_label": ".ensureairframemodel()"
     },
     {
       "label": ".refreshFlightVisuals()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1028",
+      "source_location": "L1030",
       "id": "flightlayers_flightscenelayermanager_refreshflightvisuals",
       "community": 1,
       "norm_label": ".refreshflightvisuals()"
@@ -5056,7 +5056,7 @@
       "label": ".refreshSelectionOverlays()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1034",
+      "source_location": "L1036",
       "id": "flightlayers_flightscenelayermanager_refreshselectionoverlays",
       "community": 1,
       "norm_label": ".refreshselectionoverlays()"
@@ -5065,7 +5065,7 @@
       "label": ".updateSensorLinkCamera()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1053",
+      "source_location": "L1055",
       "id": "flightlayers_flightscenelayermanager_updatesensorlinkcamera",
       "community": 1,
       "norm_label": ".updatesensorlinkcamera()"
@@ -5074,7 +5074,7 @@
       "label": ".captureFocusOffset()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1103",
+      "source_location": "L1105",
       "id": "flightlayers_flightscenelayermanager_capturefocusoffset",
       "community": 1,
       "norm_label": ".capturefocusoffset()"
@@ -5083,7 +5083,7 @@
       "label": ".clampFocusOffset()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1118",
+      "source_location": "L1120",
       "id": "flightlayers_flightscenelayermanager_clampfocusoffset",
       "community": 1,
       "norm_label": ".clampfocusoffset()"
@@ -5092,7 +5092,7 @@
       "label": ".releaseLockedCamera()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1140",
+      "source_location": "L1142",
       "id": "flightlayers_flightscenelayermanager_releaselockedcamera",
       "community": 1,
       "norm_label": ".releaselockedcamera()"
@@ -5101,7 +5101,7 @@
       "label": ".refreshRouteOverlay()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1156",
+      "source_location": "L1158",
       "id": "flightlayers_flightscenelayermanager_refreshrouteoverlay",
       "community": 1,
       "norm_label": ".refreshrouteoverlay()"
@@ -5110,7 +5110,7 @@
       "label": ".requestRender()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1188",
+      "source_location": "L1190",
       "id": "flightlayers_flightscenelayermanager_requestrender",
       "community": 1,
       "norm_label": ".requestrender()"
@@ -5119,7 +5119,7 @@
       "label": ".clearSelectedTrail()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1194",
+      "source_location": "L1196",
       "id": "flightlayers_flightscenelayermanager_clearselectedtrail",
       "community": 1,
       "norm_label": ".clearselectedtrail()"
@@ -5128,7 +5128,7 @@
       "label": ".rebuildSelectedTrailSegments()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1209",
+      "source_location": "L1211",
       "id": "flightlayers_flightscenelayermanager_rebuildselectedtrailsegments",
       "community": 1,
       "norm_label": ".rebuildselectedtrailsegments()"
@@ -5137,7 +5137,7 @@
       "label": ".promoteSelectedTrailLiveAnchor()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1241",
+      "source_location": "L1243",
       "id": "flightlayers_flightscenelayermanager_promoteselectedtrailliveanchor",
       "community": 1,
       "norm_label": ".promoteselectedtrailliveanchor()"
@@ -5146,7 +5146,7 @@
       "label": ".updateSelectedTrailGluePoint()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1276",
+      "source_location": "L1278",
       "id": "flightlayers_flightscenelayermanager_updateselectedtrailgluepoint",
       "community": 1,
       "norm_label": ".updateselectedtrailgluepoint()"
@@ -5155,7 +5155,7 @@
       "label": ".updateTrailSegmentVisibility()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1302",
+      "source_location": "L1304",
       "id": "flightlayers_flightscenelayermanager_updatetrailsegmentvisibility",
       "community": 1,
       "norm_label": ".updatetrailsegmentvisibility()"
@@ -5164,7 +5164,7 @@
       "label": ".removeFlightEntry()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1309",
+      "source_location": "L1311",
       "id": "flightlayers_flightscenelayermanager_removeflightentry",
       "community": 1,
       "norm_label": ".removeflightentry()"
@@ -5173,16 +5173,34 @@
       "label": "buildOpenSkyTrailData()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1344",
+      "source_location": "L1346",
       "id": "flightlayers_buildopenskytraildata",
       "community": 1,
       "norm_label": "buildopenskytraildata()"
     },
     {
+      "label": "sanitizeTrailPath()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
+      "source_location": "L1415",
+      "id": "flightlayers_sanitizetrailpath",
+      "community": 1,
+      "norm_label": "sanitizetrailpath()"
+    },
+    {
+      "label": "findFirstValidTrailAltitude()",
+      "file_type": "code",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
+      "source_location": "L1451",
+      "id": "flightlayers_findfirstvalidtrailaltitude",
+      "community": 1,
+      "norm_label": "findfirstvalidtrailaltitude()"
+    },
+    {
       "label": "buildFlightApiCartesian()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1408",
+      "source_location": "L1463",
       "id": "flightlayers_buildflightapicartesian",
       "community": 1,
       "norm_label": "buildflightapicartesian()"
@@ -5191,7 +5209,7 @@
       "label": "getRenderedFlightState()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1417",
+      "source_location": "L1472",
       "id": "flightlayers_getrenderedflightstate",
       "community": 1,
       "norm_label": "getrenderedflightstate()"
@@ -5200,7 +5218,7 @@
       "label": "getTrailSegmentColor()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1434",
+      "source_location": "L1489",
       "id": "flightlayers_gettrailsegmentcolor",
       "community": 1,
       "norm_label": "gettrailsegmentcolor()"
@@ -5209,7 +5227,7 @@
       "label": "buildFutureArcPositions()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1462",
+      "source_location": "L1517",
       "id": "flightlayers_buildfuturearcpositions",
       "community": 1,
       "norm_label": "buildfuturearcpositions()"
@@ -5218,7 +5236,7 @@
       "label": "getAirportAppearance()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1525",
+      "source_location": "L1580",
       "id": "flightlayers_getairportappearance",
       "community": 1,
       "norm_label": "getairportappearance()"
@@ -5227,7 +5245,7 @@
       "label": "rectangleContainsLonLat()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1577",
+      "source_location": "L1632",
       "id": "flightlayers_rectanglecontainslonlat",
       "community": 1,
       "norm_label": "rectanglecontainslonlat()"
@@ -5236,7 +5254,7 @@
       "label": "cloneColorWithOpacity()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1598",
+      "source_location": "L1653",
       "id": "flightlayers_clonecolorwithopacity",
       "community": 1,
       "norm_label": "clonecolorwithopacity()"
@@ -5245,7 +5263,7 @@
       "label": "clamp01()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1602",
+      "source_location": "L1657",
       "id": "flightlayers_clamp01",
       "community": 1,
       "norm_label": "clamp01()"
@@ -5254,7 +5272,7 @@
       "label": "isFlightPickId()",
       "file_type": "code",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1606",
+      "source_location": "L1661",
       "id": "flightlayers_isflightpickid",
       "community": 1,
       "norm_label": "isflightpickid()"
@@ -7209,7 +7227,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\weather\\WeatherLayerManager.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_earth_weather_weatherlayermanager_ts",
-      "community": 8,
+      "community": 10,
       "norm_label": "weatherlayermanager.ts"
     },
     {
@@ -7218,7 +7236,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\weather\\WeatherLayerManager.ts",
       "source_location": "L18",
       "id": "weatherlayermanager_weatherlayermanager",
-      "community": 8,
+      "community": 10,
       "norm_label": "weatherlayermanager"
     },
     {
@@ -7227,7 +7245,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\weather\\WeatherLayerManager.ts",
       "source_location": "L38",
       "id": "weatherlayermanager_weatherlayermanager_constructor",
-      "community": 8,
+      "community": 10,
       "norm_label": ".constructor()"
     },
     {
@@ -7236,7 +7254,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\weather\\WeatherLayerManager.ts",
       "source_location": "L49",
       "id": "weatherlayermanager_weatherlayermanager_destroy",
-      "community": 8,
+      "community": 10,
       "norm_label": ".destroy()"
     },
     {
@@ -7245,7 +7263,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\weather\\WeatherLayerManager.ts",
       "source_location": "L60",
       "id": "weatherlayermanager_weatherlayermanager_setclimatestate",
-      "community": 8,
+      "community": 10,
       "norm_label": ".setclimatestate()"
     },
     {
@@ -7254,7 +7272,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\weather\\WeatherLayerManager.ts",
       "source_location": "L65",
       "id": "weatherlayermanager_weatherlayermanager_updateweatherlayers",
-      "community": 8,
+      "community": 10,
       "norm_label": ".updateweatherlayers()"
     },
     {
@@ -7263,7 +7281,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\weather\\WeatherLayerManager.ts",
       "source_location": "L90",
       "id": "weatherlayermanager_weatherlayermanager_ensureimagerylayer",
-      "community": 8,
+      "community": 10,
       "norm_label": ".ensureimagerylayer()"
     },
     {
@@ -7272,7 +7290,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\weather\\WeatherLayerManager.ts",
       "source_location": "L113",
       "id": "weatherlayermanager_weatherlayermanager_removeimagerylayer",
-      "community": 8,
+      "community": 10,
       "norm_label": ".removeimagerylayer()"
     },
     {
@@ -7281,7 +7299,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\weather\\WeatherLayerManager.ts",
       "source_location": "L124",
       "id": "weatherlayermanager_weatherlayermanager_getinsertionindex",
-      "community": 8,
+      "community": 10,
       "norm_label": ".getinsertionindex()"
     },
     {
@@ -7290,7 +7308,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\weather\\WeatherLayerManager.ts",
       "source_location": "L133",
       "id": "weatherlayermanager_weatherlayermanager_updatenativeenvironment",
-      "community": 8,
+      "community": 10,
       "norm_label": ".updatenativeenvironment()"
     },
     {
@@ -7299,7 +7317,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\weather\\WeatherLayerManager.ts",
       "source_location": "L154",
       "id": "weatherlayermanager_weatherlayermanager_restorenativeenvironment",
-      "community": 8,
+      "community": 10,
       "norm_label": ".restorenativeenvironment()"
     },
     {
@@ -7308,7 +7326,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\weather\\WeatherLayerManager.ts",
       "source_location": "L165",
       "id": "weatherlayermanager_weatherlayermanager_getlayerurl",
-      "community": 8,
+      "community": 10,
       "norm_label": ".getlayerurl()"
     },
     {
@@ -7317,7 +7335,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\weather\\WeatherLayerManager.ts",
       "source_location": "L187",
       "id": "weatherlayermanager_isnativeweatherurl",
-      "community": 8,
+      "community": 10,
       "norm_label": "isnativeweatherurl()"
     },
     {
@@ -7623,7 +7641,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\engine\\TelemetryRenderer.ts",
       "source_location": "L116",
       "id": "telemetryrenderer_telemetryrenderer_detach",
-      "community": 8,
+      "community": 1,
       "norm_label": ".detach()"
     },
     {
@@ -7830,7 +7848,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\engine\\ViewerCameraController.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_engine_viewercameracontroller_ts",
-      "community": 8,
+      "community": 10,
       "norm_label": "viewercameracontroller.ts"
     },
     {
@@ -7839,7 +7857,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\engine\\ViewerCameraController.ts",
       "source_location": "L10",
       "id": "viewercameracontroller_viewercameracontroller",
-      "community": 8,
+      "community": 10,
       "norm_label": "viewercameracontroller"
     },
     {
@@ -7848,7 +7866,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\engine\\ViewerCameraController.ts",
       "source_location": "L14",
       "id": "viewercameracontroller_viewercameracontroller_attach",
-      "community": 8,
+      "community": 10,
       "norm_label": ".attach()"
     },
     {
@@ -7857,7 +7875,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\engine\\ViewerCameraController.ts",
       "source_location": "L22",
       "id": "viewercameracontroller_viewercameracontroller_detach",
-      "community": 8,
+      "community": 10,
       "norm_label": ".detach()"
     },
     {
@@ -7866,7 +7884,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\engine\\ViewerCameraController.ts",
       "source_location": "L45",
       "id": "viewercameracontroller_viewercameracontroller_updatezoomforaltitude",
-      "community": 8,
+      "community": 10,
       "norm_label": ".updatezoomforaltitude()"
     },
     {
@@ -7875,7 +7893,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\engine\\ViewerCameraController.ts",
       "source_location": "L67",
       "id": "viewercameracontroller_getzoombandforaltitude",
-      "community": 8,
+      "community": 10,
       "norm_label": "getzoombandforaltitude()"
     },
     {
@@ -7920,7 +7938,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\engine\\WeatherInspectorRenderer.ts",
       "source_location": "L1",
       "id": "e_ashis_god_eyes_explorer_src_engine_weatherinspectorrenderer_ts",
-      "community": 8,
+      "community": 10,
       "norm_label": "weatherinspectorrenderer.ts"
     },
     {
@@ -7929,7 +7947,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\engine\\WeatherInspectorRenderer.ts",
       "source_location": "L20",
       "id": "weatherinspectorrenderer_weatherinspectorrenderer",
-      "community": 8,
+      "community": 10,
       "norm_label": "weatherinspectorrenderer"
     },
     {
@@ -7938,7 +7956,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\engine\\WeatherInspectorRenderer.ts",
       "source_location": "L27",
       "id": "weatherinspectorrenderer_weatherinspectorrenderer_attach",
-      "community": 8,
+      "community": 10,
       "norm_label": ".attach()"
     },
     {
@@ -7947,7 +7965,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\engine\\WeatherInspectorRenderer.ts",
       "source_location": "L40",
       "id": "weatherinspectorrenderer_weatherinspectorrenderer_detach",
-      "community": 8,
+      "community": 10,
       "norm_label": ".detach()"
     },
     {
@@ -7956,7 +7974,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\engine\\WeatherInspectorRenderer.ts",
       "source_location": "L58",
       "id": "weatherinspectorrenderer_weatherinspectorrenderer_handlecamerachange",
-      "community": 8,
+      "community": 10,
       "norm_label": ".handlecamerachange()"
     },
     {
@@ -7965,7 +7983,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\engine\\WeatherInspectorRenderer.ts",
       "source_location": "L88",
       "id": "weatherinspectorrenderer_weatherinspectorrenderer_samplecenter",
-      "community": 8,
+      "community": 10,
       "norm_label": ".samplecenter()"
     },
     {
@@ -7974,7 +7992,7 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\engine\\WeatherInspectorRenderer.ts",
       "source_location": "L135",
       "id": "weatherinspectorrenderer_weatherinspectorrenderer_handleclick",
-      "community": 8,
+      "community": 10,
       "norm_label": ".handleclick()"
     },
     {
@@ -14448,8 +14466,8 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\services\\emergencyTripwire.mjs",
       "source_location": "L147",
       "weight": 1.0,
-      "_src": "emergencytripwire_getemergencystats",
-      "_tgt": "tmp_adsblol_script_filter",
+      "_src": "tmp_adsblol_script_filter",
+      "_tgt": "emergencytripwire_getemergencystats",
       "source": "tmp_adsblol_script_filter",
       "target": "emergencytripwire_getemergencystats"
     },
@@ -14580,8 +14598,8 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\core\\api\\telemetryApi.ts",
       "source_location": "L33",
       "weight": 1.0,
-      "_src": "telemetryapi_fetchemergencytelemetry",
-      "_tgt": "tmp_adsblol_script_filter",
+      "_src": "tmp_adsblol_script_filter",
+      "_tgt": "telemetryapi_fetchemergencytelemetry",
       "source": "tmp_adsblol_script_filter",
       "target": "telemetryapi_fetchemergencytelemetry"
     },
@@ -19272,8 +19290,8 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\server\\store\\flightCache.mjs",
       "source_location": "L39",
       "weight": 1.0,
-      "_src": "flightcache_upsertflight",
-      "_tgt": "emergencytripwire_applyemergencytripwire",
+      "_src": "emergencytripwire_applyemergencytripwire",
+      "_tgt": "flightcache_upsertflight",
       "source": "emergencytripwire_applyemergencytripwire",
       "target": "flightcache_upsertflight"
     },
@@ -22680,8 +22698,8 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\ui\\panels\\GlobalLayerPanel.tsx",
       "source_location": "L173",
       "weight": 1.0,
-      "_src": "globallayerpanel_synctelemetry",
-      "_tgt": "telemetryapi_fetchemergencytelemetry",
+      "_src": "telemetryapi_fetchemergencytelemetry",
+      "_tgt": "globallayerpanel_synctelemetry",
       "source": "telemetryapi_fetchemergencytelemetry",
       "target": "globallayerpanel_synctelemetry"
     },
@@ -23037,7 +23055,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L145",
+      "source_location": "L147",
       "weight": 1.0,
       "_src": "e_ashis_god_eyes_explorer_src_earth_flights_flightlayers_ts",
       "_tgt": "flightlayers_flightscenelayermanager",
@@ -23049,7 +23067,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1344",
+      "source_location": "L1346",
       "weight": 1.0,
       "_src": "e_ashis_god_eyes_explorer_src_earth_flights_flightlayers_ts",
       "_tgt": "flightlayers_buildopenskytraildata",
@@ -23061,7 +23079,31 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1408",
+      "source_location": "L1415",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_src_earth_flights_flightlayers_ts",
+      "_tgt": "flightlayers_sanitizetrailpath",
+      "source": "e_ashis_god_eyes_explorer_src_earth_flights_flightlayers_ts",
+      "target": "flightlayers_sanitizetrailpath",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
+      "source_location": "L1451",
+      "weight": 1.0,
+      "_src": "e_ashis_god_eyes_explorer_src_earth_flights_flightlayers_ts",
+      "_tgt": "flightlayers_findfirstvalidtrailaltitude",
+      "source": "e_ashis_god_eyes_explorer_src_earth_flights_flightlayers_ts",
+      "target": "flightlayers_findfirstvalidtrailaltitude",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
+      "source_location": "L1463",
       "weight": 1.0,
       "_src": "e_ashis_god_eyes_explorer_src_earth_flights_flightlayers_ts",
       "_tgt": "flightlayers_buildflightapicartesian",
@@ -23073,7 +23115,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1417",
+      "source_location": "L1472",
       "weight": 1.0,
       "_src": "e_ashis_god_eyes_explorer_src_earth_flights_flightlayers_ts",
       "_tgt": "flightlayers_getrenderedflightstate",
@@ -23085,7 +23127,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1434",
+      "source_location": "L1489",
       "weight": 1.0,
       "_src": "e_ashis_god_eyes_explorer_src_earth_flights_flightlayers_ts",
       "_tgt": "flightlayers_gettrailsegmentcolor",
@@ -23097,7 +23139,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1462",
+      "source_location": "L1517",
       "weight": 1.0,
       "_src": "e_ashis_god_eyes_explorer_src_earth_flights_flightlayers_ts",
       "_tgt": "flightlayers_buildfuturearcpositions",
@@ -23109,7 +23151,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1525",
+      "source_location": "L1580",
       "weight": 1.0,
       "_src": "e_ashis_god_eyes_explorer_src_earth_flights_flightlayers_ts",
       "_tgt": "flightlayers_getairportappearance",
@@ -23121,7 +23163,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1577",
+      "source_location": "L1632",
       "weight": 1.0,
       "_src": "e_ashis_god_eyes_explorer_src_earth_flights_flightlayers_ts",
       "_tgt": "flightlayers_rectanglecontainslonlat",
@@ -23133,7 +23175,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1598",
+      "source_location": "L1653",
       "weight": 1.0,
       "_src": "e_ashis_god_eyes_explorer_src_earth_flights_flightlayers_ts",
       "_tgt": "flightlayers_clonecolorwithopacity",
@@ -23145,7 +23187,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1602",
+      "source_location": "L1657",
       "weight": 1.0,
       "_src": "e_ashis_god_eyes_explorer_src_earth_flights_flightlayers_ts",
       "_tgt": "flightlayers_clamp01",
@@ -23157,7 +23199,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1606",
+      "source_location": "L1661",
       "weight": 1.0,
       "_src": "e_ashis_god_eyes_explorer_src_earth_flights_flightlayers_ts",
       "_tgt": "flightlayers_isflightpickid",
@@ -23169,7 +23211,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L202",
+      "source_location": "L204",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_constructor",
@@ -23181,7 +23223,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L281",
+      "source_location": "L283",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_destroy",
@@ -23193,7 +23235,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L290",
+      "source_location": "L292",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_setflightsvisible",
@@ -23205,7 +23247,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L300",
+      "source_location": "L302",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_setflightrendermode",
@@ -23217,7 +23259,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L306",
+      "source_location": "L308",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_setassetviewstate",
@@ -23229,7 +23271,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L312",
+      "source_location": "L314",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_setsensorlinkstate",
@@ -23241,7 +23283,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L335",
+      "source_location": "L337",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_kickcinematicapproach",
@@ -23253,7 +23295,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L385",
+      "source_location": "L387",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_resetflightdecklook",
@@ -23265,7 +23307,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L390",
+      "source_location": "L392",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_adjustflightdecklook",
@@ -23277,7 +23319,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L399",
+      "source_location": "L401",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_setselectedflightid",
@@ -23289,7 +23331,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L414",
+      "source_location": "L416",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_setshowselectedtrail",
@@ -23301,7 +23343,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L422",
+      "source_location": "L424",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_updateselectedtrail",
@@ -23313,7 +23355,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L493",
+      "source_location": "L495",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_syncflights",
@@ -23325,7 +23367,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L588",
+      "source_location": "L590",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_setglobalairports",
@@ -23337,7 +23379,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L666",
+      "source_location": "L668",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_setaviationgridstate",
@@ -23349,7 +23391,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L672",
+      "source_location": "L674",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_setgroundstationsstate",
@@ -23361,7 +23403,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L678",
+      "source_location": "L680",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_settrackedroute",
@@ -23373,7 +23415,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L687",
+      "source_location": "L689",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_applyaviationgridvisibility",
@@ -23385,7 +23427,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L695",
+      "source_location": "L697",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_applygroundstationvisibility",
@@ -23397,7 +23439,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L701",
+      "source_location": "L703",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_getairportcollection",
@@ -23409,7 +23451,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L720",
+      "source_location": "L722",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_pickflight",
@@ -23421,7 +23463,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L730",
+      "source_location": "L732",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_tickpositions",
@@ -23433,7 +23475,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L870",
+      "source_location": "L872",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_extractpickid",
@@ -23445,7 +23487,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L889",
+      "source_location": "L891",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_updatetargetapiposition",
@@ -23457,7 +23499,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L905",
+      "source_location": "L907",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_applyrenderedposition",
@@ -23469,7 +23511,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L910",
+      "source_location": "L912",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_applyflightvisual",
@@ -23481,7 +23523,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L974",
+      "source_location": "L976",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_applyentryopacity",
@@ -23493,7 +23535,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L986",
+      "source_location": "L988",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_ensureairframemodel",
@@ -23505,7 +23547,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1028",
+      "source_location": "L1030",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_refreshflightvisuals",
@@ -23517,7 +23559,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1034",
+      "source_location": "L1036",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_refreshselectionoverlays",
@@ -23529,7 +23571,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1053",
+      "source_location": "L1055",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_updatesensorlinkcamera",
@@ -23541,7 +23583,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1103",
+      "source_location": "L1105",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_capturefocusoffset",
@@ -23553,7 +23595,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1118",
+      "source_location": "L1120",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_clampfocusoffset",
@@ -23565,7 +23607,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1140",
+      "source_location": "L1142",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_releaselockedcamera",
@@ -23577,7 +23619,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1156",
+      "source_location": "L1158",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_refreshrouteoverlay",
@@ -23589,7 +23631,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1188",
+      "source_location": "L1190",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_requestrender",
@@ -23601,7 +23643,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1194",
+      "source_location": "L1196",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_clearselectedtrail",
@@ -23613,7 +23655,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1209",
+      "source_location": "L1211",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_rebuildselectedtrailsegments",
@@ -23625,7 +23667,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1241",
+      "source_location": "L1243",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_promoteselectedtrailliveanchor",
@@ -23637,7 +23679,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1276",
+      "source_location": "L1278",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_updateselectedtrailgluepoint",
@@ -23649,7 +23691,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1302",
+      "source_location": "L1304",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_updatetrailsegmentvisibility",
@@ -23661,7 +23703,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1309",
+      "source_location": "L1311",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager",
       "_tgt": "flightlayers_flightscenelayermanager_removeflightentry",
@@ -23673,7 +23715,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L286",
+      "source_location": "L288",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_destroy",
       "_tgt": "flightlayers_flightscenelayermanager_requestrender",
@@ -23685,7 +23727,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L294",
+      "source_location": "L296",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_setflightsvisible",
       "_tgt": "flightlayers_flightscenelayermanager_refreshflightvisuals",
@@ -23697,7 +23739,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L295",
+      "source_location": "L297",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_setflightsvisible",
       "_tgt": "flightlayers_flightscenelayermanager_updatetrailsegmentvisibility",
@@ -23709,7 +23751,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L296",
+      "source_location": "L298",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_setflightsvisible",
       "_tgt": "flightlayers_flightscenelayermanager_refreshselectionoverlays",
@@ -23721,7 +23763,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L297",
+      "source_location": "L299",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_setflightsvisible",
       "_tgt": "flightlayers_flightscenelayermanager_requestrender",
@@ -23748,8 +23790,8 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\ui\\panels\\EmergencyTicker.tsx",
       "source_location": "L39",
       "weight": 1.0,
-      "_src": "emergencyticker_handleemergencyclick",
-      "_tgt": "flightlayers_flightscenelayermanager_setflightsvisible",
+      "_src": "flightlayers_flightscenelayermanager_setflightsvisible",
+      "_tgt": "emergencyticker_handleemergencyclick",
       "source": "flightlayers_flightscenelayermanager_setflightsvisible",
       "target": "emergencyticker_handleemergencyclick"
     },
@@ -23757,7 +23799,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L302",
+      "source_location": "L304",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_setflightrendermode",
       "_tgt": "flightlayers_flightscenelayermanager_refreshflightvisuals",
@@ -23769,7 +23811,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L303",
+      "source_location": "L305",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_setflightrendermode",
       "_tgt": "flightlayers_flightscenelayermanager_requestrender",
@@ -23793,7 +23835,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L308",
+      "source_location": "L310",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_setassetviewstate",
       "_tgt": "flightlayers_flightscenelayermanager_refreshflightvisuals",
@@ -23805,7 +23847,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L309",
+      "source_location": "L311",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_setassetviewstate",
       "_tgt": "flightlayers_flightscenelayermanager_requestrender",
@@ -23829,7 +23871,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L316",
+      "source_location": "L318",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_setsensorlinkstate",
       "_tgt": "flightlayers_flightscenelayermanager_resetflightdecklook",
@@ -23841,7 +23883,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L328",
+      "source_location": "L330",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_setsensorlinkstate",
       "_tgt": "flightlayers_flightscenelayermanager_kickcinematicapproach",
@@ -23853,7 +23895,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L330",
+      "source_location": "L332",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_setsensorlinkstate",
       "_tgt": "flightlayers_flightscenelayermanager_updatesensorlinkcamera",
@@ -23865,7 +23907,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L332",
+      "source_location": "L334",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_setsensorlinkstate",
       "_tgt": "flightlayers_flightscenelayermanager_requestrender",
@@ -23877,7 +23919,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L402",
+      "source_location": "L404",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_setselectedflightid",
       "_tgt": "flightlayers_flightscenelayermanager_setsensorlinkstate",
@@ -23925,7 +23967,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L407",
+      "source_location": "L409",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_setselectedflightid",
       "_tgt": "flightlayers_flightscenelayermanager_refreshflightvisuals",
@@ -23937,7 +23979,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L408",
+      "source_location": "L410",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_setselectedflightid",
       "_tgt": "flightlayers_flightscenelayermanager_refreshselectionoverlays",
@@ -23949,7 +23991,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L410",
+      "source_location": "L412",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_setselectedflightid",
       "_tgt": "flightlayers_flightscenelayermanager_updateselectedtrail",
@@ -23961,7 +24003,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L411",
+      "source_location": "L413",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_setselectedflightid",
       "_tgt": "flightlayers_flightscenelayermanager_requestrender",
@@ -23985,7 +24027,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L417",
+      "source_location": "L419",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_setshowselectedtrail",
       "_tgt": "flightlayers_flightscenelayermanager_updateselectedtrail",
@@ -23997,7 +24039,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L418",
+      "source_location": "L420",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_setshowselectedtrail",
       "_tgt": "flightlayers_flightscenelayermanager_updatetrailsegmentvisibility",
@@ -24009,7 +24051,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L419",
+      "source_location": "L421",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_setshowselectedtrail",
       "_tgt": "flightlayers_flightscenelayermanager_requestrender",
@@ -24033,7 +24075,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L428",
+      "source_location": "L430",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_updateselectedtrail",
       "_tgt": "flightlayers_flightscenelayermanager_clearselectedtrail",
@@ -24045,7 +24087,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L681",
+      "source_location": "L683",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_settrackedroute",
       "_tgt": "flightlayers_flightscenelayermanager_updateselectedtrail",
@@ -24069,7 +24111,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L509",
+      "source_location": "L511",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_syncflights",
       "_tgt": "flightlayers_buildflightapicartesian",
@@ -24081,7 +24123,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L556",
+      "source_location": "L558",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_syncflights",
       "_tgt": "flightlayers_flightscenelayermanager_updatetargetapiposition",
@@ -24093,7 +24135,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L573",
+      "source_location": "L575",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_syncflights",
       "_tgt": "flightlayers_flightscenelayermanager_applyflightvisual",
@@ -24105,7 +24147,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L579",
+      "source_location": "L581",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_syncflights",
       "_tgt": "flightlayers_flightscenelayermanager_promoteselectedtrailliveanchor",
@@ -24117,7 +24159,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L583",
+      "source_location": "L585",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_syncflights",
       "_tgt": "flightlayers_flightscenelayermanager_refreshselectionoverlays",
@@ -24129,7 +24171,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L584",
+      "source_location": "L586",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_syncflights",
       "_tgt": "flightlayers_flightscenelayermanager_refreshrouteoverlay",
@@ -24141,7 +24183,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L585",
+      "source_location": "L587",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_syncflights",
       "_tgt": "flightlayers_flightscenelayermanager_requestrender",
@@ -24165,7 +24207,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L599",
+      "source_location": "L601",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_setglobalairports",
       "_tgt": "flightlayers_getairportappearance",
@@ -24177,7 +24219,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L604",
+      "source_location": "L606",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_setglobalairports",
       "_tgt": "flightlayers_flightscenelayermanager_getairportcollection",
@@ -24189,7 +24231,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L661",
+      "source_location": "L663",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_setglobalairports",
       "_tgt": "flightlayers_flightscenelayermanager_applyaviationgridvisibility",
@@ -24201,7 +24243,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L662",
+      "source_location": "L664",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_setglobalairports",
       "_tgt": "flightlayers_flightscenelayermanager_applygroundstationvisibility",
@@ -24213,7 +24255,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L663",
+      "source_location": "L665",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_setglobalairports",
       "_tgt": "flightlayers_flightscenelayermanager_requestrender",
@@ -24237,7 +24279,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L668",
+      "source_location": "L670",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_setaviationgridstate",
       "_tgt": "flightlayers_flightscenelayermanager_applyaviationgridvisibility",
@@ -24249,7 +24291,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L669",
+      "source_location": "L671",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_setaviationgridstate",
       "_tgt": "flightlayers_flightscenelayermanager_requestrender",
@@ -24273,7 +24315,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L674",
+      "source_location": "L676",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_setgroundstationsstate",
       "_tgt": "flightlayers_flightscenelayermanager_applygroundstationvisibility",
@@ -24285,7 +24327,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L675",
+      "source_location": "L677",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_setgroundstationsstate",
       "_tgt": "flightlayers_flightscenelayermanager_requestrender",
@@ -24309,7 +24351,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L682",
+      "source_location": "L684",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_settrackedroute",
       "_tgt": "flightlayers_flightscenelayermanager_refreshrouteoverlay",
@@ -24321,7 +24363,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L683",
+      "source_location": "L685",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_settrackedroute",
       "_tgt": "flightlayers_flightscenelayermanager_updatetrailsegmentvisibility",
@@ -24333,7 +24375,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L684",
+      "source_location": "L686",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_settrackedroute",
       "_tgt": "flightlayers_flightscenelayermanager_requestrender",
@@ -24357,7 +24399,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L722",
+      "source_location": "L724",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_pickflight",
       "_tgt": "flightlayers_flightscenelayermanager_extractpickid",
@@ -24369,7 +24411,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L723",
+      "source_location": "L725",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_pickflight",
       "_tgt": "flightlayers_isflightpickid",
@@ -24381,7 +24423,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L744",
+      "source_location": "L746",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_tickpositions",
       "_tgt": "flightlayers_flightscenelayermanager_updatetargetapiposition",
@@ -24393,7 +24435,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L752",
+      "source_location": "L754",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_tickpositions",
       "_tgt": "flightlayers_clamp01",
@@ -24405,7 +24447,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L757",
+      "source_location": "L759",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_tickpositions",
       "_tgt": "flightlayers_flightscenelayermanager_applyentryopacity",
@@ -24417,7 +24459,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L793",
+      "source_location": "L795",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_tickpositions",
       "_tgt": "flightlayers_rectanglecontainslonlat",
@@ -24429,7 +24471,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L821",
+      "source_location": "L823",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_tickpositions",
       "_tgt": "flightlayers_flightscenelayermanager_applyrenderedposition",
@@ -24441,7 +24483,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L841",
+      "source_location": "L843",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_tickpositions",
       "_tgt": "flightlayers_flightscenelayermanager_updateselectedtrailgluepoint",
@@ -24453,7 +24495,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L850",
+      "source_location": "L852",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_tickpositions",
       "_tgt": "flightlayers_flightscenelayermanager_refreshrouteoverlay",
@@ -24465,7 +24507,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L860",
+      "source_location": "L862",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_tickpositions",
       "_tgt": "flightlayers_flightscenelayermanager_removeflightentry",
@@ -24477,7 +24519,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L863",
+      "source_location": "L865",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_tickpositions",
       "_tgt": "flightlayers_flightscenelayermanager_refreshselectionoverlays",
@@ -24489,7 +24531,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L865",
+      "source_location": "L867",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_tickpositions",
       "_tgt": "flightlayers_flightscenelayermanager_updatesensorlinkcamera",
@@ -24525,7 +24567,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L963",
+      "source_location": "L965",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_applyflightvisual",
       "_tgt": "flightlayers_flightscenelayermanager_ensureairframemodel",
@@ -24537,7 +24579,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L971",
+      "source_location": "L973",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_applyflightvisual",
       "_tgt": "flightlayers_flightscenelayermanager_applyentryopacity",
@@ -24549,7 +24591,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1030",
+      "source_location": "L1032",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_refreshflightvisuals",
       "_tgt": "flightlayers_flightscenelayermanager_applyflightvisual",
@@ -24621,7 +24663,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L975",
+      "source_location": "L977",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_applyentryopacity",
       "_tgt": "flightlayers_clonecolorwithopacity",
@@ -24645,7 +24687,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1059",
+      "source_location": "L1061",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_updatesensorlinkcamera",
       "_tgt": "flightlayers_flightscenelayermanager_releaselockedcamera",
@@ -24657,7 +24699,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1074",
+      "source_location": "L1076",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_updatesensorlinkcamera",
       "_tgt": "flightlayers_flightscenelayermanager_capturefocusoffset",
@@ -24681,7 +24723,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1106",
+      "source_location": "L1108",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_capturefocusoffset",
       "_tgt": "flightlayers_flightscenelayermanager_clampfocusoffset",
@@ -24705,7 +24747,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1339",
+      "source_location": "L1341",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_removeflightentry",
       "_tgt": "flightlayers_flightscenelayermanager_releaselockedcamera",
@@ -24717,7 +24759,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1169",
+      "source_location": "L1171",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_refreshrouteoverlay",
       "_tgt": "flightlayers_buildfuturearcpositions",
@@ -24729,7 +24771,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1331",
+      "source_location": "L1333",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_removeflightentry",
       "_tgt": "flightlayers_flightscenelayermanager_refreshrouteoverlay",
@@ -24753,7 +24795,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1206",
+      "source_location": "L1208",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_clearselectedtrail",
       "_tgt": "flightlayers_flightscenelayermanager_requestrender",
@@ -24765,7 +24807,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1273",
+      "source_location": "L1275",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_promoteselectedtrailliveanchor",
       "_tgt": "flightlayers_flightscenelayermanager_requestrender",
@@ -24777,7 +24819,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1323",
+      "source_location": "L1325",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_removeflightentry",
       "_tgt": "flightlayers_flightscenelayermanager_clearselectedtrail",
@@ -24789,7 +24831,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1231",
+      "source_location": "L1233",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_rebuildselectedtrailsegments",
       "_tgt": "flightlayers_gettrailsegmentcolor",
@@ -24801,7 +24843,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1271",
+      "source_location": "L1273",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_promoteselectedtrailliveanchor",
       "_tgt": "flightlayers_flightscenelayermanager_rebuildselectedtrailsegments",
@@ -24813,7 +24855,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1272",
+      "source_location": "L1274",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_promoteselectedtrailliveanchor",
       "_tgt": "flightlayers_flightscenelayermanager_updateselectedtrailgluepoint",
@@ -24825,7 +24867,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1287",
+      "source_location": "L1289",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_updateselectedtrailgluepoint",
       "_tgt": "flightlayers_getrenderedflightstate",
@@ -24837,12 +24879,36 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
-      "source_location": "L1298",
+      "source_location": "L1300",
       "weight": 1.0,
       "_src": "flightlayers_flightscenelayermanager_updateselectedtrailgluepoint",
       "_tgt": "flightlayers_gettrailsegmentcolor",
       "source": "flightlayers_flightscenelayermanager_updateselectedtrailgluepoint",
       "target": "flightlayers_gettrailsegmentcolor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
+      "source_location": "L1358",
+      "weight": 1.0,
+      "_src": "flightlayers_buildopenskytraildata",
+      "_tgt": "flightlayers_sanitizetrailpath",
+      "source": "flightlayers_buildopenskytraildata",
+      "target": "flightlayers_sanitizetrailpath",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "E:\\ashis\\god eyes\\explorer\\src\\earth\\flights\\flightLayers.ts",
+      "source_location": "L1426",
+      "weight": 1.0,
+      "_src": "flightlayers_sanitizetrailpath",
+      "_tgt": "flightlayers_findfirstvalidtrailaltitude",
+      "source": "flightlayers_sanitizetrailpath",
+      "target": "flightlayers_findfirstvalidtrailaltitude",
       "confidence_score": 1.0
     },
     {
@@ -26988,8 +27054,8 @@
       "source_file": "E:\\ashis\\god eyes\\explorer\\src\\engine\\MapRenderer.ts",
       "source_location": "L486",
       "weight": 1.0,
-      "_src": "maprenderer_maprenderer_flytocoordinates",
-      "_tgt": "satelliteintelligence_toradians",
+      "_src": "satelliteintelligence_toradians",
+      "_tgt": "maprenderer_maprenderer_flytocoordinates",
       "source": "satelliteintelligence_toradians",
       "target": "maprenderer_maprenderer_flytocoordinates"
     },
