@@ -330,3 +330,885 @@
 [19]: https://gdacs.org/?utm_source=chatgpt.com "GDACS - Global Disaster Awareness and Coordination System"
 [20]: https://global-flood.emergency.copernicus.eu/?utm_source=chatgpt.com "Global Flood Awareness System: Home | Copernicus EMS"
 [21]: https://www.worldpop.org/methods/populations/?utm_source=chatgpt.com "Gridded population estimate datasets and tools."
+
+
+| Source name           | URL                                                                                                                                                                                                            | Access / API key / endpoints                                                                               |
+| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Open-Meteo            | [https://open-meteo.com/en/docs](https://open-meteo.com/en/docs)                                                                                                                                               | **No API key**. REST endpoint: `https://api.open-meteo.com/v1/forecast?...` ([Open Meteo][1])              |
+| NOAA / NWS API        | [https://www.weather.gov/documentation/services-web-api](https://www.weather.gov/documentation/services-web-api)                                                                                               | **No API key**, but use `User-Agent` header. Endpoints: forecasts, alerts, gridpoints, observations.       |
+| NOAA NCEI CDO         | [https://www.ncei.noaa.gov/cdo-web/](https://www.ncei.noaa.gov/cdo-web/)                                                                                                                                       | **API token required**. Historical climate/weather data endpoints.                                         |
+| NOAA Open Data / NODD | [https://www.noaa.gov/information-technology/open-data-dissemination](https://www.noaa.gov/information-technology/open-data-dissemination)                                                                     | **No normal API key** for many datasets. Mostly cloud/file access: GRIB2, NetCDF, GeoTIFF.                 |
+| NASA GIBS             | [https://www.earthdata.nasa.gov/engage/open-data-services-software/earthdata-developer-portal/gibs-api](https://www.earthdata.nasa.gov/engage/open-data-services-software/earthdata-developer-portal/gibs-api) | Usually **no key for public WMTS tiles**, but some Earthdata products may need NASA login/token.           |
+| NOAA GOES on AWS      | [https://registry.opendata.aws/noaa-goes/](https://registry.opendata.aws/noaa-goes/)                                                                                                                           | **No API key**. Public S3 bucket access, mostly satellite files.                                           |
+| NASA FIRMS            | [https://firms.modaps.eosdis.nasa.gov/api/](https://firms.modaps.eosdis.nasa.gov/api/)                                                                                                                         | **Free MAP_KEY required**. Endpoints: area, country, CSV, KML, fire detections. ([NASA FIRMS][2])          |
+| USGS Earthquakes      | [https://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php](https://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php)                                                                                 | **No API key**. GeoJSON feeds + event query API. ([USGS Earthquake Hazards Program][3])                    |
+| USGS Water Data       | [https://api.waterdata.usgs.gov/](https://api.waterdata.usgs.gov/)                                                                                                                                             | Usually **no API key**. Endpoints for river level, discharge, groundwater, gauges.                         |
+| NOAA Water / NWPS     | [https://water.noaa.gov/](https://water.noaa.gov/)                                                                                                                                                             | Public access. River forecasts, flood guidance, water prediction services.                                 |
+| NOAA DART Tsunami     | [https://nctr.pmel.noaa.gov/Dart/](https://nctr.pmel.noaa.gov/Dart/)                                                                                                                                           | Public data. Buoy/tsunami observation data, mostly file/API-style access.                                  |
+| Copernicus ERA5 / CDS | [https://cds.climate.copernicus.eu/datasets/reanalysis-era5-single-levels](https://cds.climate.copernicus.eu/datasets/reanalysis-era5-single-levels)                                                           | **Register required**. Uses CDS API client/token. Mostly NetCDF/GRIB downloads.                            |
+| Copernicus CAMS       | [https://atmosphere.copernicus.eu/air-quality](https://atmosphere.copernicus.eu/air-quality)                                                                                                                   | **Register may be required** depending product. Air quality/atmosphere datasets through CDS/ADS APIs.      |
+| OpenAQ                | [https://openaq.org/](https://openaq.org/)                                                                                                                                                                     | **API key required**. REST API for air quality measurements. ([OpenAQ Docs][4])                            |
+| Copernicus Land       | [https://land.copernicus.eu/](https://land.copernicus.eu/)                                                                                                                                                     | Usually **free registration/download**, depends product. Land cover, snow, vegetation, soil moisture.      |
+| NASA MODIS            | [https://modis.gsfc.nasa.gov/data/dataprod/mod13.php](https://modis.gsfc.nasa.gov/data/dataprod/mod13.php)                                                                                                     | Mostly **NASA Earthdata login/token** for downloads. NDVI/EVI and satellite products.                      |
+| Smithsonian GVP       | [https://volcano.si.edu/](https://volcano.si.edu/)                                                                                                                                                             | Public website/database. Volcano location, eruption history, reports. API availability limited.            |
+| USGS Volcano Hazards  | [https://www.usgs.gov/programs/VHP](https://www.usgs.gov/programs/VHP)                                                                                                                                         | Public data/feeds. Volcano notices, activity, alerts, U.S.-focused.                                        |
+| GDACS                 | [https://gdacs.org/](https://gdacs.org/)                                                                                                                                                                       | Public feeds/API-style access. Earthquakes, floods, cyclones, volcanoes, disaster alerts.                  |
+| Copernicus GloFAS     | [https://global-flood.emergency.copernicus.eu/](https://global-flood.emergency.copernicus.eu/)                                                                                                                 | **Registration/API access likely required** through Copernicus/CEMS. Flood forecasts and river flood data. |
+| WorldPop              | [https://www.worldpop.org/methods/populations/](https://www.worldpop.org/methods/populations/)                                                                                                                 | Public downloads/API-style access. Population grids and exposure data.                                     |
+
+[1]: https://open-meteo.com/?utm_source=chatgpt.com "Open-Meteo.com: 🌤️ Free Open-Source Weather API"
+[2]: https://firms.modaps.eosdis.nasa.gov/api/map_key/?utm_source=chatgpt.com "API - Map Key"
+[3]: https://earthquake.usgs.gov/fdsnws/event/1/?utm_source=chatgpt.com "API Documentation - Earthquake Catalog"
+[4]: https://docs.openaq.org/using-the-api/api-key?utm_source=chatgpt.com "API Key"
+
+
+|  # | Source                                        | Data format received                                           | Data size type          | Official / known rate limit                                                                                                         | Realistic fetch interval                                         | Correct fetch strategy                                                                                                |
+| -: | --------------------------------------------- | -------------------------------------------------------------- | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+|  1 | Open-Meteo                                    | JSON, CSV, XLSX                                                | Small–medium            | Free non-commercial: **10,000/day, 5,000/hour, 600/min**. Forecast update suggested hourly. ([Open Meteo][1])                       | Current: 10–15 min. Forecast: 1 hour                             | Fetch by bbox/points. Cache results. Store small point data in Postgres; larger hourly grids as Parquet.              |
+|  2 | NOAA / NWS API                                | JSON, GeoJSON, XML-LD                                          | Small–medium            | Rate limit exists but exact number not public; requires `User-Agent`. ([National Weather Service][2])                               | Alerts: 2–5 min. Forecast: 15–60 min                             | Use conditional requests if possible. Never spam. Retry with backoff on 429/503.                                      |
+|  3 | NOAA NCEI CDO                                 | JSON, CSV, XML; also WMS/WFS/WCS, NetCDF for some services     | Medium–large historical | Token required: **5 requests/sec, 10,000/day**. ([NCEI][3])                                                                         | Historical: daily/weekly, not live                               | Batch by station/date range. Do not poll frequently. Store raw responses + normalized Parquet.                        |
+|  4 | NOAA NODD / GFS                               | GRIB2, NetCDF, files on cloud/object storage                   | Very large              | No normal REST API limit; cloud/object bandwidth applies. GFS updates **4 times/day**. ([registry.opendata.aws][4])                 | Every 6 hours after model cycle completes                        | Do not download everything. Pull only required variables/forecast hours. Convert to Parquet/COG tiles.                |
+|  5 | NASA GIBS                                     | WMTS, WMS, TWMS, TMS tiles; GDAL access                        | Medium–large tiles      | Designed for map tile access; supports WMTS/WMS/TWMS/TMS. ([NASA Earthdata][5])                                                     | Satellite layers: 10–60 min depending layer; daily layers: daily | Treat as tile service. Cache tiles. Do not store every tile unless needed.                                            |
+|  6 | NOAA GOES on AWS                              | NetCDF, cloud files, satellite products                        | Very large              | Public S3/open data; no API key.                                                                                                    | 5–15 min for near-real-time imagery                              | Poll bucket manifests/prefixes. Download only latest product/channel/region. Convert selected bands to tiles.         |
+|  7 | NASA FIRMS                                    | CSV, GeoJSON, KML, WMS/WFS/MVT                                 | Small–medium            | MAP_KEY required; **5,000 transactions / 10 min**. ([firms.modaps.eosdis.nasa.gov][6])                                              | 10–15 min for active fire                                        | Fetch by region and time window. Store raw CSV/GeoJSON; normalize to fire events. For high tile traffic use GIBS/MVT. |
+|  8 | USGS Earthquakes                              | GeoJSON, CSV, XML via feeds/API                                | Small                   | No public numeric rate; USGS recommends real-time GeoJSON feeds for display/performance. ([USGS Earthquake Hazards Program][7])     | 1–5 min                                                          | Fetch summary feeds like `all_hour`, `all_day`. Use event IDs for dedupe/upsert.                                      |
+|  9 | USGS Water Data                               | JSON/OGC API, WaterML-style data, paginated REST               | Medium                  | Modern API uses pagination; max page size can be up to 10,000 records. ([api.waterdata.usgs.gov][8])                                | 15–60 min for gauges                                             | Fetch only monitored gauges/regions. Use paging. Store latest in Postgres; history in Parquet.                        |
+| 10 | NOAA NWPS / National Water Prediction Service | API JSON/services, metadata, observations, forecasts           | Medium                  | Public API services. ([water.noaa.gov][9])                                                                                          | 15–60 min                                                        | Fetch gauge observations + forecasts by region. Cache metadata separately from changing values.                       |
+| 11 | NOAA DART / NDBC Tsunami Buoys                | Text/CSV-like buoy messages, pressure/water-level time series  | Small–medium            | Public data; no simple global REST limit found                                                                                      | Normal mode: 15 min–6 hours. Event mode: faster                  | Poll station list slowly. Increase frequency only during tsunami/earthquake events.                                   |
+| 12 | Copernicus ERA5 / CDS                         | GRIB, NetCDF                                                   | Very large              | Registration/API required; CDS API access. ([Climate Data Store][10])                                                               | Historical/reanalysis: daily/monthly batch                       | Do not use for live. Batch download by variable/time/area. Store as Parquet/Zarr/COG.                                 |
+| 13 | Copernicus CAMS                               | GRIB, zipped NetCDF                                            | Large                   | ADS/CDS account/API required. CAMS global forecasts produced **twice daily**. ([Atmosphere Data Store][11])                         | Every 12 hours                                                   | Fetch only needed pollutants/levels. Save raw GRIB/NetCDF; normalize to air-quality grids.                            |
+| 14 | OpenAQ                                        | JSON REST API                                                  | Small–medium            | API key required; **60/min, 2,000/hour**. Pagination max **1,000/page**. ([OpenAQ Docs][12])                                        | 10–30 min for active stations                                    | Fetch by bbox/country/city. Use paging. Store stations metadata separately from measurements.                         |
+| 15 | Copernicus Land / CLMS                        | GeoTIFF, NetCDF, raster products, OData/S3/Sentinel Hub/openEO | Large                   | Free products; accessible via S3, OData, Sentinel Hub APIs, Copernicus Browser. ([Copernicus Land Monitoring Service][13])          | Daily to monthly depending product                               | Do not poll frequently. Download product updates by date/tile. Store rasters as COG/Parquet indexes.                  |
+| 16 | NASA MODIS                                    | HDF/HDF-EOS, HDF5, GeoTIFF derivatives                         | Large                   | Earthdata access often required; product dependent                                                                                  | 1–2 days for global coverage. ([NASA Earthdata][14])             | Batch by product/tile/date. Convert HDF to COG/Parquet. Not for minute-level live.                                    |
+| 17 | Smithsonian GVP                               | HTML/database, XML/Excel downloads                             | Small                   | Public; no high-frequency API                                                                                                       | Daily/weekly/monthly                                             | Treat as reference + eruption reports, not live stream. Fetch weekly/monthly.                                         |
+| 18 | USGS Volcano Hazards                          | Feeds/pages/notices, JSON/XML where available                  | Small                   | Public; source-specific                                                                                                             | 5–30 min for notices; daily for background                       | Poll notices/alerts. Store volcano reference separately from activity updates.                                        |
+| 19 | GDACS                                         | RSS, XML, GeoRSS, KML, API/Swagger                             | Small–medium            | Public API/feeds; popular feeds listed as updated every **6 minutes**. ([GDACS][15])                                                | 6–10 min                                                         | Poll all-events feed. Dedupe by event ID. Use detail endpoint only for changed/new events.                            |
+| 20 | Copernicus GloFAS                             | GRIB/NetCDF via CDS/CEMS; WMS-T for viewing                    | Large                   | Registration/API via CDS/CEMS. Time-critical CDS use not advised for some datasets. ([Copernicus Emergency Management Service][16]) | 6–24 hours depending product                                     | Batch forecast grids. For live map use WMS-T where possible. Store flood grids as Parquet/COG.                        |
+| 21 | WorldPop                                      | GeoTIFF, ASCII XYZ, API/download links                         | Large static rasters    | Public API/downloads. GeoTIFF; some datasets ~GB scale. ([WorldPop][17])                                                            | Monthly/yearly, not live                                         | Download once per country/year/version. Store as COG. Use for exposure joins, not frequent polling.                   |
+
+| Tier   |          Fetch frequency | Source / API                   | Data provided                                                           | Notes / rule                                                     |
+| ------ | -----------------------: | ------------------------------ | ----------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| Tier 1 |              **1–5 min** | USGS Earthquakes               | Earthquake location, magnitude, depth, tsunami potential                | Faster than 15 min because seismic alerts are immediate.         |
+| Tier 1 |              **2–5 min** | NOAA/NWS Alerts                | Weather warnings, watches, emergency alerts                             | Severe alerts can change quickly.                                |
+| Tier 1 |             **5–10 min** | GDACS                          | Global disaster alerts, cyclone alerts, earthquake/flood/volcano alerts | Good global disaster aggregator.                                 |
+| Tier 1 |            **10–15 min** | NASA FIRMS                     | Active fires, fire radiative power, fire confidence                     | 15 min is fine because satellite passes limit freshness.         |
+| Tier 1 |             **Adaptive** | NOAA DART/NDBC                 | Tsunami buoys, wave height, ocean pressure/water level                  | Normal: 15–60 min. If major earthquake: 1–2 min.                 |
+| Tier 2 |            **10–15 min** | Open-Meteo Current             | Current temperature, wind, rain, visibility, humidity                   | Current weather can be refreshed more often.                     |
+| Tier 2 |               **1 hour** | Open-Meteo Forecast            | Hourly/daily forecast, precipitation probability, wind forecast         | Forecast does not need 5-min polling.                            |
+| Tier 2 |            **15–60 min** | USGS Water                     | Stream gauge level, river discharge, groundwater                        | Use faster interval only during flood risk.                      |
+| Tier 2 |            **30–60 min** | OpenAQ                         | PM2.5, PM10, AQI, ozone, NO2, SO2, CO                                   | Many sensors update hourly.                                      |
+| Tier 2 |               **1 hour** | NOAA NWPS/NWM                  | River forecast, flood stage, water prediction                           | Hourly is enough for normal use.                                 |
+| Tier 2 |            **30–60 min** | NASA GPM / IMERG               | Satellite rainfall estimate, precipitation accumulation                 | Add this source; important for rainfall intelligence.            |
+| Tier 3 | **4x/day after release** | NOAA GFS / NODD                | Global weather model: wind, pressure, CAPE, shear, storms               | Fetch after model cycle is available, not exactly every 6 hours. |
+| Tier 3 |        **6h / adaptive** | NOAA NHC / JTWC                | Hurricane/cyclone track, forecast cone, intensity                       | 6h normal; 1–3h near landfall or active threat.                  |
+| Tier 4 |                **Daily** | Copernicus ERA5 / CDS          | Historical weather, anomalies, climate normals                          | Use for analysis, not live alerts.                               |
+| Tier 4 |            **12h–daily** | Copernicus CAMS                | Smoke, dust, aerosols, air composition                                  | Atmospheric models update slower than live events.               |
+| Tier 4 |        **6–24h / daily** | Copernicus GloFAS              | Flood probability, river flood forecasts                                | Depends on product and availability.                             |
+| Tier 4 |             **1–2 days** | NASA MODIS / Earthdata         | NDVI, EVI, land surface temp, snow, vegetation                          | Satellite coverage/product latency.                              |
+| Tier 5 |               **Weekly** | Smithsonian GVP / USGS Volcano | Volcano locations, eruption reports, alert levels                       | Volcano metadata changes slowly.                                 |
+| Tier 5 |              **Monthly** | Copernicus Land / CLMS         | Land cover, soil moisture, deforestation, vegetation                    | Land surface products change slowly.                             |
+| Tier 5 |               **Yearly** | WorldPop                       | Population density, vulnerable population                               | Demographic grids update yearly or occasionally.                 |
+
+
+| Rule                              | Meaning                                                                          |
+| --------------------------------- | -------------------------------------------------------------------------------- |
+| Do not fetch all sources together | Each source needs its own schedule.                                              |
+| Use priority queues               | Tier 1 gets high-priority workers; Tier 5 gets cold/background workers.          |
+| Use adaptive polling              | Increase fetch rate only during active danger.                                   |
+| Use deduplication                 | If event ID exists, update it; otherwise insert it.                              |
+| Use raw storage first             | Save original API/file response before normalization.                            |
+| Use source-specific limits        | Respect API key, token, rate limit, and terms.                                   |
+| Use model-cycle fetching          | For GFS/CAMS/GloFAS, fetch after new model files are released.                   |
+| Split metadata from live values   | Station lists, volcano lists, sensors change slowly; measurements change faster. |
+| Cache tile sources                | NASA GIBS/GOES visual tiles should be cached/on-demand, not blindly downloaded.  |
+
+
+| Trigger                               | Action                                                |
+| ------------------------------------- | ----------------------------------------------------- |
+| Earthquake magnitude > 6.5 near ocean | Increase DART/NDBC polling to 1–2 min.                |
+| Active cyclone near land              | Increase NHC/JTWC polling to 1–3h.                    |
+| Flood warning active                  | Increase USGS Water/NWPS polling to 15 min.           |
+| Severe weather alert active           | Keep NWS alerts at 2–5 min.                           |
+| Large wildfire detected               | Increase FIRMS + wind/weather checks for that region. |
+
+Tier 1 = emergency/event feeds
+Tier 2 = operational live observations
+Tier 3 = forecast model cycles
+Tier 4 = daily analytical products
+Tier 5 = static/reference datasets
+
+/data/raw/
+ ├── weather/
+ │    ├── open_meteo/                → current + forecast weather (JSON)
+ │    ├── noaa_nws/                  → alerts, warnings (JSON/GeoJSON)
+ │    ├── noaa_gfs/                  → global forecast model (GRIB2)
+ │    ├── noaa_ncei/                 → historical climate (CSV/JSON)
+ │    ├── copernicus_era5/           → reanalysis climate (NetCDF/GRIB)
+ │    ├── nasa_gpm/                  → rainfall satellite (HDF5/NetCDF)
+ │
+ │    ├── earthquakes/
+ │    │    ├── usgs/                 → earthquake events (GeoJSON)
+ │
+ │    ├── fires/
+ │    │    ├── nasa_firms/           → active fires (CSV/GeoJSON)
+ │
+ │    ├── alerts/
+ │    │    ├── gdacs/                → global disaster alerts (JSON/XML)
+ │
+ │    ├── oceans/
+ │    │    ├── noaa_dart/            → tsunami buoys (CSV/TXT)
+ │    │    ├── noaa_ndbc/            → ocean buoys (CSV/TXT)
+ │
+ │    ├── hydrology/
+ │    │    ├── usgs_water/           → river gauges (JSON)
+ │    │    ├── noaa_nwps/            → river forecasts (JSON)
+ │    │    ├── copernicus_glofas/    → flood models (NetCDF/GRIB)
+ │
+ │    ├── air_quality/
+ │    │    ├── openaq/               → AQI + pollutants (JSON)
+ │    │    ├── copernicus_cams/      → aerosols/smoke (GRIB/NetCDF)
+ │
+ │    ├── satellite/
+ │    │    ├── nasa_gibs/            → imagery tiles (WMTS/PNG refs)
+ │    │    ├── noaa_goes/            → satellite data (NetCDF)
+ │    │    ├── nasa_modis/           → NDVI/LST (HDF/GeoTIFF)
+ │
+ │    ├── cyclones/
+ │    │    ├── noaa_nhc/             → hurricanes (JSON)
+ │    │    ├── jtwc/                 → typhoons (TXT/JSON)
+ │
+ │    ├── geology/
+ │    │    ├── usgs_volcano/         → volcano alerts (JSON)
+ │    │    ├── smithsonian_gvp/      → volcano database (CSV/XML)
+ │
+ │    ├── land/
+ │    │    ├── copernicus_land/      → land cover, soil (GeoTIFF)
+ │
+ │    ├── population/
+ │    │    ├── worldpop/             → population grids (GeoTIFF)
+
+ Inside each source folder:
+
+/year=YYYY/
+  ├── month=MM/
+  │    ├── day=DD/
+  │    │    ├── hour=HH/
+  │    │    │    ├── {source}_{datatype}_{timestamp}.{ext}
+
+  Rules:
+
+1. One folder per source (21 sources = 21 folders)
+2. Group by domain (weather, hydrology, fire, etc.) for readability
+3. Always partition by time (year/month/day/hour)
+4. Always store original format (no conversion here)
+5. Keep filenames consistent (source + datatype + timestamp)
+6. Never mix multiple sources in one folder
+7. Large data (GRIB/NetCDF) stays exactly as downloaded
+8. Small data (JSON/CSV) stored directly or gzip if needed
+9. Satellite tiles → store reference or cache, not full dump
+10. Errors/debugging → isolated per source folder
+
+
+PROBLEM:
+Different sources return:
+- Tiles (PNG/JPG via WMTS/WMS)
+- Hybrid (API + WMS)
+- Raster (GeoTIFF)
+- Structured (JSON/CSV/GeoJSON)
+- Binary grids (GRIB2/NetCDF)
+
+GOAL:
+Unify ALL into ONE system → "queryable + visualizable + normalized"
+
+────────────────────────────────────────────
+STEP 1: CLASSIFY EVERY SOURCE (MANDATORY)
+────────────────────────────────────────────
+
+TYPE_A = VISUAL_TILES
+  nasa_gibs
+  noaa_goes_tiles (if used via tiles)
+
+TYPE_B = HYBRID
+  nasa_firms
+  copernicus_glofas
+
+TYPE_C = RASTER_DATA
+  worldpop
+  copernicus_land
+
+TYPE_D = STRUCTURED_EVENTS
+  usgs_earthquake
+  gdacs
+  usgs_volcano
+  nws_alerts
+
+TYPE_E = STRUCTURED_OBSERVATIONS
+  open_meteo
+  openaq
+  usgs_water
+  noaa_nwps
+
+TYPE_F = GRID_MODELS
+  noaa_gfs
+  era5
+  cams
+  gpm
+
+────────────────────────────────────────────
+STEP 2: STORAGE STRATEGY (UNIFIED)
+────────────────────────────────────────────
+
+TYPE_A (tiles)
+→ DO NOT STORE
+→ store only:
+   - layer_name
+   - url_template
+→ render directly in frontend (Cesium)
+
+TYPE_B (hybrid)
+→ store BOTH:
+   1. raw API data → /data/raw/
+   2. WMS URL → config
+→ use:
+   - API → intelligence
+   - WMS → visualization
+
+TYPE_C (GeoTIFF)
+→ store raw GeoTIFF
+→ convert → COG OR Parquet grid
+→ extract:
+   - value
+   - lat/lon
+   - h3 index
+
+TYPE_D (events)
+→ raw JSON → /data/raw/
+→ normalized → PostgreSQL (intel_events)
+
+TYPE_E (observations)
+→ raw JSON → /data/raw/
+→ normalized → PostgreSQL (intel_observations)
+
+TYPE_F (grid models)
+→ raw GRIB/NetCDF → /data/raw/
+→ convert → Parquet (DuckDB readable)
+→ DO NOT store in PostgreSQL
+
+────────────────────────────────────────────
+STEP 3: NORMALIZATION PIPELINE PER TYPE
+────────────────────────────────────────────
+
+TYPE_A:
+  skip normalization
+  just store config
+
+TYPE_B:
+  normalize API data (like TYPE_D/E)
+  ignore WMS for backend
+
+TYPE_C:
+  GeoTIFF → rasterio/gdal
+  → extract pixels
+  → map to H3
+  → save as Parquet
+
+TYPE_D:
+  JSON → map fields
+  → add H3
+  → insert into events table
+
+TYPE_E:
+  JSON → standardize units
+  → add H3
+  → insert into observations table
+
+TYPE_F:
+  GRIB/NetCDF → xarray
+  → select variables
+  → convert to Parquet
+  → index by H3 or grid cell
+
+────────────────────────────────────────────
+STEP 4: QUERY UNIFICATION
+────────────────────────────────────────────
+
+User query:
+→ location (lat/lon)
+
+Backend:
+→ convert to H3
+
+Then:
+
+PostgreSQL:
+→ events
+→ observations
+→ assets
+
+DuckDB:
+→ weather grids (Parquet)
+
+Frontend:
+→ tiles (GIBS/WMS)
+
+Combine:
+→ single JSON response
+
+────────────────────────────────────────────
+STEP 5: VISUALIZATION STRATEGY
+────────────────────────────────────────────
+
+Events:
+→ points (Cesium entities)
+
+Observations:
+→ markers / heatmap
+
+Grids:
+→ raster layer OR sampled values
+
+Tiles:
+→ direct overlay (WMTS/WMS)
+
+────────────────────────────────────────────
+STEP 6: KEY RULES
+────────────────────────────────────────────
+
+1. NEVER convert everything to one format
+2. KEEP each type in optimal format
+3. UNIFY only at query time
+4. USE H3 as join key
+5. USE DuckDB for large grids
+6. USE Postgres for relationships
+7. USE frontend for tile rendering
+
+────────────────────────────────────────────
+FINAL SYSTEM MODEL
+────────────────────────────────────────────
+
+Tiles (GIBS) → Frontend
+Events → PostgreSQL
+Observations → PostgreSQL
+Grids → Parquet + DuckDB
+Raster → GeoTIFF → Parquet
+Raw → MinIO
+
+ALL JOINED BY:
+→ H3 index
+→ time
+
+RESULT:
+→ one unified intelligence system
+
+
+VERDICT:
+✔ Your design = production-grade
+✔ All 3 points = correct
+✔ No major flaw
+→ Only add missing safeguards below
+
+────────────────────────────────────────────
+1. RETENTION POLICY (IMPROVED)
+────────────────────────────────────────────
+
+Current:
+✔ Tier 1/2 → 30 days
+✔ Tier 3 → 7 days
+
+ADD:
+
+- Keep LAST SUCCESSFUL FILE always (do not delete blindly)
+- Keep DAILY SNAPSHOT:
+    → 1 file per day kept for long-term (for debugging)
+
+Final rule:
+
+Tier 1/2:
+  - full data → 30 days
+  - daily snapshot → keep 6–12 months
+
+Tier 3:
+  - full data → 7 days
+  - keep 1 file per model cycle (optional)
+
+────────────────────────────────────────────
+2. PRE-SAVE VALIDATION (EXPANDED)
+────────────────────────────────────────────
+
+Current:
+✔ status 200
+✔ JSON.parse()
+
+ADD:
+
+CHECKS:
+
+1. HTTP status == 200
+2. Content-Type header correct
+   → application/json / text/csv / application/octet-stream
+
+3. File size > 0
+4. Schema sanity check:
+   - JSON has expected keys
+   - CSV has headers
+   - GRIB/NetCDF not corrupted
+
+5. Response NOT:
+   - HTML
+   - empty array (optional check)
+
+IF FAIL:
+→ DO NOT SAVE
+→ LOG ERROR
+→ RETRY
+
+────────────────────────────────────────────
+3. EXPONENTIAL BACKOFF (IMPROVED)
+────────────────────────────────────────────
+
+Current:
+✔ retry logic
+✔ DLQ
+
+ADD:
+
+Backoff pattern:
+
+attempt 1 → wait 1 min
+attempt 2 → wait 2 min
+attempt 3 → wait 4 min
+attempt 4 → wait 8 min
+attempt 5 → wait 16 min
+
+MAX_ATTEMPTS = 5
+
+After fail:
+→ move to DLQ
+
+ADD:
+
+- jitter (random delay)
+  → prevents all jobs retrying at same time
+
+Example:
+wait = base * 2^attempt + random(0–30s)
+
+────────────────────────────────────────────
+4. DEAD LETTER QUEUE (UPGRADE)
+────────────────────────────────────────────
+
+DLQ should store:
+
+- source_id
+- last_attempt_time
+- error_message
+- retry_count
+- last_success_time
+
+Trigger alerts:
+
+✔ Slack / Discord webhook
+✔ Email (optional)
+
+Auto-recovery:
+
+→ system retries DLQ every 1–6 hours
+
+────────────────────────────────────────────
+5. ADD CIRCUIT BREAKER (VERY IMPORTANT)
+────────────────────────────────────────────
+
+Problem:
+API down → infinite retries
+
+Solution:
+
+IF failure rate > threshold (e.g., 80% in last 10 attempts)
+→ STOP hitting API for 30–60 min
+
+State:
+
+CLOSED → normal
+OPEN → stop requests
+HALF-OPEN → test request
+
+────────────────────────────────────────────
+6. ADD IDEMPOTENCY (CRITICAL)
+────────────────────────────────────────────
+
+Problem:
+Same data fetched multiple times
+
+Solution:
+
+Before saving:
+
+IF file with same timestamp exists
+→ SKIP save
+
+OR:
+
+use hash checksum:
+→ avoid duplicate storage
+
+────────────────────────────────────────────
+7. ADD PARTIAL SUCCESS HANDLING
+────────────────────────────────────────────
+
+Problem:
+API returns partial data
+
+Solution:
+
+- mark metadata:
+  status = partial
+
+- still save raw
+- normalization handles missing fields
+
+────────────────────────────────────────────
+8. ADD SOURCE HEALTH TRACKING
+────────────────────────────────────────────
+
+Track per source:
+
+- last_success_time
+- success_rate
+- failure_rate
+- avg_response_time
+
+Use this for:
+
+→ confidence scoring
+→ alerting
+→ debugging
+
+────────────────────────────────────────────
+9. ADD FETCH PRIORITY QUEUE
+────────────────────────────────────────────
+
+Queue types:
+
+HIGH → Tier 1
+MEDIUM → Tier 2
+LOW → Tier 3+
+BACKGROUND → Tier 4/5
+
+Workers process:
+
+HIGH first
+then MEDIUM
+then LOW
+
+────────────────────────────────────────────
+10. FINAL FETCH FLOW (UPDATED)
+────────────────────────────────────────────
+
+FETCH
+   ↓
+VALIDATE
+   ↓
+CHECK DUPLICATE
+   ↓
+SAVE RAW (MinIO)
+   ↓
+STORE METADATA (DB)
+   ↓
+QUEUE NORMALIZATION
+   ↓
+SUCCESS
+
+IF FAIL:
+   ↓
+RETRY (backoff + jitter)
+   ↓
+IF max fail:
+   ↓
+DLQ
+   ↓
+ALERT
+
+DAILY:
+   ↓
+PURGE OLD DATA
+   ↓
+KEEP SNAPSHOT
+
+────────────────────────────────────────────
+FINAL RESULT
+────────────────────────────────────────────
+
+✔ No storage overflow
+✔ No corrupted files
+✔ No infinite retry loops
+✔ No duplicate data
+✔ Full observability
+✔ Recoverable pipeline
+
+
+
+STATUS:
+✔ Your system is already ~90–95% complete
+✔ Only a few CRITICAL production-grade gaps remain
+
+────────────────────────────────────────────
+1. TIME SYNCHRONIZATION (CRITICAL)
+────────────────────────────────────────────
+
+Problem:
+Different sources use different clocks
+
+Fix:
+
+- Always store:
+  observed_time
+  valid_time
+  forecast_time
+  ingested_at
+
+- Convert EVERYTHING → UTC
+
+- Sync server clock (NTP)
+
+────────────────────────────────────────────
+2. VERSIONING (DATA EVOLUTION)
+────────────────────────────────────────────
+
+Problem:
+Same forecast updated later → overwrite risk
+
+Fix:
+
+- Add version field:
+
+version = model_run_time (for GFS/ERA5)
+version = updated_at (for APIs)
+
+- Never overwrite blindly
+- Keep latest + optionally previous version
+
+────────────────────────────────────────────
+3. SCHEMA DRIFT HANDLING
+────────────────────────────────────────────
+
+Problem:
+API changes field names → pipeline breaks
+
+Fix:
+
+- Use payload JSONB (raw backup)
+- Add schema validation layer
+- Log unknown fields
+
+────────────────────────────────────────────
+4. DATA QUALITY SCORING
+────────────────────────────────────────────
+
+Problem:
+All sources are not equal
+
+Fix:
+
+Each record gets:
+
+- source_priority
+- freshness_score
+- completeness_score
+- final_confidence
+
+────────────────────────────────────────────
+5. GEOSPATIAL EDGE CASES
+────────────────────────────────────────────
+
+Problem:
+- missing lat/lon
+- invalid geometry
+- polar regions
+
+Fix:
+
+- validate coordinates
+- fallback to bbox
+- handle null geometry safely
+
+────────────────────────────────────────────
+6. LARGE FILE STREAMING
+────────────────────────────────────────────
+
+Problem:
+GRIB/NetCDF too large → memory crash
+
+Fix:
+
+- stream download (NOT buffer)
+- chunk processing
+- never load full file into RAM
+
+────────────────────────────────────────────
+7. SECURITY (BASIC BUT IMPORTANT)
+────────────────────────────────────────────
+
+Fix:
+
+- store API keys in ENV (not code)
+- rate-limit your own API
+- validate all inputs
+- block external file injection
+
+────────────────────────────────────────────
+8. MONITORING + LOGGING
+────────────────────────────────────────────
+
+You need:
+
+- fetch logs
+- error logs
+- normalization logs
+- API response time
+
+Tools:
+
+- simple logs → start
+- later → Prometheus / Grafana
+
+────────────────────────────────────────────
+9. REPROCESSING SYSTEM (VERY IMPORTANT)
+────────────────────────────────────────────
+
+Problem:
+Bug in normalization
+
+Fix:
+
+- ability to:
+  SELECT raw files
+  RE-RUN normalization
+
+Command example:
+
+reprocess --source=usgs --date=2026-04-30
+
+────────────────────────────────────────────
+10. DATA LINEAGE (TRACEABILITY)
+────────────────────────────────────────────
+
+Every record should answer:
+
+"Where did this come from?"
+
+Store:
+
+- source
+- raw_file_path
+- ingestion_run_id
+
+────────────────────────────────────────────
+11. PARTITIONING STRATEGY (DB LEVEL)
+────────────────────────────────────────────
+
+PostgreSQL tables:
+
+Partition by:
+
+- time (day/month)
+- OR H3 region
+
+Prevents slowdown at scale
+
+────────────────────────────────────────────
+12. LATENCY VS COST TRADEOFF
+────────────────────────────────────────────
+
+Rule:
+
+- Not everything needs real-time
+- expensive sources → fetch less
+- critical sources → fetch more
+
+────────────────────────────────────────────
+13. FALLBACK VISUALIZATION
+────────────────────────────────────────────
+
+Problem:
+Tile servers down
+
+Fix:
+
+- fallback layer
+- cached tiles
+- basic rendering from your data
+
+────────────────────────────────────────────
+14. ALERT FATIGUE CONTROL
+────────────────────────────────────────────
+
+Problem:
+Too many alerts = useless system
+
+Fix:
+
+- deduplicate alerts
+- merge similar events
+- severity thresholds
+
+
+────────────────────────────────────────────
+FINAL SUMMARY
+────────────────────────────────────────────
+
+YOU HAVE COVERED:
+
+✔ data sources
+✔ fetch strategy
+✔ storage (raw + processed)
+✔ normalization
+✔ database split
+✔ retention
+✔ retry/backoff
+✔ DLQ
+✔ validation
+
+ADDED NOW:
+
+✔ time handling
+✔ versioning
+✔ schema drift
+✔ data quality scoring
+✔ streaming
+✔ monitoring
+✔ reprocessing
+✔ lineage
+✔ partitioning
+✔ alert control
+
+────────────────────────────────────────────
+FINAL VERDICT
+────────────────────────────────────────────
+
+System readiness:
+→ 95% complete architecture
+
+Remaining work:
+→ implementation, not design
+
+
+No record of WHAT was fetched
+fetch_log.json OR DB table
+
+fields:
+- source
+- fetched_at
+- status (success/fail)
+- file_path
+- bytes downloaded
+- duration
+- error message (if any)
+- http_status
+- rate_limit_used
+- retry_count
+- time_window (UTC)
+
+Same API called twice → duplicate files
+IF file exists for timestamp
+→ SKIP saving
+use hash check

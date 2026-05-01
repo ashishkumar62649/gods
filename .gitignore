@@ -9,6 +9,8 @@ dist
 .env
 .env.local
 .env.*.local
+.cdsapirc
+copernicus_land_clms.json
 
 # OS / editor
 .DS_Store

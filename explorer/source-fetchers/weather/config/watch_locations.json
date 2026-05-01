@@ -1,0 +1,101 @@
+{
+  "version": 1,
+  "description": "Small no-auth raw-fetch watch list. Keep this tiny until storage and normalization are designed.",
+  "locations": [
+    {
+      "id": "kolkata_in",
+      "name": "Kolkata",
+      "countryCode": "IN",
+      "latitude": 22.5726,
+      "longitude": 88.3639,
+      "useNws": false
+    },
+    {
+      "id": "new_york_us",
+      "name": "New York City",
+      "countryCode": "US",
+      "latitude": 40.7128,
+      "longitude": -74.006,
+      "useNws": true
+    },
+    {
+      "id": "san_francisco_us",
+      "name": "San Francisco",
+      "countryCode": "US",
+      "latitude": 37.7749,
+      "longitude": -122.4194,
+      "useNws": true
+    },
+    {
+      "id": "honolulu_us",
+      "name": "Honolulu",
+      "countryCode": "US",
+      "latitude": 21.3069,
+      "longitude": -157.8583,
+      "useNws": true
+    }
+  ],
+  "usgsWater": {
+    "sites": ["01646500"],
+    "parameterCodes": ["00060", "00065"],
+    "bbox": null
+  },
+  "nwps": {
+    "gaugeIds": ["ALBN6"]
+  },
+  "dart": {
+    "stationIds": ["21413"]
+  },
+  "worldPop": {
+    "countries": ["IND", "USA"],
+    "year": 2020,
+    "datasetAlias": "pop",
+    "categoryAlias": "wpgp"
+  },
+  "firms": {
+    "dayRange": 1,
+    "sources": ["VIIRS_SNPP_NRT", "MODIS_NRT"],
+    "areas": [
+      {
+        "id": "kolkata_region",
+        "name": "Kolkata Region",
+        "bbox": "87.5,21.8,89.2,23.3"
+      },
+      {
+        "id": "california_bay_area",
+        "name": "California Bay Area",
+        "bbox": "-123.2,36.8,-121.4,38.5"
+      }
+    ]
+  },
+  "openaq": {
+    "parameters": ["pm25", "pm10", "o3", "no2", "so2", "co"],
+    "limit": 100
+  },
+  "earthdataModis": {
+    "collectionKeyword": "MODIS",
+    "collectionShortNames": ["MOD11A1", "MOD13A1"],
+    "pageSize": 3
+  },
+  "copernicusLand": {
+    "apiRoot": "https://land.copernicus.eu/api",
+    "metadataEndpoints": [
+      {
+        "id": "site_root",
+        "path": "/"
+      },
+      {
+        "id": "search_collections",
+        "path": "/@search?portal_type=DataSet&metadata_fields=UID&metadata_fields=title&metadata_fields=description&metadata_fields=modified&metadata_fields=subjects&sort_on=modified&sort_order=descending&b_size=10"
+      }
+    ]
+  },
+  "gibs": {
+    "sampleDate": "2012-07-09",
+    "sampleLayer": "MODIS_Terra_CorrectedReflectance_TrueColor"
+  },
+  "goes": {
+    "bucket": "noaa-goes19",
+    "productPrefix": "ABI-L2-CMIPF/"
+  }
+}
