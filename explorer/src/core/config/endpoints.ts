@@ -21,6 +21,12 @@ export const ENVIRONMENT = {
 
 export const API_ROUTES = {
   LOCAL_CLIMATE_STATE: '/api/climate/state',
+  LOCAL_INTEL_SUMMARY: '/api/intel/summary',
+  LOCAL_INTEL_WEATHER_CURRENT: '/api/intel/weather/current',
+  LOCAL_INTEL_HAZARDS_ACTIVE: '/api/intel/hazards/active',
+  LOCAL_INTEL_AIR_QUALITY_LATEST: '/api/intel/air-quality/latest',
+  LOCAL_INTEL_HYDROLOGY_LATEST: '/api/intel/hydrology/latest',
+  LOCAL_INTEL_SOURCE_HEALTH: '/api/intel/source-health',
   LOCAL_AIRPORTS: '/api/airports',
   LOCAL_FLIGHTS: '/api/flights',
   LOCAL_FLIGHT_EMERGENCIES: '/api/flights/emergencies',

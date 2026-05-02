@@ -1,2 +1,1 @@
-export {};
-
+export type { HazardIntelEvent } from './intel';

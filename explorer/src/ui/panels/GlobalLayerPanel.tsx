@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { fetchInfrastructureSnapshot } from '../../core/api/infrastructureApi';
+import { fetchWeatherIntelSnapshot } from '../../core/api/intelApi';
 import { fetchSatelliteTelemetry } from '../../core/api/orbitalApi';
 import {
   fetchAirports,
@@ -12,10 +13,12 @@ import WeatherLayerAccordion from './WeatherLayerAccordion';
 import { INTERVALS } from '../../core/config/constants';
 import { useMapStore } from '../../core/store/useMapStore';
 import { useInfrastructureStore } from '../../core/store/useInfrastructureStore';
+import { useIntelStore } from '../../core/store/useIntelStore';
 import { useSatelliteStore } from '../../core/store/useSatelliteStore';
 import { useClimateStore } from '../../core/store/useClimateStore';
 import { useTelemetryStore } from '../../core/store/useTelemetryStore';
 import { useTransitStore } from '../../core/store/useTransitStore';
+import type { IntelLayerKey, SourceHealthRecord } from '../../core/types/intel';
 
 type SidebarSection = 'base' | 'intel' | 'infra' | 'weather' | 'system';
 type MissionFilter = 'SIGINT' | 'NAV' | 'COMMS' | 'WEATHER';
@@ -54,6 +57,8 @@ const SECTION_TABS: Array<{ id: SidebarSection; label: string; title: string }> 
   { id: 'weather', label: 'Weather', title: 'Weather & Earth' },
   { id: 'system', label: 'System', title: 'System Controls' },
 ];
+
+const INTEL_SYNC_MS = 60_000;
 
 interface WeatherCategoryMeta {
   id: WeatherCategory;
@@ -118,6 +123,21 @@ export default function GlobalLayerPanel() {
   const activeClimateLayers = useClimateStore((state) => state.activeLayers);
   const toggleClimateLayer = useClimateStore((state) => state.toggleLayer);
   const setClimateSnapshot = useClimateStore((state) => state.setClimateSnapshot);
+
+  const intelActiveLayers = useIntelStore((state) => state.activeLayers);
+  const intelStatus = useIntelStore((state) => state.status);
+  const intelMessage = useIntelStore((state) => state.message);
+  const intelLastSync = useIntelStore((state) => state.lastSync);
+  const intelSummary = useIntelStore((state) => state.summary);
+  const intelWeatherCount = useIntelStore((state) => state.weather.length);
+  const intelHazardCount = useIntelStore((state) => state.hazards.length);
+  const intelAirQualityCount = useIntelStore((state) => state.airQuality.length);
+  const intelHydrologyCount = useIntelStore((state) => state.hydrology.length);
+  const intelSources = useIntelStore((state) => state.sources);
+  const toggleIntelLayer = useIntelStore((state) => state.toggleLayer);
+  const setIntelLoading = useIntelStore((state) => state.setLoading);
+  const setIntelSnapshot = useIntelStore((state) => state.setSnapshot);
+  const setIntelError = useIntelStore((state) => state.setError);
 
   const visibleTransitNetworks = useTransitStore((state) => state.visibleNetworks);
   const toggleTransitNetwork = useTransitStore((state) => state.toggleNetwork);
@@ -243,6 +263,35 @@ export default function GlobalLayerPanel() {
   useEffect(() => {
     let cancelled = false;
 
+    const syncIntel = async () => {
+      const hasSynced = useIntelStore.getState().lastSync !== null;
+      setIntelLoading(
+        hasSynced ? 'Refreshing database intelligence.' : 'Loading database intelligence.',
+      );
+      try {
+        const snapshot = await fetchWeatherIntelSnapshot();
+        if (cancelled) return;
+        setIntelSnapshot(snapshot);
+      } catch (error) {
+        if (cancelled) return;
+        const message = error instanceof Error
+          ? error.message
+          : 'Weather intelligence fetch failed.';
+        setIntelError(message);
+      }
+    };
+
+    void syncIntel();
+    const intervalId = window.setInterval(syncIntel, INTEL_SYNC_MS);
+    return () => {
+      cancelled = true;
+      window.clearInterval(intervalId);
+    };
+  }, [setIntelError, setIntelLoading, setIntelSnapshot]);
+
+  useEffect(() => {
+    let cancelled = false;
+
     const syncInfrastructure = async () => {
       setInfrastructureFeedStatus('loading', 'Refreshing infrastructure feed.');
       const snapshot = await fetchInfrastructureSnapshot();
@@ -319,7 +368,46 @@ export default function GlobalLayerPanel() {
           </>
         );
       case 'weather':
-        return <WeatherLayerAccordion />;
+        return (
+          <>
+            <WeatherLayerAccordion />
+            <IntelFeedSummaryCard
+              status={intelStatus}
+              message={intelMessage}
+              lastSync={intelLastSync}
+              rawFiles={intelSummary?.counts.source_raw_files ?? 0}
+              sources={intelSources}
+            />
+            <IntelToggleRow
+              label="DB Weather Points"
+              checked={intelActiveLayers.weather}
+              count={intelWeatherCount}
+              status={intelStatus}
+              onToggle={() => toggleIntelLayer('weather')}
+            />
+            <IntelToggleRow
+              label="Active Hazards"
+              checked={intelActiveLayers.hazards}
+              count={intelHazardCount}
+              status={intelStatus}
+              onToggle={() => toggleIntelLayer('hazards')}
+            />
+            <IntelToggleRow
+              label="Air Quality"
+              checked={intelActiveLayers.airQuality}
+              count={intelAirQualityCount}
+              status={intelStatus}
+              onToggle={() => toggleIntelLayer('airQuality')}
+            />
+            <IntelToggleRow
+              label="Hydrology"
+              checked={intelActiveLayers.hydrology}
+              count={intelHydrologyCount}
+              status={intelStatus}
+              onToggle={() => toggleIntelLayer('hydrology')}
+            />
+          </>
+        );
       case 'system':
         return (
           <>
@@ -570,6 +658,139 @@ function ToggleRow({
       </span>
     </button>
   );
+}
+
+function IntelToggleRow({
+  label,
+  checked,
+  count,
+  status,
+  onToggle,
+}: {
+  label: string;
+  checked: boolean;
+  count: number;
+  status: string;
+  layer?: IntelLayerKey;
+  onToggle: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      className={
+        checked
+          ? 'layer-card layer-card--toggle layer-card--intel layer-card--active flex justify-between items-center w-full py-1.5 aether-data-row'
+          : 'layer-card layer-card--toggle layer-card--intel flex justify-between items-center w-full py-1.5 aether-data-row'
+      }
+      onClick={onToggle}
+    >
+      <span className="layer-card__body">
+        <span className="layer-card__label">{label}</span>
+        <span className="layer-card__meta">
+          {count.toLocaleString()} records - {status}
+        </span>
+      </span>
+      <span className={checked ? 'layer-switch layer-switch--on' : 'layer-switch'} aria-hidden="true">
+        <span className="layer-switch__thumb" />
+        <span className="layer-switch__text">{checked ? 'On' : 'Off'}</span>
+      </span>
+    </button>
+  );
+}
+
+function IntelFeedSummaryCard({
+  status,
+  message,
+  lastSync,
+  rawFiles,
+  sources,
+}: {
+  status: string;
+  message: string;
+  lastSync: number | null;
+  rawFiles: number;
+  sources: SourceHealthRecord[];
+}) {
+  const failingSources = sources.filter((source) => source.failureCount > 0).length;
+  const liveSources = sources.filter((source) => source.successCount > 0).length;
+
+  return (
+    <div className="layer-card layer-card--status flex flex-col w-full py-2 aether-data-row" style={{ gap: '0.55rem' }}>
+      <div className="flex justify-between items-center" style={{ gap: '0.7rem' }}>
+        <span className="layer-card__body">
+          <span className="layer-card__label">PostgreSQL Intelligence</span>
+          <span className="layer-card__meta">{message}</span>
+        </span>
+        <span
+          className={status === 'live' ? 'layer-badge layer-badge--live' : 'layer-badge'}
+          style={{ flexShrink: 0 }}
+        >
+          {status}
+        </span>
+      </div>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+          gap: '0.4rem',
+        }}
+      >
+        <IntelMetric label="Raw" value={rawFiles} />
+        <IntelMetric label="Sources" value={liveSources} />
+        <IntelMetric label="Flags" value={failingSources} />
+      </div>
+      {lastSync && (
+        <span className="layer-card__meta" style={{ marginTop: 0 }}>
+          Synced {formatClock(lastSync)}
+        </span>
+      )}
+    </div>
+  );
+}
+
+function IntelMetric({ label, value }: { label: string; value: number }) {
+  return (
+    <span
+      style={{
+        border: '1px solid rgba(103, 232, 249, 0.18)',
+        background: 'rgba(8, 47, 73, 0.2)',
+        borderRadius: 8,
+        padding: '0.35rem 0.4rem',
+        minWidth: 0,
+      }}
+    >
+      <span
+        style={{
+          display: 'block',
+          color: '#e0f2fe',
+          fontSize: '0.82rem',
+          fontWeight: 700,
+          fontVariantNumeric: 'tabular-nums',
+        }}
+      >
+        {value.toLocaleString()}
+      </span>
+      <span
+        style={{
+          display: 'block',
+          marginTop: '0.1rem',
+          color: 'rgba(203, 213, 225, 0.7)',
+          fontSize: '0.58rem',
+          letterSpacing: '0.12em',
+          textTransform: 'uppercase',
+        }}
+      >
+        {label}
+      </span>
+    </span>
+  );
+}
+
+function formatClock(timestamp: number) {
+  return new Date(timestamp).toLocaleTimeString([], {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
 }
 
 function DisabledRow({ label, meta }: { label: string; meta?: string }) {

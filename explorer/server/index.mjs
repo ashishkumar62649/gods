@@ -38,6 +38,7 @@ import {
 import { startInfrastructureRefreshLoop } from './services/infrastructureFetcher.mjs';
 import { startShipStream } from './services/shipFetcher.mjs';
 import { handleClimateStateRoute } from './routes/climate.mjs';
+import { handleWeatherIntelRoute } from './routes/weatherIntel.mjs';
 import { fetchRouteForCallsign, fetchTraceForIcao24 } from './services/opensky.mjs';
 import {
   beginEmergencySweep,
@@ -100,6 +101,10 @@ const server = http.createServer(async (req, res) => {
   }
 
   const url = new URL(req.url, `http://localhost:${PORT}`);
+
+  if (await handleWeatherIntelRoute(req, res, sendJson, url)) {
+    return;
+  }
 
   // ── GET /api/flights ──────────────────────────────────────
   // Returns position-feed flights enriched with intel attributes.

@@ -14,12 +14,12 @@ function yyyymmdd(date) {
   return date.toISOString().slice(0, 10).replace(/-/g, "");
 }
 
-function buildFeeds() {
+export function buildClimateAirReferenceFeeds({ dataTypes = null } = {}) {
   const end = new Date(Date.now() - 24 * 60 * 60 * 1000);
   const start = new Date(end.getTime() - 24 * 60 * 60 * 1000);
   const nceiEnd = process.env.NOAA_NCEI_SAMPLE_END_DATE || "2025-04-30";
   const nceiStart = process.env.NOAA_NCEI_SAMPLE_START_DATE || "2025-04-29";
-  return [
+  const feeds = [
     {
       ...OPTIONS,
       folder: "nasa_power",
@@ -71,10 +71,14 @@ function buildFeeds() {
       expectedLimitBytes: NO_AUTH_LIMITS.smallJson,
     },
   ];
+
+  if (!dataTypes) return feeds;
+  const allowed = new Set(dataTypes);
+  return feeds.filter((feed) => allowed.has(feed.dataType));
 }
 
-export async function runClimateAirReferenceRawFetch() {
-  return runFeedList(buildFeeds());
+export async function runClimateAirReferenceRawFetch(options = {}) {
+  return runFeedList(buildClimateAirReferenceFeeds(options));
 }
 
 runCli(import.meta.url, SOURCE, runClimateAirReferenceRawFetch);

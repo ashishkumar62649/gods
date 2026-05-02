@@ -6,6 +6,8 @@ import {
 import { buildHome } from '../earth/viewer/cameraUtils';
 import { FLIGHT_EASING, HOME_VIEW } from '../earth/viewer/viewerConfig';
 import { InfrastructureRenderer } from './InfrastructureRenderer';
+import { HazardRenderer } from './HazardRenderer';
+import { IntelLocationRenderer } from './IntelLocationRenderer';
 import { MapRenderer } from './MapRenderer';
 import { SatelliteRenderer } from './SatelliteRenderer';
 import { TelemetryRenderer } from './TelemetryRenderer';
@@ -40,6 +42,8 @@ export function initializeViewer(container: HTMLElement | string) {
   const telemetryRenderer = new TelemetryRenderer();
   const satelliteRenderer = new SatelliteRenderer();
   const infrastructureRenderer = new InfrastructureRenderer();
+  const hazardRenderer = new HazardRenderer();
+  const intelLocationRenderer = new IntelLocationRenderer();
   const weatherInspectorRenderer = new WeatherInspectorRenderer();
   const cameraController = new ViewerCameraController();
 
@@ -49,6 +53,8 @@ export function initializeViewer(container: HTMLElement | string) {
   telemetryRenderer.attach(viewer);
   satelliteRenderer.attach(viewer);
   infrastructureRenderer.attach(viewer);
+  hazardRenderer.attach(viewer);
+  intelLocationRenderer.attach(viewer);
   weatherInspectorRenderer.attach(viewer);
   cameraController.attach(viewer);
 
@@ -57,6 +63,8 @@ export function initializeViewer(container: HTMLElement | string) {
     destroy: () => {
       cameraController.detach();
       weatherInspectorRenderer.detach();
+      intelLocationRenderer.detach();
+      hazardRenderer.detach();
       infrastructureRenderer.detach();
       satelliteRenderer.detach();
       telemetryRenderer.detach();

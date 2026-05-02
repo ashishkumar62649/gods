@@ -7,7 +7,7 @@ export const COVERAGE_STATUSES = [
   "catalog_only",
   "partial",
   "derived_later",
-  "missing_global_source",
+  "missing_source",
 ];
 
 export const MISSING_GLOBAL_SOURCE_PARAMETERS = new Set([
@@ -327,7 +327,7 @@ function buildCoverageEntry(row) {
       sourceFamily: "needs_global_open_source",
       fetcherId: null,
       rawDataFolder: null,
-      status: "missing_global_source",
+      status: "missing_source",
       normalizationNotes: "Needs a global/free source decision or global fetcher before normalization coverage can be claimed.",
     };
   }
@@ -360,7 +360,7 @@ function buildCoverageEntry(row) {
     sourceFamily: "needs_global_open_source",
     fetcherId: null,
     rawDataFolder: null,
-    status: "missing_global_source",
+    status: "missing_source",
     normalizationNotes: "No implemented global/open raw-fetch proof is mapped yet.",
   };
 }
