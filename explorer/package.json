@@ -7,12 +7,15 @@
     "dev": "vite",
     "dev:flights": "node server/index.mjs",
     "dev:flights:legacy": "node server/flights-proxy.mjs",
+    "normalize:weather:mvp": "node normalization/weather/pipelines/mvp_open_meteo_pipeline.mjs",
     "build": "tsc -b && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
     "cesium": "^1.121.2",
     "csv-parse": "^6.2.1",
+    "h3-js": "^4.4.0",
+    "pg": "^8.20.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "resium": "^1.19.0-beta.1",

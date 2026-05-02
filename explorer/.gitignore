@@ -7,3 +7,11 @@ dist
 .DS_Store
 *.log
 data_raw/
+data_normalized/**
+!data_normalized/.gitkeep
+!data_normalized/weather/
+!data_normalized/weather/.gitkeep
+data_processed/**
+!data_processed/.gitkeep
+!data_processed/weather/
+!data_processed/weather/.gitkeep

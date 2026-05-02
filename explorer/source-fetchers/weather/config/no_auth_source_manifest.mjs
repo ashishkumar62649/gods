@@ -1,8 +1,12 @@
-import { readFile } from "node:fs/promises";
+import { access, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { EXPLORER_ROOT } from "../common_functions/index.mjs";
 
 export const WEATHER_TXT_PATH = join(EXPLORER_ROOT, "..", "weather.txt");
+export const WEATHER_TXT_FALLBACK_PATHS = [
+  WEATHER_TXT_PATH,
+  join(EXPLORER_ROOT, "..", "doc", "weather.txt"),
+];
 
 export const COMMON_FEED_OPTIONS = {
   rateLimitPerMin: 60,
@@ -150,16 +154,49 @@ function matchesAlias(sourceText, alias) {
   return sourceText.toLowerCase().includes(alias.toLowerCase());
 }
 
+async function fileExists(path) {
+  try {
+    await access(path);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export async function resolveWeatherTxtPath(weatherTxtPath = WEATHER_TXT_PATH) {
+  const paths = [weatherTxtPath, ...WEATHER_TXT_FALLBACK_PATHS].filter(
+    (path, index, values) => values.indexOf(path) === index,
+  );
+  for (const path of paths) {
+    if (await fileExists(path)) return path;
+  }
+  return weatherTxtPath;
+}
+
+export function parseFirstWeatherParameterTable(text) {
+  const rows = [];
+  let inFirstTable = false;
+
+  for (const line of text.split(/\r?\n/)) {
+    if (!line.startsWith("|")) {
+      if (inFirstTable) break;
+      continue;
+    }
+
+    inFirstTable = true;
+    if (!isParameterRow(line)) continue;
+
+    const [parameter, sourceText] = splitMarkdownRow(line);
+    if (parameter && sourceText) rows.push({ parameter, sourceText });
+  }
+
+  return rows;
+}
+
 export async function loadWeatherParameterRows(weatherTxtPath = WEATHER_TXT_PATH) {
-  const text = await readFile(weatherTxtPath, "utf8");
-  return text
-    .split(/\r?\n/)
-    .filter(isParameterRow)
-    .map((line) => {
-      const [parameter, sourceText] = splitMarkdownRow(line);
-      return { parameter, sourceText };
-    })
-    .filter((row) => row.parameter && row.sourceText);
+  const resolvedWeatherTxtPath = await resolveWeatherTxtPath(weatherTxtPath);
+  const text = await readFile(resolvedWeatherTxtPath, "utf8");
+  return parseFirstWeatherParameterTable(text);
 }
 
 export async function getSourceParameterNames(sourceId, weatherTxtPath = WEATHER_TXT_PATH) {

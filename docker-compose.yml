@@ -1,0 +1,25 @@
+services:
+  god_eyes_db:
+    image: timescale/timescaledb-ha:pg16
+    container_name: god_eyes_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: god_eyes
+      POSTGRES_USER: god_eyes
+      POSTGRES_PASSWORD: ${GOD_EYES_DB_PASSWORD:-god_eyes_dev_password}
+    ports:
+      - "${GOD_EYES_DB_PORT:-55432}:5432"
+    volumes:
+      - god_eyes_pgdata:/home/postgres/pgdata/data
+      - ./explorer/database/postgres/init:/docker-entrypoint-initdb.d:ro
+      - ./explorer/database/postgres/migrations:/schema/migrations:ro
+      - ./explorer/database/postgres/seeds:/schema/seeds:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U god_eyes -d god_eyes"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  god_eyes_pgdata:
