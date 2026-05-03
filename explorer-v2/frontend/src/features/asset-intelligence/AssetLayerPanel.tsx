@@ -1,6 +1,7 @@
 import LeftControlPanel from '../../components/shell/LeftControlPanel';
 import LayerToggle from '../../components/controls/LayerToggle';
 import { useLayerStore } from '../../store/layerStore';
+import { useUiStore } from '../../store/uiStore';
 
 const assetLayers = [
   ['aircraftAdsb', 'Aircraft (ADS-B)', 'ADSB'],
@@ -13,11 +14,12 @@ const assetLayers = [
 export default function AssetLayerPanel() {
   const activeLayers = useLayerStore((state) => state.activeLayers);
   const toggleLayer = useLayerStore((state) => state.toggleLayer);
+  const toggleLeftPanel = useUiStore((state) => state.toggleLeftPanel);
 
   return (
     <LeftControlPanel>
       <div className="god-panel-scroll">
-        <header className="panel-title-row"><h2>Layers</h2><button type="button">Collapse</button></header>
+        <header className="panel-title-row"><h2>Layers</h2><button type="button" onClick={toggleLeftPanel}>Collapse</button></header>
         <input className="panel-search" placeholder="Search layers..." />
         <section className="layer-section-v2 is-open">
           <h3>Assets</h3>

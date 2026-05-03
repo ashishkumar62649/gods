@@ -1,12 +1,15 @@
 import StatusBadge from '../../components/cards/StatusBadge';
 import LeftControlPanel from '../../components/shell/LeftControlPanel';
+import { useUiStore } from '../../store/uiStore';
 import { watchZonesMock } from './watchZonesMock';
 
 export default function WatchZoneLeftPanel() {
+  const toggleLeftPanel = useUiStore((state) => state.toggleLeftPanel);
+
   return (
     <LeftControlPanel>
       <div className="god-panel-scroll">
-        <header className="panel-title-row"><h2>Watch Zones</h2><button type="button">Filters</button></header>
+        <header className="panel-title-row"><h2>Watch Zones</h2><button type="button" onClick={toggleLeftPanel}>Collapse</button></header>
         <input className="panel-search" placeholder="Search watch zones..." />
         <div className="zone-tabs">
           <button type="button" className="is-active">All 12</button>

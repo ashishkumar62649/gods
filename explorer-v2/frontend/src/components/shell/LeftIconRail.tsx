@@ -15,17 +15,24 @@ const railItems: Array<{ id: AppMode | 'layers' | 'maritime' | 'settings'; label
 export default function LeftIconRail() {
   const mode = useUiStore((state) => state.mode);
   const setMode = useUiStore((state) => state.setMode);
+  const toggleLeftPanel = useUiStore((state) => state.toggleLeftPanel);
 
   return (
     <nav className="left-icon-rail god-glass">
       {railItems.map((item) => {
         const canSetMode = item.id.includes('-');
+        const onClick =
+          item.id === 'layers'
+            ? toggleLeftPanel
+            : canSetMode
+              ? () => setMode(item.id as AppMode)
+              : undefined;
         return (
           <IconButton
             active={item.id === mode}
             label={item.label}
             key={item.id}
-            onClick={canSetMode ? () => setMode(item.id as AppMode) : undefined}
+            onClick={onClick}
           >
             {item.glyph}
           </IconButton>

@@ -669,6 +669,8 @@ button {
   height: 54px;
   border-radius: 50%;
   font-weight: 800;
+  border: 1px solid var(--god-border);
+  color: var(--god-text);
 }
 
 .map-tool-stack {
@@ -676,6 +678,38 @@ button {
   gap: 4px;
   padding: 6px;
   border-radius: 12px;
+}
+
+.map-layer-picker {
+  position: absolute;
+  top: 84px;
+  right: 58px;
+  display: grid;
+  width: 230px;
+  max-height: 360px;
+  gap: 6px;
+  overflow-y: auto;
+  padding: 12px;
+  border-radius: 12px;
+}
+
+.map-layer-picker p {
+  margin: 0 0 4px;
+}
+
+.map-layer-picker button {
+  border: 1px solid var(--god-border);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--god-text-soft);
+  padding: 8px 10px;
+  text-align: left;
+}
+
+.map-layer-picker button.is-active {
+  border-color: var(--god-border-strong);
+  background: rgba(59, 130, 246, 0.24);
+  color: var(--god-text);
 }
 
 .mode-asset-intelligence .god-right-panel {

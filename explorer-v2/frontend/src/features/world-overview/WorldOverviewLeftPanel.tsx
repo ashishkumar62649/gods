@@ -1,6 +1,7 @@
 import { useLayerStore } from '../../store/layerStore';
 import LayerToggle from '../../components/controls/LayerToggle';
 import LeftControlPanel from '../../components/shell/LeftControlPanel';
+import { useUiStore } from '../../store/uiStore';
 
 const weatherLayers = [
   ['satelliteTrueColor', 'Satellite (True Color)', 'SAT'],
@@ -15,13 +16,14 @@ const weatherLayers = [
 export default function WorldOverviewLeftPanel() {
   const activeLayers = useLayerStore((state) => state.activeLayers);
   const toggleLayer = useLayerStore((state) => state.toggleLayer);
+  const toggleLeftPanel = useUiStore((state) => state.toggleLeftPanel);
 
   return (
     <LeftControlPanel>
       <div className="god-panel-scroll">
         <header className="panel-title-row">
           <h2>Layers</h2>
-          <button type="button">Collapse</button>
+          <button type="button" onClick={toggleLeftPanel}>Collapse</button>
         </header>
         <input className="panel-search" placeholder="Search layers..." />
         <section className="layer-section-v2 is-open">
