@@ -1,0 +1,23 @@
+export const ZOOM_THRESHOLDS = {
+  SPACE: 0,
+  CONTINENT: 4,
+  REGION: 7,
+  CITY: 13,
+  STREET: 18,
+} as const;
+
+export const ALTITUDE_THRESHOLDS = {
+  CLIMATE_3D_TRANSITION: 15_000,
+  ORBITAL_FADE: 500_000,
+} as const;
+
+export const INTERVALS = {
+  WEATHER_SYNC_MS: 600_000,
+  TELEMETRY_SYNC_MS: 15_000,
+  EARTHQUAKE_SYNC_MS: 300_000,
+} as const;
+
+export const LIMITS = {
+  MAX_WEATHER_PARTICLES: 10_000,
+  MAX_FLIGHTS_RENDERED: 1_000,
+} as const;

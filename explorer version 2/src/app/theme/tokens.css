@@ -1,0 +1,32 @@
+:root {
+  --god-bg: #040914;
+  --god-bg-soft: #07111f;
+  --god-panel: rgba(8, 18, 33, 0.78);
+  --god-panel-strong: rgba(6, 13, 27, 0.9);
+  --god-panel-soft: rgba(10, 24, 43, 0.62);
+  --god-border: rgba(125, 170, 255, 0.16);
+  --god-border-strong: rgba(96, 165, 250, 0.32);
+  --god-text: #eaf2ff;
+  --god-text-soft: #a8b7d6;
+  --god-text-muted: #7282a3;
+  --god-blue: #3b82f6;
+  --god-cyan: #22d3ee;
+  --god-green: #22c55e;
+  --god-yellow: #eab308;
+  --god-orange: #f97316;
+  --god-red: #ef4444;
+  --god-purple: #a855f7;
+  --god-radius-sm: 10px;
+  --god-radius-md: 14px;
+  --god-radius-lg: 18px;
+  --god-radius-xl: 24px;
+  --god-shadow-panel: 0 20px 60px rgba(0, 0, 0, 0.45);
+  --god-shadow-blue: 0 0 30px rgba(59, 130, 246, 0.22);
+  --god-blur: blur(18px);
+  --god-topbar-height: 64px;
+  --god-footer-height: 38px;
+  --god-left-rail-width: 52px;
+  --god-left-panel-width: 280px;
+  --god-right-panel-width: 380px;
+  --god-timeline-height: 150px;
+}

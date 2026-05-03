@@ -1,0 +1,15 @@
+.god-glass {
+  background: var(--god-panel);
+  border: 1px solid var(--god-border);
+  backdrop-filter: var(--god-blur);
+  -webkit-backdrop-filter: var(--god-blur);
+  box-shadow: var(--god-shadow-panel);
+}
+
+.god-glass-strong {
+  background: var(--god-panel-strong);
+  border: 1px solid var(--god-border-strong);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  box-shadow: var(--god-shadow-panel);
+}
