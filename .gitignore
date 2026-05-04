@@ -1,9 +1,12 @@
-# Root-level ignores — applied to both old-hero-globe/ and explorer/.
+# Root-level ignores for the God Eyes v2 repository.
 
 # Dependencies / build output
 node_modules
 dist
 .vite
+*.tsbuildinfo
+vite.config.js
+vite.config.d.ts
 
 # Environment files (never commit tokens)
 .env
@@ -11,13 +14,56 @@ dist
 .env.*.local
 .cdsapirc
 copernicus_land_clms.json
+*.pem
+*.key
 
 # OS / editor
 .DS_Store
 Thumbs.db
 *.log
 
+# Raw/staging/normalized data is local audit material, not source code.
+explorer-v2/data_raw/**
+!explorer-v2/data_raw/
+!explorer-v2/data_raw/README.md
+!explorer-v2/data_raw/weather/
+!explorer-v2/data_raw/weather/.gitkeep
+explorer-v2/data_processed/**
+!explorer-v2/data_processed/
+!explorer-v2/data_processed/README.md
+!explorer-v2/data_processed/weather/
+!explorer-v2/data_processed/weather/.gitkeep
+explorer-v2/data_normalized/**
+!explorer-v2/data_normalized/
+!explorer-v2/data_normalized/README.md
+!explorer-v2/data_normalized/weather/
+!explorer-v2/data_normalized/weather/.gitkeep
+!explorer-v2/data_normalized/weather/**/
+!explorer-v2/data_normalized/weather/**/.gitkeep
+explorer/data_raw/
+explorer/data_processed/
+explorer/data_normalized/
+__pycache__/
+*.pyc
+
+# Quarantined local clutter. Keep only its README tracked.
+_unnecessary/**
+!_unnecessary/
+!_unnecessary/README.md
+
 # Local harness / misc
 .claude/
 venv/
 export.geojson
+
+# Codex local configuration
+.codex/
+
+# Claude Flow runtime data
+.claude-flow/data/
+.claude-flow/logs/
+
+# Environment variables
+.env
+.env.local
+.env.*.local

@@ -1,23 +1,158 @@
 import { create } from 'zustand';
 
-type TimelineMode = 'past-24h' | 'forecast-72h' | 'live';
+export type TimelineMode = 'live' | 'historical' | 'forecast';
+export type PlaybackSpeed = 1 | 2 | 4;
+
+export interface TimelineCapability {
+  live: boolean;
+  historical: boolean;
+  forecast: boolean;
+}
+
+type TimelineDomain =
+  | 'flights'
+  | 'satellites'
+  | 'weather'
+  | 'hazards'
+  | 'maritime'
+  | 'infrastructure';
 
 interface TimelineState {
   isPlaying: boolean;
-  speed: 1 | 2 | 4;
-  timelineMode: TimelineMode;
-  currentTimeLabel: string;
+  playbackSpeed: PlaybackSpeed;
+  mode: TimelineMode;
+  currentTimeMs: number;
+  startTimeMs: number;
+  endTimeMs: number;
+  scrubPercent: number;
+  lastAdvancedAtMs: number;
+  supportedDomains: Record<TimelineDomain, TimelineCapability>;
+  unsupportedDomainMessages: Record<TimelineDomain, string>;
   togglePlaying: () => void;
-  setSpeed: (speed: 1 | 2 | 4) => void;
-  setTimelineMode: (timelineMode: TimelineMode) => void;
+  setPlaybackSpeed: (speed: PlaybackSpeed) => void;
+  setMode: (mode: TimelineMode) => void;
+  scrubToPercent: (percent: number) => void;
+  advance: (realNowMs: number) => void;
 }
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+const FORECAST_MS = 72 * 60 * 60 * 1000;
+
+function windowForMode(mode: TimelineMode, currentTimeMs: number, realNowMs = Date.now()) {
+  if (mode === 'live') {
+    return {
+      currentTimeMs: realNowMs,
+      startTimeMs: realNowMs - DAY_MS,
+      endTimeMs: realNowMs,
+      scrubPercent: 100,
+    };
+  }
+
+  if (mode === 'forecast') {
+    const startTimeMs = realNowMs;
+    const endTimeMs = realNowMs + FORECAST_MS;
+    const clampedTime = Math.max(startTimeMs, Math.min(endTimeMs, currentTimeMs));
+    return {
+      currentTimeMs: clampedTime,
+      startTimeMs,
+      endTimeMs,
+      scrubPercent: percentForTime(startTimeMs, endTimeMs, clampedTime),
+    };
+  }
+
+  const endTimeMs = realNowMs;
+  const startTimeMs = realNowMs - DAY_MS;
+  const clampedTime = Math.max(startTimeMs, Math.min(endTimeMs, currentTimeMs));
+  return {
+    currentTimeMs: clampedTime,
+    startTimeMs,
+    endTimeMs,
+    scrubPercent: percentForTime(startTimeMs, endTimeMs, clampedTime),
+  };
+}
+
+function percentForTime(startTimeMs: number, endTimeMs: number, currentTimeMs: number) {
+  const span = Math.max(1, endTimeMs - startTimeMs);
+  return Math.round(((currentTimeMs - startTimeMs) / span) * 1000) / 10;
+}
+
+function timeForPercent(startTimeMs: number, endTimeMs: number, percent: number) {
+  const clamped = Math.max(0, Math.min(100, percent));
+  return startTimeMs + (endTimeMs - startTimeMs) * (clamped / 100);
+}
+
+const now = Date.now();
 
 export const useTimelineStore = create<TimelineState>()((set) => ({
   isPlaying: true,
-  speed: 1,
-  timelineMode: 'forecast-72h',
-  currentTimeLabel: '24 Apr 2026',
+  playbackSpeed: 1,
+  mode: 'live',
+  ...windowForMode('live', now, now),
+  lastAdvancedAtMs: now,
+  supportedDomains: {
+    flights: { live: true, historical: false, forecast: false },
+    satellites: { live: true, historical: false, forecast: true },
+    weather: { live: true, historical: true, forecast: true },
+    hazards: { live: true, historical: true, forecast: false },
+    maritime: { live: true, historical: false, forecast: false },
+    infrastructure: { live: true, historical: false, forecast: false },
+  },
+  unsupportedDomainMessages: {
+    flights: 'Historical aircraft playback needs flight snapshots loaded into PostgreSQL.',
+    satellites: 'Satellite forecast uses propagated orbital states; historical TLE playback is pending.',
+    weather: 'Weather supports live, historical, and forecast windows when database views are populated.',
+    hazards: 'Hazards support live/current and historical event windows; future prediction is source dependent.',
+    maritime: 'Maritime history needs AIS snapshots loaded into PostgreSQL.',
+    infrastructure: 'Infrastructure is mostly static; timeline only affects source freshness.',
+  },
   togglePlaying: () => set((state) => ({ isPlaying: !state.isPlaying })),
-  setSpeed: (speed) => set({ speed }),
-  setTimelineMode: (timelineMode) => set({ timelineMode }),
+  setPlaybackSpeed: (playbackSpeed) => set({ playbackSpeed }),
+  setMode: (mode) =>
+    set((state) => ({
+      mode,
+      isPlaying: mode === 'live' ? true : state.isPlaying,
+      ...windowForMode(mode, state.currentTimeMs),
+      lastAdvancedAtMs: Date.now(),
+    })),
+  scrubToPercent: (percent) =>
+    set((state) => {
+      const currentTimeMs = timeForPercent(state.startTimeMs, state.endTimeMs, percent);
+      return {
+        currentTimeMs,
+        scrubPercent: percentForTime(state.startTimeMs, state.endTimeMs, currentTimeMs),
+        mode: state.mode === 'live' ? 'historical' : state.mode,
+        isPlaying: state.mode === 'live' ? false : state.isPlaying,
+        lastAdvancedAtMs: Date.now(),
+      };
+    }),
+  advance: (realNowMs) =>
+    set((state) => {
+      if (state.mode === 'live') {
+        return {
+          ...windowForMode('live', realNowMs, realNowMs),
+          lastAdvancedAtMs: realNowMs,
+        };
+      }
+
+      const refreshedWindow = windowForMode(state.mode, state.currentTimeMs, realNowMs);
+      if (!state.isPlaying) {
+        return {
+          ...refreshedWindow,
+          lastAdvancedAtMs: realNowMs,
+        };
+      }
+
+      const elapsedMs = Math.max(0, realNowMs - state.lastAdvancedAtMs);
+      const nextTime = Math.min(
+        refreshedWindow.endTimeMs,
+        refreshedWindow.currentTimeMs + elapsedMs * state.playbackSpeed,
+      );
+      return {
+        ...refreshedWindow,
+        currentTimeMs: nextTime,
+        scrubPercent: percentForTime(refreshedWindow.startTimeMs, refreshedWindow.endTimeMs, nextTime),
+        isPlaying: nextTime < refreshedWindow.endTimeMs,
+        lastAdvancedAtMs: realNowMs,
+      };
+    }),
 }));

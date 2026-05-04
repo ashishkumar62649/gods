@@ -1,7 +1,0 @@
-AGENTS.md
-PROJECT_STATE.md
-README.md
-explorer\index.html
-graphify-out\graph.html
-graphify-out\GRAPH_REPORT.md
-old-hero-globe\index.html

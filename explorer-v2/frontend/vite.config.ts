@@ -2,8 +2,10 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import cesium from 'vite-plugin-cesium';
 import { fileURLToPath, URL } from 'node:url';
+import { resolve } from 'node:path';
 
 export default defineConfig({
+  envDir: resolve(__dirname, '..'),
   // vite-plugin-cesium copies Cesium's static assets (workers, shaders,
   // widgets.css, Assets folder) to the build output and sets CESIUM_BASE_URL
   // so Cesium can find them at runtime. Without this, the Viewer crashes on load.

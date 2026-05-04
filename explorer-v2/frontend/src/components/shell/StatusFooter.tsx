@@ -1,23 +1,23 @@
 import { useUiStore } from '../../store/uiStore';
 import { useLiveDataStore } from '../../store/liveDataStore';
-
-const coordsByMode = {
-  'world-overview': '11 deg 01 min N, 88 deg 01 min E',
-  'asset-intelligence': '25 deg 37 min N, 82 deg 58 min E',
-  'watch-zones': '18 deg 57 min N, 88 deg 36 min E',
-  'location-intelligence': '22 deg 34 min N, 88 deg 21 min E',
-};
+import { useMapStore } from '../../core/store/useMapStore';
+import { useTimelineStore } from '../../store/timelineStore';
 
 export default function StatusFooter() {
   const mode = useUiStore((state) => state.mode);
   const selectedLocationLat = useLiveDataStore((state) => state.selectedLocationLat);
   const selectedLocationLon = useLiveDataStore((state) => state.selectedLocationLon);
   const selectedLocationElevationM = useLiveDataStore((state) => state.selectedLocationElevationM);
-  const feedCycle = useLiveDataStore((state) => state.feedCycle);
+  const cameraLat = useMapStore((state) => state.cameraLat);
+  const cameraLon = useMapStore((state) => state.cameraLon);
+  const cameraHeightM = useMapStore((state) => state.cameraHeightM);
+  const timelineMode = useTimelineStore((state) => state.mode);
   const liveCoordinates =
-    mode === 'location-intelligence'
+    cameraLat !== null && cameraLon !== null
+      ? `${Math.abs(cameraLat).toFixed(2)} deg ${cameraLat >= 0 ? 'N' : 'S'}, ${Math.abs(cameraLon).toFixed(2)} deg ${cameraLon >= 0 ? 'E' : 'W'}`
+      : mode === 'location-intelligence'
       ? `${Math.abs(selectedLocationLat).toFixed(2)} deg ${selectedLocationLat >= 0 ? 'N' : 'S'}, ${Math.abs(selectedLocationLon).toFixed(2)} deg ${selectedLocationLon >= 0 ? 'E' : 'W'}`
-      : coordsByMode[mode];
+      : 'Camera pending';
 
   return (
     <footer className="status-footer">
@@ -27,11 +27,11 @@ export default function StatusFooter() {
       </div>
       <div>
         <span>ELEVATION</span>
-        <b>{mode === 'location-intelligence' ? `${selectedLocationElevationM} m` : `${10 + (feedCycle % 6)} m`}</b>
+        <b>{cameraHeightM > 0 ? `${cameraHeightM.toLocaleString('en-US')} m` : `${selectedLocationElevationM} m`}</b>
       </div>
       <div>
-        <span>SCALE</span>
-        <b>1 : 9,500,000</b>
+        <span>TIME MODE</span>
+        <b>{timelineMode}</b>
       </div>
       <p>Copyright 2026 GODS Explorer</p>
       <a>Open Source Project</a>

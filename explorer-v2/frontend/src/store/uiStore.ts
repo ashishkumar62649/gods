@@ -20,7 +20,7 @@ export const useUiStore = create<UiState>()((set) => ({
   rightPanelOpen: true,
   mapLayerPickerOpen: false,
   activeBottomTab: 'overview',
-  setMode: (mode) => set({ mode }),
+  setMode: (mode) => set({ mode, rightPanelOpen: true }),
   toggleLeftPanel: () =>
     set((state) => ({ leftPanelCollapsed: !state.leftPanelCollapsed })),
   toggleMapLayerPicker: () =>

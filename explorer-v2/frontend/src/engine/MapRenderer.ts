@@ -1,6 +1,7 @@
 import {
   Cartesian2,
   Cartesian3,
+  Cartographic,
   createOsmBuildingsAsync,
   EasingFunction,
   HeadingPitchRange,
@@ -17,6 +18,7 @@ import {
 } from 'cesium';
 import type { IRenderer } from './IRenderer';
 import { type MapState, useMapStore } from '../core/store/useMapStore';
+import { useLiveDataStore } from '../store/liveDataStore';
 import { flyObliqueToDestination } from '../earth/viewer/cameraUtils';
 import { buildImageryOptions } from '../earth/viewer/imageryOptions';
 import { BUILDINGS_ALTITUDE_THRESHOLD, HOME_VIEW } from '../earth/viewer/viewerConfig';
@@ -38,6 +40,7 @@ export class MapRenderer implements IRenderer {
   private buildingsLoadPromise: Promise<Cesium3DTileset | null> | null = null;
   private pendingAutoOrbitRev = 0;
   private interactionHandler: ScreenSpaceEventHandler | null = null;
+  private lastCameraStatusAt = 0;
 
   attach(viewer: CesiumViewer): void {
     this.viewer = viewer;
@@ -47,7 +50,10 @@ export class MapRenderer implements IRenderer {
       void this.renderMap(state);
     });
 
-    this.cameraListener = () => this.updateBuildingsVisibility();
+    this.cameraListener = () => {
+      this.updateBuildingsVisibility();
+      this.updateCameraStatus();
+    };
     viewer.camera.changed.addEventListener(this.cameraListener);
 
     this.interactionHandler = new ScreenSpaceEventHandler(viewer.scene.canvas);
@@ -69,6 +75,7 @@ export class MapRenderer implements IRenderer {
     this.interactionHandler.setInputAction(stopOrbitOnInteraction, ScreenSpaceEventType.PINCH_START);
 
     void this.renderMap(useMapStore.getState());
+    this.updateCameraStatus(true);
   }
 
   detach(): void {
@@ -251,6 +258,26 @@ export class MapRenderer implements IRenderer {
     this.viewer.scene.requestRender();
   }
 
+  private updateCameraStatus(force = false): void {
+    if (!this.viewer || this.viewer.isDestroyed()) return;
+    const now = performance.now();
+    if (!force && now - this.lastCameraStatusAt < 250) return;
+    this.lastCameraStatusAt = now;
+
+    const cartographic = this.viewer.camera.positionCartographic;
+    useMapStore.getState().setCameraStatus({
+      headingDeg: CesiumMath.toDegrees(this.viewer.camera.heading),
+      pitchDeg: CesiumMath.toDegrees(this.viewer.camera.pitch),
+      heightM: cartographic.height,
+      latitude: Number.isFinite(cartographic.latitude)
+        ? CesiumMath.toDegrees(cartographic.latitude)
+        : null,
+      longitude: Number.isFinite(cartographic.longitude)
+        ? CesiumMath.toDegrees(cartographic.longitude)
+        : null,
+    });
+  }
+
   private applyOrbit(enabled: boolean): void {
     if (!this.viewer || this.viewer.isDestroyed()) {
       return;
@@ -362,6 +389,13 @@ export class MapRenderer implements IRenderer {
       }
 
       const chosen = pickBestGeocoderResult(trimmedQuery, results);
+      const location = locationFromGeocoderDestination(chosen.destination, this.viewer);
+      if (location) {
+        useLiveDataStore.getState().setSelectedLocation({
+          name: chosen.displayName || trimmedQuery,
+          ...location,
+        });
+      }
 
       // Treat either a Cartesian3 point OR a very tight Rectangle
       // (< 0.02° diagonal) as a landmark — Ion returns famous landmarks
@@ -504,6 +538,35 @@ type GeocoderResult = {
   displayName: string;
   destination: Rectangle | Cartesian3;
 };
+
+function locationFromGeocoderDestination(
+  destination: Rectangle | Cartesian3,
+  viewer: CesiumViewer,
+): { latitude: number; longitude: number; elevationM: number } | null {
+  if (destination instanceof Rectangle) {
+    const latitude = CesiumMath.toDegrees((destination.north + destination.south) / 2);
+    const longitude = CesiumMath.toDegrees((destination.east + destination.west) / 2);
+    return {
+      latitude,
+      longitude,
+      elevationM: viewer.scene.globe.getHeight(
+        new Cartographic(
+          CesiumMath.toRadians(longitude),
+          CesiumMath.toRadians(latitude),
+          0,
+        ),
+      ) ?? 0,
+    };
+  }
+
+  const cartographic = viewer.scene.globe.ellipsoid.cartesianToCartographic(destination);
+  if (!cartographic) return null;
+  return {
+    latitude: CesiumMath.toDegrees(cartographic.latitude),
+    longitude: CesiumMath.toDegrees(cartographic.longitude),
+    elevationM: viewer.scene.globe.getHeight(cartographic) ?? cartographic.height ?? 0,
+  };
+}
 
 function pickBestGeocoderResult(
   query: string,

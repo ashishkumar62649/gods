@@ -22,6 +22,11 @@ export interface MapState {
   buildingsEnabled: boolean;
   autoBuildingsEnabled: boolean;
   orbitEnabled: boolean;
+  cameraHeadingDeg: number;
+  cameraPitchDeg: number;
+  cameraHeightM: number;
+  cameraLat: number | null;
+  cameraLon: number | null;
   lastSearch: SearchCommand | null;
   lastCoordinateFlyTo: CoordinateFlyToCommand | null;
   lastHomeRequestAt: number | null;
@@ -32,6 +37,13 @@ export interface MapActions {
   toggleBuildings(): void;
   setAutoBuildings(enabled: boolean): void;
   setOrbitEnabled(enabled: boolean): void;
+  setCameraStatus(status: {
+    headingDeg: number;
+    pitchDeg: number;
+    heightM: number;
+    latitude: number | null;
+    longitude: number | null;
+  }): void;
   toggleOrbit(): void;
   requestSearch(query: string): void;
   requestFlyToCoordinates(latitude: number, longitude: number, height?: number): void;
@@ -64,6 +76,11 @@ export const useMapStore = create<MapStore>()((set) => ({
   buildingsEnabled: false,
   autoBuildingsEnabled: false,
   orbitEnabled: false,
+  cameraHeadingDeg: 0,
+  cameraPitchDeg: 0,
+  cameraHeightM: 0,
+  cameraLat: null,
+  cameraLon: null,
   lastSearch: null,
   lastCoordinateFlyTo: null,
   lastHomeRequestAt: null,
@@ -92,6 +109,35 @@ export const useMapStore = create<MapStore>()((set) => ({
   setOrbitEnabled: (enabled) =>
     set({
       orbitEnabled: enabled,
+    }),
+
+  setCameraStatus: (status) =>
+    set((state) => {
+      const headingDeg = normalizeDegrees(status.headingDeg);
+      const pitchDeg = Math.round(status.pitchDeg * 10) / 10;
+      const heightM = Math.round(status.heightM);
+      const cameraLat =
+        status.latitude === null ? null : Math.round(status.latitude * 10000) / 10000;
+      const cameraLon =
+        status.longitude === null ? null : Math.round(status.longitude * 10000) / 10000;
+
+      if (
+        Math.abs(state.cameraHeadingDeg - headingDeg) < 0.5 &&
+        Math.abs(state.cameraPitchDeg - pitchDeg) < 0.5 &&
+        Math.abs(state.cameraHeightM - heightM) < 5 &&
+        state.cameraLat === cameraLat &&
+        state.cameraLon === cameraLon
+      ) {
+        return state;
+      }
+
+      return {
+        cameraHeadingDeg: headingDeg,
+        cameraPitchDeg: pitchDeg,
+        cameraHeightM: heightM,
+        cameraLat,
+        cameraLon,
+      };
     }),
 
   toggleOrbit: () =>
@@ -126,3 +172,7 @@ export const useMapStore = create<MapStore>()((set) => ({
       lastHomeRequestAt: Date.now(),
     }),
 }));
+
+function normalizeDegrees(value: number) {
+  return Math.round((((value % 360) + 360) % 360) * 10) / 10;
+}

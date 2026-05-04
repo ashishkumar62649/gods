@@ -9,12 +9,20 @@ import FloatingMapControls from '../components/shell/FloatingMapControls';
 import LeftIconRail from '../components/shell/LeftIconRail';
 import StatusFooter from '../components/shell/StatusFooter';
 import TopBar from '../components/shell/TopBar';
-import { startLiveMockFeed } from '../store/liveDataStore';
+import { startLiveClock } from '../store/liveDataStore';
+import { useTimelineStore } from '../store/timelineStore';
 
 export default function AppShell() {
   const mode = useUiStore((state) => state.mode);
 
-  useEffect(() => startLiveMockFeed(), []);
+  useEffect(() => {
+    const tick = () => {
+      const realNowMs = Date.now();
+      useTimelineStore.getState().advance(realNowMs);
+      return useTimelineStore.getState().currentTimeMs;
+    };
+    return startLiveClock(tick);
+  }, []);
 
   return (
     <main className={`god-app-shell mode-${mode}`}>

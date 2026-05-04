@@ -1,5 +1,6 @@
 import type { AppMode } from '../../app/appModes';
 import { useUiStore } from '../../store/uiStore';
+import { useLayerStore } from '../../store/layerStore';
 import IconButton from '../controls/IconButton';
 
 const railItems: Array<{ id: AppMode | 'layers' | 'maritime' | 'settings'; label: string; glyph: string }> = [
@@ -16,6 +17,8 @@ export default function LeftIconRail() {
   const mode = useUiStore((state) => state.mode);
   const setMode = useUiStore((state) => state.setMode);
   const toggleLeftPanel = useUiStore((state) => state.toggleLeftPanel);
+  const toggleMapLayerPicker = useUiStore((state) => state.toggleMapLayerPicker);
+  const setLayer = useLayerStore((state) => state.setLayer);
 
   return (
     <nav className="left-icon-rail god-glass">
@@ -24,6 +27,15 @@ export default function LeftIconRail() {
         const onClick =
           item.id === 'layers'
             ? toggleLeftPanel
+            : item.id === 'maritime'
+              ? () => {
+                  setMode('asset-intelligence');
+                  setLayer('vesselsAis', true);
+                  setLayer('internetCables', true);
+                  setLayer('infrastructureAssets', true);
+                }
+            : item.id === 'settings'
+              ? toggleMapLayerPicker
             : canSetMode
               ? () => setMode(item.id as AppMode)
               : undefined;

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import LeftControlPanel from '../../components/shell/LeftControlPanel';
 import LayerToggle from '../../components/controls/LayerToggle';
 import { useLayerStore } from '../../store/layerStore';
@@ -6,8 +7,11 @@ import { useUiStore } from '../../store/uiStore';
 const assetLayers = [
   ['aircraftAdsb', 'Aircraft (ADS-B)', 'ADSB'],
   ['aircraftMilitary', 'Aircraft (Military)', 'MIL'],
+  ['aircraftTrails', 'Aircraft Trails', 'TRL'],
   ['vesselsAis', 'Vessels (AIS)', 'AIS'],
   ['satellites', 'Satellites', 'SAT'],
+  ['internetCables', 'Internet Cables', 'CAB'],
+  ['infrastructureAssets', 'Infrastructure Assets', 'INF'],
   ['launchesDebris', 'Launches / Debris', 'ORB'],
 ] as const;
 
@@ -15,26 +19,48 @@ export default function AssetLayerPanel() {
   const activeLayers = useLayerStore((state) => state.activeLayers);
   const toggleLayer = useLayerStore((state) => state.toggleLayer);
   const toggleLeftPanel = useUiStore((state) => state.toggleLeftPanel);
+  const [query, setQuery] = useState('');
+  const normalizedQuery = query.trim().toLowerCase();
+  const visibleAssetLayers = assetLayers.filter(([, label]) =>
+    label.toLowerCase().includes(normalizedQuery),
+  );
+  const hazardLayers = [
+    ['hazards', 'Hazards', 'HZ'],
+    ['earthquakes', 'Earthquakes', 'EQ'],
+    ['wildfires', 'Wildfires', 'FIR'],
+    ['storms', 'Storms / Cyclones', 'STM'],
+  ] as const;
+  const visibleHazardLayers = hazardLayers.filter(([, label]) =>
+    label.toLowerCase().includes(normalizedQuery),
+  );
+  const activeLayer = [...assetLayers, ...hazardLayers].find(([id]) => activeLayers[id]);
 
   return (
     <LeftControlPanel>
       <div className="god-panel-scroll">
         <header className="panel-title-row"><h2>Layers</h2><button type="button" onClick={toggleLeftPanel}>Collapse</button></header>
-        <input className="panel-search" placeholder="Search layers..." />
+        <input
+          className="panel-search"
+          placeholder="Search layers..."
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+        />
         <section className="layer-section-v2 is-open">
           <h3>Assets</h3>
-          {assetLayers.map(([id, label, icon]) => (
+          {visibleAssetLayers.map(([id, label, icon]) => (
             <LayerToggle checked={Boolean(activeLayers[id])} icon={icon} key={id} label={label} onChange={() => toggleLayer(id)} />
           ))}
         </section>
-        {['Weather', 'Aviation', 'Maritime', 'Hazards', 'Infrastructure', 'Population', 'Events'].map((name) => (
-          <section className="layer-section-v2" key={name}><h3>{name}</h3></section>
+        {visibleHazardLayers.map(([id, label, icon]) => (
+          <section className="layer-section-v2 is-open" key={id}>
+            <LayerToggle checked={Boolean(activeLayers[id])} icon={icon} label={label} onChange={() => toggleLayer(id)} />
+          </section>
         ))}
         <div className="active-layer-card">
           <span className="god-kicker">Active Layer</span>
-          <b>Aircraft (ADS-B)</b>
+          <b>{activeLayer?.[1] ?? 'No active layer'}</b>
           <p><span className="live-dot" /> Live</p>
-          <button type="button">Add filter</button>
+          <button type="button" onClick={() => setQuery(activeLayer?.[1] ?? '')}>Focus filter</button>
         </div>
       </div>
     </LeftControlPanel>

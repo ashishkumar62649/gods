@@ -11,9 +11,11 @@ services:
       - "${GOD_EYES_DB_PORT:-55432}:5432"
     volumes:
       - god_eyes_pgdata:/home/postgres/pgdata/data
-      - ./explorer/database/postgres/init:/docker-entrypoint-initdb.d:ro
-      - ./explorer/database/postgres/migrations:/schema/migrations:ro
-      - ./explorer/database/postgres/seeds:/schema/seeds:ro
+      - ./explorer-v2/database/postgres/init:/docker-entrypoint-initdb.d:ro
+      - ./explorer-v2/database/postgres/migrations:/schema/migrations:ro
+      - ./explorer-v2/database/postgres/seeds:/schema/seeds:ro
+      - ./explorer-v2/database/postgres/views:/schema/views:ro
+      - ./explorer-v2/database/postgres/schemas:/schema/domain-schemas:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U god_eyes -d god_eyes"]
       interval: 10s

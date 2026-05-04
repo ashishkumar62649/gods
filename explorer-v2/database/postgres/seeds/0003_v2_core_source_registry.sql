@@ -1,0 +1,35 @@
+INSERT INTO core.source_registry (
+  source_key,
+  domain,
+  display_name,
+  homepage_url,
+  requires_auth,
+  raw_retention_days,
+  notes
+) VALUES
+  ('airplanes_live', 'aviation', 'airplanes.live CDN', 'https://globe.airplanes.live/', false, 7, 'Primary no-auth ADS-B snapshot source for live aircraft positions.'),
+  ('adsb_lol_intel', 'aviation', 'adsb.lol intelligence feeds', 'https://api.adsb.lol/', false, 7, 'No-auth military/PIA/LADD/emergency enrichment feeds used by v1.'),
+  ('opensky', 'aviation', 'OpenSky Network', 'https://opensky-network.org/', false, 14, 'No-auth limited route/trace aviation lookup; account improves limits.'),
+  ('ourairports', 'aviation', 'OurAirports', 'https://ourairports.com/data/', false, 90, 'Airport reference CSV.'),
+  ('space_track', 'satellites', 'Space-Track GP', 'https://www.space-track.org/', true, 30, 'TLE catalog source; requires Space-Track credentials.'),
+  ('celestrak', 'satellites', 'CelesTrak', 'https://celestrak.org/', false, 30, 'Candidate no-auth TLE fallback from public catalog.'),
+  ('open_meteo', 'weather', 'Open-Meteo', 'https://open-meteo.com/', false, 14, 'No-auth weather forecast/current source.'),
+  ('noaa_nws', 'weather', 'NOAA National Weather Service', 'https://www.weather.gov/documentation/services-web-api', false, 14, 'No-auth US alerts/grid/forecast API.'),
+  ('usgs_earthquake', 'hazards', 'USGS Earthquake Hazards Program', 'https://earthquake.usgs.gov/fdsnws/event/1/', false, 30, 'No-auth global earthquake feed.'),
+  ('usgs_water', 'weather', 'USGS Water Services', 'https://waterservices.usgs.gov/', false, 30, 'No-auth US hydrology and water observations.'),
+  ('gdacs', 'hazards', 'GDACS', 'https://www.gdacs.org/', false, 30, 'No-auth global disaster events.'),
+  ('nasa_firms', 'hazards', 'NASA FIRMS', 'https://firms.modaps.eosdis.nasa.gov/', true, 14, 'Active fire source; many production endpoints require MAP_KEY.'),
+  ('openaq', 'weather', 'OpenAQ', 'https://docs.openaq.org/', true, 30, 'Air quality source; public-apis now lists apiKey requirement.'),
+  ('rainviewer', 'weather', 'RainViewer', 'https://www.rainviewer.com/api.html', false, 7, 'No-auth radar tile metadata source.'),
+  ('aisstream', 'maritime', 'AISStream', 'https://aisstream.io/', true, 7, 'Live AIS WebSocket source; requires API key.'),
+  ('global_fishing_watch', 'maritime', 'Global Fishing Watch', 'https://globalfishingwatch.org/', true, 30, 'Maritime intelligence source; requires credentials for many APIs.'),
+  ('submarine_cable_map', 'infrastructure', 'Submarine Cable Map', 'https://www.submarinecablemap.com/', false, 90, 'Subsea cable reference source used by v1 infrastructure layer.'),
+  ('public_apis_catalog', 'source-discovery', 'public-apis/public-apis', 'https://github.com/public-apis/public-apis', false, 30, 'Candidate API discovery catalog only; entries must be validated before production onboarding.')
+ON CONFLICT (source_key) DO UPDATE SET
+  domain = EXCLUDED.domain,
+  display_name = EXCLUDED.display_name,
+  homepage_url = EXCLUDED.homepage_url,
+  requires_auth = EXCLUDED.requires_auth,
+  raw_retention_days = EXCLUDED.raw_retention_days,
+  notes = EXCLUDED.notes,
+  updated_at = now();

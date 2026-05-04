@@ -12,10 +12,10 @@ interface SelectionState {
 }
 
 export const useSelectionStore = create<SelectionState>()((set) => ({
-  selectedAssetId: 'ignite21',
+  selectedAssetId: undefined,
   selectedWatchZoneId: 'bay-of-bengal',
   selectedAlertId: 'hooghly-flood-risk',
-  selectedLocationId: 'kolkata',
+  selectedLocationId: undefined,
   selectAsset: (selectedAssetId) => set({ selectedAssetId }),
   selectWatchZone: (selectedWatchZoneId) => set({ selectedWatchZoneId }),
   selectAlert: (selectedAlertId) => set({ selectedAlertId }),

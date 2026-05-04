@@ -1,0 +1,24 @@
+{
+  "name": "god-eyes-explorer-v2-backend",
+  "private": true,
+  "version": "0.2.0",
+  "description": "God Eyes v2 API and data services.",
+  "type": "module",
+  "scripts": {
+    "dev": "node src/index.mjs",
+    "start": "node src/index.mjs",
+    "start:legacy-flights": "node src/flights-proxy.mjs",
+    "test": "node --test \"../tests/backend/**/*.test.mjs\""
+  },
+  "dependencies": {
+    "csv-parse": "^6.2.1",
+    "express": "^4.21.2",
+    "fast-xml-parser": "^5.7.2",
+    "h3-js": "^4.4.0",
+    "pg": "^8.20.0",
+    "satellite.js": "^7.0.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

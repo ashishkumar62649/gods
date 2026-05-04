@@ -1,0 +1,31 @@
+{
+  "name": "god-eyes-explorer-v2",
+  "private": true,
+  "version": "0.2.0",
+  "description": "Active God Eyes v2 platform package.",
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "dev:frontend": "node scripts/start-frontend.mjs",
+    "dev:backend": "node scripts/start-backend.mjs",
+    "build": "node scripts/build.mjs",
+    "build:frontend": "npm --prefix frontend run build",
+    "check": "npm run pipeline:python:check && npm run test",
+    "db:up": "cd .. && docker compose up -d god_eyes_db",
+    "db:config": "cd .. && docker compose config",
+    "start:backend": "npm --prefix backend run start",
+    "pipeline:weather": "python -m pipelines.weather.jobs.run_weather_pipeline --dry-run",
+    "pipeline:weather:plan": "python -m pipelines.weather.jobs.run_weather_pipeline --plan-only",
+    "pipeline:hazards": "python -m pipelines.weather.jobs.run_hazard_pipeline --dry-run",
+    "pipeline:hazards:plan": "python -m pipelines.weather.jobs.run_hazard_pipeline --plan-only",
+    "pipeline:all": "npm run pipeline:weather && npm run pipeline:hazards",
+    "pipeline:all:plan": "npm run pipeline:weather:plan && npm run pipeline:hazards:plan",
+    "pipeline:weather:legacy-js": "node _migration/pending-review/weather-js-pipelines/normalizers/pipelines/stage2_jsonl_pipeline.mjs && node _migration/pending-review/weather-js-pipelines/normalizers/pipelines/stage3_postgres_insert_pipeline.mjs && node scripts/weather_stage_report.mjs",
+    "pipeline:python:check": "python -m pipelines.cli --check",
+    "report:structure": "node scripts/report-structure.mjs",
+    "test": "node --test \"tests/**/*.test.mjs\""
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

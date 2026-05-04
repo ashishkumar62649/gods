@@ -573,26 +573,69 @@ button {
 .timeline-ruler {
   display: grid;
   grid-template-columns: repeat(9, 1fr);
-  margin: 14px 0 8px 190px;
+  margin: 10px 0 8px 190px;
   color: var(--god-text-soft);
   font-size: 12px;
 }
 
+.timeline-scrubber {
+  display: grid;
+  grid-template-columns: 86px 1fr 86px;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+  color: var(--god-text-muted);
+  font-size: 11px;
+}
+
+.timeline-scrubber input {
+  width: 100%;
+  accent-color: var(--god-cyan);
+}
+
 .timeline-row {
   display: grid;
-  grid-template-columns: 180px 1fr;
+  grid-template-columns: 180px 1fr minmax(120px, 220px);
   align-items: center;
   gap: 14px;
-  margin: 9px 0;
+  margin: 7px 0;
   color: var(--god-text);
   font-size: 13px;
 }
 
 .timeline-row i {
+  position: relative;
   display: block;
   height: 3px;
   border-radius: 999px;
   background: var(--god-blue);
+}
+
+.timeline-row i::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: var(--timeline-marker, 100%);
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 0 14px rgba(125, 211, 252, 0.8);
+  transform: translate(-50%, -50%);
+}
+
+.timeline-row small {
+  color: var(--god-text-muted);
+  font-size: 11px;
+  line-height: 1.25;
+}
+
+.timeline-row--unsupported {
+  opacity: 0.66;
+}
+
+.timeline-row--unsupported i {
+  background: rgba(148, 163, 184, 0.4);
 }
 
 .timeline-row .line-1 {
@@ -671,6 +714,17 @@ button {
   font-weight: 800;
   border: 1px solid var(--god-border);
   color: var(--god-text);
+}
+
+.compass span {
+  display: block;
+  line-height: 1;
+  transform-origin: center;
+}
+
+.compass small {
+  font-size: 10px;
+  color: var(--god-text-muted);
 }
 
 .map-tool-stack {

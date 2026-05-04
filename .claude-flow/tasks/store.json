@@ -1,0 +1,200 @@
+{
+  "tasks": {
+    "task-1777854638779-n478dn": {
+      "taskId": "task-1777854638779-n478dn",
+      "type": "research",
+      "description": "1. V1 feature inventory: inspect explorer/ as read-only reference and build explorer-v2/docs/V1_FEATURE_PARITY_MATRIX.md with v1 feature, v2 target, implementation status, files, and acceptance checks.",
+      "priority": "critical",
+      "status": "pending",
+      "progress": 0,
+      "assignedTo": [
+        "god-eyes-architect",
+        "god-eyes-docs"
+      ],
+      "tags": [
+        "v1",
+        "inventory",
+        "parity"
+      ],
+      "createdAt": "2026-05-04T00:30:38.779Z",
+      "startedAt": null,
+      "completedAt": null
+    },
+    "task-1777854638784-iyb8o0": {
+      "taskId": "task-1777854638784-iyb8o0",
+      "type": "research",
+      "description": "2. Source coverage inventory: inspect v1 source fetchers/routes/services and build explorer-v2/docs/SOURCE_COVERAGE.md with source, domain, auth needs, pipeline state, DB target, API/frontend consumer.",
+      "priority": "critical",
+      "status": "pending",
+      "progress": 0,
+      "assignedTo": [
+        "god-eyes-pipelines",
+        "god-eyes-docs"
+      ],
+      "tags": [
+        "sources",
+        "inventory",
+        "coverage"
+      ],
+      "createdAt": "2026-05-04T00:30:38.784Z",
+      "startedAt": null,
+      "completedAt": null
+    },
+    "task-1777854638887-95cray": {
+      "taskId": "task-1777854638887-95cray",
+      "type": "feature",
+      "description": "3. Database schema completion: ensure explorer-v2 database schemas cover weather, aviation, satellites, maritime, hazards, infrastructure, locations, source health, provenance, and future domain expansion.",
+      "priority": "critical",
+      "status": "pending",
+      "progress": 0,
+      "assignedTo": [
+        "god-eyes-database"
+      ],
+      "tags": [
+        "database",
+        "schemas",
+        "postgis",
+        "timescale"
+      ],
+      "createdAt": "2026-05-04T00:30:38.887Z",
+      "startedAt": null,
+      "completedAt": null
+    },
+    "task-1777854638891-vk2uvc": {
+      "taskId": "task-1777854638891-vk2uvc",
+      "type": "feature",
+      "description": "4. Real-data pipeline completion: move Python pipelines beyond scaffold into fetch-normalize-validate-load patterns with raw audit and database-ready outputs.",
+      "priority": "critical",
+      "status": "in_progress",
+      "progress": 58,
+      "assignedTo": [
+        "god-eyes-pipelines"
+      ],
+      "tags": [
+        "pipelines",
+        "python",
+        "real-data"
+      ],
+      "createdAt": "2026-05-04T00:30:38.891Z",
+      "startedAt": "2026-05-04T01:30:43.410Z",
+      "completedAt": null
+    },
+    "task-1777854638900-h2r0ke": {
+      "taskId": "task-1777854638900-h2r0ke",
+      "type": "feature",
+      "description": "5. Backend API and binary endpoints: expose /api/v2 domain APIs plus compact binary/vector transport endpoints for dense globe layers.",
+      "priority": "critical",
+      "status": "in_progress",
+      "progress": 74,
+      "assignedTo": [
+        "god-eyes-backend",
+        "god-eyes-binary"
+      ],
+      "tags": [
+        "backend",
+        "api",
+        "binary"
+      ],
+      "createdAt": "2026-05-04T00:30:38.900Z",
+      "startedAt": "2026-05-04T00:34:55.652Z",
+      "completedAt": null
+    },
+    "task-1777854638904-ne3ak3": {
+      "taskId": "task-1777854638904-ne3ak3",
+      "type": "feature",
+      "description": "6. Frontend globe layer wiring: connect Cesium renderers to /api/v2 domain APIs and binary transport, replacing static-only behavior where possible.",
+      "priority": "critical",
+      "status": "in_progress",
+      "progress": 78,
+      "assignedTo": [
+        "god-eyes-frontend"
+      ],
+      "tags": [
+        "frontend",
+        "cesium",
+        "layers"
+      ],
+      "createdAt": "2026-05-04T00:30:38.904Z",
+      "startedAt": "2026-05-04T00:38:06.424Z",
+      "completedAt": null
+    },
+    "task-1777854638906-34bwr5": {
+      "taskId": "task-1777854638906-34bwr5",
+      "type": "feature",
+      "description": "7. Panel/toggle wiring: wire UI mode panels, layer toggles, source health states, selections, and store state to real API data.",
+      "priority": "high",
+      "status": "in_progress",
+      "progress": 76,
+      "assignedTo": [
+        "god-eyes-frontend"
+      ],
+      "tags": [
+        "frontend",
+        "panels",
+        "toggles"
+      ],
+      "createdAt": "2026-05-04T00:30:38.906Z",
+      "startedAt": "2026-05-04T01:30:33.443Z",
+      "completedAt": null
+    },
+    "task-1777854638909-7gwws7": {
+      "taskId": "task-1777854638909-7gwws7",
+      "type": "refactor",
+      "description": "8. Performance optimization: minimize overfetching, use compact vector/binary payloads, maintain stable frontend render loops, and document perf constraints.",
+      "priority": "high",
+      "status": "in_progress",
+      "progress": 72,
+      "assignedTo": [
+        "god-eyes-binary",
+        "god-eyes-testing"
+      ],
+      "tags": [
+        "performance",
+        "transport",
+        "rendering"
+      ],
+      "createdAt": "2026-05-04T00:30:38.909Z",
+      "startedAt": "2026-05-04T01:30:43.511Z",
+      "completedAt": null
+    },
+    "task-1777854638912-pwxim2": {
+      "taskId": "task-1777854638912-pwxim2",
+      "type": "feature",
+      "description": "9. Tests/build validation: run and expand tests for backend APIs, pipelines, database schema, frontend build, and integration acceptance.",
+      "priority": "critical",
+      "status": "in_progress",
+      "progress": 88,
+      "assignedTo": [
+        "god-eyes-testing"
+      ],
+      "tags": [
+        "tests",
+        "build",
+        "validation"
+      ],
+      "createdAt": "2026-05-04T00:30:38.912Z",
+      "startedAt": "2026-05-04T01:30:33.542Z",
+      "completedAt": null
+    },
+    "task-1777854638915-bkj2tt": {
+      "taskId": "task-1777854638915-bkj2tt",
+      "type": "research",
+      "description": "10. Documentation: update structure, onboarding, API contracts, migration, source coverage, parity matrix, and acceptance status docs for future chats.",
+      "priority": "high",
+      "status": "in_progress",
+      "progress": 86,
+      "assignedTo": [
+        "god-eyes-docs"
+      ],
+      "tags": [
+        "docs",
+        "handoff",
+        "migration"
+      ],
+      "createdAt": "2026-05-04T00:30:38.915Z",
+      "startedAt": "2026-05-04T01:30:33.547Z",
+      "completedAt": null
+    }
+  },
+  "version": "3.0.0"
+}

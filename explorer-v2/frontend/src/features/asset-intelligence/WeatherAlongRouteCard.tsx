@@ -1,11 +1,17 @@
 import IntelligenceCard from '../../components/cards/IntelligenceCard';
-import { assetMock } from './assetMock';
 
-export default function WeatherAlongRouteCard() {
+interface WeatherLeg {
+  leg: string;
+  altitude: string;
+  temp: string;
+  condition: string;
+}
+
+export default function WeatherAlongRouteCard({ legs }: { legs: WeatherLeg[] }) {
   return (
     <IntelligenceCard title="Weather Along Route">
       <div className="weather-route-grid">
-        {assetMock.weatherAlongRoute.map((leg) => (
+        {legs.map((leg) => (
           <span key={leg.leg}>
             <b>{leg.leg}</b>
             <small>{leg.altitude}</small>

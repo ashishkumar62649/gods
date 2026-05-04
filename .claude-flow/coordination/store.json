@@ -1,0 +1,32 @@
+{
+  "topology": {
+    "type": "hierarchical",
+    "maxNodes": 15,
+    "redundancy": 2,
+    "consensusAlgorithm": "raft"
+  },
+  "loadBalance": {
+    "algorithm": "adaptive",
+    "weights": {},
+    "healthCheck": true
+  },
+  "sync": {
+    "lastSync": "2026-05-04T00:49:49.285Z",
+    "syncCount": 0,
+    "conflicts": 0,
+    "pendingChanges": 0
+  },
+  "nodes": {},
+  "version": "3.0.0",
+  "orchestrations": [
+    {
+      "id": "orch-1777855789285",
+      "task": "Frontend production wiring pass after FULL_PRODUCTION_PROMPT.md update: audit all visible explorer-v2 controls, eliminate static production UI, wire timeline/north/layers/panels/search to backend/Cesium where available, document blockers, and keep explorer/ read-only.",
+      "strategy": "broadcast",
+      "agents": [],
+      "status": "scheduled",
+      "scheduledAt": "2026-05-04T00:49:49.285Z",
+      "topology": "hierarchical"
+    }
+  ]
+}

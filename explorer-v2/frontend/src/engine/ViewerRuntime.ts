@@ -1,7 +1,7 @@
 import { Terrain, Viewer as CesiumViewer } from 'cesium';
 import { MapRenderer } from './MapRenderer';
-import { MockFlightMotionRenderer } from './MockFlightMotionRenderer';
-import { MockIntelEntityRenderer } from './MockIntelEntityRenderer';
+import { LiveFlightRenderer } from './LiveFlightRenderer';
+import { LiveIntelEntityRenderer } from './LiveIntelEntityRenderer';
 import { ViewerCameraController } from './ViewerCameraController';
 
 export function initializeViewer(container: HTMLElement | string) {
@@ -22,8 +22,8 @@ export function initializeViewer(container: HTMLElement | string) {
 
   const mapRenderer = new MapRenderer();
   const cameraController = new ViewerCameraController();
-  const flightRenderer = new MockFlightMotionRenderer();
-  const intelRenderer = new MockIntelEntityRenderer();
+  const flightRenderer = new LiveFlightRenderer();
+  const intelRenderer = new LiveIntelEntityRenderer();
 
   mapRenderer.attach(viewer);
   cameraController.attach(viewer);

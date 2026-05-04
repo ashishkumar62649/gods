@@ -9,6 +9,12 @@ interface LiveDataState {
   feedCycle: number;
   setNow: (nowMs: number) => void;
   recordSearchContext: (query: string) => void;
+  setSelectedLocation: (location: {
+    name: string;
+    latitude: number;
+    longitude: number;
+    elevationM?: number;
+  }) => void;
 }
 
 export const useLiveDataStore = create<LiveDataState>()((set) => ({
@@ -27,20 +33,23 @@ export const useLiveDataStore = create<LiveDataState>()((set) => ({
     set((state) => {
       const normalized = query.trim();
       if (!normalized) return state;
-      const hash = [...normalized].reduce((sum, char) => sum + char.charCodeAt(0), 0);
       return {
         selectedLocationName: normalized,
-        selectedLocationLat: clamp(-60, 72, -35 + (hash % 107)),
-        selectedLocationLon: clamp(-170, 170, -140 + ((hash * 7) % 310)),
-        selectedLocationElevationM: 5 + (hash % 740),
       };
+    }),
+  setSelectedLocation: (location) =>
+    set({
+      selectedLocationName: location.name,
+      selectedLocationLat: clamp(-90, 90, location.latitude),
+      selectedLocationLon: clamp(-180, 180, location.longitude),
+      selectedLocationElevationM: Math.max(0, Math.round(location.elevationM ?? 0)),
     }),
 }));
 
-export function startLiveMockFeed() {
+export function startLiveClock(getTimelineTimeMs?: () => number) {
   useLiveDataStore.getState().setNow(Date.now());
   const timer = window.setInterval(() => {
-    useLiveDataStore.getState().setNow(Date.now());
+    useLiveDataStore.getState().setNow(getTimelineTimeMs?.() ?? Date.now());
   }, 1000);
   return () => window.clearInterval(timer);
 }

@@ -4,6 +4,7 @@ interface LayerState {
   activeLayers: Record<string, boolean>;
   layerOpacity: Record<string, number>;
   toggleLayer: (id: string) => void;
+  setLayer: (id: string, enabled: boolean) => void;
   setLayerOpacity: (id: string, opacity: number) => void;
 }
 
@@ -18,8 +19,18 @@ export const useLayerStore = create<LayerState>()((set) => ({
     humidity2m: false,
     aircraftAdsb: true,
     aircraftMilitary: true,
+    aircraftTrails: true,
     vesselsAis: false,
     satellites: false,
+    hazards: true,
+    earthquakes: true,
+    volcanoes: true,
+    wildfires: true,
+    storms: true,
+    hydrology: false,
+    airQuality: false,
+    internetCables: true,
+    infrastructureAssets: true,
     launchesDebris: false,
   },
   layerOpacity: {
@@ -31,6 +42,13 @@ export const useLayerStore = create<LayerState>()((set) => ({
       activeLayers: {
         ...state.activeLayers,
         [id]: !state.activeLayers[id],
+      },
+    })),
+  setLayer: (id, enabled) =>
+    set((state) => ({
+      activeLayers: {
+        ...state.activeLayers,
+        [id]: enabled,
       },
     })),
   setLayerOpacity: (id, opacity) =>

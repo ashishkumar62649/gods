@@ -1,0 +1,42 @@
+
+# Codex local configuration
+.codex/
+.agents/
+.swarm/
+.mcp.json
+
+# Claude Flow runtime data
+.claude/
+.claude-flow/
+.claude-flow/data/
+.claude-flow/logs/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Generated outputs
+node_modules/
+dist/
+.vite/
+*.tsbuildinfo
+*.log
+__pycache__/
+*.pyc
+data_raw/**
+data_processed/**
+data_normalized/**
+!data_raw/
+!data_raw/README.md
+!data_raw/weather/
+!data_raw/weather/.gitkeep
+!data_processed/
+!data_processed/README.md
+!data_processed/weather/
+!data_processed/weather/.gitkeep
+!data_normalized/
+!data_normalized/README.md
+!data_normalized/weather/
+!data_normalized/weather/**/
+!data_normalized/weather/**/.gitkeep

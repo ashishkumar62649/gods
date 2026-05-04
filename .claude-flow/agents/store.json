@@ -1,0 +1,117 @@
+{
+  "agents": {
+    "god-eyes-docs": {
+      "agentId": "god-eyes-docs",
+      "agentType": "researcher",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "model": "inherit"
+      },
+      "createdAt": "2026-05-04T00:30:08.934Z",
+      "domain": "documentation",
+      "model": "inherit",
+      "modelRoutedBy": "explicit"
+    },
+    "god-eyes-architect": {
+      "agentId": "god-eyes-architect",
+      "agentType": "planner",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "model": "inherit"
+      },
+      "createdAt": "2026-05-04T00:30:21.451Z",
+      "domain": "repository-architecture",
+      "model": "inherit",
+      "modelRoutedBy": "explicit"
+    },
+    "god-eyes-frontend": {
+      "agentId": "god-eyes-frontend",
+      "agentType": "coder",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "model": "inherit"
+      },
+      "createdAt": "2026-05-04T00:30:21.554Z",
+      "domain": "frontend-react-cesium",
+      "model": "inherit",
+      "modelRoutedBy": "explicit"
+    },
+    "god-eyes-backend": {
+      "agentId": "god-eyes-backend",
+      "agentType": "coder",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "model": "inherit"
+      },
+      "createdAt": "2026-05-04T00:30:21.560Z",
+      "domain": "backend-node-api",
+      "model": "inherit",
+      "modelRoutedBy": "explicit"
+    },
+    "god-eyes-pipelines": {
+      "agentId": "god-eyes-pipelines",
+      "agentType": "coder",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "model": "inherit"
+      },
+      "createdAt": "2026-05-04T00:30:21.564Z",
+      "domain": "python-data-pipelines",
+      "model": "inherit",
+      "modelRoutedBy": "explicit"
+    },
+    "god-eyes-database": {
+      "agentId": "god-eyes-database",
+      "agentType": "coder",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "model": "inherit"
+      },
+      "createdAt": "2026-05-04T00:30:21.567Z",
+      "domain": "postgres-postgis-timescale",
+      "model": "inherit",
+      "modelRoutedBy": "explicit"
+    },
+    "god-eyes-binary": {
+      "agentId": "god-eyes-binary",
+      "agentType": "coder",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "model": "inherit"
+      },
+      "createdAt": "2026-05-04T00:30:21.571Z",
+      "domain": "binary-vector-transport",
+      "model": "inherit",
+      "modelRoutedBy": "explicit"
+    },
+    "god-eyes-testing": {
+      "agentId": "god-eyes-testing",
+      "agentType": "tester",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "model": "inherit"
+      },
+      "createdAt": "2026-05-04T00:30:21.574Z",
+      "domain": "testing-production-hardening",
+      "model": "inherit",
+      "modelRoutedBy": "explicit"
+    }
+  },
+  "version": "3.0.0"
+}

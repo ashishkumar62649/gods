@@ -1,0 +1,23 @@
+{
+  "name": "god-eyes",
+  "private": true,
+  "version": "0.2.0",
+  "description": "Root orchestration package for the God Eyes v2 intelligence platform.",
+  "type": "module",
+  "scripts": {
+    "dev": "npm --prefix explorer-v2 run dev",
+    "dev:frontend": "npm --prefix explorer-v2/frontend run dev",
+    "dev:backend": "npm --prefix explorer-v2/backend run dev",
+    "build": "npm --prefix explorer-v2 run build",
+    "build:frontend": "npm --prefix explorer-v2/frontend run build",
+    "start:backend": "npm --prefix explorer-v2/backend run start",
+    "db:up": "docker compose up -d god_eyes_db",
+    "db:config": "docker compose config",
+    "pipeline:weather": "npm --prefix explorer-v2 run pipeline:weather",
+    "report:structure": "npm --prefix explorer-v2 run report:structure",
+    "test": "npm --prefix explorer-v2 run test"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
