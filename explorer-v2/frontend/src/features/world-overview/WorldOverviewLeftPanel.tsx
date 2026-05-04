@@ -56,7 +56,9 @@ const domainLayerGroups: Array<{ name: string; layers: LayerTuple[] }> = [
 
 export default function WorldOverviewLeftPanel() {
   const activeLayers = useLayerStore((state) => state.activeLayers);
+  const layerOpacity = useLayerStore((state) => state.layerOpacity);
   const toggleLayer = useLayerStore((state) => state.toggleLayer);
+  const setLayerOpacity = useLayerStore((state) => state.setLayerOpacity);
   const toggleLeftPanel = useUiStore((state) => state.toggleLeftPanel);
   const [query, setQuery] = useState('');
   const normalizedQuery = query.trim().toLowerCase();
@@ -99,7 +101,9 @@ export default function WorldOverviewLeftPanel() {
               icon={icon}
               key={id}
               label={label}
+              opacity={layerOpacity[id] ?? 100}
               onChange={() => toggleLayer(id)}
+              onOpacityChange={(opacity) => setLayerOpacity(id, opacity)}
             />
           ))}
         </section>
@@ -112,7 +116,9 @@ export default function WorldOverviewLeftPanel() {
                 icon={icon}
                 key={id}
                 label={label}
+                opacity={layerOpacity[id] ?? 100}
                 onChange={() => toggleLayer(id)}
+                onOpacityChange={(opacity) => setLayerOpacity(id, opacity)}
               />
             ))}
           </section>

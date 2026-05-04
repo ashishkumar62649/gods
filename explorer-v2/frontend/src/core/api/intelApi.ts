@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_BASE?.trim() || import.meta.env.VITE_FLIGHT_API_BASE?.trim() || '';
+import { apiUrl } from './apiConfig';
 
 export interface ApiPointRecord {
   id?: string;
@@ -19,6 +19,13 @@ export interface ApiPointRecord {
   centroid_latitude?: number;
   centroid_longitude?: number;
   altitude_km?: number;
+  velocity_kps?: number;
+  speed_knots?: number;
+  heading_deg?: number;
+  nearest_cable_id?: string;
+  nearest_cable_distance_m?: number;
+  risk_status?: string;
+  data_source?: string;
   value?: number;
   unit?: string;
   timestamp?: number;
@@ -36,11 +43,19 @@ export interface InfrastructureCable {
 }
 
 export async function fetchApiJson<T>(path: string, signal?: AbortSignal): Promise<T> {
-  const response = await fetch(`${API_BASE}${path}`, { signal });
+  const response = await fetch(apiUrl(path), { signal });
   if (!response.ok) {
     throw new Error(`${path} returned ${response.status}`);
   }
   return (await response.json()) as T;
+}
+
+export async function fetchApiBinary(path: string, signal?: AbortSignal): Promise<ArrayBuffer> {
+  const response = await fetch(apiUrl(path), { signal });
+  if (!response.ok) {
+    throw new Error(`${path} returned ${response.status}`);
+  }
+  return response.arrayBuffer();
 }
 
 export function pointLat(record: ApiPointRecord) {

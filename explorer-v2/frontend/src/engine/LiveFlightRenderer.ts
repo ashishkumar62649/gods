@@ -27,6 +27,7 @@ export class LiveFlightRenderer implements IRenderer {
   private unsubscribeLayers: (() => void) | null = null;
   private unsubscribeTimeline: (() => void) | null = null;
   private abortController: AbortController | null = null;
+  private timelineFetchKey = flightTimelineKey();
 
   attach(viewer: CesiumViewer): void {
     this.manager = new FlightSceneLayerManager(viewer);
@@ -36,8 +37,10 @@ export class LiveFlightRenderer implements IRenderer {
     });
     this.unsubscribeLayers = useLayerStore.subscribe(() => this.syncVisibility());
     this.unsubscribeTimeline = useTimelineStore.subscribe(() => {
-      const timeline = useTimelineStore.getState();
-      if (timeline.mode === 'live') void this.refreshFlights();
+      const nextKey = flightTimelineKey();
+      if (nextKey === this.timelineFetchKey) return;
+      this.timelineFetchKey = nextKey;
+      void this.refreshFlights();
     });
     this.pollTimer = window.setInterval(() => void this.refreshFlights(), FLIGHT_POLL_INTERVAL_MS);
     void this.refreshFlights();
@@ -72,21 +75,35 @@ export class LiveFlightRenderer implements IRenderer {
   }
 
   private syncVisibility() {
-    const layers = useLayerStore.getState().activeLayers;
+    const state = useLayerStore.getState();
+    const layers = state.activeLayers;
     this.manager?.setFlightsVisible(Boolean(layers.aircraftAdsb || layers.aircraftMilitary));
     this.manager?.setShowSelectedTrail(Boolean(layers.aircraftTrails));
+    this.manager?.setFlightRenderMode(state.flightRenderMode);
+    this.manager?.setAssetViewState(state.flightAssetView);
+    this.manager?.setSensorLinkState(state.flightSensorLink);
+    this.manager?.setAviationGridState(state.aviationGrid);
+    this.manager?.setGroundStationsState(state.groundStations);
   }
 
   private async refreshFlights() {
     if (!this.manager) return;
-    if (useTimelineStore.getState().mode !== 'live') return;
+    const timeline = useTimelineStore.getState();
+    if (timeline.mode === 'forecast') {
+      this.manager.syncFlights([]);
+      return;
+    }
+
     this.abortController?.abort();
     const controller = new AbortController();
     this.abortController = controller;
     try {
-      const flights = await this.fetchBinary(controller.signal);
+      const flights = timeline.mode === 'live'
+        ? await this.fetchBinary(controller.signal)
+        : await this.fetchTimelineSnapshot(controller.signal);
       this.manager.syncFlights(this.filterByLayers(flights));
     } catch {
+      if (controller.signal.aborted) return;
       const snapshot = await fetchFlightSnapshot(controller.signal);
       this.manager.syncFlights(this.filterByLayers(snapshot.flights));
     } finally {
@@ -107,6 +124,20 @@ export class LiveFlightRenderer implements IRenderer {
     return decodeFlightLiveBinary(await response.arrayBuffer());
   }
 
+  private async fetchTimelineSnapshot(signal?: AbortSignal): Promise<FlightRecord[]> {
+    const timeline = useTimelineStore.getState();
+    const url = new URL(FLIGHT_API_URL, window.location.origin);
+    url.searchParams.set('time', new Date(timeline.currentTimeMs).toISOString());
+    url.searchParams.set('timeMode', timeline.mode);
+    url.searchParams.set('limit', '10000');
+    const response = await fetch(url.toString(), { signal });
+    if (!response.ok) {
+      throw new Error(`Flight timeline feed returned ${response.status}`);
+    }
+    const snapshot = await response.json() as { flights?: FlightRecord[] };
+    return snapshot.flights ?? [];
+  }
+
   private filterByLayers(flights: FlightRecord[]) {
     const layers = useLayerStore.getState().activeLayers;
     return flights.filter((flight) => {
@@ -114,4 +145,10 @@ export class LiveFlightRenderer implements IRenderer {
       return Boolean(layers.aircraftAdsb);
     });
   }
+}
+
+function flightTimelineKey() {
+  const timeline = useTimelineStore.getState();
+  if (timeline.mode === 'live') return 'live';
+  return `${timeline.mode}:${Math.floor(timeline.currentTimeMs / 60_000)}`;
 }

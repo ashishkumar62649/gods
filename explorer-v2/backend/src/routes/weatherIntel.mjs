@@ -27,6 +27,8 @@ function optionsFromUrl(url) {
     latitude: url.searchParams.get('lat') || url.searchParams.get('latitude') || null,
     longitude: url.searchParams.get('lon') || url.searchParams.get('longitude') || null,
     radiusKm: url.searchParams.get('radiusKm') || null,
+    time: url.searchParams.get('time') || null,
+    timeMode: url.searchParams.get('timeMode') || null,
     activeOnly: url.searchParams.get('activeOnly') !== 'false',
   };
 }

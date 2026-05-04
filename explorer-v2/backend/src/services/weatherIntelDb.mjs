@@ -40,6 +40,14 @@ function addOptionalFilter(parts, values, column, value) {
   parts.push(`${column} = $${values.length}`);
 }
 
+function addTimelineFilter(parts, values, timeExpr, value) {
+  const selectedTime = parseOptionalTime(value);
+  if (!selectedTime) return null;
+  values.push(selectedTime);
+  parts.push(`${timeExpr} <= $${values.length}::timestamptz`);
+  return `$${values.length}::timestamptz`;
+}
+
 function ageSecondsExpression(timeExpr) {
   return `EXTRACT(EPOCH FROM (now() - ${timeExpr}))::integer`;
 }
@@ -65,6 +73,7 @@ export async function queryCurrentWeather(options = {}) {
   const values = [];
   addOptionalFilter(where, values, 'w.parameter_id', options.parameter);
   addOptionalFilter(where, values, 'w.source_id', options.source);
+  addTimelineFilter(where, values, 'w.time_index', options.time);
   values.push(limit);
   const sql = `
     SELECT
@@ -108,6 +117,7 @@ export async function queryBestCurrentValues(options = {}) {
   const values = [];
   addOptionalFilter(where, values, 'b.parameter_id', options.parameter);
   addOptionalFilter(where, values, 'b.source_id', options.source);
+  addTimelineFilter(where, values, 'b.time_index', options.time);
   values.push(limit);
   const sql = `
     SELECT
@@ -155,9 +165,11 @@ export async function queryActiveHazards(options = {}) {
   const values = [];
   addOptionalFilter(where, values, 'h.event_type', options.eventType);
   addOptionalFilter(where, values, 'h.source_id', options.source);
+  const selectedTimeSql = addTimelineFilter(where, values, 'h.time_index', options.time);
   if (options.activeOnly !== false) {
-    where.push("(h.expires_time IS NULL OR h.expires_time >= now() - interval '1 hour')");
-    where.push("(h.ended_at IS NULL OR h.ended_at >= now() - interval '1 hour')");
+    const referenceTime = selectedTimeSql ?? 'now()';
+    where.push(`(h.expires_time IS NULL OR h.expires_time >= ${referenceTime} - interval '1 hour')`);
+    where.push(`(h.ended_at IS NULL OR h.ended_at >= ${referenceTime} - interval '1 hour')`);
   }
   values.push(limit);
   const sql = `
@@ -214,6 +226,7 @@ async function queryPointTimeSeries(table, options = {}) {
   const values = [];
   addOptionalFilter(where, values, 't.parameter_id', options.parameter);
   addOptionalFilter(where, values, 't.source_id', options.source);
+  addTimelineFilter(where, values, 't.time_index', options.time);
   values.push(limit);
   const sql = `
     SELECT
@@ -393,4 +406,10 @@ export async function queryIntelSummary() {
     generatedAt: new Date().toISOString(),
     counts: Object.fromEntries(result.rows.map((row) => [row.table_name, row.count])),
   };
+}
+
+function parseOptionalTime(value) {
+  if (!value) return null;
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? null : date;
 }

@@ -11,14 +11,28 @@ const icons = ['AC', 'ST', 'CB', 'SH', 'EM', 'SR'];
 
 interface HealthPayload {
   storeSize?: number;
-  satellites?: { count?: number };
-  infrastructure?: { cableCount?: number; cables?: number; ships?: number };
+  satellites?: {
+    count?: number;
+    tle?: { count?: number };
+    propagation?: { count?: number };
+  };
+  infrastructure?: {
+    cableCount?: number;
+    cables?: number | { count?: number };
+    ships?: number | { count?: number };
+  };
   emergencies?: { cached?: number };
   aircraft?: { available?: boolean; loaded?: number };
 }
 
 interface SourcePayload {
-  sources?: Array<{ operational_status?: string; status?: string }>;
+  sources?: Array<{
+    operational_status?: string;
+    status?: string;
+    success_count?: number;
+    failure_count?: number;
+    raw_file_count?: number;
+  }>;
 }
 
 export default function WorldSituationPanel() {
@@ -51,15 +65,16 @@ export default function WorldSituationPanel() {
 
   const metrics = useMemo(() => {
     const sources = sourceHealth?.sources ?? [];
-    const healthySources = sources.filter((source) =>
-      ['live', 'healthy', 'ok', 'success'].includes(String(source.operational_status ?? source.status ?? '').toLowerCase()),
-    ).length;
+    const healthySources = sources.filter(isHealthySource).length;
     const sourceTotal = sources.length;
+    const satelliteCount = health?.satellites?.count ?? health?.satellites?.propagation?.count ?? health?.satellites?.tle?.count ?? 0;
+    const cableCount = numericCount(health?.infrastructure?.cableCount ?? health?.infrastructure?.cables);
+    const shipCount = numericCount(health?.infrastructure?.ships);
     return [
       metric('Flights Online', health?.storeSize ?? 'offline', health?.storeSize ? 'elevated' : 'moderate', 88),
-      metric('Satellites', health?.satellites?.count ?? 0, 'moderate', 82),
-      metric('Internet Cables', health?.infrastructure?.cableCount ?? health?.infrastructure?.cables ?? 0, 'healthy', 80),
-      metric('Ships Cached', health?.infrastructure?.ships ?? 0, 'moderate', 70),
+      metric('Satellites', satelliteCount, 'moderate', 82),
+      metric('Internet Cables', cableCount, 'healthy', 80),
+      metric('Ships Cached', shipCount, 'moderate', 70),
       metric('Emergency Signals', health?.emergencies?.cached ?? 0, (health?.emergencies?.cached ?? 0) > 0 ? 'high' : 'healthy', 86),
       metric('Source Health', sourceTotal > 0 ? `${healthySources} / ${sourceTotal}` : 'offline', healthySources > 0 ? 'healthy' : 'elevated', 72),
     ];
@@ -88,4 +103,20 @@ export default function WorldSituationPanel() {
 
 function metric(label: string, value: string | number, severity: Severity, confidence: number) {
   return { label, value, severity, confidence };
+}
+
+function numericCount(value: number | { count?: number } | undefined) {
+  return typeof value === 'number' ? value : value?.count ?? 0;
+}
+
+function isHealthySource(source: NonNullable<SourcePayload['sources']>[number]) {
+  const status = String(source.operational_status ?? source.status ?? '').toLowerCase();
+  if (['live', 'healthy', 'ok', 'success', 'operational'].includes(status)) {
+    return true;
+  }
+
+  const successCount = Number(source.success_count ?? 0);
+  const failureCount = Number(source.failure_count ?? 0);
+  const rawFileCount = Number(source.raw_file_count ?? 0);
+  return successCount > 0 && successCount >= failureCount && rawFileCount > 0;
 }

@@ -24,7 +24,9 @@ const layers = [
 
 export default function LocationLayerPanel() {
   const activeLayers = useLayerStore((state) => state.activeLayers);
+  const layerOpacity = useLayerStore((state) => state.layerOpacity);
   const toggleLayer = useLayerStore((state) => state.toggleLayer);
+  const setLayerOpacity = useLayerStore((state) => state.setLayerOpacity);
   const toggleLeftPanel = useUiStore((state) => state.toggleLeftPanel);
   const [query, setQuery] = useState('');
   const normalizedQuery = query.trim().toLowerCase();
@@ -46,7 +48,15 @@ export default function LocationLayerPanel() {
         <section className="layer-section-v2 is-open">
           <h3>Weather</h3>
           {visibleLayers.map(([id, label, icon]) => (
-            <LayerToggle checked={Boolean(activeLayers[id])} icon={icon} key={id} label={label} onChange={() => toggleLayer(id)} />
+            <LayerToggle
+              checked={Boolean(activeLayers[id])}
+              icon={icon}
+              key={id}
+              label={label}
+              opacity={layerOpacity[id] ?? 100}
+              onChange={() => toggleLayer(id)}
+              onOpacityChange={(opacity) => setLayerOpacity(id, opacity)}
+            />
           ))}
         </section>
         <div className="active-layer-card">

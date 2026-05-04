@@ -111,6 +111,76 @@
       "domain": "testing-production-hardening",
       "model": "inherit",
       "modelRoutedBy": "explicit"
+    },
+    "agent-1777862046968-b4olga": {
+      "agentId": "agent-1777862046968-b4olga",
+      "agentType": "architect",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "model": "inherit"
+      },
+      "createdAt": "2026-05-04T02:34:06.968Z",
+      "domain": "repository-architecture",
+      "model": "inherit",
+      "modelRoutedBy": "explicit"
+    },
+    "agent-1777862046992-t9jx9o": {
+      "agentId": "agent-1777862046992-t9jx9o",
+      "agentType": "coder",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "model": "inherit"
+      },
+      "createdAt": "2026-05-04T02:34:06.992Z",
+      "domain": "frontend-react-cesium",
+      "model": "inherit",
+      "modelRoutedBy": "explicit"
+    },
+    "agent-1777862046997-4epxwn": {
+      "agentId": "agent-1777862046997-4epxwn",
+      "agentType": "coder",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "model": "inherit"
+      },
+      "createdAt": "2026-05-04T02:34:06.997Z",
+      "domain": "backend-node-api-binary",
+      "model": "inherit",
+      "modelRoutedBy": "explicit"
+    },
+    "agent-1777862047003-99ati8": {
+      "agentId": "agent-1777862047003-99ati8",
+      "agentType": "coder",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "model": "inherit"
+      },
+      "createdAt": "2026-05-04T02:34:07.003Z",
+      "domain": "postgres-python-pipelines",
+      "model": "inherit",
+      "modelRoutedBy": "explicit"
+    },
+    "agent-1777862047008-8c1iuy": {
+      "agentId": "agent-1777862047008-8c1iuy",
+      "agentType": "tester",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "model": "inherit"
+      },
+      "createdAt": "2026-05-04T02:34:07.008Z",
+      "domain": "browser-validation-hardening",
+      "model": "inherit",
+      "modelRoutedBy": "explicit"
     }
   },
   "version": "3.0.0"

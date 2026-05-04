@@ -71,8 +71,12 @@ export const IMAGERY_CHOICES: ImageryChoice[] = [
   { id: 'natural-earth-ii', name: 'Natural Earth II' },
 ];
 
+const DEFAULT_IMAGERY_ID = import.meta.env.VITE_MAPTILER_API_KEY
+  ? 'maptiler-satellite'
+  : 'arcgis-world-imagery';
+
 export const useMapStore = create<MapStore>()((set) => ({
-  selectedImageryId: 'arcgis-world-imagery',
+  selectedImageryId: DEFAULT_IMAGERY_ID,
   buildingsEnabled: false,
   autoBuildingsEnabled: false,
   orbitEnabled: false,

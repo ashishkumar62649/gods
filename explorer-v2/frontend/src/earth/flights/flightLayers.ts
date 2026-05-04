@@ -821,6 +821,7 @@ export class FlightSceneLayerManager {
       }
 
       this.applyRenderedPosition(entry);
+      this.applyNearSideVisibility(entry, isFlightOnNearSide(this.viewer, entry));
       const headingRad = (entry.flight.heading_true_deg * Math.PI) / 180;
       entry.icon.rotation = cameraHeading - headingRad;
       if (entry.model?.show) {
@@ -983,6 +984,23 @@ export class FlightSceneLayerManager {
     if (entry.model) {
       entry.model.color = Color.WHITE.withAlpha(entry.currentOpacity);
     }
+  }
+
+  private applyNearSideVisibility(entry: FlightRenderEntry, nearSide: boolean) {
+    if (entry.flight.id_icao === this.selectedFlightId) {
+      return;
+    }
+
+    if (!nearSide) {
+      entry.dot.show = false;
+      entry.icon.show = false;
+      if (entry.model) {
+        entry.model.show = false;
+      }
+      return;
+    }
+
+    this.applyFlightVisual(entry, entry.flight);
   }
 
   private ensureAirframeModel(entry: FlightRenderEntry) {
@@ -1467,6 +1485,22 @@ function buildFlightApiCartesian(flight: FlightRecord) {
   const lat = Number.isFinite(flight.latitude)  ? flight.latitude  : 0;
   const alt = Math.max(0, Number.isFinite(flight.altitude_baro_m) ? flight.altitude_baro_m : 0);
   return Cartesian3.fromDegrees(lon, lat, alt);
+}
+
+function isFlightOnNearSide(viewer: CesiumViewer, entry: FlightRenderEntry) {
+  if (entry.flight.is_active_emergency || entry.flight.emergency_status === 'SIGNAL_LOST') {
+    return true;
+  }
+
+  const latitude = entry.targetLatitude;
+  const longitude = entry.targetLongitude;
+  if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) {
+    return false;
+  }
+
+  const cameraNormal = Cartesian3.normalize(viewer.camera.positionWC, new Cartesian3());
+  const flightNormal = Cartesian3.normalize(Cartesian3.fromDegrees(longitude, latitude, 0), new Cartesian3());
+  return Cartesian3.dot(cameraNormal, flightNormal) > 0.08;
 }
 
 function getRenderedFlightState(entry: FlightRenderEntry) {

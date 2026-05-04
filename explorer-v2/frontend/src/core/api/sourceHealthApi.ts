@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_BASE?.trim() || import.meta.env.VITE_FLIGHT_API_BASE?.trim() || '';
+import { apiUrl } from './apiConfig';
 
 export interface SourceHealthRow {
   source_id?: string;
@@ -14,7 +14,7 @@ export interface SourceHealthRow {
 }
 
 export async function fetchSourceHealth(signal?: AbortSignal): Promise<SourceHealthRow[]> {
-  const response = await fetch(`${API_BASE}/api/v2/source-health?limit=8`, { signal });
+  const response = await fetch(apiUrl('/api/v2/source-health?limit=8'), { signal });
   if (!response.ok) {
     throw new Error(`Source health returned ${response.status}`);
   }

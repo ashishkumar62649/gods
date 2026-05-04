@@ -1,0 +1,241 @@
+- main [ref=e3]:
+  - generic:
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - generic [ref=e12]: G
+        - strong [ref=e13]: GODS Explorer
+      - combobox [ref=e14]:
+        - option "World Overview" [selected]
+        - option "Asset Intelligence"
+        - option "Watch Zones & Alerts"
+        - option "Location Intelligence"
+      - search [ref=e17]:
+        - textbox "Search a place" [ref=e18]
+        - button "Search a place" [disabled] [ref=e19] [cursor=pointer]: Enter
+      - generic [ref=e20]:
+        - strong [ref=e21]: 03:04:35 AM
+        - generic [ref=e22]: 04 May 2026 UTC
+      - generic [ref=e23]:
+        - button "Notifications" [ref=e24] [cursor=pointer]: "N"
+        - button "Settings" [ref=e25] [cursor=pointer]: S
+        - button "Download" [ref=e26] [cursor=pointer]: D
+        - generic [ref=e27]: A
+    - navigation [ref=e28]:
+      - button "World Overview" [ref=e29] [cursor=pointer]: GL
+      - button "Layers" [ref=e30] [cursor=pointer]: LY
+      - button "Aircraft" [ref=e31] [cursor=pointer]: AC
+      - button "Maritime" [ref=e32] [cursor=pointer]: SH
+      - button "Hazards" [ref=e33] [cursor=pointer]: HZ
+      - button "Location" [ref=e34] [cursor=pointer]: LC
+      - button "Settings" [ref=e35] [cursor=pointer]: ST
+    - complementary [ref=e36]:
+      - generic [ref=e37]:
+        - generic [ref=e38]:
+          - heading "Layers" [level=2] [ref=e39]
+          - button "Collapse" [ref=e40] [cursor=pointer]
+        - textbox "Search layers..." [ref=e41]
+        - generic [ref=e42]:
+          - heading "Weather" [level=3] [ref=e43]
+          - button "SAT Satellite (True Color)" [ref=e44] [cursor=pointer]:
+            - generic [ref=e45]: SAT
+            - generic [ref=e46]: Satellite (True Color)
+          - button "RAD Radar (Precipitation)" [ref=e48] [cursor=pointer]:
+            - generic [ref=e49]: RAD
+            - generic [ref=e50]: Radar (Precipitation)
+          - button "CLD Clouds" [ref=e52] [cursor=pointer]:
+            - generic [ref=e53]: CLD
+            - generic [ref=e54]: Clouds
+          - button "TMP Temperature" [ref=e56] [cursor=pointer]:
+            - generic [ref=e57]: TMP
+            - generic [ref=e58]: Temperature
+          - button "WND Wind (10m)" [ref=e60] [cursor=pointer]:
+            - generic [ref=e61]: WND
+            - generic [ref=e62]: Wind (10m)
+          - button "PRS Pressure (MSLP)" [ref=e64] [cursor=pointer]:
+            - generic [ref=e65]: PRS
+            - generic [ref=e66]: Pressure (MSLP)
+          - button "HUM Humidity (2m)" [ref=e68] [cursor=pointer]:
+            - generic [ref=e69]: HUM
+            - generic [ref=e70]: Humidity (2m)
+        - generic [ref=e72]:
+          - heading "Aviation" [level=3] [ref=e73]
+          - button "ADSB Aircraft (ADS-B)" [ref=e74] [cursor=pointer]:
+            - generic [ref=e75]: ADSB
+            - generic [ref=e76]: Aircraft (ADS-B)
+          - button "MIL Aircraft (Military)" [ref=e78] [cursor=pointer]:
+            - generic [ref=e79]: MIL
+            - generic [ref=e80]: Aircraft (Military)
+          - button "TRL Aircraft Trails" [ref=e82] [cursor=pointer]:
+            - generic [ref=e83]: TRL
+            - generic [ref=e84]: Aircraft Trails
+        - generic [ref=e86]:
+          - heading "Satellites" [level=3] [ref=e87]
+          - button "SAT Satellites" [ref=e88] [cursor=pointer]:
+            - generic [ref=e89]: SAT
+            - generic [ref=e90]: Satellites
+          - button "ORB Launches / Debris" [ref=e92] [cursor=pointer]:
+            - generic [ref=e93]: ORB
+            - generic [ref=e94]: Launches / Debris
+        - generic [ref=e96]:
+          - heading "Hazards" [level=3] [ref=e97]
+          - button "HZ All Hazards" [ref=e98] [cursor=pointer]:
+            - generic [ref=e99]: HZ
+            - generic [ref=e100]: All Hazards
+          - button "EQ Earthquakes" [ref=e102] [cursor=pointer]:
+            - generic [ref=e103]: EQ
+            - generic [ref=e104]: Earthquakes
+          - button "VOL Volcanoes" [ref=e106] [cursor=pointer]:
+            - generic [ref=e107]: VOL
+            - generic [ref=e108]: Volcanoes
+          - button "FIR Wildfires" [ref=e110] [cursor=pointer]:
+            - generic [ref=e111]: FIR
+            - generic [ref=e112]: Wildfires
+          - button "STM Storms / Cyclones" [ref=e114] [cursor=pointer]:
+            - generic [ref=e115]: STM
+            - generic [ref=e116]: Storms / Cyclones
+          - button "HYD Hydrology" [ref=e118] [cursor=pointer]:
+            - generic [ref=e119]: HYD
+            - generic [ref=e120]: Hydrology
+          - button "AIR Air Quality" [ref=e122] [cursor=pointer]:
+            - generic [ref=e123]: AIR
+            - generic [ref=e124]: Air Quality
+        - generic [ref=e126]:
+          - heading "Maritime & Infrastructure" [level=3] [ref=e127]
+          - button "AIS Vessels (AIS)" [ref=e128] [cursor=pointer]:
+            - generic [ref=e129]: AIS
+            - generic [ref=e130]: Vessels (AIS)
+          - button "CAB Internet Cables" [ref=e132] [cursor=pointer]:
+            - generic [ref=e133]: CAB
+            - generic [ref=e134]: Internet Cables
+          - button "INF Infrastructure Assets" [ref=e136] [cursor=pointer]:
+            - generic [ref=e137]: INF
+            - generic [ref=e138]: Infrastructure Assets
+        - generic [ref=e140]:
+          - text: Active Layer
+          - generic [ref=e141]: Satellite (True Color)
+          - generic [ref=e143]:
+            - generic [ref=e144]: "-30"
+            - generic [ref=e145]: "-10"
+            - generic [ref=e146]: "10"
+            - generic [ref=e147]: "30"
+            - generic [ref=e148]: 50 C
+    - complementary [ref=e149]:
+      - generic [ref=e150]:
+        - generic [ref=e151]:
+          - generic [ref=e152]:
+            - heading "Global Situation" [level=2] [ref=e153]
+            - text: "Last updated: 4s ago"
+          - button "Close" [ref=e154] [cursor=pointer]
+        - generic [ref=e155]:
+          - article [ref=e156]:
+            - generic [ref=e157]:
+              - generic [ref=e158]: AC
+              - generic [ref=e159]:
+                - generic [ref=e160]: Flights Online
+                - strong [ref=e161]: offline
+              - generic [ref=e162]: moderate
+            - generic [ref=e164]: Confidence 88%
+          - article [ref=e167]:
+            - generic [ref=e168]:
+              - generic [ref=e169]: ST
+              - generic [ref=e170]:
+                - generic [ref=e171]: Satellites
+                - strong [ref=e172]: "0"
+              - generic [ref=e173]: moderate
+            - generic [ref=e175]: Confidence 82%
+          - article [ref=e178]:
+            - generic [ref=e179]:
+              - generic [ref=e180]: CB
+              - generic [ref=e181]:
+                - generic [ref=e182]: Internet Cables
+                - strong [ref=e183]: "0"
+              - generic [ref=e184]: healthy
+            - generic [ref=e186]: Confidence 80%
+          - article [ref=e189]:
+            - generic [ref=e190]:
+              - generic [ref=e191]: SH
+              - generic [ref=e192]:
+                - generic [ref=e193]: Ships Cached
+                - strong [ref=e194]: "0"
+              - generic [ref=e195]: moderate
+            - generic [ref=e197]: Confidence 70%
+          - article [ref=e200]:
+            - generic [ref=e201]:
+              - generic [ref=e202]: EM
+              - generic [ref=e203]:
+                - generic [ref=e204]: Emergency Signals
+                - strong [ref=e205]: "0"
+              - generic [ref=e206]: healthy
+            - generic [ref=e208]: Confidence 86%
+          - article [ref=e211]:
+            - generic [ref=e212]:
+              - generic [ref=e213]: SR
+              - generic [ref=e214]:
+                - generic [ref=e215]: Source Health
+                - strong [ref=e216]: offline
+              - generic [ref=e217]: elevated
+            - generic [ref=e219]: Confidence 72%
+        - button "View All Alerts & Events" [ref=e222] [cursor=pointer]
+    - generic [ref=e223]:
+      - button "Overview" [ref=e224] [cursor=pointer]
+      - button "Events" [ref=e225] [cursor=pointer]
+      - button "Watch Zones 7" [ref=e226] [cursor=pointer]:
+        - text: Watch Zones
+        - generic [ref=e227]: "7"
+      - button "Assets" [ref=e228] [cursor=pointer]
+      - button "Timeline" [ref=e229] [cursor=pointer]
+    - generic [ref=e230]:
+      - generic [ref=e231]:
+        - generic [ref=e232]: 04 May 2026
+        - button "Pause" [ref=e233] [cursor=pointer]
+        - combobox [ref=e234]:
+          - option "1x" [selected]
+          - option "2x"
+          - option "4x"
+        - generic [ref=e235]:
+          - button "Live" [ref=e236] [cursor=pointer]
+          - button "Past 24h" [ref=e237] [cursor=pointer]
+          - button "Forecast 72h" [ref=e238] [cursor=pointer]
+      - generic [ref=e239]:
+        - generic [ref=e240]: 03 May 2026
+        - slider "Timeline scrubber" [ref=e241]: "100"
+        - generic [ref=e242]: 04 May 2026
+      - generic [ref=e243]:
+        - generic [ref=e244]:
+          - generic [ref=e245]: Weather grid
+          - generic [ref=e247]: live ready
+        - generic [ref=e248]:
+          - generic [ref=e249]: Hazard events
+          - generic [ref=e251]: live ready
+        - generic [ref=e252]:
+          - generic [ref=e253]: Satellite orbits
+          - generic [ref=e255]: live ready
+    - generic [ref=e256]:
+      - button "N 0 deg" [ref=e257] [cursor=pointer]:
+        - generic [ref=e258]: "N"
+        - generic [ref=e259]: 0 deg
+      - generic [ref=e260]:
+        - button "Home" [ref=e261] [cursor=pointer]: HM
+        - button "Orbit" [ref=e262] [cursor=pointer]: OR
+        - button "Buildings" [ref=e263] [cursor=pointer]: BD
+        - button "Map layers" [ref=e264] [cursor=pointer]: LY
+      - generic [ref=e265]:
+        - button "Zoom in" [ref=e266] [cursor=pointer]: +
+        - button "Zoom out" [ref=e267] [cursor=pointer]: "-"
+    - generic [ref=e268]:
+      - generic [ref=e269]:
+        - generic [ref=e270]: COORDINATES
+        - generic [ref=e271]: 20.62 deg N, 78.96 deg E
+      - generic [ref=e272]:
+        - generic [ref=e273]: ELEVATION
+        - generic [ref=e274]: 14,065,603 m
+      - generic [ref=e275]:
+        - generic [ref=e276]: TIME MODE
+        - generic [ref=e277]: live
+      - paragraph [ref=e278]: Copyright 2026 GODS Explorer
+      - generic [ref=e279]: Open Source Project
+      - navigation [ref=e280]:
+        - generic [ref=e281]: Docs
+        - generic [ref=e282]: API
+        - generic [ref=e283]: GitHub
+        - generic [ref=e284]: All Systems Operational

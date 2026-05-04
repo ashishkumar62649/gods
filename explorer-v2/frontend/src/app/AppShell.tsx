@@ -4,6 +4,7 @@ import AssetIntelligenceScreen from '../features/asset-intelligence/AssetIntelli
 import LocationIntelligenceScreen from '../features/location-intelligence/LocationIntelligenceScreen';
 import WatchZonesScreen from '../features/watch-zones/WatchZonesScreen';
 import WorldOverviewScreen from '../features/world-overview/WorldOverviewScreen';
+import WorldAssistantPanel from '../features/world-assistant/WorldAssistantPanel';
 import { useUiStore } from '../store/uiStore';
 import FloatingMapControls from '../components/shell/FloatingMapControls';
 import LeftIconRail from '../components/shell/LeftIconRail';
@@ -34,6 +35,7 @@ export default function AppShell() {
         {mode === 'asset-intelligence' ? <AssetIntelligenceScreen /> : null}
         {mode === 'watch-zones' ? <WatchZonesScreen /> : null}
         {mode === 'location-intelligence' ? <LocationIntelligenceScreen /> : null}
+        <WorldAssistantPanel />
         <FloatingMapControls />
         <StatusFooter />
       </div>

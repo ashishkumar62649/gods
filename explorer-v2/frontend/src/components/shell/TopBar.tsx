@@ -13,6 +13,7 @@ export default function TopBar() {
   const mode = useUiStore((state) => state.mode);
   const setMode = useUiStore((state) => state.setMode);
   const toggleMapLayerPicker = useUiStore((state) => state.toggleMapLayerPicker);
+  const toggleAssistant = useUiStore((state) => state.toggleAssistant);
   const requestSearch = useMapStore((state) => state.requestSearch);
   const nowMs = useLiveDataStore((state) => state.nowMs);
   const recordSearchContext = useLiveDataStore((state) => state.recordSearchContext);
@@ -70,7 +71,7 @@ export default function TopBar() {
         >
           D
         </IconButton>
-        <span className="avatar">A</span>
+        <IconButton label="World intelligence assistant" onClick={toggleAssistant}>AI</IconButton>
       </div>
     </header>
   );

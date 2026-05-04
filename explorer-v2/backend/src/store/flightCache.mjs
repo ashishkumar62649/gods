@@ -8,6 +8,7 @@
 
 import { STALE_FLIGHT_TIMEOUT_MS } from '../config/constants.mjs';
 import { applyEmergencyTripwire } from '../services/emergencyTripwire.mjs';
+import { enqueueFlightSnapshot } from '../services/liveDomainDbWriter.mjs';
 
 /**
  * The primary in-memory flight store.
@@ -36,7 +37,9 @@ export function upsertFlight(flight) {
     return;
   }
 
-  flightStore.set(flight.id_icao, applyEmergencyTripwire(flight));
+  const normalizedFlight = applyEmergencyTripwire(flight);
+  flightStore.set(flight.id_icao, normalizedFlight);
+  enqueueFlightSnapshot(normalizedFlight);
 }
 
 /**

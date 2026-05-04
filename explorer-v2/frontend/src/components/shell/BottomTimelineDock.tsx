@@ -82,8 +82,8 @@ export default function BottomTimelineDock({ variant = 'world' }: BottomTimeline
         <span>{formatDate(endTimeMs)}</span>
       </div>
       <div className="timeline-ruler">
-        {ticks.map((tick) => (
-          <span key={tick}>{tick}</span>
+        {ticks.map((tick, index) => (
+          <span key={`${tick}-${index}`}>{tick}</span>
         ))}
       </div>
       <div className="timeline-rows">

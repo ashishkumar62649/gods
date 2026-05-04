@@ -1,3 +1,8 @@
+import {
+  enqueueSatelliteStateSnapshots,
+  enqueueSatelliteTleCatalog,
+} from '../services/liveDomainDbWriter.mjs';
+
 export const tleStore = new Map();
 export const satelliteStore = new Map();
 
@@ -30,6 +35,7 @@ export function replaceTles(tles, source = 'Space-Track GP') {
     source,
     error: null,
   };
+  enqueueSatelliteTleCatalog(Array.from(tleStore.values()));
 }
 
 export function setTleFetchError(error) {
@@ -62,6 +68,7 @@ export function replaceSatellites(satellites, stats = {}) {
     skippedCount: stats.skippedCount ?? 0,
     loopActive: stats.loopActive ?? propagationStats.loopActive,
   };
+  enqueueSatelliteStateSnapshots(Array.from(satelliteStore.values()));
 }
 
 export function setSatelliteLoopActive(loopActive) {

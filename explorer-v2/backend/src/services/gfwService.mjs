@@ -4,6 +4,7 @@ import {
   GFW_API_KEY,
   GFW_MARITIME_REFRESH_INTERVAL_MS,
 } from '../config/constants.mjs';
+import { enqueueMaritimePresenceSnapshots } from './liveDomainDbWriter.mjs';
 
 const REPORT_LOOKBACK_HOURS = 24;
 const GFW_PRESENCE_DATASET = 'public-global-presence:latest';
@@ -110,6 +111,10 @@ async function refreshGfwTradeSnapshot() {
       loading: false,
     },
   };
+  enqueueMaritimePresenceSnapshots(vessels, {
+    observedAt: snapshotCache.meta.fetchedAt,
+    sourceLabel: snapshotCache.meta.source,
+  });
 
   return snapshotCache;
 }
@@ -295,6 +300,8 @@ function normalizeTradePresenceRows(rows) {
       vesselKey,
       sortTime: Date.parse(timestamp) || 0,
       vessel: {
+        vessel_id: vesselKey,
+        vesselId: vesselKey,
         mmsi: safeText(row?.mmsi),
         name:
           safeText(row?.shipName) ??
@@ -304,8 +311,12 @@ function normalizeTradePresenceRows(rows) {
           'Unknown Vessel',
         lat,
         lon,
+        latitude: lat,
+        longitude: lon,
         timestamp,
         type,
+        vessel_type: type,
+        data_source: 'global_fishing_watch',
       },
     };
 

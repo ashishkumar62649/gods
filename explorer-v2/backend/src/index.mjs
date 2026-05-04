@@ -38,12 +38,15 @@ import {
 import {
   LIVE_BINARY_CONTENT_TYPE,
   encodeFlightsLiveBinary,
+  encodeHazardsLiveBinary,
   encodeMaritimeLiveBinary,
   encodeSatellitesLiveBinary,
+  encodeWeatherLiveBinary,
 } from './core/binaryTransport.mjs';
 import { startInfrastructureRefreshLoop } from './services/infrastructureFetcher.mjs';
 import { startShipStream } from './services/shipFetcher.mjs';
 import { handleClimateStateRoute } from './routes/climate.mjs';
+import { handleAssistantRoute } from './routes/assistant.mjs';
 import { handleWeatherIntelRoute } from './routes/weatherIntel.mjs';
 import { fetchRouteForCallsign, fetchTraceForIcao24 } from './services/opensky.mjs';
 import {
@@ -51,7 +54,20 @@ import {
   queryHazardsMvt,
   queryWeatherMvt,
 } from './services/vectorTileDb.mjs';
+import {
+  hasTimelineQuery,
+  queryFlightSnapshots,
+  queryInfrastructureSnapshot,
+  queryMaritimeSnapshots,
+  querySatelliteSnapshots,
+  timelineOptionsFromUrl,
+} from './services/liveDomainDbReader.mjs';
 import { parseTilePath } from './core/tilePaths.mjs';
+import {
+  queryActiveHazards,
+  queryBestCurrentValues,
+  parseLimit as parseWeatherIntelLimit,
+} from './services/weatherIntelDb.mjs';
 import {
   beginEmergencySweep,
   endEmergencySweep,
@@ -103,6 +119,8 @@ function normalizeApiUrl(url) {
     ['/api/v2/maritime/live', '/api/maritime'],
     ['/api/v2/infrastructure', '/api/infrastructure'],
     ['/api/v2/locations', '/api/intel/nearby'],
+    ['/api/v2/assistant/chat', '/api/assistant/chat'],
+    ['/api/v2/assistant/context', '/api/assistant/context'],
     ['/api/v2/health', '/api/health'],
   ]);
 
@@ -171,6 +189,61 @@ app.use(async (req, res) => {
 
   const requestUrl = new URL(req.url, `http://localhost:${PORT}`);
   const url = normalizeApiUrl(requestUrl);
+
+  if (await handleAssistantRoute(req, res, sendJson, url)) {
+    return;
+  }
+
+  if (req.method === 'GET' && (requestUrl.pathname === '/api/v2/weather/current.bin' || url.pathname === '/api/weather/current.bin')) {
+    try {
+      const rows = await queryBestCurrentValues({
+        limit: parseWeatherIntelLimit(url.searchParams.get('limit'), 600),
+        parameter: url.searchParams.get('parameter') || null,
+        source: url.searchParams.get('source') || null,
+        time: url.searchParams.get('time') || null,
+      });
+      const buffer = encodeWeatherLiveBinary(rows);
+      res.writeHead(200, {
+        'Content-Type': LIVE_BINARY_CONTENT_TYPE,
+        'Content-Length': buffer.byteLength,
+        'Cache-Control': 'no-store',
+      });
+      res.end(buffer);
+    } catch (error) {
+      console.error('[Binary] weather current failed:', error);
+      sendJson(res, 503, {
+        error: 'Weather binary feed failed.',
+        detail: error instanceof Error ? error.message : String(error),
+      });
+    }
+    return;
+  }
+
+  if (req.method === 'GET' && (requestUrl.pathname === '/api/v2/hazards/live.bin' || url.pathname === '/api/hazards/live.bin')) {
+    try {
+      const rows = await queryActiveHazards({
+        limit: parseWeatherIntelLimit(url.searchParams.get('limit'), 800),
+        eventType: url.searchParams.get('eventType') || null,
+        source: url.searchParams.get('source') || null,
+        time: url.searchParams.get('time') || null,
+        activeOnly: url.searchParams.get('activeOnly') !== 'false',
+      });
+      const buffer = encodeHazardsLiveBinary(rows);
+      res.writeHead(200, {
+        'Content-Type': LIVE_BINARY_CONTENT_TYPE,
+        'Content-Length': buffer.byteLength,
+        'Cache-Control': 'no-store',
+      });
+      res.end(buffer);
+    } catch (error) {
+      console.error('[Binary] hazards live failed:', error);
+      sendJson(res, 503, {
+        error: 'Hazards binary feed failed.',
+        detail: error instanceof Error ? error.message : String(error),
+      });
+    }
+    return;
+  }
 
   if (await handleWeatherIntelRoute(req, res, sendJson, url)) {
     return;
@@ -251,6 +324,29 @@ app.use(async (req, res) => {
   // ── GET /api/flights ──────────────────────────────────────
   // Returns position-feed flights enriched with intel attributes.
   if (req.method === 'GET' && url.pathname === '/api/flights') {
+    if (hasTimelineQuery(url)) {
+      try {
+        const flights = await queryFlightSnapshots(timelineOptionsFromUrl(url, 10_000));
+        sendJson(res, 200, {
+          flights,
+          meta: {
+            count: flights.length,
+            timestamp: Date.now(),
+            source: 'postgres:aviation.live_flight_snapshots',
+            query: Object.fromEntries(url.searchParams.entries()),
+          },
+        });
+      } catch (error) {
+        console.error('[Flights DB] Timeline query failed:', error);
+        sendJson(res, 503, {
+          flights: [],
+          error: 'Flight timeline database query failed.',
+          detail: error instanceof Error ? error.message : String(error),
+        });
+      }
+      return;
+    }
+
     const rawFlights = getAllFlights();
 
     // Merge intel attributes into each flight at query time.
@@ -311,6 +407,29 @@ app.use(async (req, res) => {
   }
 
   if (req.method === 'GET' && url.pathname === '/api/satellites') {
+    if (hasTimelineQuery(url)) {
+      try {
+        const satellites = await querySatelliteSnapshots(timelineOptionsFromUrl(url, 2000));
+        sendJson(res, 200, {
+          satellites,
+          meta: {
+            count: satellites.length,
+            timestamp: Date.now(),
+            source: 'postgres:satellites.state_snapshots',
+            query: Object.fromEntries(url.searchParams.entries()),
+          },
+        });
+      } catch (error) {
+        console.error('[Satellites DB] Timeline query failed:', error);
+        sendJson(res, 503, {
+          satellites: [],
+          error: 'Satellite timeline database query failed.',
+          detail: error instanceof Error ? error.message : String(error),
+        });
+      }
+      return;
+    }
+
     const satellites = getAllSatellites();
     sendJson(res, 200, {
       satellites,
@@ -324,6 +443,31 @@ app.use(async (req, res) => {
   }
 
   if (req.method === 'GET' && url.pathname === '/api/infrastructure') {
+    if (hasTimelineQuery(url)) {
+      try {
+        const snapshot = await queryInfrastructureSnapshot(timelineOptionsFromUrl(url, 2000));
+        sendJson(res, 200, {
+          ...snapshot,
+          meta: {
+            count: snapshot.cables.length + snapshot.ships.length + snapshot.nodes.length,
+            timestamp: Date.now(),
+            source: 'postgres:infrastructure+maritime',
+            query: Object.fromEntries(url.searchParams.entries()),
+          },
+        });
+      } catch (error) {
+        console.error('[Infrastructure DB] Timeline query failed:', error);
+        sendJson(res, 503, {
+          cables: [],
+          ships: [],
+          nodes: [],
+          error: 'Infrastructure timeline database query failed.',
+          detail: error instanceof Error ? error.message : String(error),
+        });
+      }
+      return;
+    }
+
     const cables = getAllCables();
     const ships = getAllShips();
     const nodes = getAllInfrastructureNodes();
@@ -342,6 +486,38 @@ app.use(async (req, res) => {
   }
 
   if (req.method === 'GET' && url.pathname === '/api/maritime') {
+    if (hasTimelineQuery(url)) {
+      try {
+        const options = {
+          ...timelineOptionsFromUrl(url, 10_000),
+          sourceKey: url.searchParams.get('sourceKey') || url.searchParams.get('source') || null,
+        };
+        const vessels = await queryMaritimeSnapshots(options);
+        sendJson(res, 200, {
+          vessels,
+          meta: {
+            count: vessels.length,
+            fetchedAt: new Date().toISOString(),
+            source: options.sourceKey ? `postgres:maritime:${options.sourceKey}` : 'postgres:maritime',
+            error: null,
+            query: Object.fromEntries(url.searchParams.entries()),
+          },
+        });
+      } catch (error) {
+        console.error('[Maritime DB] Timeline query failed:', error);
+        sendJson(res, 503, {
+          vessels: [],
+          meta: {
+            count: 0,
+            fetchedAt: null,
+            source: 'postgres:maritime',
+            error: error instanceof Error ? error.message : 'Maritime timeline database query failed.',
+          },
+        });
+      }
+      return;
+    }
+
     try {
       const snapshot = await getGfwTradeSnapshot();
       sendJson(res, 200, snapshot);

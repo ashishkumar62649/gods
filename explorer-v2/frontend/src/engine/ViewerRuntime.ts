@@ -19,6 +19,7 @@ export function initializeViewer(container: HTMLElement | string) {
     timeline: false,
     terrain: Terrain.fromWorldTerrain(),
   });
+  viewer.scene.globe.depthTestAgainstTerrain = true;
 
   const mapRenderer = new MapRenderer();
   const cameraController = new ViewerCameraController();

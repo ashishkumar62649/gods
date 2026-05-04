@@ -3,6 +3,10 @@ import {
   CABLE_RISK_SPEED_KNOTS,
   SHIP_STALE_TIMEOUT_MS,
 } from '../config/constants.mjs';
+import {
+  enqueueInfrastructureCables,
+  enqueueShipSnapshot,
+} from '../services/liveDomainDbWriter.mjs';
 
 export const cableStore = new Map();
 export const shipStore = new Map();
@@ -41,6 +45,7 @@ export function replaceCables(cables, source = 'Submarine Cable Map') {
     source,
     error: null,
   };
+  enqueueInfrastructureCables(Array.from(cableStore.values()));
 }
 
 export function setCableFetchError(error) {
@@ -92,6 +97,7 @@ export function upsertShip(ship) {
       cable.last_inspected_by = ship.vessel_id;
     }
   }
+  enqueueShipSnapshot(normalized);
 }
 
 export function removeStaleShips(nowMs = Date.now()) {

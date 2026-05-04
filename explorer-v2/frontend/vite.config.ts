@@ -4,6 +4,8 @@ import cesium from 'vite-plugin-cesium';
 import { fileURLToPath, URL } from 'node:url';
 import { resolve } from 'node:path';
 
+const apiProxyTarget = process.env.VITE_API_PROXY_TARGET || process.env.VITE_API_BASE || 'http://localhost:8788';
+
 export default defineConfig({
   envDir: resolve(__dirname, '..'),
   // vite-plugin-cesium copies Cesium's static assets (workers, shaders,
@@ -26,5 +28,11 @@ export default defineConfig({
   server: {
     port: 5175,
     open: true,
+    proxy: {
+      '/api': {
+        target: apiProxyTarget,
+        changeOrigin: true,
+      },
+    },
   },
 });

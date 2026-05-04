@@ -24,6 +24,8 @@ type PanelState = 'loading' | 'live' | 'empty' | 'error';
 
 export default function AircraftIntelligencePanel() {
   const selectedAssetId = useSelectionStore((state) => state.selectedAssetId);
+  const selectedAssetDomain = useSelectionStore((state) => state.selectedAssetDomain);
+  const selectedAssetRecord = useSelectionStore((state) => state.selectedAssetRecord);
   const setRightPanelOpen = useUiStore((state) => state.setRightPanelOpen);
   const [flight, setFlight] = useState<FlightRecord | null>(null);
   const [route, setRoute] = useState<FlightRouteSnapshot | null>(null);
@@ -31,6 +33,14 @@ export default function AircraftIntelligencePanel() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (selectedAssetDomain && selectedAssetDomain !== 'aviation') {
+      setFlight(null);
+      setRoute(null);
+      setStatus('live');
+      setError(null);
+      return;
+    }
+
     const controller = new AbortController();
     setStatus('loading');
     setError(null);
@@ -73,7 +83,17 @@ export default function AircraftIntelligencePanel() {
 
     void load();
     return () => controller.abort();
-  }, [selectedAssetId]);
+  }, [selectedAssetId, selectedAssetDomain]);
+
+  if (selectedAssetDomain && selectedAssetDomain !== 'aviation' && selectedAssetRecord) {
+    return (
+      <SelectedAssetInfoPanel
+        domain={selectedAssetDomain}
+        record={selectedAssetRecord}
+        onClose={() => setRightPanelOpen(false)}
+      />
+    );
+  }
 
   const metrics = useMemo(() => {
     if (!flight) return [];
@@ -163,6 +183,144 @@ export default function AircraftIntelligencePanel() {
       </div>
     </RightIntelligencePanel>
   );
+}
+
+function SelectedAssetInfoPanel({
+  domain,
+  record,
+  onClose,
+}: {
+  domain: string;
+  record: Record<string, unknown>;
+  onClose: () => void;
+}) {
+  const title = String(
+    record.name ??
+      record.object_name ??
+      record.title ??
+      record.vessel_id ??
+      record.id_norad ??
+      record.asset_id ??
+      'Selected asset',
+  );
+  const subtitle = domainLabel(domain);
+  const timestamp = Number(record.timestamp);
+  const updated = Number.isFinite(timestamp)
+    ? formatLastUpdated(timestamp)
+    : String(record.observed_time ?? record.time_index ?? 'live');
+  const metrics = [
+    metric('Latitude', numberValue(record.latitude ?? record.lat, 3)),
+    metric('Longitude', numberValue(record.longitude ?? record.lon, 3)),
+    metric('Speed', vesselSpeed(record.speed_knots) ?? satelliteSpeed(record.velocity_kps) ?? 'N/A'),
+    metric('Heading', numberValue(record.heading_deg, 0, 'deg')),
+    metric('Altitude', satelliteAltitude(record.altitude_km)),
+    metric('Risk', String(record.risk_status ?? 'Normal')),
+    metric('Nearest cable', distanceValue(record.nearest_cable_distance_m)),
+    metric('Source', String(record.data_source ?? 'live/database')),
+  ].filter((item) => item.value !== 'N/A');
+  const notes = notesForDomain(domain, record);
+
+  return (
+    <RightIntelligencePanel>
+      <div className="god-panel-scroll aircraft-panel">
+        <header className="panel-title-row">
+          <div>
+            <h2>{subtitle}</h2>
+            <strong>{title}</strong>
+            <span>{String(record.vessel_type ?? record.parameter_id ?? record.event_type ?? 'Live entity')}</span>
+            <small>Telemetry updated {updated}</small>
+          </div>
+          <button type="button" onClick={onClose}>Close</button>
+        </header>
+        <div className="badge-row">
+          <StatusBadge tone="active">Live</StatusBadge>
+          <StatusBadge tone={String(record.risk_status ?? '').toLowerCase() === 'risk' ? 'high' : 'normal'}>
+            {String(record.risk_status ?? domain)}
+          </StatusBadge>
+        </div>
+        <div className="mini-grid">
+          {metrics.map((item) => <MiniMetricCard key={item.label} {...item} />)}
+        </div>
+        <div className="anomaly-card">
+          <RiskScoreRing score={riskScoreForRecord(record)} label={riskLabelForRecord(record)} />
+          <div className="sparkline" />
+          <strong>{String(record.risk_status ?? '').toLowerCase() === 'risk' ? '+ cable risk' : 'stable'}</strong>
+        </div>
+        <SourceProvenanceCard sources={[{ label: String(record.data_source ?? 'God Eyes database'), status: 'position' }]} />
+        <WhatToWatchCard notes={notes} />
+      </div>
+    </RightIntelligencePanel>
+  );
+}
+
+function metric(label: string, value: string) {
+  return { label, value };
+}
+
+function domainLabel(domain: string) {
+  if (domain === 'maritime') return 'Maritime Intelligence';
+  if (domain === 'satellite') return 'Satellite Intelligence';
+  if (domain === 'infrastructure') return 'Infrastructure Intelligence';
+  return 'Asset Intelligence';
+}
+
+function numberValue(value: unknown, digits = 1, suffix = '') {
+  const number = Number(value);
+  if (!Number.isFinite(number)) return 'N/A';
+  return `${number.toFixed(digits)}${suffix ? ` ${suffix}` : ''}`;
+}
+
+function vesselSpeed(value: unknown) {
+  const number = Number(value);
+  return Number.isFinite(number) ? `${number.toFixed(1)} kt` : null;
+}
+
+function satelliteSpeed(value: unknown) {
+  const number = Number(value);
+  return Number.isFinite(number) ? `${number.toFixed(2)} km/s` : null;
+}
+
+function satelliteAltitude(value: unknown) {
+  const number = Number(value);
+  return Number.isFinite(number) ? `${number.toLocaleString('en-US', { maximumFractionDigits: 0 })} km` : 'N/A';
+}
+
+function distanceValue(value: unknown) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) return 'N/A';
+  if (number >= 1000) return `${(number / 1000).toFixed(1)} km`;
+  return `${number.toFixed(0)} m`;
+}
+
+function notesForDomain(domain: string, record: Record<string, unknown>) {
+  if (domain === 'maritime') {
+    const notes = ['AIS traffic is rendered on the ocean surface and persisted to maritime.position_snapshots.'];
+    if (String(record.risk_status ?? '').toUpperCase() === 'RISK') {
+      notes.push('This vessel is close enough to an internet cable to trigger the cable-risk visual mode.');
+    }
+    notes.push('Cable-risk mode keeps vessel trails visible without turning the globe into clutter.');
+    return notes;
+  }
+  if (domain === 'satellite') {
+    return [
+      'Satellite position is rendered at propagated orbital altitude.',
+      'Orbit-trail and sensor-focus modes are controlled from the asset layer panel.',
+    ];
+  }
+  return ['Selected infrastructure entity is clamped to the surface and linked to the database-backed layer.'];
+}
+
+function riskScoreForRecord(record: Record<string, unknown>) {
+  if (String(record.risk_status ?? '').toUpperCase() === 'RISK') return 78;
+  if (Number(record.nearest_cable_distance_m) <= 10_000) return 64;
+  return 28;
+}
+
+function riskLabelForRecord(record: Record<string, unknown>) {
+  const score = riskScoreForRecord(record);
+  if (score >= 75) return 'High';
+  if (score >= 45) return 'Elevated';
+  return 'Normal';
 }
 
 function statusLabel(status: PanelState) {

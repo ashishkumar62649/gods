@@ -55,6 +55,11 @@ export const OWM_API_KEY =
   process.env.OWM_API_KEY ||
   null;
 
+/** Optional local world-intelligence assistant. */
+export const OLLAMA_BASE_URL = process.env.OLLAMA_BASE_URL || 'http://127.0.0.1:11434';
+export const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'llama3.2:3b';
+export const WORLD_ASSISTANT_TIMEOUT_MS = Number(process.env.WORLD_ASSISTANT_TIMEOUT_MS || 5_000);
+
 /** Space-Track credentials. Required to fetch live GP/TLE catalog data. */
 export const SPACETRACK_EMAIL = process.env.SPACETRACK_EMAIL || null;
 export const SPACETRACK_PASSWORD = process.env.SPACETRACK_PASSWORD || null;

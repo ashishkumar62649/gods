@@ -2,6 +2,7 @@ import largeAirportIconPng from '../../assets/map-icons/generated/airport-large-
 import mediumAirportIconPng from '../../assets/map-icons/generated/airport-medium-yellow.png?inline';
 import commsTowerIconPng from '../../assets/map-icons/generated/tower-comms-blue.png?inline';
 import hfdlTowerIconPng from '../../assets/map-icons/generated/tower-hfdl-red.png?inline';
+import { API_BASE } from '../../core/api/apiConfig';
 
 export interface FlightTrailPoint {
   latitude: number;
@@ -120,12 +121,10 @@ export interface FlightFeedState {
   totalAvailable: number;
 }
 
-const FLIGHT_API_BASE = import.meta.env.VITE_FLIGHT_API_BASE?.trim() ?? '';
-
-export const FLIGHT_API_URL = `${FLIGHT_API_BASE}/api/flights`;
-export const FLIGHT_ROUTE_API_BASE_URL = `${FLIGHT_API_BASE}/api/route`;
-export const FLIGHT_TRACE_API_BASE_URL = `${FLIGHT_API_BASE}/api/trace`;
-export const AIRPORTS_API_URL = `${FLIGHT_API_BASE}/api/airports`;
+export const FLIGHT_API_URL = `${API_BASE}/api/flights`;
+export const FLIGHT_ROUTE_API_BASE_URL = `${API_BASE}/api/route`;
+export const FLIGHT_TRACE_API_BASE_URL = `${API_BASE}/api/trace`;
+export const AIRPORTS_API_URL = `${API_BASE}/api/airports`;
 export const FLIGHT_POLL_INTERVAL_MS = 15_000;
 export const FLIGHT_ICON_ALTITUDE_THRESHOLD = 3_500_000;
 export const FLIGHT_PREDICTION_SECONDS = 12;
